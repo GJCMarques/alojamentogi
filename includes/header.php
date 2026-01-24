@@ -228,7 +228,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         }
 
         #main-header.scrolled .header-inner {
-            height: 5rem; /* h-20 = 80px */
+            height: 5.5rem; /* h-22 = 88px */
         }
 
         /* Navigation transitions */
@@ -463,7 +463,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                              : (strpos($currentPath, rtrim($item['url'], '/')) === 0);
                     ?>
                     <a href="<?= $item['url'] ?>"
-                       class="mobile-nav-link block py-4 text-xl border-b border-white/5 <?= $isActive ? 'text-accent font-semibold' : 'text-cream/90' ?> hover:text-accent hover:pl-2 transition-all">
+                       class="mobile-nav-link block py-4 text-xl font-sans border-b border-white/5 <?= $isActive ? 'text-accent font-semibold' : 'text-cream/90' ?> hover:text-accent hover:pl-2 transition-all">
                         <?= e($item['label']) ?>
                     </a>
                     <?php endforeach; ?>

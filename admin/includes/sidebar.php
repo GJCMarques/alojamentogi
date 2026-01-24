@@ -89,11 +89,8 @@ $adminItems[] = [
 <aside class="sidebar fixed inset-y-0 left-0 w-64 bg-primary flex flex-col transition-all duration-300 z-50">
     <!-- Logo -->
     <div class="flex items-center h-16 px-6 border-b border-primary-600">
-        <a href="<?= $base ?>/admin/" class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-secondary rounded flex items-center justify-center">
-                <span class="text-cream font-bold text-sm">Gi</span>
-            </div>
-            <span class="sidebar-text text-cream font-semibold">A Casa do Gi</span>
+        <a href="<?= $base ?>/admin/" class="flex items-center space-x-3 justify-center w-full">
+            <span class="sidebar-text text-cream font-cursive text-3xl pt-2">A Casa do Gi</span>
         </a>
     </div>
 

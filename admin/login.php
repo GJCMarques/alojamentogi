@@ -54,7 +54,7 @@ if (isPost()) {
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -63,59 +63,62 @@ if (isPost()) {
             theme: {
                 extend: {
                     colors: {
-                        // Sophisticated Nature Palette
                         'primary': {
-                            50: '#e8edef', 100: '#d1dbdf', 200: '#a3b7bf', 300: '#75939f',
-                            400: '#476f7f', 500: '#264653', 600: '#1e3842', 700: '#172a32',
-                            800: '#0f1c21', 900: '#080e11', DEFAULT: '#264653'
+                            DEFAULT: '#264653',
+                            500: '#264653',
+                            600: '#1e3842',
+                            700: '#172a32',
                         },
                         'secondary': {
-                            50: '#f2f4f0', 100: '#e5e9e1', 200: '#cbd3c3', 300: '#b1bda5',
-                            400: '#97a787', 500: '#768A68', 600: '#5e6e53', 700: '#47533e',
-                            800: '#2f372a', 900: '#181c15', DEFAULT: '#768A68'
+                            DEFAULT: '#768A68',
+                            500: '#768A68',
+                            600: '#5e6e53',
                         },
                         'accent': {
-                            50: '#faf6ed', 100: '#f5eddb', 200: '#ebdbb7', 300: '#e1c993',
-                            400: '#d7b76f', 500: '#C5A059', 600: '#9e8047', 700: '#766035',
-                            800: '#4f4024', 900: '#272012', DEFAULT: '#C5A059'
+                            DEFAULT: '#C5A059',
+                            500: '#C5A059',
                         },
                         'cream': {
-                            50: '#FDFBF7', 100: '#faf5eb', 200: '#f5ebd7', 300: '#f0e1c3',
-                            400: '#ebd7af', DEFAULT: '#FDFBF7'
+                            DEFAULT: '#FDFBF7',
+                            100: '#faf5eb',
+                            200: '#f5ebd7',
                         },
                         'charcoal': {
-                            50: '#f7f8f8', 100: '#ebedef', 200: '#d4d8dc', 300: '#b8bfc5',
-                            400: '#9aa3ab', 500: '#7b8792', 600: '#5f6a74', 700: '#4a5259',
-                            800: '#2D3748', 900: '#1a2028', DEFAULT: '#2D3748'
+                            DEFAULT: '#2D3748',
+                            200: '#d4d8dc',
+                            500: '#7b8792',
+                            700: '#4a5259',
                         }
                     },
                     fontFamily: {
-                        'serif': ['Playfair Display', 'Georgia', 'serif'],
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'sans': ['Poppins', 'system-ui', 'sans-serif'],
+                        'cursive': ['Great Vibes', 'cursive'],
                     }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Inter', system-ui, sans-serif; }
-        h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
+        body { font-family: 'Poppins', system-ui, sans-serif; }
+        .font-cursive { font-family: 'Great Vibes', cursive; }
     </style>
 </head>
 <body class="h-full bg-cream-100">
     <div class="min-h-full flex">
         <!-- Left Side - Image -->
-        <div class="hidden lg:block lg:w-1/2 relative">
-            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?= asset('images/admin-login-bg.jpg') ?>');">
-                <div class="absolute inset-0 bg-primary/70"></div>
-            </div>
-            <div class="relative h-full flex flex-col justify-between p-12 text-white">
+        <div class="hidden lg:block lg:w-1/2 relative bg-primary-700">
+            <!-- Image Placeholder -->
+            <img src="<?= asset('images/mogadouroLogin.png') ?>" 
+                 alt="Mogadouro" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-60">
+            
+            <div class="relative h-full flex flex-col justify-between p-12 text-white z-10">
                 <div>
-                    <h1 class="font-serif text-3xl font-semibold text-cream">A Casa do Gi</h1>
-                    <p class="mt-2 text-cream-200">Painel de Administracao</p>
+                    <h1 class="text-5xl font-cursive text-cream tracking-wide drop-shadow-md pb-1">A Casa do Gi</h1>
+                    <p class="mt-2 text-cream-200 text-lg font-light">Painel de Administracao</p>
                 </div>
                 <div>
-                    <blockquote class="text-lg text-cream-200 italic">
+                    <blockquote class="text-xl text-cream-200 italic font-light leading-relaxed">
                         "Simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor!"
                     </blockquote>
                 </div>
@@ -127,13 +130,13 @@ if (isPost()) {
             <div class="w-full max-w-md">
                 <!-- Mobile Logo -->
                 <div class="lg:hidden text-center mb-8">
-                    <h1 class="font-serif text-2xl font-semibold text-primary">A Casa do Gi</h1>
+                    <h1 class="text-4xl font-cursive text-primary drop-shadow-sm pb-1">A Casa do Gi</h1>
                     <p class="text-charcoal-500">Painel de Administracao</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-lg p-8 border border-accent/20">
                     <div class="text-center mb-8">
-                        <h2 class="font-serif text-2xl text-primary">Bem-vindo</h2>
+                        <h2 class="text-2xl font-bold text-primary">Bem-vindo</h2>
                         <p class="text-charcoal-500 mt-2">Inicie sessao para continuar</p>
                     </div>
 
