@@ -246,13 +246,13 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 <body class="bg-cream text-charcoal antialiased <?= e($bodyClass) ?>">
     <?php if (!$hideNav): ?>
     <!-- Header Navigation -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-md shadow-lg transition-all duration-300 border-b border-accent/20">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent text-cream">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-24">
+            <div class="flex items-center justify-between h-24 transition-all duration-300">
                 <!-- Logo / Brand -->
                 <a href="<?= $isEnglish ? $base . '/en/' : $base . '/' ?>" class="flex items-center group">
                     <!-- Text Logo -->
-                    <span class="font-cursive text-5xl text-cream group-hover:text-accent transition-colors duration-300 drop-shadow-md pb-2">
+                    <span class="font-cursive text-5xl text-cream group-hover:text-accent transition-colors duration-300 drop-shadow-md pb-2 relative top-1">
                         A Casa do Gi
                     </span>
                 </a>
@@ -260,50 +260,62 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center space-x-8">
                     <?php foreach ($navItems as $item):
-                        // Fix active detection: homepage uses exact match, other pages use prefix match
+                        // Fix active detection logic
                         $homeUrlPT = $base . '/';
                         $homeUrlEN = $base . '/en/';
                         $itemUrlTrimmed = rtrim($item['url'], '/');
                         $currentPathTrimmed = rtrim($currentPath, '/');
 
                         if ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN) {
-                            // Homepage: only exact match (with or without trailing slash)
                             $isActive = ($currentPath === $item['url']) ||
                                        ($currentPathTrimmed === $itemUrlTrimmed);
                         } else {
-                            // Other pages: exact match OR current path starts with this URL
                             $isActive = ($currentPath === $item['url']) ||
                                        ($currentPathTrimmed === $itemUrlTrimmed) ||
                                        (strpos($currentPath, $itemUrlTrimmed . '/') === 0);
                         }
                     ?>
                     <a href="<?= $item['url'] ?>"
-                       class="nav-link text-sm font-medium text-cream/90 hover:text-accent transition-colors tracking-wide uppercase <?= $isActive ? 'active text-accent' : '' ?>">
+                       class="nav-link text-sm font-sans font-medium text-cream hover:text-accent transition-colors tracking-widest uppercase <?= $isActive ? 'active text-accent' : '' ?>">
                         <?= e($item['label']) ?>
                     </a>
                     <?php endforeach; ?>
 
+                    <!-- Separator -->
+                    <div class="h-6 w-px bg-cream/30"></div>
+
                     <!-- Language Switcher -->
-                    <div class="flex items-center border-l border-accent/30 pl-6 ml-2">
+                    <div class="flex items-center ml-2">
                         <?php $switchLang = $isEnglish ? LANG_PT : LANG_EN; ?>
                         <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
-                           class="flex items-center space-x-1 text-sm text-cream/80 hover:text-accent transition-colors"
+                           class="flex items-center justify-center w-8 h-8 rounded-full border border-cream/50 hover:bg-white/10 hover:border-accent transition-all duration-300 group"
                            title="<?= $isEnglish ? 'Mudar para Portugues' : 'Switch to English' ?>">
-                            <span class="w-5 h-5 rounded-full overflow-hidden border border-cream/20">
+                            <div class="w-6 h-6 rounded-full overflow-hidden relative">
                                 <?php if ($isEnglish): ?>
-                                    <svg viewBox="0 0 36 36" class="w-full h-full"><rect fill="#060" y="12" width="36" height="12"/><rect fill="#060" width="36" height="12"/><rect fill="#C00" y="24" width="36" height="12"/><circle fill="#FF0" cx="9" cy="18" r="5"/></svg>
+                                    <!-- Portuguese Flag (SVG) -->
+                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                        <path fill="#214524" d="M0 0h220v480H0z"/>
+                                        <path fill="#cf1020" d="M220 0h420v480H220z"/>
+                                        <path fill="#ffc400" d="M220 240m-60 0a60 60 0 1 0 120 0 60 60 0 1 0-120 0"/>
+                                    </svg>
                                 <?php else: ?>
-                                    <svg viewBox="0 0 36 36" class="w-full h-full"><rect fill="#00247D" width="36" height="36"/><path fill="#FFF" d="M0 0l36 36M36 0L0 36" stroke="#FFF" stroke-width="4.8"/></svg>
+                                    <!-- UK Flag (SVG) -->
+                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                        <path fill="#012169" d="M0 0h640v480H0z"/>
+                                        <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z"/>
+                                        <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
+                                        <path fill="#FFF" d="M241 0v480h160V0H241zM0 160v160h640V160H0z"/>
+                                        <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z"/>
+                                    </svg>
                                 <?php endif; ?>
-                            </span>
-                            <span class="font-medium"><?= $isEnglish ? 'PT' : 'EN' ?></span>
+                            </div>
                         </a>
                     </div>
 
                     <!-- Cart Icon (if shop enabled) -->
                     <?php if (isShopEnabled()): ?>
                     <a href="<?= $lang->url('loja/carrinho') ?>"
-                       class="relative p-2 text-cream/90 hover:text-accent transition-colors"
+                       class="relative p-2 text-cream hover:text-accent transition-colors ml-4"
                        title="<?= $isEnglish ? 'Shopping Cart' : 'Carrinho' ?>">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
@@ -323,7 +335,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         </nav>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-full max-w-sm bg-primary shadow-2xl lg:hidden border-l border-accent/20">
+        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-full max-w-sm bg-primary shadow-2xl lg:hidden border-l border-accent/20 z-50 transform translate-x-full transition-transform duration-300">
             <div class="flex flex-col h-full">
                 <div class="flex items-center justify-between p-6 border-b border-accent/20 bg-primary-700">
                     <span class="font-cursive text-3xl text-cream">Menu</span>
@@ -335,22 +347,11 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 </div>
                 <nav class="flex-1 px-6 py-8 overflow-y-auto bg-primary">
                     <?php foreach ($navItems as $item):
-                        // Fix active detection: homepage uses exact match, other pages use prefix match
-                        $homeUrlPT = $base . '/';
-                        $homeUrlEN = $base . '/en/';
-                        $itemUrlTrimmed = rtrim($item['url'], '/');
-                        $currentPathTrimmed = rtrim($currentPath, '/');
-
-                        if ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN) {
-                            // Homepage: only exact match (with or without trailing slash)
-                            $isActive = ($currentPath === $item['url']) ||
-                                       ($currentPathTrimmed === $itemUrlTrimmed);
-                        } else {
-                            // Other pages: exact match OR current path starts with this URL
-                            $isActive = ($currentPath === $item['url']) ||
-                                       ($currentPathTrimmed === $itemUrlTrimmed) ||
-                                       (strpos($currentPath, $itemUrlTrimmed . '/') === 0);
-                        }
+                        // Active logic
+                        $homeUrlPT = $base . '/'; $homeUrlEN = $base . '/en/';
+                        $isActive = ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN)
+                             ? ($currentPath === $item['url'])
+                             : (strpos($currentPath, rtrim($item['url'], '/')) === 0);
                     ?>
                     <a href="<?= $item['url'] ?>"
                        class="block py-4 text-xl border-b border-white/5 <?= $isActive ? 'text-accent font-semibold' : 'text-cream/90' ?> hover:text-accent hover:pl-2 transition-all">
@@ -361,13 +362,23 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     <div class="mt-8 pt-8 border-t border-accent/20">
                         <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
                            class="flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
-                            <span class="w-6 h-6 rounded-full overflow-hidden border border-cream/20">
+                            <div class="w-8 h-8 rounded-full overflow-hidden border border-cream/20">
                                 <?php if ($isEnglish): ?>
-                                    <svg viewBox="0 0 36 36" class="w-full h-full"><rect fill="#060" y="12" width="36" height="12"/><rect fill="#060" width="36" height="12"/><rect fill="#C00" y="24" width="36" height="12"/><circle fill="#FF0" cx="9" cy="18" r="5"/></svg>
+                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                        <path fill="#214524" d="M0 0h220v480H0z"/>
+                                        <path fill="#cf1020" d="M220 0h420v480H220z"/>
+                                        <path fill="#ffc400" d="M220 240m-60 0a60 60 0 1 0 120 0 60 60 0 1 0-120 0"/>
+                                    </svg>
                                 <?php else: ?>
-                                    <svg viewBox="0 0 36 36" class="w-full h-full"><rect fill="#00247D" width="36" height="36"/><path fill="#FFF" d="M0 0l36 36M36 0L0 36" stroke="#FFF" stroke-width="4.8"/></svg>
+                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                        <path fill="#012169" d="M0 0h640v480H0z"/>
+                                        <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z"/>
+                                        <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
+                                        <path fill="#FFF" d="M241 0v480h160V0H241zM0 160v160h640V160H0z"/>
+                                        <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z"/>
+                                    </svg>
                                 <?php endif; ?>
-                            </span>
+                            </div>
                             <span class="text-lg"><?= $isEnglish ? 'Portugues' : 'English' ?></span>
                         </a>
                     </div>
@@ -376,8 +387,94 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         </div>
     </header>
 
-    <!-- Spacer for fixed header -->
-    <div class="h-20"></div>
+    <!-- Header Scroll Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.getElementById('main-header');
+        const headerInner = header.querySelector('div'); // The inner flex container
+        const logoText = header.querySelector('.font-cursive');
+
+        // Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                // Scrolled state
+                header.classList.remove('bg-transparent', 'text-cream');
+                header.classList.add('bg-primary/95', 'text-cream', 'shadow-md', 'backdrop-blur-sm');
+
+                // Shrink height
+                headerInner.classList.remove('h-24');
+                headerInner.classList.add('h-20');
+
+                // Adjust logo size
+                logoText.classList.remove('text-5xl');
+                logoText.classList.add('text-4xl');
+            } else {
+                // Top state
+                header.classList.add('bg-transparent', 'text-cream');
+                header.classList.remove('bg-primary/95', 'shadow-md', 'backdrop-blur-sm');
+
+                // Restore height
+                headerInner.classList.remove('h-20');
+                headerInner.classList.add('h-24');
+
+                // Restore logo size
+                logoText.classList.remove('text-4xl');
+                logoText.classList.add('text-5xl');
+            }
+        });
+
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileClose = document.getElementById('mobile-menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function toggleMenu() {
+            const isOpen = !mobileMenu.classList.contains('translate-x-full');
+            if (isOpen) {
+                mobileMenu.classList.add('translate-x-full');
+            } else {
+                mobileMenu.classList.remove('translate-x-full');
+            }
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
+        if (mobileClose) mobileClose.addEventListener('click', toggleMenu);
+    });
+    </script>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-secondary text-cream p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 z-40 hover:bg-secondary-600 hover:-translate-y-1 transform scale-90 hover:scale-100" aria-label="Voltar ao topo">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </button>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.remove('opacity-0', 'invisible', 'scale-90');
+                backToTop.classList.add('opacity-100', 'visible', 'scale-100');
+            } else {
+                backToTop.classList.add('opacity-0', 'invisible', 'scale-90');
+                backToTop.classList.remove('opacity-100', 'visible', 'scale-100');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+    </script>
+
+    <!-- Spacer for content to sit below header is NOT needed if header is transparent over hero.
+         But if other pages don't have a hero, they might need padding.
+         We can handle this by adding padding-top to body or main in specific pages if needed.
+         For Index, we want it transparent over hero.
+         For others, we might want a solid background.
+         Let's handle this in the pages themselves or via a body class.
+    -->
     <?php endif; ?>
 
     <!-- Flash Messages -->

@@ -57,16 +57,21 @@ include INCLUDES_PATH . '/header.php';
 
 <!-- Hero Section -->
 <section class="relative h-[60vh] min-h-[400px] -mt-20 overflow-hidden">
-    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?= asset('images/accommodation-hero.jpg') ?>');">
-        <div class="absolute inset-0 bg-primary/70"></div>
+    <div class="absolute inset-0 bg-cover bg-center parallax-bg" style="background-image: url('<?= asset('images/accommodation-hero.jpg') ?>');">
+        <!-- Overlay Gradient -->
+        <div class="absolute inset-0 bg-primary/40 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent"></div>
     </div>
-    <div class="relative z-10 h-full flex items-center justify-center text-center px-4">
-        <div class="max-w-3xl animate-slide-up">
-            <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl text-cream mb-4 drop-shadow-lg">
+    <div class="relative z-10 h-full flex items-center justify-center text-center px-4 pt-20">
+        <div class="max-w-4xl animate-slide-up space-y-4">
+            <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-2 drop-shadow-md">
+                Bem-vindo a
+            </span>
+            <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream drop-shadow-2xl leading-none">
                 <?= e($accTranslation['title'] ?? 'A Casa do Gi') ?>
             </h1>
-            <p class="text-xl text-cream-100">
-                <?= e($accTranslation['short_description'] ?? 'Casa de ferias de 100m2') ?>
+            <p class="font-serif text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto italic font-light leading-relaxed mt-6 drop-shadow-md">
+                "<?= e($accTranslation['short_description'] ?? 'Casa de ferias de 100m2') ?>"
             </p>
         </div>
     </div>
@@ -222,25 +227,53 @@ include INCLUDES_PATH . '/header.php';
 
                             <?php if ($guestreadyUrl): ?>
                             <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener"
-                               class="flex items-center justify-center w-full py-3 px-4 bg-secondary text-cream font-semibold rounded-lg hover:bg-secondary-600 transition-all shadow-md hover:shadow-lg hover:scale-105">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                Reservar no GuestReady
+                               class="flex items-center p-3 bg-secondary rounded-lg hover:bg-secondary-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
+                                    <!-- GuestReady / Direct Key Icon -->
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-xs text-cream/80 uppercase tracking-wide">Direto</span>
+                                    <span class="text-white font-bold">GuestReady</span>
+                                </div>
                             </a>
                             <?php endif; ?>
 
                             <?php if ($bookingUrl): ?>
                             <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener"
-                               class="flex items-center justify-center w-full py-3 px-4 bg-primary text-cream font-semibold rounded-lg hover:bg-primary-600 transition-all shadow-md hover:shadow-lg hover:scale-105">
-                                Reservar no Booking.com
+                               class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                               style="background-color: #003580;">
+                                <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
+                                    <!-- Booking Logo -->
+                                   <svg class="h-5 w-auto" viewbox="0 0 24 24" fill="none">
+                                        <path d="M4 3C2.89543 3 2 3.89543 2 5V19C2 20.1046 2.89543 21 4 21H13V15H11V13H13V3H4Z" fill="white"/>
+                                        <path d="M19 8C19.5523 8 20 8.44772 20 9V11C20 11.5523 19.5523 12 19 12H15V8H19Z" fill="white"/>
+                                        <path d="M19 14C19.5523 14 20 14.4477 20 15V19C20 19.5523 19.5523 20 19 20H15V14H19Z" fill="white"/>
+                                   </svg> 
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
+                                    <span class="text-white font-bold">Booking.com</span>
+                                </div>
                             </a>
                             <?php endif; ?>
 
                             <?php if ($airbnbUrl): ?>
                             <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener"
-                               class="flex items-center justify-center w-full py-3 px-4 bg-pink-600 text-white font-semibold rounded-lg hover:bg-pink-700 transition-all shadow-md hover:shadow-lg hover:scale-105">
-                                Reservar no Airbnb
+                               class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                               style="background-color: #FF385C;">
+                                <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
+                                    <!-- Airbnb Logo -->
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M22.519,4.427C21.949,3.879,21.166,3.606,20.252,3.606c-0.494,0-0.965,0.082-1.401,0.245 c-0.638,0.24-1.258,0.704-1.849,1.383c-1.302,1.496-2.924,4.421-4.996,8.995c-2.071-4.573-3.694-7.498-4.996-8.995 C6.42,4.555,5.801,4.09,5.163,3.851C4.727,3.688,4.256,3.606,3.762,3.606c-0.914,0-1.697,0.273-2.267,0.821 C0.804,5.15,0.463,6.29,0.463,7.96c0,1.935,0.49,4.259,1.455,6.905c1.474,4.043,4.646,7.575,8.933,9.947l1.155,0.64l1.155-0.64 c4.287-2.372,7.459-5.904,8.933-9.947c0.965-2.646,1.455-4.97,1.455-6.905C23.547,6.29,23.206,5.15,22.519,4.427L22.519,4.427z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
+                                    <span class="text-white font-bold">Airbnb</span>
+                                </div>
                             </a>
                             <?php endif; ?>
 

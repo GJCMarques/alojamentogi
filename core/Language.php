@@ -55,24 +55,78 @@ class Language
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         $path = parse_url($uri, PHP_URL_PATH);
 
-        // Check if path starts with /en/
-        if (strpos($path, '/en/') === 0 || $path === '/en') {
+        // Get base path to properly detect /en/ prefix
+        $base = $this->getBasePath();
+
+        // Remove base path to get relative path
+        $relativePath = $path;
+        if ($base !== '' && strpos($path, $base) === 0) {
+            $relativePath = substr($path, strlen($base));
+        }
+
+        // Ensure relativePath starts with /
+        if (empty($relativePath) || $relativePath[0] !== '/') {
+            $relativePath = '/' . $relativePath;
+        }
+
+        // Check if relative path starts with /en/ or is exactly /en
+        if (strpos($relativePath, '/en/') === 0 || $relativePath === '/en') {
             $this->setLanguage(LANG_EN);
             return;
         }
 
-        // Check session
-        Session::start();
-        $sessionLang = Session::getLanguage();
+        // Any path NOT starting with /en/ is Portuguese
+        // This ensures Portuguese pages always show Portuguese content
+        // regardless of session language
+        $this->setLanguage(LANG_PT);
+    }
 
-        if (isset($this->languages[$sessionLang])) {
-            $this->currentLang = $sessionLang;
-            $this->currentLangId = (int) $this->languages[$sessionLang]['id'];
-            return;
+    /**
+     * Get base path (helper to avoid circular dependency with basePath())
+     */
+    private function getBasePath(): string
+    {
+        static $basePath = null;
+
+        if ($basePath === null) {
+            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+            $dir = dirname($scriptName);
+            $dir = str_replace('\\', '/', $dir);
+
+            // All known subfolders that need to be removed to get root base
+            $subfolders = [
+                '/admin',
+                '/en',
+                '/api',
+                '/alojamento',
+                '/loja',
+                '/atividades',
+                '/contactos',
+                '/sobre-nos',
+                '/accommodation',
+                '/shop',
+                '/activities',
+                '/contact',
+                '/about-us',
+            ];
+
+            // Find the earliest occurrence of any subfolder and cut there
+            $cutPosition = strlen($dir);
+            foreach ($subfolders as $subfolder) {
+                $pos = strpos($dir, $subfolder);
+                if ($pos !== false && $pos < $cutPosition) {
+                    $cutPosition = $pos;
+                }
+            }
+
+            if ($cutPosition < strlen($dir)) {
+                $dir = substr($dir, 0, $cutPosition);
+            }
+
+            $basePath = rtrim($dir, '/');
         }
 
-        // Default to PT
-        $this->setLanguage(DEFAULT_LANG);
+        return $basePath;
     }
 
     /**
@@ -250,10 +304,24 @@ class Language
         $path = parse_url($uri, PHP_URL_PATH);
         $query = parse_url($uri, PHP_URL_QUERY);
         $queryString = $query ? '?' . $query : '';
+        
+        // Remove base path to get relative path
+        $base = parse_url(basePath(), PHP_URL_PATH) ?? '';
+        $base = rtrim($base, '/');
+        
+        // If current path starts with base, remove it
+        $relPath = $path;
+        if ($base !== '' && strpos($path, $base) === 0) {
+            $relPath = substr($path, strlen($base));
+        }
+        
+        // Ensure relPath starts with slash
+        if (empty($relPath) || $relPath[0] !== '/') {
+            $relPath = '/' . $relPath;
+        }
 
         // Current is PT, switching to EN
         if ($this->currentLang === LANG_PT && $toLang === LANG_EN) {
-            // Map PT paths to EN paths
             $pathMap = [
                 '/' => '/en/',
                 '/alojamento' => '/en/accommodation',
@@ -263,18 +331,28 @@ class Language
                 '/sobre-nos' => '/en/about-us',
             ];
 
+            // Check mappings
             foreach ($pathMap as $pt => $en) {
-                if ($path === $pt || strpos($path, $pt . '/') === 0) {
-                    return str_replace($pt, $en, $path) . $queryString;
+                // Exact match or prefix match
+                if ($relPath === $pt || ($pt !== '/' && strpos($relPath, $pt . '/') === 0)) {
+                    // Replace mapping
+                    $newRelPath = ($pt === '/') ? $en : str_replace($pt, $en, $relPath);
+                    return $base . $newRelPath . $queryString;
                 }
             }
 
-            return '/en/' . ltrim($path, '/') . $queryString;
+            // Fallback: just prepend /en/ to relative path (if not already there)
+            if (strpos($relPath, '/en/') !== 0) {
+                // If it's root '/', just make it '/en/'
+                if ($relPath === '/') {
+                    return $base . '/en/' . $queryString;
+                }
+                return $base . '/en' . $relPath . $queryString;
+            }
         }
 
         // Current is EN, switching to PT
         if ($this->currentLang === LANG_EN && $toLang === LANG_PT) {
-            // Map EN paths to PT paths
             $pathMap = [
                 '/en/' => '/',
                 '/en' => '/',
@@ -286,15 +364,17 @@ class Language
             ];
 
             foreach ($pathMap as $en => $pt) {
-                if ($path === $en || strpos($path, $en . '/') === 0) {
-                    $newPath = str_replace($en, $pt, $path);
-                    return ($newPath === '' ? '/' : $newPath) . $queryString;
+                if ($relPath === $en || strpos($relPath, $en . '/') === 0) {
+                    $newRelPath = str_replace($en, $pt, $relPath);
+                    // Ensure we don't end up with empty path if mapping to /
+                    if ($newRelPath === '') $newRelPath = '/';
+                    return $base . $newRelPath . $queryString;
                 }
             }
 
-            // Remove /en/ prefix
-            $newPath = preg_replace('/^\/en\/?/', '/', $path);
-            return ($newPath === '' ? '/' : $newPath) . $queryString;
+            // Remove /en prefix
+            $newRelPath = preg_replace('/^\/en(\/|$)/', '/', $relPath);
+            return $base . $newRelPath . $queryString;
         }
 
         return $uri;

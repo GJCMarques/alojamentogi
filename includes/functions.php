@@ -52,7 +52,7 @@ function basePath(): string
 
     if ($basePath === null) {
         $appUrl = config('app.url', '');
-        
+
         // Use configured URL if available and valid
         if ($appUrl && filter_var($appUrl, FILTER_VALIDATE_URL)) {
             $parsed = parse_url($appUrl);
@@ -61,16 +61,40 @@ function basePath(): string
             // Auto-detect from script name
             $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
             $dir = dirname($scriptName);
-            
+
             // Normalize slashes
             $dir = str_replace('\\', '/', $dir);
-            
-            // Remove /admin if present to get root base
-            $adminPos = strpos($dir, '/admin');
-            if ($adminPos !== false) {
-                $dir = substr($dir, 0, $adminPos);
+
+            // All known subfolders that need to be removed to get root base
+            $subfolders = [
+                '/admin',
+                '/en',
+                '/api',
+                '/alojamento',
+                '/loja',
+                '/atividades',
+                '/contactos',
+                '/sobre-nos',
+                '/accommodation',
+                '/shop',
+                '/activities',
+                '/contact',
+                '/about-us',
+            ];
+
+            // Find the earliest occurrence of any subfolder and cut there
+            $cutPosition = strlen($dir);
+            foreach ($subfolders as $subfolder) {
+                $pos = strpos($dir, $subfolder);
+                if ($pos !== false && $pos < $cutPosition) {
+                    $cutPosition = $pos;
+                }
             }
-            
+
+            if ($cutPosition < strlen($dir)) {
+                $dir = substr($dir, 0, $cutPosition);
+            }
+
             $basePath = rtrim($dir, '/');
         }
     }

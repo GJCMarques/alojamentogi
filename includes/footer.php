@@ -140,8 +140,9 @@ $instagramUrl = setting('instagram_url', '');
                         <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener"
                            class="flex items-center p-3 bg-secondary rounded-lg hover:bg-secondary-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
                             <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
+                                <!-- GuestReady / Direct Key Icon -->
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                                 </svg>
                             </div>
                             <div class="flex flex-col">
@@ -157,7 +158,11 @@ $instagramUrl = setting('instagram_url', '');
                            class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                            style="background-color: #003580;">
                             <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                <span class="font-bold text-lg">B.</span>
+                                <svg class="h-5 w-auto" viewbox="0 0 24 24" fill="none">
+                                     <path d="M4 3C2.89543 3 2 3.89543 2 5V19C2 20.1046 2.89543 21 4 21H13V15H11V13H13V3H4Z" fill="white"/>
+                                     <path d="M19 8C19.5523 8 20 8.44772 20 9V11C20 11.5523 19.5523 12 19 12H15V8H19Z" fill="white"/>
+                                     <path d="M19 14C19.5523 14 20 14.4477 20 15V19C20 19.5523 19.5523 20 19 20H15V14H19Z" fill="white"/>
+                                </svg> 
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>

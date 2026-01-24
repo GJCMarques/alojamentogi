@@ -21,40 +21,43 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative py-20 lg:py-32 bg-primary">
-    <div class="absolute inset-0 opacity-20">
+<section class="relative py-20 lg:py-32 bg-primary overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIwOS0xLjc5MS00LTQtNHMtNCAxLjc5MS00IDQgMS43OTEgNCA0IDQgNC0xLjc5MSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')]"></div>
     </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span class="inline-block text-accent text-sm font-medium uppercase tracking-wider mb-4">
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-primary/50 to-primary"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-fade-in">
             Descubra Mogadouro
         </span>
-        <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl text-cream mb-6">
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-lg">
             O Que Fazer
         </h1>
-        <p class="text-xl text-charcoal max-w-3xl mx-auto">
+        <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto font-light leading-relaxed">
             De paisagens deslumbrantes a sabores únicos, Mogadouro e o nordeste transmontano têm muito para oferecer.
         </p>
     </div>
 </section>
 
 <!-- Category Filter -->
-<section class="py-8 bg-cream border-b border-cream-200">
+<section class="py-8 bg-cream border-b border-accent/20 sticky top-20 z-40 shadow-sm backdrop-blur-md bg-cream/95">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-wrap items-center justify-center gap-4">
-            <button class="activity-filter active px-6 py-2 rounded-full text-sm font-medium transition-colors bg-secondary text-cream" data-filter="all">
+            <button class="activity-filter active px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-secondary text-cream shadow-md hover:scale-105 hover:bg-secondary-600" data-filter="all">
                 Todas
             </button>
-            <button class="activity-filter px-6 py-2 rounded-full text-sm font-medium transition-colors bg-cream-100 text-charcoal hover:bg-accent/10" data-filter="natureza">
+            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="natureza">
                 Natureza
             </button>
-            <button class="activity-filter px-6 py-2 rounded-full text-sm font-medium transition-colors bg-cream-100 text-charcoal hover:bg-accent/10" data-filter="cultura">
-                Cultura & História
+            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="cultura">
+                Cultura
             </button>
-            <button class="activity-filter px-6 py-2 rounded-full text-sm font-medium transition-colors bg-cream-100 text-charcoal hover:bg-accent/10" data-filter="gastronomia">
+            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="gastronomia">
                 Gastronomia
             </button>
-            <button class="activity-filter px-6 py-2 rounded-full text-sm font-medium transition-colors bg-cream-100 text-charcoal hover:bg-accent/10" data-filter="aventura">
+            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="aventura">
                 Aventura
             </button>
         </div>
