@@ -1,0 +1,19 @@
+{
+    "name": "casadogi/website",
+    "description": "A Casa do Gi - Website para alojamento local em Mogadouro",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.0",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/",
+            "Models\\": "models/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

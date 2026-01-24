@@ -1,0 +1,45 @@
+# A Casa do Gi - Git Ignore
+
+# Configuration (contains credentials)
+config/config.php
+
+# Uploads (user content)
+uploads/*
+!uploads/.gitkeep
+!uploads/products/.gitkeep
+!uploads/gallery/.gitkeep
+!uploads/activities/.gitkeep
+!uploads/content/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# Vendor (Composer dependencies)
+vendor/
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Cache
+cache/*
+!cache/.gitkeep
+
+# Node (if using build tools)
+node_modules/
+package-lock.json
+
+# Environment files
+.env
+.env.local
+.env.*.local
