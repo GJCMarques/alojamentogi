@@ -108,7 +108,7 @@ include INCLUDES_PATH . '/header.php';
             <!-- Left Column - Description -->
             <div class="lg:col-span-2 space-y-12">
                 <!-- Description -->
-                <div>
+                <div class="animate-on-scroll">
                     <h2 class="font-serif text-2xl md:text-3xl text-primary mb-6">Sobre o Alojamento</h2>
                     <div class="prose prose-lg text-charcoal max-w-none">
                         <?= $accTranslation['full_description'] ?? '<p>A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor!</p>' ?>
@@ -116,7 +116,7 @@ include INCLUDES_PATH . '/header.php';
                 </div>
 
                 <!-- Gallery -->
-                <div>
+                <div class="animate-on-scroll">
                     <h2 class="font-serif text-2xl md:text-3xl text-primary mb-6">Galeria</h2>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <?php if (empty($galleryImages)): ?>
@@ -144,7 +144,7 @@ include INCLUDES_PATH . '/header.php';
                 </div>
 
                 <!-- Bedrooms -->
-                <div>
+                <div class="animate-on-scroll">
                     <h2 class="font-serif text-2xl md:text-3xl text-primary mb-6">Quartos</h2>
                     <div class="grid md:grid-cols-3 gap-6">
                         <?php if (empty($bedrooms)): ?>
@@ -172,7 +172,7 @@ include INCLUDES_PATH . '/header.php';
                 </div>
 
                 <!-- Amenities -->
-                <div>
+                <div class="animate-on-scroll">
                     <h2 class="font-serif text-2xl md:text-3xl text-primary mb-6">Comodidades</h2>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <?php
@@ -225,57 +225,13 @@ include INCLUDES_PATH . '/header.php';
                         <div class="space-y-3">
                             <h3 class="font-serif text-lg text-primary text-center mb-4">Reserve a Sua Estadia</h3>
 
-                            <?php if ($guestreadyUrl): ?>
-                            <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener"
-                               class="flex items-center p-3 bg-secondary rounded-lg hover:bg-secondary-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                                <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                    <!-- GuestReady / Direct Key Icon -->
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                                    </svg>
-                                </div>
-                                <div class="flex flex-col text-left">
-                                    <span class="text-xs text-cream/80 uppercase tracking-wide">Direto</span>
-                                    <span class="text-white font-bold">GuestReady</span>
-                                </div>
-                            </a>
-                            <?php endif; ?>
-
-                            <?php if ($bookingUrl): ?>
-                            <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener"
-                               class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-                               style="background-color: #003580;">
-                                <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                    <!-- Booking Logo -->
-                                   <svg class="h-5 w-auto" viewbox="0 0 24 24" fill="none">
-                                        <path d="M4 3C2.89543 3 2 3.89543 2 5V19C2 20.1046 2.89543 21 4 21H13V15H11V13H13V3H4Z" fill="white"/>
-                                        <path d="M19 8C19.5523 8 20 8.44772 20 9V11C20 11.5523 19.5523 12 19 12H15V8H19Z" fill="white"/>
-                                        <path d="M19 14C19.5523 14 20 14.4477 20 15V19C20 19.5523 19.5523 20 19 20H15V14H19Z" fill="white"/>
-                                   </svg> 
-                                </div>
-                                <div class="flex flex-col text-left">
-                                    <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
-                                    <span class="text-white font-bold">Booking.com</span>
-                                </div>
-                            </a>
-                            <?php endif; ?>
-
-                            <?php if ($airbnbUrl): ?>
-                            <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener"
-                               class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-                               style="background-color: #FF385C;">
-                                <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                    <!-- Airbnb Logo -->
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M22.519,4.427C21.949,3.879,21.166,3.606,20.252,3.606c-0.494,0-0.965,0.082-1.401,0.245 c-0.638,0.24-1.258,0.704-1.849,1.383c-1.302,1.496-2.924,4.421-4.996,8.995c-2.071-4.573-3.694-7.498-4.996-8.995 C6.42,4.555,5.801,4.09,5.163,3.851C4.727,3.688,4.256,3.606,3.762,3.606c-0.914,0-1.697,0.273-2.267,0.821 C0.804,5.15,0.463,6.29,0.463,7.96c0,1.935,0.49,4.259,1.455,6.905c1.474,4.043,4.646,7.575,8.933,9.947l1.155,0.64l1.155-0.64 c4.287-2.372,7.459-5.904,8.933-9.947c0.965-2.646,1.455-4.97,1.455-6.905C23.547,6.29,23.206,5.15,22.519,4.427L22.519,4.427z"/>
-                                    </svg>
-                                </div>
-                                <div class="flex flex-col text-left">
-                                    <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
-                                    <span class="text-white font-bold">Airbnb</span>
-                                </div>
-                            </a>
-                            <?php endif; ?>
+                            <?php 
+                            component('booking-buttons', [
+                                'layout' => 'vertical', 
+                                'size' => 'default',
+                                'show_labels' => true
+                            ]); 
+                            ?>
 
                             <?php if (!$guestreadyUrl && !$bookingUrl && !$airbnbUrl): ?>
                             <p class="text-center text-charcoal-600 text-sm">
@@ -325,25 +281,136 @@ include INCLUDES_PATH . '/header.php';
 <!-- Location Section -->
 <section class="py-16 bg-cream">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
-            <h2 class="font-serif text-2xl md:text-3xl text-primary mb-4">Localizacao</h2>
-            <p class="text-charcoal">Mogadouro, Portugal</p>
+        <div class="text-center mb-10 animate-on-scroll">
+            <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">Localizacao</span>
+            <h2 class="font-serif text-2xl md:text-3xl text-primary mb-4">Onde Estamos</h2>
+            <p class="text-charcoal/70">Mogadouro, no coracao de Tras-os-Montes</p>
         </div>
 
-        <!-- Map Placeholder -->
-        <div class="aspect-video bg-cream-200 rounded-lg overflow-hidden shadow-lg border border-accent/20">
-            <div class="w-full h-full flex items-center justify-center text-charcoal-400">
-                <div class="text-center">
-                    <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    <p class="text-charcoal">Av. N. Sr. do Caminho 52</p>
-                    <p class="text-charcoal">5200-207 Mogadouro, Portugal</p>
+        <div class="animate-on-scroll" data-delay="200">
+            <!-- Map Container -->
+            <div class="relative rounded-2xl overflow-hidden shadow-xl border border-charcoal/10">
+                <div id="location-map" class="w-full h-[400px] md:h-[450px]"></div>
+
+                <!-- Map Overlay Card -->
+                <div class="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-sm bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-5 border border-charcoal/10 z-[5000]">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-primary text-lg">A Casa do Gi</h3>
+                            <p class="text-charcoal/80 text-sm mt-1">
+                                Av. N. Sr. do Caminho 52<br>
+                                5200-207 Mogadouro
+                            </p>
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=41.3397,-6.7147"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="inline-flex items-center text-secondary hover:text-secondary-700 text-sm font-medium mt-3 group">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                </svg>
+                                Obter direcoes
+                                <svg class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // A Casa do Gi coordinates (Mogadouro)
+    const lat = 41.3397;
+    const lng = -6.7147;
+
+    // Initialize map
+    const map = L.map('location-map', {
+        scrollWheelZoom: false
+    }).setView([lat, lng], 15);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Custom marker icon with brand colors
+    const customIcon = L.divIcon({
+        className: 'custom-map-marker',
+        html: `
+            <div style="
+                width: 40px;
+                height: 40px;
+                background: linear-gradient(135deg, #264653 0%, #1d3a47 100%);
+                border-radius: 50% 50% 50% 0;
+                transform: rotate(-45deg);
+                box-shadow: 0 4px 12px rgba(38, 70, 83, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">
+                <svg style="transform: rotate(45deg); width: 20px; height: 20px; color: #C5A059;" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                </svg>
+            </div>
+        `,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40]
+    });
+
+    // Add marker with popup
+    const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+    marker.bindPopup(`
+        <div style="text-align: center; padding: 8px;">
+            <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
+            <span style="color: #2D3748; font-size: 12px;">Av. N. Sr. do Caminho 52</span><br>
+            <span style="color: #2D3748; font-size: 12px;">5200-207 Mogadouro</span>
+        </div>
+    `, {
+        className: 'custom-popup'
+    });
+
+    // Enable scroll zoom on click
+    map.on('click', function() {
+        map.scrollWheelZoom.enable();
+    });
+
+    map.on('mouseout', function() {
+        map.scrollWheelZoom.disable();
+    });
+});
+</script>
+
+<style>
+.custom-popup .leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+.custom-popup .leaflet-popup-tip {
+    background: white;
+}
+.leaflet-control-attribution {
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.8) !important;
+}
+</style>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>

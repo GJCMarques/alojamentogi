@@ -23,20 +23,21 @@ $bodyClass = $bodyClass ?? '';
 $hideNav = $hideNav ?? false;
 
 // Navigation items
+
 $navItems = $isEnglish ? [
     ['url' => $base . '/en/', 'label' => 'Home'],
     ['url' => $base . '/en/accommodation/', 'label' => 'Accommodation'],
-    ['url' => $base . '/en/shop/', 'label' => 'Shop'],
     ['url' => $base . '/en/activities/', 'label' => 'Activities'],
     ['url' => $base . '/en/about-us/', 'label' => 'About Us'],
     ['url' => $base . '/en/contact/', 'label' => 'Contact'],
+    ['url' => $base . '/en/shop/', 'label' => 'Shop'],
 ] : [
     ['url' => $base . '/', 'label' => 'Inicio'],
     ['url' => $base . '/alojamento/', 'label' => 'Alojamento'],
-    ['url' => $base . '/loja/', 'label' => 'Loja'],
     ['url' => $base . '/atividades/', 'label' => 'Atividades'],
     ['url' => $base . '/sobre-nos/', 'label' => 'Sobre Nos'],
     ['url' => $base . '/contactos/', 'label' => 'Contactos'],
+    ['url' => $base . '/loja/', 'label' => 'Loja'],
 ];
 
 // Get current path for active state
@@ -198,6 +199,38 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             }
         }
 
+        /* Header smooth transitions */
+        #main-header {
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        #main-header.scrolled {
+            background-color: rgba(38, 70, 83, 0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Logo smooth scaling with CSS transform */
+        .logo-text {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left center;
+        }
+
+        #main-header.scrolled .logo-text {
+            transform: scale(0.82);
+        }
+
+        /* Header inner height transition */
+        .header-inner {
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 6rem; /* h-24 = 96px */
+        }
+
+        #main-header.scrolled .header-inner {
+            height: 5rem; /* h-20 = 80px */
+        }
+
         /* Navigation transitions */
         .nav-link {
             position: relative;
@@ -206,27 +239,40 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: -2px;
-            left: 0;
+            bottom: -4px;
+            left: 50%;
             width: 0;
             height: 2px;
-            background-color: #C5A059; /* Accent - Gold Ocre */
-            transition: width 0.3s ease;
+            background-color: #C5A059;
+            transition: width 0.3s ease, left 0.3s ease;
         }
 
         .nav-link:hover::after,
         .nav-link.active::after {
             width: 100%;
+            left: 0;
         }
 
         /* Mobile menu animation */
         .mobile-menu {
             transform: translateX(100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .mobile-menu.open {
             transform: translateX(0);
+        }
+
+        /* Mobile menu backdrop */
+        .mobile-backdrop {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .mobile-backdrop.open {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Cart badge */
@@ -238,6 +284,66 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-on-scroll[data-animation="fade-left"] {
+            transform: translateX(-30px);
+        }
+
+        .animate-on-scroll[data-animation="fade-left"].visible {
+            transform: translateX(0);
+        }
+
+        .animate-on-scroll[data-animation="fade-right"] {
+            transform: translateX(30px);
+        }
+
+        .animate-on-scroll[data-animation="fade-right"].visible {
+            transform: translateX(0);
+        }
+
+        .animate-on-scroll[data-animation="zoom-in"] {
+            transform: scale(0.9);
+        }
+
+        .animate-on-scroll[data-animation="zoom-in"].visible {
+            transform: scale(1);
+        }
+
+        /* Stagger delays */
+        .animate-on-scroll[data-delay="100"] { transition-delay: 0.1s; }
+        .animate-on-scroll[data-delay="200"] { transition-delay: 0.2s; }
+        .animate-on-scroll[data-delay="300"] { transition-delay: 0.3s; }
+        .animate-on-scroll[data-delay="400"] { transition-delay: 0.4s; }
+        .animate-on-scroll[data-delay="500"] { transition-delay: 0.5s; }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-on-scroll,
+            .logo-text,
+            .header-inner,
+            #main-header,
+            .mobile-menu,
+            .mobile-backdrop {
+                transition: none !important;
+                animation: none !important;
+            }
+            .animate-on-scroll {
+                opacity: 1;
+                transform: none;
+            }
+        }
     </style>
 
     <!-- CSRF Token for AJAX -->
@@ -246,19 +352,19 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 <body class="bg-cream text-charcoal antialiased <?= e($bodyClass) ?>">
     <?php if (!$hideNav): ?>
     <!-- Header Navigation -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent text-cream">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 bg-transparent text-cream">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-24 transition-all duration-300">
+            <div class="header-inner flex items-center justify-between">
                 <!-- Logo / Brand -->
                 <a href="<?= $isEnglish ? $base . '/en/' : $base . '/' ?>" class="flex items-center group">
                     <!-- Text Logo -->
-                    <span class="font-cursive text-5xl text-cream group-hover:text-accent transition-colors duration-300 drop-shadow-md pb-2 relative top-1">
+                    <span class="logo-text font-cursive text-5xl text-cream group-hover:text-accent transition-colors duration-300 drop-shadow-md pb-2 relative top-1">
                         A Casa do Gi
                     </span>
                 </a>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden lg:flex items-center space-x-8">
+                <div class="hidden lg:flex items-center space-x-6">
                     <?php foreach ($navItems as $item):
                         // Fix active detection logic
                         $homeUrlPT = $base . '/';
@@ -276,7 +382,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         }
                     ?>
                     <a href="<?= $item['url'] ?>"
-                       class="nav-link text-sm font-sans font-medium text-cream hover:text-accent transition-colors tracking-widest uppercase <?= $isActive ? 'active text-accent' : '' ?>">
+                       class="nav-link text-[13px] font-sans font-medium text-cream hover:text-accent transition-colors tracking-wide uppercase <?= $isActive ? 'active text-accent' : '' ?>">
                         <?= e($item['label']) ?>
                     </a>
                     <?php endforeach; ?>
@@ -334,8 +440,11 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             </div>
         </nav>
 
+        <!-- Mobile Menu Backdrop -->
+        <div id="mobile-backdrop" class="mobile-backdrop fixed inset-0 bg-black/60 lg:hidden z-40"></div>
+
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-full max-w-sm bg-primary shadow-2xl lg:hidden border-l border-accent/20 z-50 transform translate-x-full transition-transform duration-300">
+        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-full max-w-sm bg-primary shadow-2xl lg:hidden border-l border-accent/20 z-50">
             <div class="flex flex-col h-full">
                 <div class="flex items-center justify-between p-6 border-b border-accent/20 bg-primary-700">
                     <span class="font-cursive text-3xl text-cream">Menu</span>
@@ -354,14 +463,14 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                              : (strpos($currentPath, rtrim($item['url'], '/')) === 0);
                     ?>
                     <a href="<?= $item['url'] ?>"
-                       class="block py-4 text-xl border-b border-white/5 <?= $isActive ? 'text-accent font-semibold' : 'text-cream/90' ?> hover:text-accent hover:pl-2 transition-all">
+                       class="mobile-nav-link block py-4 text-xl border-b border-white/5 <?= $isActive ? 'text-accent font-semibold' : 'text-cream/90' ?> hover:text-accent hover:pl-2 transition-all">
                         <?= e($item['label']) ?>
                     </a>
                     <?php endforeach; ?>
 
                     <div class="mt-8 pt-8 border-t border-accent/20">
                         <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
-                           class="flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
+                           class="mobile-nav-link flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
                             <div class="w-8 h-8 rounded-full overflow-hidden border border-cream/20">
                                 <?php if ($isEnglish): ?>
                                     <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
@@ -382,6 +491,20 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                             <span class="text-lg"><?= $isEnglish ? 'Portugues' : 'English' ?></span>
                         </a>
                     </div>
+
+                    <!-- Cart in Mobile Menu -->
+                    <?php if (isShopEnabled()): ?>
+                    <div class="mt-6 pt-6 border-t border-accent/20">
+                        <a href="<?= $lang->url('loja/carrinho') ?>"
+                           class="mobile-nav-link flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                            <span class="text-lg"><?= $isEnglish ? 'Cart' : 'Carrinho' ?></span>
+                            <span id="mobile-cart-count" class="ml-auto w-6 h-6 bg-accent text-primary text-xs font-bold rounded-full flex items-center justify-center hidden">0</span>
+                        </a>
+                    </div>
+                    <?php endif; ?>
                 </nav>
             </div>
         </div>
@@ -391,54 +514,91 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const header = document.getElementById('main-header');
-        const headerInner = header.querySelector('div'); // The inner flex container
-        const logoText = header.querySelector('.font-cursive');
 
-        // Scroll Effect
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                // Scrolled state
-                header.classList.remove('bg-transparent', 'text-cream');
-                header.classList.add('bg-primary/95', 'text-cream', 'shadow-md', 'backdrop-blur-sm');
+        // Scroll Effect with debouncing using requestAnimationFrame
+        let ticking = false;
+        let lastScrollY = 0;
 
-                // Shrink height
-                headerInner.classList.remove('h-24');
-                headerInner.classList.add('h-20');
-
-                // Adjust logo size
-                logoText.classList.remove('text-5xl');
-                logoText.classList.add('text-4xl');
+        function handleScroll() {
+            if (lastScrollY > 50) {
+                header.classList.add('scrolled');
             } else {
-                // Top state
-                header.classList.add('bg-transparent', 'text-cream');
-                header.classList.remove('bg-primary/95', 'shadow-md', 'backdrop-blur-sm');
-
-                // Restore height
-                headerInner.classList.remove('h-20');
-                headerInner.classList.add('h-24');
-
-                // Restore logo size
-                logoText.classList.remove('text-4xl');
-                logoText.classList.add('text-5xl');
+                header.classList.remove('scrolled');
             }
-        });
+            ticking = false;
+        }
 
-        // Mobile Menu Logic
+        window.addEventListener('scroll', () => {
+            lastScrollY = window.scrollY;
+            if (!ticking) {
+                requestAnimationFrame(handleScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // Initial check
+        handleScroll();
+
+        // Mobile Menu Logic with backdrop
         const mobileBtn = document.getElementById('mobile-menu-btn');
         const mobileClose = document.getElementById('mobile-menu-close');
         const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBackdrop = document.getElementById('mobile-backdrop');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
-        function toggleMenu() {
-            const isOpen = !mobileMenu.classList.contains('translate-x-full');
-            if (isOpen) {
-                mobileMenu.classList.add('translate-x-full');
-            } else {
-                mobileMenu.classList.remove('translate-x-full');
-            }
+        function openMenu() {
+            mobileMenu.classList.add('open');
+            mobileBackdrop.classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
 
-        if (mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
-        if (mobileClose) mobileClose.addEventListener('click', toggleMenu);
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            mobileBackdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', openMenu);
+        if (mobileClose) mobileClose.addEventListener('click', closeMenu);
+        if (mobileBackdrop) mobileBackdrop.addEventListener('click', closeMenu);
+
+        // Close menu when clicking nav links
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Small delay to allow navigation
+                setTimeout(closeMenu, 100);
+            });
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        });
+
+        // Scroll Animations with Intersection Observer
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
+        if (animatedElements.length > 0) {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50px 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Optional: unobserve after animation
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            animatedElements.forEach(el => observer.observe(el));
+        }
     });
     </script>
 
@@ -451,8 +611,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const backToTop = document.getElementById('backToTop');
+        let backToTopTicking = false;
 
-        window.addEventListener('scroll', () => {
+        function handleBackToTop() {
             if (window.scrollY > 300) {
                 backToTop.classList.remove('opacity-0', 'invisible', 'scale-90');
                 backToTop.classList.add('opacity-100', 'visible', 'scale-100');
@@ -460,7 +621,15 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 backToTop.classList.add('opacity-0', 'invisible', 'scale-90');
                 backToTop.classList.remove('opacity-100', 'visible', 'scale-100');
             }
-        });
+            backToTopTicking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!backToTopTicking) {
+                requestAnimationFrame(handleBackToTop);
+                backToTopTicking = true;
+            }
+        }, { passive: true });
 
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });

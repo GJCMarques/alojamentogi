@@ -138,16 +138,14 @@ $instagramUrl = setting('instagram_url', '');
                     <div class="space-y-4">
                         <?php if ($guestreadyUrl = setting('guestready_url')): ?>
                         <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener"
-                           class="flex items-center p-3 bg-secondary rounded-lg hover:bg-secondary-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                            <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                <!-- GuestReady / Direct Key Icon -->
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                                </svg>
+                           class="flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                            <div class="w-10 h-10 bg-[#800020]/10 rounded-md flex items-center justify-center mr-3 text-white p-1">
+                                <!-- GuestReady Logo -->
+                                <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
-                                <span class="text-xs text-cream/80 uppercase tracking-wide">Direto</span>
-                                <span class="text-white font-bold">GuestReady</span>
+                                <span class="text-xs text-[#800020]/80 uppercase tracking-wide">Direto</span>
+                                <span class="text-[#800020] font-bold">GuestReady</span>
                             </div>
                         </a>
                         <?php endif; ?>
@@ -157,12 +155,8 @@ $instagramUrl = setting('instagram_url', '');
                         <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener"
                            class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                            style="background-color: #003580;">
-                            <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                <svg class="h-5 w-auto" viewbox="0 0 24 24" fill="none">
-                                     <path d="M4 3C2.89543 3 2 3.89543 2 5V19C2 20.1046 2.89543 21 4 21H13V15H11V13H13V3H4Z" fill="white"/>
-                                     <path d="M19 8C19.5523 8 20 8.44772 20 9V11C20 11.5523 19.5523 12 19 12H15V8H19Z" fill="white"/>
-                                     <path d="M19 14C19.5523 14 20 14.4477 20 15V19C20 19.5523 19.5523 20 19 20H15V14H19Z" fill="white"/>
-                                </svg> 
+                            <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white p-1">
+                                <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
@@ -176,10 +170,8 @@ $instagramUrl = setting('instagram_url', '');
                         <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener"
                            class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                            style="background-color: #FF385C;">
-                            <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M22.519,4.427C21.949,3.879,21.166,3.606,20.252,3.606c-0.494,0-0.965,0.082-1.401,0.245 c-0.638,0.24-1.258,0.704-1.849,1.383c-1.302,1.496-2.924,4.421-4.996,8.995c-2.071-4.573-3.694-7.498-4.996-8.995 C6.42,4.555,5.801,4.09,5.163,3.851C4.727,3.688,4.256,3.606,3.762,3.606c-0.914,0-1.697,0.273-2.267,0.821 C0.804,5.15,0.463,6.29,0.463,7.96c0,1.935,0.49,4.259,1.455,6.905c1.474,4.043,4.646,7.575,8.933,9.947l1.155,0.64l1.155-0.64 c4.287-2.372,7.459-5.904,8.933-9.947c0.965-2.646,1.455-4.97,1.455-6.905C23.547,6.29,23.206,5.15,22.519,4.427L22.519,4.427z"/>
-                                </svg>
+                            <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white p-1">
+                                <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
@@ -214,37 +206,6 @@ $instagramUrl = setting('instagram_url', '');
 
     <!-- Scripts -->
     <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenuClose = document.getElementById('mobile-menu-close');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.add('open');
-                document.body.style.overflow = 'hidden';
-            });
-
-            mobileMenuClose.addEventListener('click', () => {
-                mobileMenu.classList.remove('open');
-                document.body.style.overflow = '';
-            });
-        }
-
-        // Header Background on Scroll
-        const header = document.getElementById('main-header');
-        if (header) {
-            const updateHeader = () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('bg-cream-50/95', 'backdrop-blur-sm', 'shadow-sm');
-                } else {
-                    header.classList.remove('bg-cream-50/95', 'backdrop-blur-sm', 'shadow-sm');
-                }
-            };
-            window.addEventListener('scroll', updateHeader);
-            updateHeader();
-        }
-
         // Auto-hide flash messages
         const flashMessages = document.querySelectorAll('.flash-message');
         flashMessages.forEach(msg => {
@@ -255,9 +216,9 @@ $instagramUrl = setting('instagram_url', '');
             }, 5000);
         });
 
-        // Update cart count from server
-        const updateCartCount = (count) => {
-            const badges = document.querySelectorAll('.cart-count, #cart-count');
+        // Update cart count from server (global function)
+        window.updateCartCount = (count) => {
+            const badges = document.querySelectorAll('.cart-count, #cart-count, #mobile-cart-count');
             badges.forEach(badge => {
                 if (count > 0) {
                     badge.textContent = count;
@@ -281,7 +242,7 @@ $instagramUrl = setting('instagram_url', '');
         .then(response => response.json())
         .then(data => {
             if (data.success && data.cart) {
-                updateCartCount(data.cart.total_quantity || 0);
+                window.updateCartCount(data.cart.total_quantity || 0);
             }
         })
         .catch(() => {});

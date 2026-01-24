@@ -29,6 +29,24 @@ include INCLUDES_PATH . '/header.php';
         <div class="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-cream"></div>
     </div>
 
+    <!-- Floating Decorative Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <!-- Floating leaf 1 -->
+        <div class="absolute top-1/4 left-[10%] w-16 h-16 opacity-20 animate-float-slow">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="text-accent w-full h-full">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+        </div>
+        <!-- Floating circle 2 -->
+        <div class="absolute top-1/3 right-[15%] w-24 h-24 border-2 border-cream/10 rounded-full animate-float-medium"></div>
+        <!-- Floating dot 3 -->
+        <div class="absolute bottom-1/3 left-[20%] w-4 h-4 bg-accent/30 rounded-full animate-float-fast"></div>
+        <!-- Floating ring 4 -->
+        <div class="absolute top-1/2 right-[8%] w-12 h-12 border border-cream/15 rounded-full animate-float-slow" style="animation-delay: -2s;"></div>
+        <!-- Floating diamond 5 -->
+        <div class="absolute bottom-1/4 right-[25%] w-8 h-8 bg-cream/5 rotate-45 animate-float-medium" style="animation-delay: -1s;"></div>
+    </div>
+
     <!-- Hero Content -->
     <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <!-- Animated Entrance -->
@@ -80,11 +98,11 @@ include INCLUDES_PATH . '/header.php';
     <!-- Decorative Pattern -->
     <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
     <div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             <!-- Images Grid - Parallax Effect -->
-            <div class="relative order-2 lg:order-1 group">
+            <div class="relative order-2 lg:order-1 group animate-on-scroll">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-4 translate-y-12 transition-transform duration-700 hover:translate-y-10">
                         <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-xl transform transition-transform hover:scale-[1.02] duration-500 border border-black/5">
@@ -100,7 +118,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Content -->
-            <div class="order-1 lg:order-2 space-y-8">
+            <div class="order-1 lg:order-2 space-y-8 animate-on-scroll" data-delay="200">
                 <div class="space-y-2">
                     <span class="font-cursive text-4xl text-accent block mb-2">Nossa Historia</span>
                     <h2 class="font-serif text-4xl lg:text-5xl text-primary leading-tight">
@@ -134,12 +152,12 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 opacity-5" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4 animate-on-scroll">
             <span class="font-cursive text-4xl text-accent">Comodidades</span>
             <h2 class="font-serif text-4xl text-cream">Tudo o que precisa para relaxar</h2>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 animate-on-scroll" data-delay="200">
             <!-- Feature 1 -->
             <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent/50 transition-all duration-300 group text-center hover:-translate-y-1">
                 <div class="w-16 h-16 mx-auto mb-6 bg-secondary/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 text-accent">
@@ -191,7 +209,7 @@ include INCLUDES_PATH . '/header.php';
 <section class="py-24 relative overflow-hidden bg-cream text-center md:text-left">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div class="space-y-6">
+            <div class="space-y-6 animate-on-scroll">
                 <span class="font-cursive text-4xl text-secondary">A Regiao</span>
                 <h2 class="font-serif text-4xl md:text-5xl text-primary leading-tight">Mogadouro,<br>Terra de Encantos</h2>
                 <p class="text-lg text-charcoal/70 leading-relaxed font-light">
@@ -221,7 +239,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Image Composition -->
-            <div class="relative">
+            <div class="relative animate-on-scroll" data-delay="200">
                 <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl skew-y-2 hover:skew-y-0 transition-transform duration-700 cursor-pointer">
                     <img src="<?= asset('images/mogadouro.jpg') ?>" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-1000" alt="Mogadouro">
                     <!-- Badge -->
@@ -248,7 +266,7 @@ include INCLUDES_PATH . '/header.php';
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
     
-    <div class="max-w-4xl mx-auto px-4 text-center relative z-10 transition-all duration-300">
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10 transition-all duration-300 animate-on-scroll">
         <h2 class="font-cursive text-5xl md:text-6xl text-cream mb-8 drop-shadow-sm">Reserve a sua Estadia</h2>
         <p class="text-xl text-cream/90 mb-12 max-w-2xl mx-auto font-light">
             Pronto para dias inesqueciveis em Tras-os-Montes? Escolha a sua plataforma preferida e garanta ja a sua reserva.
@@ -285,8 +303,41 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <?php
-// Initialize Parallax
+// Initialize Parallax and Floating Animations
 $pageScripts = <<<'JS'
+<style>
+/* Floating Animation Keyframes */
+@keyframes float-slow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+@keyframes float-medium {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-15px) scale(1.05); }
+}
+@keyframes float-fast {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+}
+.animate-float-medium {
+    animation: float-medium 6s ease-in-out infinite;
+}
+.animate-float-fast {
+    animation: float-fast 4s ease-in-out infinite;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .animate-float-slow,
+    .animate-float-medium,
+    .animate-float-fast {
+        animation: none;
+    }
+}
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const parallaxBg = document.querySelector('.parallax-bg');

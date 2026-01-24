@@ -46,7 +46,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <!-- Image -->
-            <div class="relative group">
+            <div class="relative group animate-on-scroll">
                 <div class="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border-4 border-white transform transition-transform duration-700 hover:scale-[1.02]">
                     <div class="w-full h-full bg-gradient-to-br from-accent/20 to-cream flex items-center justify-center">
                         <!-- Placeholder for historical image or just refined graphic -->
@@ -61,7 +61,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Content -->
-            <div class="space-y-8">
+            <div class="space-y-8 animate-on-scroll" data-delay="200">
                 <h2 class="font-serif text-4xl md:text-5xl text-primary leading-tight">
                     Uma Casa com <br><span class="text-secondary italic">História & Alma</span>
                 </h2>
@@ -84,14 +84,14 @@ include INCLUDES_PATH . '/header.php';
 <!-- Values Section -->
 <section class="py-16 lg:py-24 bg-cream-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
+        <div class="text-center mb-16 animate-on-scroll">
             <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">O Que Nos Define</h2>
             <p class="text-charcoal max-w-2xl mx-auto">
                 A Casa do Gi é mais do que um alojamento - é uma experiência autêntica da hospitalidade transmontana.
             </p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 animate-on-scroll" data-delay="200">
             <!-- Value 1 -->
             <div class="text-center">
                 <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -152,7 +152,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <!-- Content -->
-            <div class="order-2 lg:order-1">
+            <div class="order-2 lg:order-1 animate-on-scroll">
                 <span class="inline-block text-secondary text-sm font-medium uppercase tracking-wider mb-4">
                     A Nossa Terra
                 </span>
@@ -179,7 +179,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Image Grid -->
-            <div class="order-1 lg:order-2">
+            <div class="order-1 lg:order-2 animate-on-scroll" data-delay="200">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-4">
                         <div class="aspect-square bg-gradient-to-br from-accent/20 to-cream rounded-lg shadow-lg"></div>
@@ -197,7 +197,7 @@ include INCLUDES_PATH . '/header.php';
 
 <!-- CTA Section -->
 <section class="py-16 lg:py-24 bg-secondary">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-on-scroll">
         <h2 class="font-serif text-3xl md:text-4xl text-cream mb-6">
             Venha Conhecer-nos
         </h2>
