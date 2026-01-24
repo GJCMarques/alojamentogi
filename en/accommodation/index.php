@@ -293,10 +293,10 @@ include INCLUDES_PATH . '/header.php';
                         <div>
                             <h3 class="font-semibold text-primary text-lg">A Casa do Gi</h3>
                             <p class="text-charcoal/80 text-sm mt-1">
-                                Av. N. Sr. do Caminho 52<br>
+                                Casa do Gi<br>
                                 5200-207 Mogadouro, Portugal
                             </p>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=41.3397,-6.7147"
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=41.34217,-6.71347"
                                target="_blank"
                                rel="noopener noreferrer"
                                class="inline-flex items-center text-secondary hover:text-secondary-700 text-sm font-medium mt-3 group">
@@ -324,8 +324,8 @@ include INCLUDES_PATH . '/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const lat = 41.3397;
-    const lng = -6.7147;
+    const lat = 41.34217;
+    const lng = -6.71347;
 
     const map = L.map('location-map', {
         scrollWheelZoom: false
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
     marker.bindPopup(`
         <div style="text-align: center; padding: 8px;">
             <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
-            <span style="color: #2D3748; font-size: 12px;">Av. N. Sr. do Caminho 52</span><br>
+            <span style="color: #2D3748; font-size: 12px;">Casa do Gi</span><br>
             <span style="color: #2D3748; font-size: 12px;">5200-207 Mogadouro, Portugal</span>
         </div>
     `, {

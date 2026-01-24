@@ -25,7 +25,7 @@ $quickLinks = $isEnglish ? [
 $siteName = setting('site_name', 'A Casa do Gi');
 $contactEmail = setting('contact_email', '');
 $contactPhone = setting('contact_phone', '');
-$contactAddress = setting('contact_address', '');
+$contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
 $facebookUrl = setting('facebook_url', '');
 $instagramUrl = setting('instagram_url', '');
 ?>

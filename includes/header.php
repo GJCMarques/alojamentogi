@@ -201,34 +201,37 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         /* Header smooth transitions */
         #main-header {
-            transition: background-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: background-color, height, box-shadow;
         }
 
         #main-header.scrolled {
-            background-color: rgba(38, 70, 83, 0.97);
+            background-color: rgba(30, 56, 66, 0.98); /* Primary-600 */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
         /* Logo smooth scaling with CSS transform */
         .logo-text {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
             transform-origin: left center;
+            will-change: transform;
         }
 
         #main-header.scrolled .logo-text {
-            transform: scale(0.82);
+            transform: scale(0.8);
         }
 
         /* Header inner height transition */
         .header-inner {
-            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 6rem; /* h-24 = 96px */
+            transition: height 1s cubic-bezier(0.4, 0, 0.2, 1), padding 1s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 8.5rem;
+            will-change: height;
         }
 
         #main-header.scrolled .header-inner {
-            height: 5.5rem; /* h-22 = 88px */
+            height: 6rem;
         }
 
         /* Navigation transitions */

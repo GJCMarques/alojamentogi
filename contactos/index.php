@@ -109,7 +109,7 @@ if (isPost() && $formEnabled) {
 // Get contact info
 $contactEmail = setting('contact_email', '');
 $contactPhone = setting('contact_phone', '');
-$contactAddress = setting('contact_address', '');
+$contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
 
 // Page configuration
 $pageTitle = __('contact_title', 'Contactos');
@@ -119,21 +119,23 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative py-20 lg:py-32 bg-primary overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIwOS0xLjc5MS00LTQtNHMtNCAxLjc5MS00IDQgMS43OTEgNCA0IDQgNC0xLjc5MSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')]"></div>
+<!-- Hero Section -->
+<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed" 
+             style="background-image: url('<?= asset('images/MogadouroContacto.jpg') ?>');">
+        </div>
+        <div class="absolute inset-0 bg-black/40"></div>
     </div>
-    <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-b from-primary/50 to-primary"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-fade-in">
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             Fale Connosco
         </span>
-        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-lg">
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-lg animate-on-scroll" data-animation="fade-up" data-delay="200">
             <?= _e('contact_title', 'Contacte-nos') ?>
         </h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed">
+        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="400">
             <?= _e('contact_intro', 'Tem alguma questão? Entre em contacto connosco') ?>
         </p>
     </div>
@@ -144,10 +146,10 @@ include INCLUDES_PATH . '/header.php';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-3 gap-12">
             <!-- Contact Information -->
-            <div class="lg:col-span-1">
+            <div class="lg:col-span-1 animate-on-scroll" data-animation="fade-right">
                 <h2 class="font-serif text-2xl text-primary mb-6">Informações de Contacto</h2>
 
-                <div class="space-y-6">
+                <div class="space-y-6 animate-slide-right">
                     <?php if ($contactAddress): ?>
                     <div class="flex items-start space-x-4">
                         <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -197,9 +199,9 @@ include INCLUDES_PATH . '/header.php';
                 </div>
 
                 <!-- Booking Links -->
-                <div class="mt-10 p-6 bg-primary rounded-lg">
+                <div class="mt-10 p-6 bg-primary rounded-lg animate-on-scroll" data-animation="fade-up" data-delay="300">
                     <h3 class="font-serif text-lg text-cream mb-4">Quer fazer uma reserva?</h3>
-                    <p class="text-charcoal/60 text-sm mb-4">
+                    <p class="text-cream/80 text-sm mb-4">
                         Reserve a sua estadia através das nossas plataformas parceiras.
                     </p>
                     <a href="<?= $base ?>/alojamento/" class="inline-flex items-center text-accent hover:text-accent/70 text-sm font-medium">
@@ -212,7 +214,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Contact Form -->
-            <div class="lg:col-span-2">
+            <div class="lg:col-span-2 animate-on-scroll" data-animation="fade-left" data-delay="200">
                 <div class="bg-white rounded-lg shadow-sm p-8 border border-charcoal/20">
                     <h2 class="font-serif text-2xl text-primary mb-6">Envie-nos uma Mensagem</h2>
 
@@ -359,9 +361,15 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
+<!-- Gradient Transition -->
+<div class="h-24 bg-gradient-to-b from-cream-100 to-white"></div>
+
 <!-- Map Section -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative pb-16 lg:pb-24 pt-8 bg-white">
+    <!-- Bottom Gradient -->
+    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-cream-100"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-12 animate-on-scroll">
             <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">Localização</span>
             <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Onde Estamos</h2>
@@ -387,10 +395,10 @@ include INCLUDES_PATH . '/header.php';
                         <div>
                             <h3 class="font-semibold text-primary text-lg">A Casa do Gi</h3>
                             <p class="text-charcoal/80 text-sm mt-1">
-                                Av. N. Sr. do Caminho 52<br>
+                                A Casa do Gi<br>
                                 5200-207 Mogadouro
                             </p>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=41.3397,-6.7147"
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=41.34217,-6.71347"
                                target="_blank"
                                rel="noopener noreferrer"
                                class="inline-flex items-center text-secondary hover:text-secondary-700 text-sm font-medium mt-3 group">
@@ -419,8 +427,8 @@ include INCLUDES_PATH . '/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // A Casa do Gi coordinates (Mogadouro)
-    const lat = 41.3397;
-    const lng = -6.7147;
+    const lat = 41.34217;
+    const lng = -6.71347;
 
     // Initialize map
     const map = L.map('contact-map', {
@@ -464,8 +472,8 @@ document.addEventListener('DOMContentLoaded', function() {
     marker.bindPopup(`
         <div style="text-align: center; padding: 8px;">
             <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
-            <span style="color: #2D3748; font-size: 12px;">Av. N. Sr. do Caminho 52</span><br>
-            <span style="color: #2D3748; font-size: 12px;">5200-207 Mogadouro</span>
+            <span style="color: #2D3748; font-size: 12px;">Casa do Gi</span><br>
+            <span style="color: #2D3748; font-size: 12px;">52 Avenida Nossa Senhora do Caminho, Mogadouro</span>
         </div>
     `, {
         className: 'custom-popup'
@@ -496,6 +504,12 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 10px;
     background: rgba(255, 255, 255, 0.8) !important;
 }
+/* Remove footer margin for this page */
+footer {
+    margin-top: 0 !important;
+}
+</style>
+
 </style>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>
