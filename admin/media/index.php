@@ -53,20 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                 $targetPath = $uploadDir . $newName;
 
                 if (move_uploaded_file($tmpName, $targetPath)) {
-                    // Get image dimensions
-                    $imageInfo = getimagesize($targetPath);
-                    $width = $imageInfo[0] ?? 0;
-                    $height = $imageInfo[1] ?? 0;
-
-                    // Save to database
+                    // Save to database (using correct column names from schema)
                     $db->insert('media', [
-                        'file_name' => $newName,
+                        'filename' => $newName,
                         'original_name' => $fileName,
                         'file_path' => '/uploads/media/' . $newName,
                         'file_type' => $fileType,
                         'file_size' => $fileSize,
-                        'width' => $width,
-                        'height' => $height,
+                        'category' => 'other',
                         'uploaded_by' => $_SESSION['admin_id'] ?? null
                     ]);
                     $uploaded++;
@@ -101,8 +95,32 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
 
             // Delete from database
             $db->delete('media', 'id = ?', [$id]);
-            Session::flash('success', 'Ficheiro eliminado.');
+            Session::flash('success', 'Ficheiro eliminado com sucesso.');
         }
+    }
+    redirect('/admin/media/');
+}
+
+// Handle edit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_media'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $id = (int)$_POST['media_id'];
+        $altPt = sanitize($_POST['alt_text_pt'] ?? '');
+        $altEn = sanitize($_POST['alt_text_en'] ?? '');
+        $category = $_POST['category'] ?? 'other';
+
+        $validCategories = ['gallery', 'products', 'activities', 'content', 'other'];
+        if (!in_array($category, $validCategories)) {
+            $category = 'other';
+        }
+
+        $db->update('media', [
+            'alt_text_pt' => $altPt,
+            'alt_text_en' => $altEn,
+            'category' => $category
+        ], 'id = ?', [$id]);
+
+        Session::flash('success', 'Imagem atualizada com sucesso.');
     }
     redirect('/admin/media/');
 }
@@ -124,7 +142,7 @@ if ($type !== 'all') {
 }
 
 if ($search) {
-    $where .= " AND (original_name LIKE ? OR file_name LIKE ?)";
+    $where .= " AND (original_name LIKE ? OR filename LIKE ?)";
     $params[] = "%{$search}%";
     $params[] = "%{$search}%";
 }
@@ -211,32 +229,58 @@ include dirname(__DIR__) . '/includes/header.php';
         </button>
     </div>
     <?php else: ?>
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-        <?php foreach ($media as $item): ?>
-        <div class="group relative bg-gray-100 rounded-lg overflow-hidden aspect-square">
-            <img src="<?= basePath() . e($item['file_path']) ?>"
-                 alt="<?= e($item['original_name']) ?>"
-                 class="w-full h-full object-cover">
-
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
-                <div class="flex gap-2">
-                    <button onclick="copyToClipboard('<?= e($item['file_path']) ?>')"
-                            class="p-2 bg-white rounded-lg text-gray-700 hover:bg-gray-100" title="Copiar URL">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-                        </svg>
-                    </button>
-                    <a href="?delete=<?= $item['id'] ?>&token=<?= CSRF::getToken() ?>"
-                       onclick="return confirm('Eliminar este ficheiro?')"
-                       class="p-2 bg-red-500 rounded-lg text-white hover:bg-red-600" title="Eliminar">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
+        <?php foreach ($media as $item):
+            // Prepare data for JavaScript (JSON encode to handle special chars)
+            $itemData = json_encode([
+                'id' => $item['id'],
+                'name' => $item['original_name'],
+                'altPt' => $item['alt_text_pt'] ?? '',
+                'altEn' => $item['alt_text_en'] ?? '',
+                'category' => $item['category'] ?? 'other'
+            ], JSON_HEX_APOS | JSON_HEX_QUOT);
+        ?>
+        <div class="media-card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 hover:shadow-md transition-shadow">
+            <!-- Image -->
+            <div class="aspect-square bg-gray-100 relative group">
+                <img src="<?= basePath() . e($item['file_path']) ?>"
+                     alt="<?= e($item['original_name']) ?>"
+                     class="w-full h-full object-cover">
+                <!-- Quick actions overlay -->
+                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <a href="<?= basePath() . e($item['file_path']) ?>" target="_blank"
+                       class="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100 mx-1" title="Ver tamanho original">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                     </a>
                 </div>
-                <p class="text-white text-xs text-center truncate w-full px-2"><?= e($item['original_name']) ?></p>
-                <p class="text-gray-300 text-xs"><?= formatFileSize($item['file_size']) ?></p>
+            </div>
+            <!-- Info & Actions -->
+            <div class="p-3">
+                <p class="text-sm font-medium text-gray-800 truncate mb-1" title="<?= e($item['original_name']) ?>">
+                    <?= e($item['original_name']) ?>
+                </p>
+                <p class="text-xs text-gray-500 mb-3">
+                    <?= formatFileSize($item['file_size']) ?>
+                    <?php if ($item['category'] && $item['category'] !== 'other'): ?>
+                    <span class="ml-2 px-1.5 py-0.5 bg-secondary-100 text-secondary-700 rounded text-xs"><?= e($item['category']) ?></span>
+                    <?php endif; ?>
+                </p>
+                <div class="flex gap-2">
+                    <button type="button"
+                            data-edit='<?= $itemData ?>'
+                            class="btn-edit flex-1 px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+                        Editar
+                    </button>
+                    <button type="button"
+                            data-delete-id="<?= $item['id'] ?>"
+                            data-delete-name="<?= e($item['original_name']) ?>"
+                            class="btn-delete px-3 py-1.5 text-xs font-medium bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors">
+                        Eliminar
+                    </button>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
@@ -268,280 +312,364 @@ include dirname(__DIR__) . '/includes/header.php';
 </div>
 
 <!-- Upload Modal -->
-<div id="uploadModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col">
+<div id="uploadModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg">
+        <!-- Header -->
         <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-800">Carregar Ficheiros</h3>
-            <button onclick="closeUploadModal()"
-                    class="text-gray-400 hover:text-gray-600">
+            <h3 class="text-lg font-semibold text-gray-800">Carregar Imagens</h3>
+            <button type="button" id="uploadModalClose" class="text-gray-400 hover:text-gray-600 transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
-        <form action="" method="post" enctype="multipart/form-data" id="uploadForm" class="flex flex-col flex-1 overflow-hidden">
+
+        <!-- Form -->
+        <form action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
             <input type="hidden" name="upload" value="1">
 
-            <div class="p-6 flex-1 overflow-y-auto">
+            <!-- Content -->
+            <div class="p-6">
                 <!-- Drop Zone -->
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-secondary-500 transition-colors cursor-pointer"
-                     id="dropZone" onclick="document.getElementById('fileInput').click()">
-                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-secondary-500 hover:bg-secondary-50 transition-all cursor-pointer"
+                     onclick="document.getElementById('fileInputUpload').click()">
+                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
-                    <p class="text-gray-600 mb-2 text-lg">Arraste imagens aqui</p>
-                    <p class="text-gray-400 mb-4">ou</p>
-                    <span class="inline-block px-6 py-3 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-medium">
-                        Escolher do Computador
-                    </span>
-                    <input type="file" name="files[]" multiple accept="image/jpeg,image/png,image/gif,image/webp" class="hidden" id="fileInput">
-                    <p class="text-xs text-gray-400 mt-4">JPEG, PNG, GIF, WebP - Maximo 5MB por ficheiro</p>
+                    <p class="text-gray-700 mb-2">Arraste imagens aqui ou clique para selecionar</p>
+                    <p class="text-sm text-gray-400">JPEG, PNG, GIF, WebP - Maximo 5MB por ficheiro</p>
+                    <input type="file" id="fileInputUpload" name="files[]" multiple accept="image/jpeg,image/png,image/gif,image/webp" required class="hidden">
                 </div>
 
-                <!-- Selected Files Preview -->
-                <div id="previewSection" class="hidden mt-6">
+                <!-- Preview -->
+                <div id="uploadPreviewArea" class="hidden mt-5">
                     <div class="flex items-center justify-between mb-3">
-                        <h4 class="font-medium text-gray-700">
-                            <span id="fileCount">0</span> ficheiro(s) selecionado(s)
-                        </h4>
-                        <button type="button" onclick="clearFiles()" class="text-sm text-red-500 hover:text-red-700">
-                            Limpar tudo
-                        </button>
+                        <p class="font-medium text-gray-700">Ficheiros selecionados:</p>
+                        <button type="button" onclick="clearUploadFiles()" class="text-sm text-red-500 hover:text-red-700">Limpar</button>
                     </div>
-                    <div id="previewGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-64 overflow-y-auto p-1">
-                        <!-- Previews will be inserted here -->
-                    </div>
-                </div>
-
-                <!-- Upload Progress -->
-                <div id="uploadProgress" class="hidden mt-6">
-                    <div class="flex items-center gap-3 mb-2">
-                        <svg class="animate-spin w-5 h-5 text-secondary-600" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span class="text-gray-700 font-medium">A carregar ficheiros...</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div id="progressBar" class="bg-secondary-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                    <p id="progressText" class="text-sm text-gray-500 mt-1">Aguarde...</p>
+                    <div id="uploadPreviewList" class="grid grid-cols-3 gap-3 max-h-64 overflow-y-auto"></div>
+                    <div id="uploadPreviewTotal" class="mt-3 pt-3 border-t border-gray-200 text-sm font-medium text-gray-700"></div>
                 </div>
             </div>
 
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
-                <p id="totalSize" class="text-sm text-gray-500"></p>
-                <div class="flex gap-3">
-                    <button type="button" onclick="closeUploadModal()"
-                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
-                        Cancelar
-                    </button>
-                    <button type="submit" id="submitBtn" disabled
-                            class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                        </svg>
-                        <span id="submitText">Carregar</span>
-                    </button>
-                </div>
+            <!-- Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-xl flex items-center justify-end gap-3">
+                <button type="submit"
+                        class="px-6 py-2.5 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-semibold transition-colors shadow-sm">
+                    Carregar Imagens
+                </button>
+                <button type="button" id="uploadModalCancel"
+                        class="px-5 py-2.5 text-gray-600 hover:text-gray-800 font-medium transition-colors">
+                    Cancelar
+                </button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Edit Modal -->
+<div id="editModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-800">Editar Imagem</h3>
+            <button type="button" id="editModalClose" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form action="" method="post" class="p-6">
+            <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
+            <input type="hidden" name="edit_media" value="1">
+            <input type="hidden" name="media_id" id="editMediaId" value="">
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nome do ficheiro</label>
+                    <p id="editFileName" class="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded"></p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Texto alternativo (PT)</label>
+                    <input type="text" name="alt_text_pt" id="editAltPt"
+                           placeholder="Descricao da imagem em portugues..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Texto alternativo (EN)</label>
+                    <input type="text" name="alt_text_en" id="editAltEn"
+                           placeholder="Image description in English..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                    <select name="category" id="editCategory"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
+                        <option value="other">Outro</option>
+                        <option value="gallery">Galeria (Alojamento)</option>
+                        <option value="products">Produtos</option>
+                        <option value="activities">Atividades</option>
+                        <option value="content">Conteudo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-medium">
+                    Guardar
+                </button>
+                <button type="button" id="editModalCancel"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4" onclick="event.stopPropagation()">
+        <div class="p-6 text-center">
+            <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Eliminar Imagem</h3>
+            <p class="text-gray-600 mb-1">Tem a certeza que deseja eliminar:</p>
+            <p id="deleteFileName" class="font-medium text-gray-800 mb-6 break-all"></p>
+            <div class="flex gap-3 justify-center">
+                <a id="deleteConfirmBtn" href="#"
+                   class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors">
+                    Eliminar
+                </a>
+                <button type="button" id="deleteCancelBtn"
+                        class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(window.location.origin + text);
-    // Show toast instead of alert
-    showToast('URL copiado para a area de transferencia!');
-}
+(function() {
+    'use strict';
 
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 ${
-        type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-    }`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
+    // DOM Elements
+    const fileInput = document.getElementById('fileInputUpload');
+    const previewArea = document.getElementById('uploadPreviewArea');
+    const previewList = document.getElementById('uploadPreviewList');
+    const dropZone = document.getElementById('dropZone');
+    const uploadModal = document.getElementById('uploadModal');
+    const editModal = document.getElementById('editModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const csrfToken = '<?= CSRF::getToken() ?>';
 
-// Upload functionality
-const fileInput = document.getElementById('fileInput');
-const dropZone = document.getElementById('dropZone');
-const previewSection = document.getElementById('previewSection');
-const previewGrid = document.getElementById('previewGrid');
-const fileCount = document.getElementById('fileCount');
-const totalSize = document.getElementById('totalSize');
-const submitBtn = document.getElementById('submitBtn');
-const uploadForm = document.getElementById('uploadForm');
-const uploadProgress = document.getElementById('uploadProgress');
-const progressBar = document.getElementById('progressBar');
-const progressText = document.getElementById('progressText');
-const submitText = document.getElementById('submitText');
-
-let selectedFiles = [];
-
-fileInput.addEventListener('change', handleFileSelect);
-
-function handleFileSelect(e) {
-    const files = e.target.files || e.dataTransfer.files;
-    addFiles(files);
-}
-
-function addFiles(files) {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-    for (let file of files) {
-        // Validate
-        if (!allowedTypes.includes(file.type)) {
-            showToast(`Tipo nao permitido: ${file.name}`, 'error');
-            continue;
-        }
-        if (file.size > maxSize) {
-            showToast(`Ficheiro muito grande (max 5MB): ${file.name}`, 'error');
-            continue;
-        }
-        // Check if already added
-        if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-            continue;
-        }
-        selectedFiles.push(file);
+    // =====================
+    // UTILITY FUNCTIONS
+    // =====================
+    function formatSize(bytes) {
+        if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+        if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return bytes + ' B';
     }
 
-    updatePreview();
-}
+    // =====================
+    // UPLOAD MODAL
+    // =====================
+    const previewTotal = document.getElementById('uploadPreviewTotal');
 
-function updatePreview() {
-    if (selectedFiles.length === 0) {
-        previewSection.classList.add('hidden');
-        submitBtn.disabled = true;
-        totalSize.textContent = '';
-        return;
+    function updatePreview(files) {
+        if (!files || files.length === 0) {
+            previewArea.classList.add('hidden');
+            previewList.innerHTML = '';
+            previewTotal.innerHTML = '';
+            return;
+        }
+
+        previewArea.classList.remove('hidden');
+        previewList.innerHTML = '';
+
+        let totalSize = 0;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            totalSize += file.size;
+
+            // Create thumbnail container
+            const item = document.createElement('div');
+            item.className = 'relative bg-gray-100 rounded-lg overflow-hidden aspect-square';
+
+            // Create image element
+            const img = document.createElement('img');
+            img.className = 'w-full h-full object-cover';
+            img.alt = file.name;
+
+            // Create file name overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1';
+            overlay.innerHTML = '<p class="text-white text-xs truncate">' + file.name + '</p>' +
+                               '<p class="text-gray-300 text-xs">' + formatSize(file.size) + '</p>';
+
+            // Read file and create thumbnail
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            item.appendChild(img);
+            item.appendChild(overlay);
+            previewList.appendChild(item);
+        }
+
+        // Update total
+        previewTotal.textContent = 'Total: ' + files.length + ' ficheiro(s) - ' + formatSize(totalSize);
     }
 
-    previewSection.classList.remove('hidden');
-    submitBtn.disabled = false;
-    previewGrid.innerHTML = '';
+    function clearUploadFiles() {
+        fileInput.value = '';
+        previewArea.classList.add('hidden');
+        previewList.innerHTML = '';
+        previewTotal.innerHTML = '';
+    }
 
-    let total = 0;
-    selectedFiles.forEach((file, index) => {
-        total += file.size;
+    function closeUploadModal() {
+        uploadModal.classList.add('hidden');
+        clearUploadFiles();
+    }
 
-        const div = document.createElement('div');
-        div.className = 'relative aspect-square bg-gray-100 rounded-lg overflow-hidden group';
-
-        // Create thumbnail
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            div.innerHTML = `
-                <img src="${e.target.result}" class="w-full h-full object-cover" alt="${file.name}">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <button type="button" onclick="removeFile(${index})" class="p-2 bg-red-500 rounded-full text-white hover:bg-red-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs p-1 truncate">
-                    ${file.name}
-                </div>
-            `;
-        };
-        reader.readAsDataURL(file);
-
-        previewGrid.appendChild(div);
+    // File input change
+    fileInput.addEventListener('change', function(e) {
+        updatePreview(e.target.files);
     });
 
-    fileCount.textContent = selectedFiles.length;
-    totalSize.textContent = `Tamanho total: ${formatBytes(total)}`;
-    submitText.textContent = `Carregar ${selectedFiles.length} ficheiro(s)`;
-
-    // Update the actual file input
-    updateFileInput();
-}
-
-function updateFileInput() {
-    const dt = new DataTransfer();
-    selectedFiles.forEach(file => dt.items.add(file));
-    fileInput.files = dt.files;
-}
-
-function removeFile(index) {
-    selectedFiles.splice(index, 1);
-    updatePreview();
-}
-
-function clearFiles() {
-    selectedFiles = [];
-    updatePreview();
-}
-
-function formatBytes(bytes) {
-    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
-    if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return bytes + ' B';
-}
-
-function closeUploadModal() {
-    document.getElementById('uploadModal').classList.add('hidden');
-    // Don't clear files - user might want to come back
-}
-
-// Drag and drop
-dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dropZone.classList.add('border-secondary-500', 'bg-secondary-50');
-});
-
-dropZone.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dropZone.classList.remove('border-secondary-500', 'bg-secondary-50');
-});
-
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dropZone.classList.remove('border-secondary-500', 'bg-secondary-50');
-    addFiles(e.dataTransfer.files);
-});
-
-// Form submit with progress simulation
-uploadForm.addEventListener('submit', function(e) {
-    if (selectedFiles.length === 0) {
+    // Drag and drop
+    dropZone.addEventListener('dragover', function(e) {
         e.preventDefault();
-        return;
+        e.stopPropagation();
+        this.classList.add('border-secondary-500', 'bg-secondary-50');
+    });
+
+    dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('border-secondary-500', 'bg-secondary-50');
+    });
+
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('border-secondary-500', 'bg-secondary-50');
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const dt = new DataTransfer();
+            for (let i = 0; i < files.length; i++) {
+                dt.items.add(files[i]);
+            }
+            fileInput.files = dt.files;
+            updatePreview(files);
+        }
+    });
+
+    // Upload modal close handlers
+    document.getElementById('uploadModalClose').addEventListener('click', closeUploadModal);
+    document.getElementById('uploadModalCancel').addEventListener('click', closeUploadModal);
+    uploadModal.addEventListener('click', function(e) {
+        if (e.target === this) closeUploadModal();
+    });
+
+    // =====================
+    // EDIT MODAL
+    // =====================
+    function openEditModal(data) {
+        document.getElementById('editMediaId').value = data.id;
+        document.getElementById('editFileName').textContent = data.name;
+        document.getElementById('editAltPt').value = data.altPt || '';
+        document.getElementById('editAltEn').value = data.altEn || '';
+        document.getElementById('editCategory').value = data.category || 'other';
+        editModal.classList.remove('hidden');
     }
 
-    // Show progress
-    dropZone.classList.add('hidden');
-    previewSection.classList.add('hidden');
-    uploadProgress.classList.remove('hidden');
-    submitBtn.disabled = true;
+    function closeEditModal() {
+        editModal.classList.add('hidden');
+    }
 
-    // Simulate progress (actual upload progress requires XHR/fetch)
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress > 90) progress = 90;
-        progressBar.style.width = progress + '%';
-        progressText.textContent = `A processar... ${Math.round(progress)}%`;
-    }, 200);
+    // Edit modal close handlers
+    document.getElementById('editModalClose').addEventListener('click', closeEditModal);
+    document.getElementById('editModalCancel').addEventListener('click', closeEditModal);
+    editModal.addEventListener('click', function(e) {
+        if (e.target === this) closeEditModal();
+    });
 
-    // The form will submit normally
-    // Clean up on page unload
-    window.addEventListener('beforeunload', () => clearInterval(interval));
-});
+    // =====================
+    // DELETE MODAL
+    // =====================
+    function openDeleteModal(id, name) {
+        document.getElementById('deleteFileName').textContent = name;
+        document.getElementById('deleteConfirmBtn').href = '?delete=' + id + '&token=' + csrfToken;
+        deleteModal.classList.remove('hidden');
+    }
 
-// Prevent clicking inside preview from triggering dropzone
-previewSection.addEventListener('click', (e) => e.stopPropagation());
+    function closeDeleteModal() {
+        deleteModal.classList.add('hidden');
+    }
+
+    document.getElementById('deleteCancelBtn').addEventListener('click', closeDeleteModal);
+    deleteModal.addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+    });
+
+    // =====================
+    // BUTTON EVENT DELEGATION
+    // =====================
+    document.addEventListener('click', function(e) {
+        // Edit button clicked
+        const editBtn = e.target.closest('.btn-edit');
+        if (editBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            try {
+                const data = JSON.parse(editBtn.getAttribute('data-edit'));
+                openEditModal(data);
+            } catch (err) {
+                console.error('Error parsing edit data:', err);
+            }
+            return;
+        }
+
+        // Delete button clicked
+        const deleteBtn = e.target.closest('.btn-delete');
+        if (deleteBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = deleteBtn.getAttribute('data-delete-id');
+            const name = deleteBtn.getAttribute('data-delete-name');
+            openDeleteModal(id, name);
+            return;
+        }
+    });
+
+    // =====================
+    // KEYBOARD NAVIGATION
+    // =====================
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (!uploadModal.classList.contains('hidden')) closeUploadModal();
+            if (!editModal.classList.contains('hidden')) closeEditModal();
+            if (!deleteModal.classList.contains('hidden')) closeDeleteModal();
+        }
+    });
+
+    // =====================
+    // GLOBAL FUNCTIONS (for onclick handlers in HTML)
+    // =====================
+    window.clearUploadFiles = clearUploadFiles;
+
+})();
 </script>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>

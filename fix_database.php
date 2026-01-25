@@ -145,6 +145,107 @@ try {
     echo "Error checking media table: " . $e->getMessage() . "\n";
 }
 
+// Fix 5: Check amenities tables
+echo "\n=== CHECKING AMENITIES TABLES ===\n";
+try {
+    // Check if amenities table exists
+    $tableExists = $db->fetch("SHOW TABLES LIKE 'amenities'");
+    if (!$tableExists) {
+        echo "Creating amenities table...\n";
+        $db->query("CREATE TABLE amenities (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            icon VARCHAR(50) DEFAULT NULL,
+            sort_order INT UNSIGNED DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB");
+        echo "Created amenities table!\n";
+    } else {
+        echo "Amenities table exists.\n";
+    }
+
+    // Check if amenity_translations table exists
+    $tableExists = $db->fetch("SHOW TABLES LIKE 'amenity_translations'");
+    if (!$tableExists) {
+        echo "Creating amenity_translations table...\n";
+        $db->query("CREATE TABLE amenity_translations (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            amenity_id INT UNSIGNED NOT NULL,
+            language_id INT UNSIGNED NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            UNIQUE KEY unique_amenity_lang (amenity_id, language_id)
+        ) ENGINE=InnoDB");
+        echo "Created amenity_translations table!\n";
+    } else {
+        echo "Amenity_translations table exists.\n";
+    }
+
+    // Check if accommodation_amenities table exists
+    $tableExists = $db->fetch("SHOW TABLES LIKE 'accommodation_amenities'");
+    if (!$tableExists) {
+        echo "Creating accommodation_amenities table...\n";
+        $db->query("CREATE TABLE accommodation_amenities (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            accommodation_id INT UNSIGNED NOT NULL,
+            amenity_id INT UNSIGNED NOT NULL,
+            UNIQUE KEY unique_acc_amenity (accommodation_id, amenity_id)
+        ) ENGINE=InnoDB");
+        echo "Created accommodation_amenities table!\n";
+    } else {
+        echo "Accommodation_amenities table exists.\n";
+    }
+
+    // Check if there are any amenities
+    $amenityCount = $db->fetch("SELECT COUNT(*) as c FROM amenities")['c'];
+    if ($amenityCount == 0) {
+        echo "No amenities found. Inserting defaults...\n";
+
+        // Get language IDs
+        $ptLang = $db->fetch("SELECT id FROM languages WHERE code = 'pt'");
+        $enLang = $db->fetch("SELECT id FROM languages WHERE code = 'en'");
+
+        $defaultAmenities = [
+            ['icon' => '🌐', 'pt' => 'Wi-Fi Grátis', 'en' => 'Free Wi-Fi'],
+            ['icon' => '🅿️', 'pt' => 'Estacionamento', 'en' => 'Parking'],
+            ['icon' => '❄️', 'pt' => 'Ar Condicionado', 'en' => 'Air Conditioning'],
+            ['icon' => '🔥', 'pt' => 'Aquecimento', 'en' => 'Heating'],
+            ['icon' => '📺', 'pt' => 'TV', 'en' => 'TV'],
+            ['icon' => '🍳', 'pt' => 'Cozinha Equipada', 'en' => 'Equipped Kitchen'],
+            ['icon' => '🧺', 'pt' => 'Máquina de Lavar', 'en' => 'Washing Machine'],
+            ['icon' => '🛏️', 'pt' => 'Roupa de Cama', 'en' => 'Bed Linen'],
+            ['icon' => '🛁', 'pt' => 'Toalhas', 'en' => 'Towels'],
+        ];
+
+        foreach ($defaultAmenities as $i => $amenity) {
+            $db->insert('amenities', [
+                'icon' => $amenity['icon'],
+                'sort_order' => $i + 1
+            ]);
+            $amenityId = $db->lastInsertId();
+
+            if ($ptLang) {
+                $db->insert('amenity_translations', [
+                    'amenity_id' => $amenityId,
+                    'language_id' => $ptLang['id'],
+                    'name' => $amenity['pt']
+                ]);
+            }
+            if ($enLang) {
+                $db->insert('amenity_translations', [
+                    'amenity_id' => $amenityId,
+                    'language_id' => $enLang['id'],
+                    'name' => $amenity['en']
+                ]);
+            }
+        }
+        echo "Inserted " . count($defaultAmenities) . " default amenities!\n";
+    } else {
+        echo "Found $amenityCount amenities.\n";
+    }
+
+} catch (Exception $e) {
+    echo "Error checking amenities: " . $e->getMessage() . "\n";
+}
+
 echo "\n=== DONE ===\n";
 echo "</pre>";
 
