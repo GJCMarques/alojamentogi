@@ -354,13 +354,13 @@ class Language
         // Current is EN, switching to PT
         if ($this->currentLang === LANG_EN && $toLang === LANG_PT) {
             $pathMap = [
-                '/en/' => '/',
-                '/en' => '/',
                 '/en/accommodation' => '/alojamento',
                 '/en/shop' => '/loja',
                 '/en/activities' => '/atividades',
                 '/en/contact' => '/contactos',
                 '/en/about-us' => '/sobre-nos',
+                '/en/' => '/',
+                '/en' => '/',
             ];
 
             foreach ($pathMap as $en => $pt) {

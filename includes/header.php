@@ -397,19 +397,19 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     <div class="flex items-center ml-2">
                         <?php $switchLang = $isEnglish ? LANG_PT : LANG_EN; ?>
                         <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
-                           class="flex items-center justify-center w-8 h-8 rounded-full border border-cream/50 hover:bg-white/10 hover:border-accent transition-all duration-300 group"
+                           class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-cream/50 hover:bg-white/10 hover:border-accent transition-all duration-300 group"
                            title="<?= $isEnglish ? 'Mudar para Portugues' : 'Switch to English' ?>">
-                            <div class="w-6 h-6 rounded-full overflow-hidden relative">
+                            <div class="w-5 h-5 rounded-full overflow-hidden relative flex-shrink-0">
                                 <?php if ($isEnglish): ?>
                                     <!-- Portuguese Flag (SVG) -->
-                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover" aria-hidden="true">
                                         <path fill="#214524" d="M0 0h220v480H0z"/>
                                         <path fill="#cf1020" d="M220 0h420v480H220z"/>
                                         <path fill="#ffc400" d="M220 240m-60 0a60 60 0 1 0 120 0 60 60 0 1 0-120 0"/>
                                     </svg>
                                 <?php else: ?>
                                     <!-- UK Flag (SVG) -->
-                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover" aria-hidden="true">
                                         <path fill="#012169" d="M0 0h640v480H0z"/>
                                         <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z"/>
                                         <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
@@ -418,6 +418,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                                     </svg>
                                 <?php endif; ?>
                             </div>
+                            <span class="text-xs font-medium text-cream uppercase tracking-wide group-hover:text-accent transition-colors">
+                                <?= $isEnglish ? 'PT' : 'EN' ?>
+                            </span>
                         </a>
                     </div>
 

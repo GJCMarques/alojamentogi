@@ -163,9 +163,9 @@ include dirname(__DIR__) . '/includes/header.php';
             <a href="?group=<?= $key ?>"
                class="flex items-center px-4 py-3 text-sm font-medium border-b border-gray-100 last:border-0
                       <?= $currentGroup === $key
-                          ? 'bg-olive-50 text-olive-700 border-l-4 border-l-olive-600'
+                          ? 'bg-secondary-50 text-secondary-700 border-l-4 border-l-secondary-600'
                           : 'text-gray-600 hover:bg-gray-50' ?>">
-                <svg class="w-5 h-5 mr-3 <?= $currentGroup === $key ? 'text-olive-600' : 'text-gray-400' ?>"
+                <svg class="w-5 h-5 mr-3 <?= $currentGroup === $key ? 'text-secondary-600' : 'text-gray-400' ?>"
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<?= $group['icon'] ?>"/>
                 </svg>
@@ -204,24 +204,24 @@ include dirname(__DIR__) . '/includes/header.php';
                         <input type="<?= $setting['type'] ?>"
                                name="<?= $setting['key'] ?>"
                                value="<?= e($value) ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500 focus:border-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
                         <?php break; case 'password': ?>
                         <input type="password"
                                name="<?= $setting['key'] ?>"
                                value="<?= e($value) ?>"
                                placeholder="<?= $value ? '••••••••' : '' ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500 focus:border-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
                         <?php break; case 'textarea': ?>
                         <textarea name="<?= $setting['key'] ?>"
                                   rows="3"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500 focus:border-olive-500"><?= e($value) ?></textarea>
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"><?= e($value) ?></textarea>
                         <?php break; case 'boolean': ?>
                         <label class="flex items-center">
                             <input type="checkbox"
                                    name="<?= $setting['key'] ?>"
                                    value="1"
                                    <?= $value === '1' ? 'checked' : '' ?>
-                                   class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                                   class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                             <span class="ml-2 text-sm text-gray-600">Ativo</span>
                         </label>
                         <?php break; case 'readonly': ?>
@@ -242,7 +242,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </div>
 
                 <div class="mt-6 pt-6 border-t border-gray-200">
-                    <button type="submit" class="px-6 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                    <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                         Guardar Alteracoes
                     </button>
                 </div>

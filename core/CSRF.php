@@ -102,6 +102,14 @@ class CSRF
     }
 
     /**
+     * Alias for validateToken (backwards compatibility)
+     */
+    public static function validate(?string $token): bool
+    {
+        return self::validateToken($token);
+    }
+
+    /**
      * Check request and abort if CSRF validation fails
      */
     public static function check(): void

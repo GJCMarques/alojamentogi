@@ -94,7 +94,7 @@ include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="mb-6">
-    <a href="/admin/encomendas/" class="text-olive-600 hover:text-olive-700 text-sm">&larr; Voltar às Encomendas</a>
+    <a href="/admin/encomendas/" class="text-secondary-600 hover:text-secondary-700 text-sm">&larr; Voltar às Encomendas</a>
 </div>
 
 <div class="flex justify-between items-start mb-6">
@@ -162,7 +162,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <?php endif; ?>
                     <tr>
                         <td colspan="3" class="px-6 py-3 text-right text-sm font-bold text-gray-800">Total</td>
-                        <td class="px-6 py-3 text-right text-lg font-bold text-olive-600"><?= formatPrice($order['total']) ?></td>
+                        <td class="px-6 py-3 text-right text-lg font-bold text-secondary-600"><?= formatPrice($order['total']) ?></td>
                     </tr>
                 </tfoot>
             </table>
@@ -205,7 +205,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <div class="space-y-4">
                 <?php foreach ($history as $h): ?>
                 <div class="flex items-start gap-3">
-                    <div class="w-2 h-2 mt-2 rounded-full bg-olive-500"></div>
+                    <div class="w-2 h-2 mt-2 rounded-full bg-secondary-500"></div>
                     <div class="flex-1">
                         <div class="flex items-center gap-2">
                             <span class="inline-flex px-2 py-0.5 text-xs font-medium rounded <?= $statusLabels[$h['status']]['class'] ?? 'bg-gray-100' ?>">
@@ -272,7 +272,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Novo Estado</label>
-                        <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                        <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                             <?php foreach ($statusLabels as $key => $info): ?>
                             <option value="<?= $key ?>" <?= $order['status'] === $key ? 'selected' : '' ?>>
                                 <?= $info['label'] ?>
@@ -287,7 +287,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="tracking_code"
                                value="<?= e($order['tracking_code'] ?? '') ?>"
                                placeholder="CTT, DPD, etc."
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
 
                     <div>
@@ -295,10 +295,10 @@ include dirname(__DIR__) . '/includes/header.php';
                         <textarea name="notes"
                                   rows="3"
                                   placeholder="Notas internas..."
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"></textarea>
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"></textarea>
                     </div>
 
-                    <button type="submit" class="w-full px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                    <button type="submit" class="w-full px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                         Atualizar
                     </button>
                 </div>

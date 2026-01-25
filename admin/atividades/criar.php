@@ -98,7 +98,7 @@ include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="mb-6">
-    <a href="/admin/atividades/" class="text-olive-600 hover:text-olive-700 text-sm">&larr; Voltar</a>
+    <a href="/admin/atividades/" class="text-secondary-600 hover:text-secondary-700 text-sm">&larr; Voltar</a>
 </div>
 
 <div class="flex justify-between items-center mb-6">
@@ -118,7 +118,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <?php foreach ($languages as $i => $lang): ?>
                         <button type="button"
                                 onclick="switchTab('<?= $lang['code'] ?>')"
-                                class="lang-tab px-6 py-3 text-sm font-medium border-b-2 <?= $i === 0 ? 'border-olive-600 text-olive-600' : 'border-transparent text-gray-500 hover:text-gray-700' ?>"
+                                class="lang-tab px-6 py-3 text-sm font-medium border-b-2 <?= $i === 0 ? 'border-secondary-600 text-secondary-600' : 'border-transparent text-gray-500 hover:text-gray-700' ?>"
                                 data-lang="<?= $lang['code'] ?>">
                             <?= strtoupper($lang['code']) ?>
                         </button>
@@ -136,7 +136,7 @@ include dirname(__DIR__) . '/includes/header.php';
                             <input type="text"
                                    name="name_<?= $lang['id'] ?>"
                                    value="<?= e($_POST['name_' . $lang['id']] ?? '') ?>"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Descricao Curta</label>
@@ -144,13 +144,13 @@ include dirname(__DIR__) . '/includes/header.php';
                                    name="short_description_<?= $lang['id'] ?>"
                                    value="<?= e($_POST['short_description_' . $lang['id']] ?? '') ?>"
                                    placeholder="Uma frase curta..."
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Descricao Completa</label>
                             <textarea name="description_<?= $lang['id'] ?>"
                                       rows="6"
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"><?= e($_POST['description_' . $lang['id']] ?? '') ?></textarea>
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($_POST['description_' . $lang['id']] ?? '') ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -168,7 +168,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="location"
                                value="<?= e($_POST['location'] ?? '') ?>"
                                placeholder="Ex: Mogadouro"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Distancia (km)</label>
@@ -178,7 +178,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                step="0.1"
                                min="0"
                                placeholder="Ex: 5.5"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Link Externo</label>
@@ -186,7 +186,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="external_url"
                                value="<?= e($_POST['external_url'] ?? '') ?>"
                                placeholder="https://..."
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                 </div>
             </div>
@@ -214,7 +214,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <h2 class="text-lg font-medium text-gray-800 mb-4">Categoria</h2>
 
                 <select name="category" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     <option value="">Selecionar...</option>
                     <?php foreach ($categories as $key => $label): ?>
                     <option value="<?= $key ?>" <?= ($_POST['category'] ?? '') === $key ? 'selected' : '' ?>>
@@ -231,12 +231,12 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div class="space-y-3">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" checked
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                         <span class="ml-2 text-sm text-gray-700">Ativo</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="is_featured" value="1"
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                         <span class="ml-2 text-sm text-gray-700">Destaque</span>
                     </label>
                 </div>
@@ -247,13 +247,13 @@ include dirname(__DIR__) . '/includes/header.php';
                            name="sort_order"
                            value="<?= e($_POST['sort_order'] ?? '0') ?>"
                            min="0"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
             </div>
 
             <!-- Actions -->
             <div class="bg-white rounded-lg shadow-sm p-6">
-                <button type="submit" class="w-full px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                <button type="submit" class="w-full px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                     Criar Atividade
                 </button>
             </div>
@@ -265,10 +265,10 @@ include dirname(__DIR__) . '/includes/header.php';
 function switchTab(langCode) {
     document.querySelectorAll('.lang-tab').forEach(tab => {
         if (tab.dataset.lang === langCode) {
-            tab.classList.add('border-olive-600', 'text-olive-600');
+            tab.classList.add('border-secondary-600', 'text-secondary-600');
             tab.classList.remove('border-transparent', 'text-gray-500');
         } else {
-            tab.classList.remove('border-olive-600', 'text-olive-600');
+            tab.classList.remove('border-secondary-600', 'text-secondary-600');
             tab.classList.add('border-transparent', 'text-gray-500');
         }
     });

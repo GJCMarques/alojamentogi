@@ -147,7 +147,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <a href="?section=<?= $key ?>"
                class="flex items-center px-4 py-3 text-sm font-medium border-b border-gray-100 last:border-0
                       <?= $currentSection === $key
-                          ? 'bg-olive-50 text-olive-700 border-l-4 border-l-olive-600'
+                          ? 'bg-secondary-50 text-secondary-700 border-l-4 border-l-secondary-600'
                           : 'text-gray-600 hover:bg-gray-50' ?>">
                 <?= $section['label'] ?>
             </a>
@@ -176,7 +176,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                 <?php foreach ($languages as $i => $lang): ?>
                                 <button type="button"
                                         onclick="switchBlockTab('<?= $blockKey ?>', '<?= $lang['id'] ?>')"
-                                        class="block-tab px-4 py-2 text-xs font-medium <?= $i === 0 ? 'bg-white text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>"
+                                        class="block-tab px-4 py-2 text-xs font-medium <?= $i === 0 ? 'bg-white text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>"
                                         data-block="<?= $blockKey ?>"
                                         data-lang="<?= $lang['id'] ?>">
                                     <?= strtoupper($lang['code']) ?>
@@ -197,15 +197,15 @@ include dirname(__DIR__) . '/includes/header.php';
                                 <input type="text"
                                        name="<?= $blockKey ?>_<?= $lang['id'] ?>"
                                        value="<?= e($value) ?>"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500 focus:border-olive-500">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
                                 <?php break; case 'textarea': ?>
                                 <textarea name="<?= $blockKey ?>_<?= $lang['id'] ?>"
                                           rows="3"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500 focus:border-olive-500"><?= e($value) ?></textarea>
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"><?= e($value) ?></textarea>
                                 <?php break; case 'wysiwyg': ?>
                                 <textarea name="<?= $blockKey ?>_<?= $lang['id'] ?>"
                                           rows="8"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500 focus:border-olive-500"><?= e($value) ?></textarea>
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"><?= e($value) ?></textarea>
                                 <p class="text-xs text-gray-500 mt-1">Pode usar HTML basico: &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;br&gt;</p>
                                 <?php break; endswitch; ?>
                             </div>
@@ -216,7 +216,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </div>
 
                 <div class="mt-6 pt-6 border-t border-gray-200">
-                    <button type="submit" class="px-6 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                    <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                         Guardar Alteracoes
                     </button>
                 </div>
@@ -230,10 +230,10 @@ function switchBlockTab(blockKey, langId) {
     // Update tabs for this block
     document.querySelectorAll(`.block-tab[data-block="${blockKey}"]`).forEach(tab => {
         if (tab.dataset.lang === langId) {
-            tab.classList.add('bg-white', 'text-olive-600', 'border-b-2', 'border-olive-600');
+            tab.classList.add('bg-white', 'text-secondary-600', 'border-b-2', 'border-secondary-600');
             tab.classList.remove('text-gray-500');
         } else {
-            tab.classList.remove('bg-white', 'text-olive-600', 'border-b-2', 'border-olive-600');
+            tab.classList.remove('bg-white', 'text-secondary-600', 'border-b-2', 'border-secondary-600');
             tab.classList.add('text-gray-500');
         }
     });

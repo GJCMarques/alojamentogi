@@ -128,23 +128,23 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
                     <input type="text" name="full_name" value="<?= e($_POST['full_name'] ?? $admin->full_name) ?>" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input type="email" name="email" value="<?= e($_POST['email'] ?? $admin->email) ?>" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nome de Utilizador</label>
                     <input type="text" name="username" value="<?= e($_POST['username'] ?? $admin->username) ?>" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                    <button type="submit" class="w-full px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                         Atualizar Perfil
                     </button>
                 </div>
@@ -174,20 +174,20 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Password Atual</label>
                     <input type="password" name="current_password" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nova Password</label>
                     <input type="password" name="new_password" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Nova Password</label>
                     <input type="password" name="confirm_password" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div class="pt-2">

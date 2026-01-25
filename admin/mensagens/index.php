@@ -99,16 +99,16 @@ include dirname(__DIR__) . '/includes/header.php';
 <!-- Filters -->
 <div class="bg-white rounded-lg shadow-sm mb-6">
     <div class="flex border-b border-gray-200">
-        <a href="?filter=all" class="px-6 py-3 text-sm font-medium <?= $filter === 'all' ? 'text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>">
+        <a href="?filter=all" class="px-6 py-3 text-sm font-medium <?= $filter === 'all' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Todas (<?= $counts['all'] ?>)
         </a>
-        <a href="?filter=unread" class="px-6 py-3 text-sm font-medium <?= $filter === 'unread' ? 'text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>">
+        <a href="?filter=unread" class="px-6 py-3 text-sm font-medium <?= $filter === 'unread' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Não lidas (<?= $counts['unread'] ?>)
         </a>
-        <a href="?filter=read" class="px-6 py-3 text-sm font-medium <?= $filter === 'read' ? 'text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>">
+        <a href="?filter=read" class="px-6 py-3 text-sm font-medium <?= $filter === 'read' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Lidas (<?= $counts['read'] ?>)
         </a>
-        <a href="?filter=spam" class="px-6 py-3 text-sm font-medium <?= $filter === 'spam' ? 'text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>">
+        <a href="?filter=spam" class="px-6 py-3 text-sm font-medium <?= $filter === 'spam' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Spam (<?= $counts['spam'] ?>)
         </a>
     </div>
@@ -127,12 +127,12 @@ include dirname(__DIR__) . '/includes/header.php';
     <?php else: ?>
     <div class="divide-y divide-gray-200">
         <?php foreach ($messages as $msg): ?>
-        <div class="p-6 hover:bg-gray-50 <?= !$msg['is_read'] ? 'bg-olive-50' : '' ?>">
+        <div class="p-6 hover:bg-gray-50 <?= !$msg['is_read'] ? 'bg-secondary-50' : '' ?>">
             <div class="flex items-start justify-between">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-3 mb-2">
                         <?php if (!$msg['is_read']): ?>
-                        <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-olive-100 text-olive-800 rounded">Nova</span>
+                        <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-secondary-100 text-olive-800 rounded">Nova</span>
                         <?php endif; ?>
                         <h3 class="text-sm font-semibold text-gray-900 truncate">
                             <?= e($msg['name']) ?>
@@ -157,7 +157,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div class="ml-4 flex items-center gap-2">
                     <?php if (!$msg['is_read']): ?>
                     <a href="?read=<?= $msg['id'] ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-olive-600 hover:text-olive-800"
+                       class="text-sm text-secondary-600 hover:text-olive-800"
                        title="Marcar como lida">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>

@@ -102,7 +102,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <h1 class="text-2xl font-bold text-gray-800">Produtos</h1>
         <p class="text-gray-600"><?= $total ?> produto(s) encontrado(s)</p>
     </div>
-    <a href="./novo/" class="inline-flex items-center px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+    <a href="./novo/" class="inline-flex items-center px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -120,11 +120,11 @@ include dirname(__DIR__) . '/includes/header.php';
                    id="search"
                    value="<?= e($search) ?>"
                    placeholder="Nome ou SKU..."
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
         </div>
         <div class="w-48">
             <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-            <select name="category" id="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+            <select name="category" id="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 <option value="0">Todas</option>
                 <?php foreach ($categories as $cat): ?>
                 <option value="<?= $cat['id'] ?>" <?= $categoryFilter == $cat['id'] ? 'selected' : '' ?>>
@@ -153,7 +153,7 @@ include dirname(__DIR__) . '/includes/header.php';
         </svg>
         <h3 class="text-lg font-medium text-gray-700 mb-2">Nenhum produto encontrado</h3>
         <p class="text-gray-500 mb-4">Comece por criar o seu primeiro produto.</p>
-        <a href="./novo/" class="inline-flex items-center px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+        <a href="./novo/" class="inline-flex items-center px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -237,14 +237,14 @@ include dirname(__DIR__) . '/includes/header.php';
                     </span>
                     <?php endif; ?>
                     <?php if ($product['is_featured']): ?>
-                    <span class="inline-flex px-2 py-1 text-xs font-medium bg-olive-100 text-olive-800 rounded ml-1">
+                    <span class="inline-flex px-2 py-1 text-xs font-medium bg-secondary-100 text-olive-800 rounded ml-1">
                         Destaque
                     </span>
                     <?php endif; ?>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <a href="./editar/?id=<?= $product['id'] ?>"
-                       class="text-olive-600 hover:text-olive-900 mr-3">
+                       class="text-secondary-600 hover:text-olive-900 mr-3">
                         Editar
                     </a>
                     <a href="<?= basePath() ?>/admin/produtos/?toggle=<?= $product['id'] ?>&token=<?= \Core\CSRF::getToken() ?>"

@@ -291,14 +291,14 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
 ?>
 
 <div class="mb-6">
-    <a href="../" class="text-olive-600 hover:text-olive-700 text-sm">
+    <a href="../" class="text-secondary-600 hover:text-secondary-700 text-sm">
         &larr; Voltar aos Produtos
     </a>
 </div>
 
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-800">Editar Produto</h1>
-    <a href="/loja/produto/?slug=<?= e($product['slug']) ?>" target="_blank" class="text-sm text-olive-600 hover:text-olive-700">
+    <a href="/loja/produto/?slug=<?= e($product['slug']) ?>" target="_blank" class="text-sm text-secondary-600 hover:text-secondary-700">
         Ver no site &rarr;
     </a>
 </div>
@@ -325,7 +325,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                     <nav class="flex -mb-px" id="lang-tabs">
                         <?php foreach ($languages as $index => $lang): ?>
                         <button type="button"
-                                class="lang-tab px-6 py-3 text-sm font-medium border-b-2 <?= $index === 0 ? 'border-olive-600 text-olive-600' : 'border-transparent text-gray-500 hover:text-gray-700' ?>"
+                                class="lang-tab px-6 py-3 text-sm font-medium border-b-2 <?= $index === 0 ? 'border-secondary-600 text-secondary-600' : 'border-transparent text-gray-500 hover:text-gray-700' ?>"
                                 data-lang="<?= $lang['id'] ?>">
                             <?= e($lang['name']) ?>
                             <?php if ($lang['is_default']): ?>
@@ -346,7 +346,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                             <input type="text"
                                    name="translations[<?= $lang['id'] ?>][name]"
                                    value="<?= e($translations[$lang['id']]['name'] ?? '') ?>"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"
                                    <?= $lang['is_default'] ? 'required' : '' ?>>
                         </div>
 
@@ -357,7 +357,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                             <input type="text"
                                    name="translations[<?= $lang['id'] ?>][short_description]"
                                    value="<?= e($translations[$lang['id']]['short_description'] ?? '') ?>"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"
                                    maxlength="255">
                         </div>
 
@@ -367,7 +367,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                             </label>
                             <textarea name="translations[<?= $lang['id'] ?>][description]"
                                       rows="6"
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"><?= e($translations[$lang['id']]['description'] ?? '') ?></textarea>
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($translations[$lang['id']]['description'] ?? '') ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -387,7 +387,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                              class="w-full h-full object-cover">
 
                         <?php if ($image['is_primary']): ?>
-                        <span class="absolute top-1 left-1 text-xs bg-olive-600 text-white px-2 py-1 rounded">
+                        <span class="absolute top-1 left-1 text-xs bg-secondary-600 text-white px-2 py-1 rounded">
                             Principal
                         </span>
                         <?php endif; ?>
@@ -395,7 +395,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                         <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <?php if (!$image['is_primary']): ?>
                             <a href="?id=<?= $productId ?>&set_primary=<?= $image['id'] ?>&token=<?= CSRF::getToken() ?>"
-                               class="text-white text-xs bg-olive-600 px-2 py-1 rounded hover:bg-olive-700"
+                               class="text-white text-xs bg-secondary-600 px-2 py-1 rounded hover:bg-secondary-700"
                                title="Definir como principal">
                                 Principal
                             </a>
@@ -446,7 +446,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                name="is_active"
                                value="1"
                                <?= $product['is_active'] ? 'checked' : '' ?>
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                         <span class="ml-2 text-gray-700">Ativo</span>
                     </label>
 
@@ -455,7 +455,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                name="is_featured"
                                value="1"
                                <?= $product['is_featured'] ? 'checked' : '' ?>
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                         <span class="ml-2 text-gray-700">Produto em destaque</span>
                     </label>
                 </div>
@@ -472,7 +472,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                         </label>
                         <select name="category_id"
                                 required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                             <option value="">Selecione...</option>
                             <?php foreach ($categories as $cat): ?>
                             <option value="<?= $cat['id'] ?>" <?= $product['category_id'] == $cat['id'] ? 'selected' : '' ?>>
@@ -490,7 +490,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                name="sku"
                                value="<?= e($product['sku']) ?>"
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
 
                     <div>
@@ -500,7 +500,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                         <input type="text"
                                name="slug"
                                value="<?= e($product['slug']) ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                 </div>
             </div>
@@ -520,7 +520,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                    name="price"
                                    value="<?= $product['price'] ?>"
                                    required
-                                   class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                   class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                     </div>
 
@@ -533,7 +533,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                             <input type="text"
                                    name="sale_price"
                                    value="<?= $product['sale_price'] ?>"
-                                   class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                   class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                     </div>
                 </div>
@@ -549,7 +549,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                name="track_inventory"
                                value="1"
                                <?= $product['track_inventory'] ? 'checked' : '' ?>
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500"
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500"
                                id="track-inventory">
                         <span class="ml-2 text-gray-700">Controlar stock</span>
                     </label>
@@ -562,7 +562,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                name="stock_quantity"
                                value="<?= $product['stock_quantity'] ?>"
                                min="0"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
 
                     <div>
@@ -573,7 +573,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                name="weight"
                                value="<?= $product['weight'] ?>"
                                placeholder="0.00"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                 </div>
             </div>
@@ -581,7 +581,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
             <!-- Submit -->
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <button type="submit"
-                        class="w-full px-4 py-3 bg-olive-600 text-white font-medium rounded-lg hover:bg-olive-700">
+                        class="w-full px-4 py-3 bg-secondary-600 text-white font-medium rounded-lg hover:bg-secondary-700">
                     Guardar Alterações
                 </button>
             </div>
@@ -600,10 +600,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const langId = this.dataset.lang;
 
             tabs.forEach(t => {
-                t.classList.remove('border-olive-600', 'text-olive-600');
+                t.classList.remove('border-secondary-600', 'text-secondary-600');
                 t.classList.add('border-transparent', 'text-gray-500');
             });
-            this.classList.add('border-olive-600', 'text-olive-600');
+            this.classList.add('border-secondary-600', 'text-secondary-600');
             this.classList.remove('border-transparent', 'text-gray-500');
 
             contents.forEach(c => {

@@ -104,7 +104,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <h1 class="text-2xl font-bold text-gray-800">Atividades</h1>
         <p class="text-gray-600"><?= $total ?> atividade(s)</p>
     </div>
-    <a href="<?= basePath() ?>/admin/atividades/criar.php" class="px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700 flex items-center gap-2">
+    <a href="<?= basePath() ?>/admin/atividades/criar.php" class="px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 flex items-center gap-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
         </svg>
@@ -119,11 +119,11 @@ include dirname(__DIR__) . '/includes/header.php';
             <label class="block text-sm font-medium text-gray-700 mb-1">Pesquisar</label>
             <input type="text" name="search" value="<?= e($search) ?>"
                    placeholder="Nome, descricao..."
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-            <select name="category" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+            <select name="category" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 <option value="">Todas</option>
                 <?php foreach ($categories as $key => $label): ?>
                 <option value="<?= $key ?>" <?= $category === $key ? 'selected' : '' ?>><?= $label ?></option>
@@ -149,7 +149,7 @@ include dirname(__DIR__) . '/includes/header.php';
         </svg>
         <h3 class="text-lg font-medium text-gray-700 mb-2">Sem atividades</h3>
         <p class="text-gray-500 mb-4">Comece por adicionar atividades turisticas.</p>
-        <a href="<?= basePath() ?>/admin/atividades/criar.php" class="inline-flex items-center px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+        <a href="<?= basePath() ?>/admin/atividades/criar.php" class="inline-flex items-center px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
             Nova Atividade
         </a>
     </div>
@@ -207,7 +207,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </td>
                 <td class="px-6 py-4 text-right">
                     <a href="<?= basePath() ?>/admin/atividades/editar.php?id=<?= $activity['id'] ?>"
-                       class="text-olive-600 hover:text-olive-800 text-sm mr-3">Editar</a>
+                       class="text-secondary-600 hover:text-olive-800 text-sm mr-3">Editar</a>
                     <a href="?delete=<?= $activity['id'] ?>&token=<?= CSRF::getToken() ?>"
                        onclick="return confirm('Eliminar esta atividade?')"
                        class="text-red-600 hover:text-red-800 text-sm">Eliminar</a>

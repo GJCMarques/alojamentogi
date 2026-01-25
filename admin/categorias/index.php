@@ -207,7 +207,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <input type="text"
                            name="translations[<?= $lang['id'] ?>][name]"
                            value="<?= e($editTranslations[$lang['id']]['name'] ?? '') ?>"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"
                            <?= $lang['is_default'] ? 'required' : '' ?>>
                 </div>
 
@@ -217,7 +217,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     </label>
                     <textarea name="translations[<?= $lang['id'] ?>][description]"
                               rows="2"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"><?= e($editTranslations[$lang['id']]['description'] ?? '') ?></textarea>
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($editTranslations[$lang['id']]['description'] ?? '') ?></textarea>
                 </div>
                 <?php endforeach; ?>
 
@@ -227,7 +227,7 @@ include dirname(__DIR__) . '/includes/header.php';
                            name="slug"
                            value="<?= e($editCategory['slug'] ?? '') ?>"
                            placeholder="auto-gerado"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div class="mb-4">
@@ -235,7 +235,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <input type="number"
                            name="sort_order"
                            value="<?= e($editCategory['sort_order'] ?? 0) ?>"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
 
                 <div class="mb-4">
@@ -244,14 +244,14 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="is_active"
                                value="1"
                                <?= ($editCategory['is_active'] ?? 1) ? 'checked' : '' ?>
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                         <span class="ml-2 text-gray-700">Ativa</span>
                     </label>
                 </div>
 
                 <div class="flex gap-2">
                     <button type="submit"
-                            class="flex-1 px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                            class="flex-1 px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                         <?= $editCategory ? 'Guardar' : 'Criar' ?>
                     </button>
                     <?php if ($editCategory): ?>
@@ -302,7 +302,7 @@ include dirname(__DIR__) . '/includes/header.php';
                             <?php endif; ?>
                         </td>
                         <td class="px-6 py-4 text-right text-sm">
-                            <a href="?edit=<?= $cat['id'] ?>" class="text-olive-600 hover:text-olive-900 mr-3">Editar</a>
+                            <a href="?edit=<?= $cat['id'] ?>" class="text-secondary-600 hover:text-olive-900 mr-3">Editar</a>
                             <?php if ($cat['product_count'] == 0): ?>
                             <a href="?delete=<?= $cat['id'] ?>&token=<?= CSRF::getToken() ?>"
                                class="text-red-600 hover:text-red-900"

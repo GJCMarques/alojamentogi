@@ -50,13 +50,13 @@ include __DIR__ . '/includes/header.php';
                 <p class="text-sm font-medium text-granite-500">Produtos Ativos</p>
                 <p class="text-2xl font-bold text-granite-800 mt-1"><?= $stats['products'] ?></p>
             </div>
-            <div class="w-12 h-12 bg-olive-100 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-olive-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-secondary-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                 </svg>
             </div>
         </div>
-        <a href="<?= basePath() ?>/admin/produtos/" class="inline-flex items-center text-sm text-olive-600 hover:text-olive-700 mt-4">
+        <a href="<?= basePath() ?>/admin/produtos/" class="inline-flex items-center text-sm text-secondary-600 hover:text-secondary-700 mt-4">
             Ver todos
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -77,7 +77,7 @@ include __DIR__ . '/includes/header.php';
                 </svg>
             </div>
         </div>
-        <a href="<?= basePath() ?>/admin/encomendas/" class="inline-flex items-center text-sm text-olive-600 hover:text-olive-700 mt-4">
+        <a href="<?= basePath() ?>/admin/encomendas/" class="inline-flex items-center text-sm text-secondary-600 hover:text-secondary-700 mt-4">
             Ver encomendas
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -114,7 +114,7 @@ include __DIR__ . '/includes/header.php';
                 </svg>
             </div>
         </div>
-        <a href="<?= basePath() ?>/admin/mensagens/" class="inline-flex items-center text-sm text-olive-600 hover:text-olive-700 mt-4">
+        <a href="<?= basePath() ?>/admin/mensagens/" class="inline-flex items-center text-sm text-secondary-600 hover:text-secondary-700 mt-4">
             Ver mensagens
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -129,7 +129,7 @@ include __DIR__ . '/includes/header.php';
     <div class="bg-white rounded-lg shadow-sm border border-granite-200">
         <div class="px-6 py-4 border-b border-granite-200 flex items-center justify-between">
             <h2 class="font-semibold text-granite-800">Encomendas Recentes</h2>
-            <a href="<?= basePath() ?>/admin/encomendas/" class="text-sm text-olive-600 hover:text-olive-700">Ver todas</a>
+            <a href="<?= basePath() ?>/admin/encomendas/" class="text-sm text-secondary-600 hover:text-secondary-700">Ver todas</a>
         </div>
         <div class="divide-y divide-granite-100">
             <?php if (empty($recentOrders)): ?>
@@ -175,7 +175,7 @@ include __DIR__ . '/includes/header.php';
     <div class="bg-white rounded-lg shadow-sm border border-granite-200">
         <div class="px-6 py-4 border-b border-granite-200 flex items-center justify-between">
             <h2 class="font-semibold text-granite-800">Mensagens Recentes</h2>
-            <a href="<?= basePath() ?>/admin/mensagens/" class="text-sm text-olive-600 hover:text-olive-700">Ver todas</a>
+            <a href="<?= basePath() ?>/admin/mensagens/" class="text-sm text-secondary-600 hover:text-secondary-700">Ver todas</a>
         </div>
         <div class="divide-y divide-granite-100">
             <?php if (empty($recentMessages)): ?>
@@ -215,8 +215,8 @@ include __DIR__ . '/includes/header.php';
     <h2 class="font-semibold text-granite-800 mb-4">Acoes Rapidas</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <a href="<?= basePath() ?>/admin/produtos/novo/" class="flex items-center p-4 bg-granite-50 rounded-lg hover:bg-granite-100 transition-colors">
-            <div class="w-10 h-10 bg-olive-100 rounded-lg flex items-center justify-center mr-3">
-                <svg class="w-5 h-5 text-olive-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
             </div>

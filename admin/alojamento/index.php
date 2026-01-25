@@ -174,7 +174,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <h1 class="text-2xl font-bold text-gray-800">Alojamento</h1>
         <p class="text-gray-600">Gerir informacoes do alojamento</p>
     </div>
-    <a href="<?= basePath() ?>/alojamento/" target="_blank" class="text-olive-600 hover:text-olive-700 text-sm flex items-center gap-1">
+    <a href="<?= basePath() ?>/alojamento/" target="_blank" class="text-secondary-600 hover:text-secondary-700 text-sm flex items-center gap-1">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
         </svg>
@@ -195,7 +195,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <?php foreach ($languages as $i => $lang): ?>
                         <button type="button"
                                 onclick="switchTab('<?= $lang['code'] ?>')"
-                                class="lang-tab px-6 py-3 text-sm font-medium border-b-2 <?= $i === 0 ? 'border-olive-600 text-olive-600' : 'border-transparent text-gray-500 hover:text-gray-700' ?>"
+                                class="lang-tab px-6 py-3 text-sm font-medium border-b-2 <?= $i === 0 ? 'border-secondary-600 text-secondary-600' : 'border-transparent text-gray-500 hover:text-gray-700' ?>"
                                 data-lang="<?= $lang['code'] ?>">
                             <?= strtoupper($lang['code']) ?>
                         </button>
@@ -211,7 +211,7 @@ include dirname(__DIR__) . '/includes/header.php';
                             <input type="text"
                                    name="name_<?= $lang['id'] ?>"
                                    value="<?= e($translations[$lang['id']]['name'] ?? '') ?>"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tagline</label>
@@ -219,13 +219,13 @@ include dirname(__DIR__) . '/includes/header.php';
                                    name="tagline_<?= $lang['id'] ?>"
                                    value="<?= e($translations[$lang['id']]['tagline'] ?? '') ?>"
                                    placeholder="Uma frase curta descritiva..."
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Descricao</label>
                             <textarea name="description_<?= $lang['id'] ?>"
                                       rows="6"
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500"><?= e($translations[$lang['id']]['description'] ?? '') ?></textarea>
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($translations[$lang['id']]['description'] ?? '') ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -279,7 +279,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="amenities[]"
                                value="<?= $amenity['id'] ?>"
                                <?= in_array($amenity['id'], $selectedAmenities) ? 'checked' : '' ?>
-                               class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                               class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                         <span class="ml-2 text-sm text-gray-700">
                             <?php if ($amenity['icon']): ?>
                             <span class="mr-1"><?= $amenity['icon'] ?></span>
@@ -306,7 +306,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="max_guests"
                                value="<?= e($accommodation['max_guests']) ?>"
                                min="1"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Quartos</label>
@@ -314,7 +314,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="bedrooms"
                                value="<?= e($accommodation['bedrooms']) ?>"
                                min="0"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Casas de Banho</label>
@@ -322,7 +322,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="bathrooms"
                                value="<?= e($accommodation['bathrooms']) ?>"
                                min="0"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Area (m²)</label>
@@ -330,7 +330,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="area_sqm"
                                value="<?= e($accommodation['area_sqm'] ?? '') ?>"
                                min="0"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
                 </div>
             </div>
@@ -344,14 +344,14 @@ include dirname(__DIR__) . '/includes/header.php';
                            name="is_active"
                            value="1"
                            <?= $accommodation['is_active'] ? 'checked' : '' ?>
-                           class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                           class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                     <span class="ml-2 text-sm text-gray-700">Visivel no site</span>
                 </label>
             </div>
 
             <!-- Actions -->
             <div class="bg-white rounded-lg shadow-sm p-6">
-                <button type="submit" class="w-full px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                <button type="submit" class="w-full px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                     Guardar Alteracoes
                 </button>
             </div>
@@ -364,10 +364,10 @@ function switchTab(langCode) {
     // Update tabs
     document.querySelectorAll('.lang-tab').forEach(tab => {
         if (tab.dataset.lang === langCode) {
-            tab.classList.add('border-olive-600', 'text-olive-600');
+            tab.classList.add('border-secondary-600', 'text-secondary-600');
             tab.classList.remove('border-transparent', 'text-gray-500');
         } else {
-            tab.classList.remove('border-olive-600', 'text-olive-600');
+            tab.classList.remove('border-secondary-600', 'text-secondary-600');
             tab.classList.add('border-transparent', 'text-gray-500');
         }
     });

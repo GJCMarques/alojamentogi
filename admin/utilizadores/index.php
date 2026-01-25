@@ -169,17 +169,17 @@ include dirname(__DIR__) . '/includes/header.php';
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     <?php foreach ($users as $user): ?>
-                    <tr class="hover:bg-gray-50 <?= $user['id'] === ($_SESSION['admin_id'] ?? 0) ? 'bg-olive-50' : '' ?>">
+                    <tr class="hover:bg-gray-50 <?= $user['id'] === ($_SESSION['admin_id'] ?? 0) ? 'bg-secondary-50' : '' ?>">
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                <div class="w-10 h-10 rounded-full bg-olive-100 flex items-center justify-center text-olive-600 font-semibold mr-3">
+                                <div class="w-10 h-10 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-600 font-semibold mr-3">
                                     <?= strtoupper(substr($user['full_name'] ?: $user['username'], 0, 1)) ?>
                                 </div>
                                 <div>
                                     <div class="text-sm font-medium text-gray-900">
                                         <?= e($user['full_name'] ?: $user['username']) ?>
                                         <?php if ($user['id'] === ($_SESSION['admin_id'] ?? 0)): ?>
-                                        <span class="text-xs text-olive-600">(voce)</span>
+                                        <span class="text-xs text-secondary-600">(voce)</span>
                                         <?php endif; ?>
                                     </div>
                                     <div class="text-xs text-gray-500"><?= e($user['email']) ?></div>
@@ -205,7 +205,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         </td>
                         <td class="px-6 py-4 text-right">
                             <a href="?edit=<?= $user['id'] ?>"
-                               class="text-olive-600 hover:text-olive-800 text-sm mr-3">Editar</a>
+                               class="text-secondary-600 hover:text-olive-800 text-sm mr-3">Editar</a>
                             <?php if ($user['id'] !== ($_SESSION['admin_id'] ?? 0)): ?>
                             <a href="?delete=<?= $user['id'] ?>&token=<?= CSRF::getToken() ?>"
                                onclick="return confirm('Eliminar este utilizador?')"
@@ -238,7 +238,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <input type="text"
                                name="full_name"
                                value="<?= e($editUser['full_name'] ?? $_POST['full_name'] ?? '') ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
 
                     <div>
@@ -247,7 +247,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="username"
                                value="<?= e($editUser['username'] ?? $_POST['username'] ?? '') ?>"
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
 
                     <div>
@@ -256,7 +256,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="email"
                                value="<?= e($editUser['email'] ?? $_POST['email'] ?? '') ?>"
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                     </div>
 
                     <div>
@@ -267,7 +267,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                name="password"
                                <?= !$editUser ? 'required' : '' ?>
                                placeholder="<?= $editUser ? 'Deixe vazio para manter' : '' ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         <?php if ($editUser): ?>
                         <p class="text-xs text-gray-500 mt-1">Deixe vazio para manter a password atual.</p>
                         <?php endif; ?>
@@ -277,7 +277,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
                         <select name="role"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                             <?php foreach ($roles as $key => $label): ?>
                             <option value="<?= $key ?>" <?= ($editUser['role'] ?? 'editor') === $key ? 'selected' : '' ?>>
                                 <?= $label ?>
@@ -292,7 +292,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                    name="is_active"
                                    value="1"
                                    <?= ($editUser['is_active'] ?? 1) ? 'checked' : '' ?>
-                                   class="w-4 h-4 text-olive-600 border-gray-300 rounded focus:ring-olive-500">
+                                   class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
                             <span class="ml-2 text-sm text-gray-700">Conta ativa</span>
                         </label>
                     </div>
@@ -300,7 +300,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </div>
 
                 <div class="mt-6 flex gap-2">
-                    <button type="submit" class="flex-1 px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+                    <button type="submit" class="flex-1 px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                         <?= $editUser ? 'Guardar' : 'Criar' ?>
                     </button>
                     <?php if ($editUser): ?>

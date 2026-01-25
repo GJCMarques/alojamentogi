@@ -195,7 +195,7 @@ include INCLUDES_PATH . '/header.php';
                 <div class="bg-white rounded-lg shadow-sm p-8 border border-charcoal/20">
                     <h2 class="font-serif text-2xl text-primary mb-6">Send us a Message</h2>
 
-                    <?php if (($s_msg = Session::flash('success')) || $success): ?>
+                    <?php if (Session::hasFlash('success') || $success): ?>
                     <div class="p-8 bg-accent/5 rounded-lg text-center border border-accent/20">
                         <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

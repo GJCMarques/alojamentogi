@@ -117,9 +117,9 @@ include dirname(__DIR__) . '/includes/header.php';
                        name="search"
                        value="<?= e($search) ?>"
                        placeholder="Pesquisar por nº encomenda, nome ou email..."
-                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-500">
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
             </div>
-            <button type="submit" class="px-4 py-2 bg-olive-600 text-white rounded-lg hover:bg-olive-700">
+            <button type="submit" class="px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
                 Pesquisar
             </button>
             <?php if ($search || $status): ?>
@@ -129,12 +129,12 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
     <div class="flex flex-wrap border-b border-gray-200">
         <a href="?<?= $search ? 'search=' . urlencode($search) : '' ?>"
-           class="px-4 py-3 text-sm font-medium <?= !$status ? 'text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>">
+           class="px-4 py-3 text-sm font-medium <?= !$status ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Todas (<?= $counts['all'] ?? 0 ?>)
         </a>
         <?php foreach ($statusLabels as $key => $info): ?>
         <a href="?status=<?= $key ?><?= $search ? '&search=' . urlencode($search) : '' ?>"
-           class="px-4 py-3 text-sm font-medium <?= $status === $key ? 'text-olive-600 border-b-2 border-olive-600' : 'text-gray-500 hover:text-gray-700' ?>">
+           class="px-4 py-3 text-sm font-medium <?= $status === $key ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             <?= $info['label'] ?> (<?= $counts[$key] ?? 0 ?>)
         </a>
         <?php endforeach; ?>
@@ -168,7 +168,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <?php foreach ($orders as $order): ?>
             <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4">
-                    <a href="<?= basePath() ?>/admin/encomendas/ver.php?id=<?= $order['id'] ?>" class="font-medium text-olive-600 hover:text-olive-800">
+                    <a href="<?= basePath() ?>/admin/encomendas/ver.php?id=<?= $order['id'] ?>" class="font-medium text-secondary-600 hover:text-olive-800">
                         #<?= e($order['order_number']) ?>
                     </a>
                 </td>
@@ -194,7 +194,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <?= formatDateTime($order['created_at']) ?>
                 </td>
                 <td class="px-6 py-4 text-right">
-                    <a href="<?= basePath() ?>/admin/encomendas/ver.php?id=<?= $order['id'] ?>" class="text-olive-600 hover:text-olive-800 text-sm">
+                    <a href="<?= basePath() ?>/admin/encomendas/ver.php?id=<?= $order['id'] ?>" class="text-secondary-600 hover:text-olive-800 text-sm">
                         Ver detalhes
                     </a>
                 </td>
