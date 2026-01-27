@@ -14,7 +14,7 @@
     <script>
         // Close dropdowns when clicking outside
         document.addEventListener('click', function(e) {
-            const dropdowns = document.querySelectorAll('[onclick]');
+            const dropdowns = document.querySelectorAll('[data-dropdown-toggle]');
             dropdowns.forEach(function(dropdown) {
                 const menu = dropdown.nextElementSibling;
                 if (menu && !dropdown.contains(e.target) && !menu.contains(e.target)) {

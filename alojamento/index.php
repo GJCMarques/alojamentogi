@@ -1,6 +1,7 @@
 <?php
 /**
  * A Casa do Gi - Accommodation Page (Portuguese)
+ * Redesigned with clean, rounded design
  */
 
 require_once dirname(__DIR__) . '/includes/init.php';
@@ -19,28 +20,60 @@ $accTranslation = $db->fetch(
     [$accommodation['id'] ?? 1, $lang->getCurrentLangId()]
 );
 
-// Get amenities
+// Get amenities grouped by category
 $amenities = $db->fetchAll(
-    "SELECT a.*, at.name FROM amenities a
+    "SELECT a.*, at.name, a.category FROM amenities a
      JOIN amenity_translations at ON a.id = at.amenity_id
      JOIN accommodation_amenities aa ON a.id = aa.amenity_id
      WHERE at.language_id = ? AND a.is_active = 1
-     ORDER BY a.sort_order",
+     ORDER BY a.category, a.sort_order",
     [$lang->getCurrentLangId()]
 );
+
+// Group amenities by category
+$amenitiesByCategory = [];
+foreach ($amenities as $amenity) {
+    $cat = $amenity['category'] ?: 'general';
+    if (!isset($amenitiesByCategory[$cat])) {
+        $amenitiesByCategory[$cat] = [];
+    }
+    $amenitiesByCategory[$cat][] = $amenity;
+}
+
+$categoryLabels = [
+    'general' => 'Geral',
+    'kitchen' => 'Cozinha',
+    'bedroom' => 'Quarto',
+    'bathroom' => 'Casa de Banho',
+    'outdoor' => 'Exterior',
+    'entertainment' => 'Entretenimento',
+    'safety' => 'Seguranca',
+    'children' => 'Criancas',
+    'sports' => 'Desporto',
+    'services' => 'Servicos'
+];
 
 // Get gallery images
 $galleryImages = $db->fetchAll(
     "SELECT * FROM media WHERE category = 'gallery' ORDER BY sort_order LIMIT 12"
 );
 
-// Get bedrooms
+// Get bedrooms with translations
 $bedrooms = $db->fetchAll(
-    "SELECT b.*, bt.beds_description FROM bedrooms b
-     JOIN bedroom_translations bt ON b.id = bt.bedroom_id
-     WHERE bt.language_id = ?
+    "SELECT b.*, bt.beds_description, bt.name as room_name FROM bedrooms b
+     LEFT JOIN bedroom_translations bt ON b.id = bt.bedroom_id AND bt.language_id = ?
+     WHERE b.accommodation_id = ?
      ORDER BY b.bedroom_number",
-    [$lang->getCurrentLangId()]
+    [$lang->getCurrentLangId(), $accommodation['id'] ?? 1]
+);
+
+// Get bathrooms
+$bathrooms = $db->fetchAll(
+    "SELECT b.*, bt.description, bt.name as bathroom_name FROM bathrooms b
+     LEFT JOIN bathroom_translations bt ON b.id = bt.bathroom_id AND bt.language_id = ?
+     WHERE b.accommodation_id = ?
+     ORDER BY b.bathroom_number",
+    [$lang->getCurrentLangId(), $accommodation['id'] ?? 1]
 );
 
 // Booking URLs
@@ -50,7 +83,7 @@ $airbnbUrl = setting('airbnb_url');
 
 // Page configuration
 $pageTitle = __('accommodation_title', 'Alojamento');
-$pageDescription = 'A Casa do Gi - Alojamento Local em Mogadouro. Casa de férias de 100m2 para 6 hóspedes.';
+$pageDescription = 'A Casa do Gi - Alojamento Local em Mogadouro. Casa de ferias de 100m2 para 6 hospedes.';
 
 include INCLUDES_PATH . '/header.php';
 ?>
@@ -58,350 +91,449 @@ include INCLUDES_PATH . '/header.php';
 <!-- Hero Section -->
 <section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed" 
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= asset('images/MogadouroAlojamento.jpg') ?>');">
         </div>
-        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
-            Bem-vindo a
-        </span>
-        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-lg animate-on-scroll" data-animation="fade-up" data-delay="200">
-            <?= e($accTranslation['title'] ?? 'A Casa do Gi') ?>
+        <!-- Rating Badge (Harmonized with 'Kicker' style but keeping badge functionality) -->
+        <?php if (!empty($accommodation['rating'])): ?>
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full mb-8 animate-on-scroll" data-animation="fade-up">
+            <div class="flex items-center gap-1.5 text-accent">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                <span class="font-bold text-white text-lg"><?= number_format($accommodation['rating'], 1) ?></span>
+            </div>
+            <?php if (!empty($accommodation['reviews_count'])): ?>
+            <div class="h-4 w-px bg-white/30 mx-1"></div>
+            <span class="text-white/90 text-sm font-medium tracking-wide uppercase"><?= $accommodation['reviews_count'] ?> Avaliacoes</span>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-lg animate-on-scroll" data-animation="fade-up" data-delay="100">
+            <?= e($accTranslation['name'] ?? 'A Casa do Gi') ?>
         </h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="400">
-            <?= e($accTranslation['short_description'] ?? 'Casa de férias de 100m2') ?>
+
+        <?php if (!empty($accTranslation['tagline'])): ?>
+        <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto font-light leading-relaxed mb-8 animate-on-scroll" data-animation="fade-up" data-delay="200">
+            <?= e($accTranslation['tagline']) ?>
         </p>
+        <?php endif; ?>
+
+        <!-- Location -->
+        <div class="flex items-center justify-center gap-2 text-cream/80 animate-on-scroll" data-animation="fade-up" data-delay="300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="tracking-widest uppercase text-sm font-medium"><?= e($accommodation['city'] ?? 'Mogadouro') ?>, <?= e($accommodation['region'] ?? 'Tras-os-Montes') ?></span>
+        </div>
     </div>
 </section>
 
-<!-- Stats Bar (Restored Overlap) -->
-<div class="relative z-20 -mt-16 sm:-mt-20 px-4">
-    <div class="max-w-5xl mx-auto bg-cream-50 rounded-xl shadow-xl overflow-hidden animate-on-scroll" data-animation="fade-up" data-delay="600">
-        <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-gray-100">
-            <!-- Guests -->
-            <div class="p-6 text-center group hover:bg-cream-50 transition-colors">
-                <div class="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-accent/10 text-secondary group-hover:scale-110 transition-transform">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
+<!-- Quick Info Bar -->
+<div class="relative z-20 -mt-12 lg:-mt-16 px-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border-b-4 border-secondary p-6 md:p-8 animate-on-scroll" data-animation="fade-up" data-delay="400">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x lg:divide-secondary/10">
+                
+                <!-- Guests -->
+                <div class="flex items-center justify-center gap-4 lg:px-4 group cursor-default">
+                    <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-serif font-bold text-primary leading-none transition-colors"><?= $accommodation['max_guests'] ?? 6 ?></span>
+                        <span class="text-xs font-semibold text-charcoal/50 uppercase tracking-widest mt-1">Hospedes</span>
+                    </div>
                 </div>
-                <div class="text-2xl font-serif text-primary font-bold mb-1"><?= $accommodation['max_guests'] ?? 6 ?></div>
-                <div class="text-xs uppercase tracking-wider text-charcoal/60">Hóspedes</div>
-            </div>
 
-            <!-- Bedrooms -->
-            <div class="p-6 text-center group hover:bg-cream-50 transition-colors">
-                <div class="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-accent/10 text-secondary group-hover:scale-110 transition-transform">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
+                <!-- Bedrooms -->
+                <div class="flex items-center justify-center gap-4 lg:px-4 group cursor-default">
+                    <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-serif font-bold text-primary leading-none transition-colors"><?= $accommodation['bedrooms'] ?? 3 ?></span>
+                        <span class="text-xs font-semibold text-charcoal/50 uppercase tracking-widest mt-1">Quartos</span>
+                    </div>
                 </div>
-                <div class="text-2xl font-serif text-primary font-bold mb-1"><?= $accommodation['bedrooms'] ?? 3 ?></div>
-                <div class="text-xs uppercase tracking-wider text-charcoal/60">Quartos</div>
-            </div>
 
-            <!-- Bathrooms -->
-            <div class="p-6 text-center group hover:bg-cream-50 transition-colors">
-                <div class="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-accent/10 text-secondary group-hover:scale-110 transition-transform">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 104 0m-4 0a2 2 0 114 0m-6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
-                    </svg>
+                <!-- Bathrooms -->
+                <div class="flex items-center justify-center gap-4 lg:px-4 group cursor-default">
+                     <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3v-8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-serif font-bold text-primary leading-none transition-colors"><?= $accommodation['bathrooms'] ?? 2 ?></span>
+                        <span class="text-xs font-semibold text-charcoal/50 uppercase tracking-widest mt-1">Banhos</span>
+                    </div>
                 </div>
-                <div class="text-2xl font-serif text-primary font-bold mb-1"><?= $accommodation['bathrooms'] ?? 2 ?></div>
-                <div class="text-xs uppercase tracking-wider text-charcoal/60">Casas de Banho</div>
-            </div>
 
-            <!-- Area -->
-            <div class="p-6 text-center group hover:bg-cream-50 transition-colors">
-                <div class="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-accent/10 text-secondary group-hover:scale-110 transition-transform">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                    </svg>
+                <!-- Area -->
+                <div class="flex items-center justify-center gap-4 lg:px-4 group cursor-default">
+                    <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-serif font-bold text-primary leading-none transition-colors"><?= (int)($accommodation['area_sqm'] ?? 100) ?></span>
+                        <span class="text-xs font-semibold text-charcoal/50 uppercase tracking-widest mt-1">m² Area</span>
+                    </div>
                 </div>
-                <div class="text-2xl font-serif text-primary font-bold mb-1"><?= (int)$accommodation['area_sqm'] ?? 100 ?></div>
-                <div class="text-xs uppercase tracking-wider text-charcoal/60">Metros Quadrados</div>
+
             </div>
         </div>
     </div>
 </div>
 
-<!-- Main Content -->
-<section class="pb-16 lg:pb-24 pt-12 bg-cream-100">
+<!-- Main Content Section -->
+<section class="py-20 lg:py-28 bg-cream-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-3 gap-12 lg:gap-16">
-            
-            <!-- Left Column Content -->
-            <div class="lg:col-span-2 space-y-16">
+        
+        <div class="grid lg:grid-cols-12 gap-12 lg:gap-20">
+            <!-- Left Column: Details & Experience -->
+            <div class="lg:col-span-8 space-y-20">
                 
-                <!-- Description -->
+                <!-- 1. The Experience (About) -->
                 <div class="animate-on-scroll" data-animation="fade-up">
-                    <h2 class="font-serif text-3xl text-primary mb-6 relative inline-block">
-                        Sobre o Alojamento
-                        <span class="absolute -bottom-2 left-0 w-12 h-1 bg-accent"></span>
+                    <span class="text-secondary font-medium tracking-[0.2em] uppercase text-sm block mb-4">A Experiência</span>
+                    <h2 class="font-serif text-3xl md:text-5xl text-primary mb-8 leading-tight">
+                        Um refúgio de <span class="italic text-accent">charme</span> e tranquilidade.
                     </h2>
-                    <div class="prose prose-lg text-charcoal/80 font-light leading-relaxed">
-                        <?= $accTranslation['full_description'] ?? '<p>A Casa do Gi é sinónimo de simplicidade, acolhimento e momentos de convívio marcantes.</p>' ?>
+                    <div class="prose prose-lg prose-charcoal max-w-none font-light leading-relaxed">
+                        <?= $accTranslation['description'] ?? '<p>A Casa do Gi é sinónimo de simplicidade, acolhimento e momentos de convívio marcantes.</p>' ?>
+                    </div>
+
+                    <?php if (($accommodation['host_type'] ?? '') === 'superhost'): ?>
+                    <div class="mt-8 inline-flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-sm border border-cream-200">
+                        <div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="block font-medium text-primary text-sm uppercase tracking-wider">Superhost</span>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- 2. Spaces (Bedrooms & Bathrooms) -->
+                <div class="animate-on-scroll" data-animation="fade-up">
+                    <div class="flex items-end justify-between mb-10 border-b border-cream-200 pb-4">
+                         <h3 class="font-serif text-3xl text-primary">Os Espaços</h3>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Bedrooms Card -->
+                        <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-accent/20 group">
+                            <div class="w-12 h-12 bg-cream-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
+                                <svg class="w-6 h-6 text-primary group-hover:text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            </div>
+                            <h4 class="font-serif text-xl text-primary mb-4">Dormidas</h4>
+                            <div class="space-y-4">
+                                <?php
+                                $displayBedrooms = !empty($bedrooms) ? $bedrooms : [
+                                    ['bedroom_number' => 1, 'room_name' => 'Suite Principal', 'beds_description' => 'Cama King Size'],
+                                    ['bedroom_number' => 2, 'room_name' => 'Quarto Duplo', 'beds_description' => '2 Camas Individuais'],
+                                    ['bedroom_number' => 3, 'room_name' => 'Quarto Conforto', 'beds_description' => 'Cama de Casal'],
+                                ];
+                                foreach ($displayBedrooms as $room):
+                                ?>
+                                <div class="flex items-start gap-4">
+                                    <span class="text-accent font-serif font-bold text-lg">0<?= $room['bedroom_number'] ?>.</span>
+                                    <div>
+                                        <div class="font-medium text-charcoal"><?= e($room['room_name'] ?? 'Quarto') ?></div>
+                                        <div class="text-sm text-charcoal/60 font-light"><?= e($room['beds_description']) ?></div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                        <!-- Bathrooms Card -->
+                        <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-accent/20 group">
+                            <div class="w-12 h-12 bg-cream-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
+                                <svg class="w-6 h-6 text-primary group-hover:text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3v-8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            </div>
+                            <h4 class="font-serif text-xl text-primary mb-4">Higiene & Conforto</h4>
+                            <div class="space-y-4">
+                                <?php
+                                $displayBathrooms = !empty($bathrooms) ? $bathrooms : [
+                                    ['bathroom_number' => 1, 'bathroom_name' => 'Casa de Banho 1', 'description' => 'Completa com banheira'],
+                                    ['bathroom_number' => 2, 'bathroom_name' => 'Casa de Banho 2', 'description' => 'Com duche'],
+                                ];
+                                foreach ($displayBathrooms as $bt):
+                                ?>
+                                <div class="flex items-start gap-4">
+                                    <span class="text-accent font-serif font-bold text-lg">0<?= $bt['bathroom_number'] ?>.</span>
+                                    <div>
+                                        <div class="font-medium text-charcoal"><?= e($bt['bathroom_name'] ?? 'Casa de Banho') ?></div>
+                                        <div class="text-sm text-charcoal/60 font-light"><?= e($bt['description']) ?></div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Bedrooms -->
+                <!-- 3. Amenities Highlight -->
                 <div class="animate-on-scroll" data-animation="fade-up">
-                    <h2 class="font-serif text-3xl text-primary mb-8 relative inline-block">
-                        O Seu Descanso
-                        <span class="absolute -bottom-2 left-0 w-12 h-1 bg-accent"></span>
-                    </h2>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <?php if (empty($bedrooms)): ?>
-                            <!-- Fallback -->
-                            <div class="bg-white p-6 rounded-xl shadow-sm border border-charcoal/5">
-                                <h3 class="font-serif text-lg text-primary mb-2">Quartos Indisponíveis</h3>
-                                <p class="text-charcoal/70 text-sm">Informação não disponível.</p>
+                    <div class="flex items-end justify-between mb-8 border-b border-cream-200 pb-4">
+                         <h3 class="font-serif text-3xl text-primary">Comodidades</h3>
+                         <?php if (count($amenities) > 8): ?>
+                         <button onclick="openAmenitiesModal()" class="text-secondary hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase border-b border-secondary/30 pb-0.5 hover:border-primary">
+                             Ver Tudo
+                         </button>
+                         <?php endif; ?>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <?php 
+                        $displayAmenities = array_slice($amenities, 0, 8);
+                        if(empty($displayAmenities)) $displayAmenities = [['name' => 'WIFI'], ['name' => 'AC'], ['name' => 'TV'], ['name' => 'Cozinha']]; // Fallback
+                        foreach ($displayAmenities as $am): 
+                        ?>
+                        <div class="flex items-center gap-3 p-4 bg-white rounded-xl border border-cream-100 hover:border-accent/30 transition-all duration-300 hover:shadow-md group">
+                            <div class="w-2 h-2 rounded-full bg-cream-200 group-hover:bg-accent transition-colors"></div>
+                            <span class="text-sm text-charcoal-600 font-medium group-hover:text-primary transition-colors"><?= e($am['name']) ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Booking Sidebar (Sticky) -->
+            <div class="lg:col-span-4 space-y-8">
+                
+                <!-- Booking Card -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 border border-cream-100 sticky top-32 animate-on-scroll" data-animation="fade-left">
+                    <div class="text-center mb-8">
+                        <span class="text-accent text-xs font-bold tracking-widest uppercase">Reserve a sua estadia</span>
+                        <h3 class="font-serif text-3xl text-primary mt-2">Pronto para relaxar?</h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <?php if ($guestreadyUrl): ?>
+                        <a href="<?= e($guestreadyUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-cream-50 hover:bg-primary group transition-all duration-300 border border-transparent hover:shadow-lg">
+                            <div class="flex items-center gap-3">
+                                <img src="<?= asset('images/guestreadylogo.png') ?>" alt="GuestReady" class="h-6 w-auto object-contain grayscale group-hover:grayscale-0 group-hover:brightness-200 transition-all">
+                                <span class="font-medium text-primary group-hover:text-white transition-colors">GuestReady</span>
                             </div>
-                        <?php else: ?>
-                            <?php foreach ($bedrooms as $index => $bedroom): ?>
-                            <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-charcoal/5">
-                                <div class="p-6">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <div class="w-10 h-10 bg-primary/5 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-cream transition-colors">
-                                            <span class="font-serif font-bold"><?= $index + 1 ?></span>
-                                        </div>
-                                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 20h14M3 20V9a2 2 0 012-2h14a2 2 0 012 2v11a2 2 0 002 2H1a2 2 0 002-2z"/>
-                                        </svg>
-                                    </div>
-                                    <h3 class="font-serif text-xl text-primary mb-2">Quarto <?= $bedroom['bedroom_number'] ?></h3>
-                                    <p class="text-charcoal/70 text-sm leading-relaxed"><?= e($bedroom['beds_description']) ?></p>
-                                </div>
+                            <svg class="w-5 h-5 text-secondary group-hover:text-accent transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                        <?php endif; ?>
+
+                        <?php if ($bookingUrl): ?>
+                        <a href="<?= e($bookingUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-cream-50 hover:bg-[#003580] group transition-all duration-300 border border-transparent hover:shadow-lg">
+                            <div class="flex items-center gap-3">
+                                <img src="<?= asset('images/bookinglogo.jpg') ?>" alt="Booking" class="h-6 w-auto object-contain mix-blend-multiply group-hover:brightness-0 group-hover:invert transition-all">
+                                <span class="font-medium text-primary group-hover:text-white transition-colors">Booking.com</span>
                             </div>
-                            <?php endforeach; ?>
+                            <svg class="w-5 h-5 text-secondary group-hover:text-white transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                        <?php endif; ?>
+
+                        <?php if ($airbnbUrl): ?>
+                        <a href="<?= e($airbnbUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-cream-50 hover:bg-[#FF385C] group transition-all duration-300 border border-transparent hover:shadow-lg">
+                            <div class="flex items-center gap-3">
+                                <img src="<?= asset('images/airbnblogo.png') ?>" alt="Airbnb" class="h-6 w-auto object-contain group-hover:brightness-0 group-hover:invert transition-all">
+                                <span class="font-medium text-primary group-hover:text-white transition-colors">Airbnb</span>
+                            </div>
+                            <svg class="w-5 h-5 text-secondary group-hover:text-white transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
                         <?php endif; ?>
                     </div>
-                </div>
 
-                <!-- Amenities -->
-                <div class="animate-on-scroll" data-animation="fade-up">
-                    <h2 class="font-serif text-3xl text-primary mb-8 relative inline-block">
-                        Comodidades
-                        <span class="absolute -bottom-2 left-0 w-12 h-1 bg-accent"></span>
-                    </h2>
-
-                    <div class="bg-white rounded-2xl shadow-sm border border-charcoal/5 p-8">
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
-                            <?php
-                            $displayAmenities = !empty($amenities) ? $amenities : [
-                                ['icon' => 'wifi', 'name' => 'WIFI Gratuito'],
-                                ['icon' => 'ac', 'name' => 'Ar Condicionado'],
-                                ['icon' => 'parking', 'name' => 'Estacionamento'],
-                                // ... other fallbacks
-                            ];
-                            
-                            foreach ($displayAmenities as $amenity): 
-                            ?>
-                            <div class="flex items-center space-x-3 text-charcoal/80">
-                                <span class="bg-secondary/10 p-2 rounded-full text-secondary flex-shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                    </svg>
-                                </span>
-                                <span class="text-sm font-medium"><?= e($amenity['name']) ?></span>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Right Column - Sidebar -->
-            <div class="lg:col-span-1">
-                <div class="sticky top-28 space-y-8 animate-on-scroll" data-animation="fade-left" data-delay="200">
-                    
-                    <!-- Booking Card -->
-                    <div class="bg-white rounded-2xl shadow-lg border border-accent/20 overflow-hidden relative">
-                        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary via-secondary to-accent"></div>
-                        
-                        <div class="p-8">
-                            <h3 class="font-serif text-2xl text-center text-primary mb-2">Reserve a Sua Estadia</h3>
-                            <p class="text-center text-charcoal/60 text-sm mb-8">Escolha a sua plataforma preferida</p>
-
-                            <div class="space-y-4">
-                                <?php if ($guestreadyUrl): ?>
-                                <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener noreferrer" 
-                                   class="group flex items-center w-full px-6 py-4 bg-white hover:bg-[#F8F9FA] text-primary border border-charcoal/10 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md">
-                                    <img src="<?= asset('images/guestreadylogo.png') ?>" alt="GuestReady" class="w-8 h-8 object-contain mr-4">
-                                    <span class="font-medium flex-1">GuestReady</span>
-                                    <svg class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                    </svg>
-                                </a>
-                                <?php endif; ?>
-
-                                <?php if ($bookingUrl): ?>
-                                <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener noreferrer" 
-                                   class="group flex items-center w-full px-6 py-4 bg-[#003580]/5 hover:bg-blue-50 text-[#003580] border border-[#003580]/10 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md">
-                                    <img src="<?= asset('images/bookinglogo.jpg') ?>" alt="Booking.com" class="w-8 h-8 object-contain mr-4 mix-blend-multiply rounded-sm">
-                                    <span class="font-medium flex-1">Booking.com</span>
-                                    <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                    </svg>
-                                </a>
-                                <?php endif; ?>
-
-                                <?php if ($airbnbUrl): ?>
-                                <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener noreferrer" 
-                                   class="group flex items-center w-full px-6 py-4 bg-[#FF5A5F]/5 hover:bg-red-50 text-[#FF5A5F] border border-[#FF5A5F]/10 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md">
-                                    <img src="<?= asset('images/airbnblogo.png') ?>" alt="Airbnb" class="w-8 h-8 object-contain mr-4">
-                                    <span class="font-medium flex-1">Airbnb</span>
-                                    <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                    </svg>
-                                </a>
-                                <?php endif; ?>
-
-                                <?php if (!$guestreadyUrl && !$bookingUrl && !$airbnbUrl): ?>
-                                <div class="text-center py-4 text-charcoal/60 bg-gray-50 rounded-lg">
-                                    Reservas online temporariamente indisponíveis.
-                                </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="mt-8 pt-6 border-t border-charcoal/10 text-center">
-                                <p class="text-charcoal/60 text-sm mb-3">Tem alguma dúvida?</p>
-                                <a href="<?= $base ?>/contactos/" class="inline-flex items-center text-secondary hover:text-secondary-700 font-medium transition-colors">
-                                    Fale Connosco
-                                    <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Info Card -->
-                    <div class="bg-primary rounded-2xl p-8 text-cream shadow-lg">
-                        <h4 class="font-serif text-xl mb-4">Informações Úteis</h4>
-                        <ul class="space-y-4 text-sm text-cream/80">
-                            <li class="flex justify-between border-b border-white/10 pb-2">
-                                <span>Check-in</span>
-                                <span class="font-semibold text-white">16:00 - 22:00</span>
+                    <!-- Essential Info Summary -->
+                    <div class="mt-8 pt-8 border-t border-gray-100">
+                        <h4 class="font-serif text-lg text-primary mb-4">Informações Essenciais</h4>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between text-sm">
+                                <span class="text-charcoal/60">Check-in</span>
+                                <span class="font-semibold text-primary"><?= substr($accommodation['check_in_time'], 0, 5) ?></span>
                             </li>
-                            <li class="flex justify-between border-b border-white/10 pb-2">
-                                <span>Check-out</span>
-                                <span class="font-semibold text-white">Até às 11:00</span>
+                            <li class="flex justify-between text-sm">
+                                <span class="text-charcoal/60">Check-out</span>
+                                <span class="font-semibold text-primary"><?= substr($accommodation['check_out_time'], 0, 5) ?></span>
                             </li>
-                            <li class="flex justify-between pt-1">
-                                <span>Licença AL</span>
-                                <span class="font-semibold text-white"><?= e($accommodation['license_number'] ?? '146729/AL') ?></span>
+                            <li class="flex justify-between text-sm">
+                                <span class="text-charcoal/60">Licença</span>
+                                <span class="font-semibold text-primary"><?= $accommodation['license_number'] ?? '146729/AL' ?></span>
                             </li>
                         </ul>
+                         <button onclick="openPoliciesModal()" class="w-full mt-6 py-2.5 rounded-lg border border-secondary/30 text-secondary text-sm font-medium hover:bg-secondary hover:text-white transition-all uppercase tracking-wide">
+                            Ver Regras da Casa
+                        </button>
                     </div>
-
                 </div>
-            </div>
 
+            </div>
         </div>
+
     </div>
 </section>
 
-<!-- Gallery Section (Bento Grid Inspired) -->
+<!-- Gallery Section -->
 <section class="py-16 bg-white overflow-hidden" id="gallery-section">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-10 flex items-end justify-between animate-on-scroll">
-            <div>
-                <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">Galeria</span>
-                <h2 class="font-serif text-3xl md:text-4xl text-primary">Um Olhar por Dentro</h2>
-            </div>
-            <!-- Optional: Link to see all photos if we had a separate page, for now just decorative or triggers modal -->
+        <div class="mb-10 animate-on-scroll">
+            <h2 class="font-serif text-3xl md:text-4xl text-primary">Galeria</h2>
+            <p class="text-charcoal/60 mt-2">Um olhar por dentro da Casa do Gi</p>
         </div>
 
         <?php if (!empty($galleryImages)): ?>
-        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-auto md:h-[600px] animate-on-scroll" data-delay="200">
-            <!-- Main Image (Left, spans 2 rows, 2 cols) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-3 md:gap-4 h-auto md:h-[550px] animate-on-scroll" data-delay="200">
+            <!-- Main Image -->
             <?php if (isset($galleryImages[0])): ?>
-            <div class="md:col-span-2 md:row-span-2 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(0)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[0]['file_path'])) ?>" 
-                     alt="<?= e($galleryImages[0]['alt_text_pt'] ?? 'Alobjamento Principal') ?>" 
+            <div class="col-span-2 row-span-2 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(0)">
+                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[0]['file_path'])) ?>"
+                     alt="<?= e($galleryImages[0]['alt_text_pt'] ?? 'Alojamento') ?>"
                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
-            </div>
-            <?php endif; ?>
-
-            <!-- Second Image (Top Right, 1x1) -->
-            <?php if (isset($galleryImages[1])): ?>
-            <div class="md:col-span-1 md:row-span-1 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(1)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[1]['file_path'])) ?>" 
-                     alt="<?= e($galleryImages[1]['alt_text_pt'] ?? 'Alojamento') ?>" 
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-            </div>
-            <?php endif; ?>
-
-            <!-- Third Image (Top Right, 1x1) -->
-            <?php if (isset($galleryImages[2])): ?>
-            <div class="md:col-span-1 md:row-span-1 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(2)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[2]['file_path'])) ?>" 
-                     alt="<?= e($galleryImages[2]['alt_text_pt'] ?? 'Alojamento') ?>" 
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-            </div>
-            <?php endif; ?>
-
-            <!-- Fourth Image (Bottom Right, 1x1) -->
-            <?php if (isset($galleryImages[3])): ?>
-            <div class="md:col-span-1 md:row-span-1 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(3)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[3]['file_path'])) ?>" 
-                     alt="<?= e($galleryImages[3]['alt_text_pt'] ?? 'Alojamento') ?>" 
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-            </div>
-            <?php endif; ?>
-
-            <!-- Fifth Image (Bottom Right, 1x1) with "See More" overlay -->
-            <?php if (isset($galleryImages[4])): ?>
-            <div class="md:col-span-1 md:row-span-1 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(4)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[4]['file_path'])) ?>" 
-                     alt="<?= e($galleryImages[4]['alt_text_pt'] ?? 'Alojamento') ?>" 
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                
-                <!-- "See All" Overlay -->
-                <div class="absolute inset-0 bg-primary/60 group-hover:bg-primary/70 transition-colors flex flex-col items-center justify-center text-white p-4 text-center">
-                    <span class="font-serif text-2xl font-bold">+ Ver mais</span>
-                    <span class="text-xs uppercase tracking-wider mt-1 opacity-80">todas as fotos</span>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                    </svg>
                 </div>
             </div>
             <?php endif; ?>
+
+            <?php for ($i = 1; $i <= 4; $i++): ?>
+            <?php if (isset($galleryImages[$i])): ?>
+            <div class="relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg aspect-[4/3] md:aspect-auto" onclick="openLightbox(<?= $i ?>)">
+                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[$i]['file_path'])) ?>"
+                     alt="<?= e($galleryImages[$i]['alt_text_pt'] ?? 'Alojamento') ?>"
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+
+                <?php if ($i === 4 && count($galleryImages) > 5): ?>
+                <div class="absolute inset-0 bg-primary/70 group-hover:bg-primary/80 transition-colors flex flex-col items-center justify-center text-white">
+                    <span class="font-serif text-3xl font-bold">+<?= count($galleryImages) - 5 ?></span>
+                    <span class="text-sm">mais fotos</span>
+                </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+            <?php endfor; ?>
         </div>
         <?php else: ?>
-        <div class="text-center py-12 text-charcoal/50 bg-gray-50 rounded-lg">
-            <p>Galeria de imagens brevemente disponível.</p>
+        <div class="text-center py-12 text-charcoal/50 bg-cream-50 rounded-2xl">
+            <p>Galeria de imagens brevemente disponivel.</p>
         </div>
         <?php endif; ?>
     </div>
 </section>
 
-<!-- Map Section (Same as Contactos) -->
-<section class="relative pb-16 lg:pb-24 pt-8 bg-white">
-    <!-- Bottom Gradient -->
-    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-cream-100"></div>
-    
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="text-center mb-12 animate-on-scroll">
-            <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">Localização</span>
-            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Onde Estamos</h2>
-            <p class="text-charcoal/70 max-w-2xl mx-auto">
-                Visite-nos em Mogadouro, no coração de Trás-os-Montes
-            </p>
+<!-- Location & Policy Combined Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-start">
+            
+            <!-- Left: Location & Activities -->
+            <div class="space-y-8 animate-on-scroll" data-animation="fade-right">
+                <div>
+                    <span class="text-secondary font-medium tracking-[0.2em] uppercase text-sm block mb-4">O Destino</span>
+                    <h2 class="font-serif text-3xl md:text-4xl text-primary mb-6">Mogadouro & Arredores</h2>
+                    <div class="prose prose-charcoal text-charcoal/80 leading-relaxed mb-8">
+                        <?= $accTranslation['location_description'] ?? 'Mogadouro é uma vila histórica no coração do Planalto Mirandês, onde a tradição se funde com a natureza. A partir da Casa do Gi, poderá explorar o Castelo de Mogadouro, percorrer trilhos no Parque Natural do Douro Internacional e saborear a gastronomia local única.' ?>
+                    </div>
+                     <div class="flex items-center gap-3 text-charcoal/80 font-medium">
+                        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span><?= e($accommodation['address'] ?? 'Mogadouro, Portugal') ?></span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <a href="<?= $base ?>/atividades/" class="inline-flex items-center justify-center gap-2 bg-secondary text-white px-8 py-4 rounded-full hover:bg-secondary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                        <span class="font-medium tracking-wide">Descobrir Atividades</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                    
+                    <button onclick="document.getElementById('contact-map').scrollIntoView({behavior: 'smooth'})" class="inline-flex items-center justify-center gap-2 border border-secondary text-secondary px-8 py-4 rounded-full hover:bg-secondary hover:text-white transition-all">
+                        <span class="font-medium tracking-wide">Ver no Mapa</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Cancellation & Policies -->
+            <div class="bg-cream-50 rounded-3xl p-8 md:p-10 border border-cream-100 animate-on-scroll" data-animation="fade-left">
+                <h3 class="font-serif text-2xl text-primary mb-6">Políticas da Estadia</h3>
+                
+                <div class="space-y-6">
+                    <!-- Cancellation -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <h4 class="font-bold text-primary">Cancelamento</h4>
+                        </div>
+                        <p class="text-charcoal/70 text-sm leading-relaxed pl-11">
+                            <?= e($accommodation['cancellation_policy'] ?? 'Cancelamento gratuito até 30 dias antes do check-in. Cancelamentos após este período sujeitos a taxas de acordo com a plataforma de reserva.') ?>
+                        </p>
+                    </div>
+
+                    <div class="h-px bg-cream-200 w-full"></div>
+
+                    <!-- House Rules Summary -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <h4 class="font-bold text-primary">Regras da Casa</h4>
+                        </div>
+                        <ul class="space-y-2 pl-11 text-sm text-charcoal/70">
+                            <li>• Não são permitidas festas ou eventos.</li>
+                            <li>• Horário de silêncio: 22h00 - 08h00.</li>
+                            <li>• Proibido fumar no interior.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-6 pt-6">
+                         <button onclick="openPoliciesModal()" class="text-secondary hover:text-primary transition-colors text-sm font-medium border-b border-secondary/30 pb-0.5 hover:border-primary">
+                             Ler todas as políticas e regras
+                         </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="relative py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10 animate-on-scroll">
+            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-3">Onde Estamos</h2>
+            <p class="text-charcoal/60">Visite-nos em Mogadouro, no coracao de Tras-os-Montes</p>
         </div>
 
         <div class="animate-on-scroll" data-delay="200">
-            <!-- Map Container -->
-            <div class="relative rounded-2xl overflow-hidden shadow-xl border border-charcoal/10">
-                <div id="contact-map" class="w-full h-[400px] md:h-[500px]"></div>
+            <div class="relative rounded-2xl overflow-hidden shadow-xl border border-gray-100">
+                <div id="contact-map" class="w-full h-[400px] md:h-[450px]"></div>
 
-                <!-- Map Overlay Card -->
-                <div class="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-sm bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-5 border border-charcoal/10 z-[5000]">
-                    <div class="flex items-start space-x-4">
+                <!-- Map Card -->
+                <div class="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-sm bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-5 z-[5000]">
+                    <div class="flex items-start gap-4">
                         <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0">
                             <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -410,19 +542,12 @@ include INCLUDES_PATH . '/header.php';
                         </div>
                         <div>
                             <h3 class="font-semibold text-primary text-lg">A Casa do Gi</h3>
-                            <p class="text-charcoal/80 text-sm mt-1">
-                                A Casa do Gi<br>
-                                5200-207 Mogadouro
-                            </p>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=41.34217,-6.71347"
-                               target="_blank"
-                               rel="noopener noreferrer"
+                            <p class="text-charcoal/70 text-sm mt-1">5200-207 Mogadouro</p>
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=<?= $accommodation['latitude'] ?? '41.34217' ?>,<?= $accommodation['longitude'] ?? '-6.71347' ?>"
+                               target="_blank" rel="noopener noreferrer"
                                class="inline-flex items-center text-secondary hover:text-secondary-700 text-sm font-medium mt-3 group">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                                </svg>
-                                Obter direções
-                                <svg class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                Obter direcoes
+                                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                 </svg>
                             </a>
@@ -434,29 +559,92 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- Lightbox Modal -->
-<div id="lightbox-modal" class="fixed inset-0 z-[100] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center">
-    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors z-[101]">
-        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-    </button>
-    
-    <button onclick="prevImage()" class="absolute left-4 md:left-8 text-white/50 hover:text-white transition-colors z-[101]">
-        <svg class="w-10 h-10 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
-        </svg>
-    </button>
 
-    <div class="relative w-full h-full max-w-7xl max-h-[90vh] p-4 flex items-center justify-center">
-        <img id="lightbox-image" src="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+
+<!-- Lightbox Modal -->
+<div id="lightbox-modal" class="fixed inset-0 z-[100] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex flex-col">
+    <div class="flex items-center justify-between px-4 md:px-8 py-4 bg-gradient-to-b from-black/50 to-transparent">
+        <div class="text-white/80 text-sm font-medium">
+            <span id="lightbox-counter">1</span> / <span id="lightbox-total"><?= count($galleryImages) ?></span>
+        </div>
+        <div class="absolute left-1/2 -translate-x-1/2 text-white font-medium text-lg text-center px-4 max-w-[60%] truncate hidden md:block" id="lightbox-title">
+            <!-- Title goes here -->
+        </div>
+        <button onclick="closeLightbox()" class="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
     </div>
 
-    <button onclick="nextImage()" class="absolute right-4 md:right-8 text-white/50 hover:text-white transition-colors z-[101]">
-        <svg class="w-10 h-10 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
-        </svg>
-    </button>
+    <!-- Mobile Title (Visible only on mobile below image) -->
+    <div class="md:hidden text-white/90 text-center px-4 py-2 font-medium" id="lightbox-title-mobile"></div>
+
+    <div class="flex-1 flex items-center justify-center relative px-4 md:px-20">
+        <button onclick="prevImage()" class="absolute left-2 md:left-6 text-white/50 hover:text-white transition-all z-[101] p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+
+        <div class="relative max-w-full max-h-[60vh] md:max-h-[70vh]">
+            <img id="lightbox-image" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
+            <div id="lightbox-loader" class="absolute inset-0 flex items-center justify-center hidden">
+                <div class="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            </div>
+        </div>
+
+        <button onclick="nextImage()" class="absolute right-2 md:right-6 text-white/50 hover:text-white transition-all z-[101] p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="bg-gradient-to-t from-black/70 to-transparent py-4 md:py-6">
+        <div class="max-w-4xl mx-auto px-4">
+            <div id="thumbnail-carousel" class="flex items-center justify-center gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                <?php foreach ($galleryImages as $index => $image): ?>
+                <button onclick="goToImage(<?= $index ?>)"
+                        class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 <?= $index === 0 ? 'border-accent opacity-100 scale-110' : 'border-transparent opacity-50' ?>"
+                        data-index="<?= $index ?>">
+                    <img src="<?= upload(str_replace('uploads/', '', $image['file_path'])) ?>" alt="" class="w-full h-full object-cover">
+                </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- All Amenities Modal -->
+<div id="amenities-modal" class="fixed inset-0 z-[100] bg-black/50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 class="font-serif text-xl text-primary">Todas as Comodidades</h3>
+            <button onclick="closeAmenitiesModal()" class="text-charcoal/40 hover:text-charcoal transition-colors p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto max-h-[calc(80vh-80px)]">
+            <?php foreach ($amenitiesByCategory as $category => $catAmenities): ?>
+            <div class="mb-6 last:mb-0">
+                <h4 class="text-sm font-semibold text-charcoal/60 uppercase tracking-wider mb-3"><?= $categoryLabels[$category] ?? ucfirst($category) ?></h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <?php foreach ($catAmenities as $amenity): ?>
+                    <div class="flex items-center gap-3 p-2">
+                        <svg class="w-5 h-5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span class="text-sm text-charcoal"><?= e($amenity['name']) ?></span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </div>
 
 <!-- Leaflet CSS/JS -->
@@ -465,117 +653,164 @@ include INCLUDES_PATH . '/header.php';
 
 <script>
 // Gallery Data
-const galleryImages = <?= json_encode(array_map(function($img) use ($base) {
-    // Strip 'uploads/' if present to avoid duplication by upload() helper
+const galleryImages = <?= json_encode(array_map(function($img) use ($lang) {
     $path = str_replace('uploads/', '', $img['file_path']);
-    // Filter empty paths
-    if (empty($path)) return asset('images/placeholder.jpg'); // Fallback
-    return upload($path);
+    $url = empty($path) ? asset('images/placeholder.jpg') : upload($path);
+    $alt = $lang->getCurrentLang() === 'pt'
+        ? ($img['alt_text_pt'] ?? '')
+        : ($img['alt_text_en'] ?? '');
+    return ['url' => $url, 'alt' => $alt];
 }, $galleryImages)) ?>;
+
 let currentImageIndex = 0;
+const totalImages = galleryImages.length;
 
 // Lightbox Functions
 function openLightbox(index) {
     currentImageIndex = index;
     updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
     const modal = document.getElementById('lightbox-modal');
     modal.classList.remove('hidden');
-    // small delay for opacity transition to work
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-    }, 10);
+    setTimeout(() => modal.classList.remove('opacity-0'), 10);
     document.body.style.overflow = 'hidden';
 }
 
 function closeLightbox() {
     const modal = document.getElementById('lightbox-modal');
     modal.classList.add('opacity-0');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
+    setTimeout(() => modal.classList.add('hidden'), 300);
     document.body.style.overflow = '';
 }
 
 function updateLightboxImage() {
     const img = document.getElementById('lightbox-image');
-    // Add fade effect
+    const loader = document.getElementById('lightbox-loader');
+    const titleEl = document.getElementById('lightbox-title');
+    const titleMobileEl = document.getElementById('lightbox-title-mobile');
+    
+    loader.classList.remove('hidden');
     img.style.opacity = '0';
-    setTimeout(() => {
-        img.src = galleryImages[currentImageIndex];
-        img.onload = () => {
-            img.style.opacity = '1';
-        };
-    }, 200);
+
+    const currentImg = galleryImages[currentImageIndex];
+    
+    // Update titles
+    if (titleEl) titleEl.textContent = currentImg.alt;
+    if (titleMobileEl) titleMobileEl.textContent = currentImg.alt;
+
+    const newImg = new Image();
+    newImg.onload = function() {
+        img.src = currentImg.url;
+        loader.classList.add('hidden');
+        img.style.opacity = '1';
+    };
+    newImg.src = currentImg.url;
+}
+
+function updateThumbnails() {
+    document.querySelectorAll('.thumbnail-item').forEach((thumb, index) => {
+        if (index === currentImageIndex) {
+            thumb.classList.add('border-accent', 'opacity-100', 'scale-110');
+            thumb.classList.remove('border-transparent', 'opacity-50');
+            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+            thumb.classList.remove('border-accent', 'opacity-100', 'scale-110');
+            thumb.classList.add('border-transparent', 'opacity-50');
+        }
+    });
+}
+
+function updateCounter() {
+    document.getElementById('lightbox-counter').textContent = currentImageIndex + 1;
+}
+
+function goToImage(index) {
+    currentImageIndex = index;
+    updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
 }
 
 function nextImage() {
-    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+    currentImageIndex = (currentImageIndex + 1) % totalImages;
     updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
 }
 
 function prevImage() {
-    currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+    currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
     updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
+}
+
+// Amenities Modal
+function openAmenitiesModal() {
+    const modal = document.getElementById('amenities-modal');
+    modal.classList.remove('hidden');
+    setTimeout(() => modal.classList.remove('opacity-0'), 10);
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAmenitiesModal() {
+    const modal = document.getElementById('amenities-modal');
+    modal.classList.add('opacity-0');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+    document.body.style.overflow = '';
 }
 
 // Keyboard navigation
 document.addEventListener('keydown', function(e) {
-    if (document.getElementById('lightbox-modal').classList.contains('hidden')) return;
-    
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') nextImage();
-    if (e.key === 'ArrowLeft') prevImage();
+    const lightbox = document.getElementById('lightbox-modal');
+    const amenitiesModal = document.getElementById('amenities-modal');
+
+    if (e.key === 'Escape') {
+        if (!lightbox.classList.contains('hidden')) closeLightbox();
+        if (!amenitiesModal.classList.contains('hidden')) closeAmenitiesModal();
+    }
+    if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+    }
 });
 
-// Map Initialization
-document.addEventListener('DOMContentLoaded', function() {
-    const lat = 41.34217;
-    const lng = -6.71347;
+// Touch support
+let touchStartX = 0;
+document.getElementById('lightbox-modal').addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, { passive: true });
+document.getElementById('lightbox-modal').addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) diff > 0 ? nextImage() : prevImage();
+}, { passive: true });
 
-    const map = L.map('contact-map', {
-        scrollWheelZoom: false
-    }).setView([lat, lng], 15);
+// Close amenities modal on backdrop click
+document.getElementById('amenities-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeAmenitiesModal();
+});
+
+// Map
+document.addEventListener('DOMContentLoaded', function() {
+    const lat = <?= $accommodation['latitude'] ?? 41.34217 ?>;
+    const lng = <?= $accommodation['longitude'] ?? -6.71347 ?>;
+
+    const map = L.map('contact-map', { scrollWheelZoom: false }).setView([lat, lng], 15);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
     const customIcon = L.divIcon({
         className: 'custom-map-marker',
-        html: `
-            <div style="
-                width: 40px;
-                height: 40px;
-                background: linear-gradient(135deg, #264653 0%, #1d3a47 100%);
-                border-radius: 50% 50% 50% 0;
-                transform: rotate(-45deg);
-                box-shadow: 0 4px 12px rgba(38, 70, 83, 0.4);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-                <svg style="transform: rotate(45deg); width: 20px; height: 20px; color: #C5A059;" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                </svg>
-            </div>
-        `,
+        html: `<div style="width:40px;height:40px;background:linear-gradient(135deg,#264653 0%,#1d3a47 100%);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(38,70,83,0.4);display:flex;align-items:center;justify-content:center;"><svg style="transform:rotate(45deg);width:20px;height:20px;color:#C5A059;" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg></div>`,
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         popupAnchor: [0, -40]
     });
 
-    const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-
-    marker.bindPopup(`
-        <div style="text-align: center; padding: 8px;">
-            <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
-            <span style="color: #2D3748; font-size: 12px;">Casa do Gi</span><br>
-            <span style="color: #2D3748; font-size: 12px;">5200-207 Mogadouro</span>
-        </div>
-    `, {
-        className: 'custom-popup'
-    });
+    L.marker([lat, lng], { icon: customIcon }).addTo(map)
+        .bindPopup('<div style="text-align:center;padding:8px;"><strong style="color:#264653;">A Casa do Gi</strong><br><span style="color:#2D3748;font-size:12px;">5200-207 Mogadouro</span></div>');
 
     map.on('click', () => map.scrollWheelZoom.enable());
     map.on('mouseout', () => map.scrollWheelZoom.disable());
@@ -583,26 +818,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Custom popup styling from Contact Page */
-.custom-popup .leaflet-popup-content-wrapper {
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-.custom-popup .leaflet-popup-tip {
-    background: white;
-}
-.leaflet-control-attribution {
-    font-size: 10px;
-    background: rgba(255, 255, 255, 0.8) !important;
-}
-/* IMPORTANT: Remove footer margin for this page so the map overlay flows into footer area if desired, 
-   or simply to match contact page style */
-footer {
-    margin-top: 0 !important;
-}
-body {
-    background-color: rgb(250 245 235 / var(--tw-bg-opacity, 1)) !important;
-}
+.custom-popup .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+.custom-popup .leaflet-popup-tip { background: white; }
+.leaflet-control-attribution { font-size: 10px; background: rgba(255,255,255,0.8) !important; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.thumbnail-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.thumbnail-item:hover { transform: scale(1.05); }
+.thumbnail-item.scale-110 { transform: scale(1.1); z-index: 10; }
+#lightbox-image { transition: opacity 0.3s ease-in-out; }
+footer { margin-top: 0 !important; }
 </style>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>
