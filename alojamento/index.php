@@ -136,9 +136,10 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Quick Info Bar -->
-<div class="relative z-20 -mt-12 lg:-mt-16 px-4">
-    <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border-b-4 border-secondary p-6 md:p-8 animate-on-scroll" data-animation="fade-up" data-delay="400">
+<section class="bg-white py-12 border-b border-cream-100">
+    <div class="px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.05)] border border-cream-200 p-6 md:p-8 animate-on-scroll" data-animation="fade-up" data-delay="400">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x lg:divide-secondary/10">
                 
                 <!-- Guests -->
@@ -158,7 +159,8 @@ include INCLUDES_PATH . '/header.php';
                 <div class="flex items-center justify-center gap-4 lg:px-4 group cursor-default">
                     <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
                         <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            <!-- Bed Front Icon -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 18v3m16-3v3M4 18h16M4 13h16v5H4v-5zM5 13V8a2 2 0 012-2h10a2 2 0 012 2v5M8 10h3M13 10h3"/>
                         </svg>
                     </div>
                     <div class="flex flex-col">
@@ -171,12 +173,13 @@ include INCLUDES_PATH . '/header.php';
                 <div class="flex items-center justify-center gap-4 lg:px-4 group cursor-default">
                      <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
                         <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3v-8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            <!-- Modern Shower Icon (Larger) -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v4 M4 6h16l-2 5h-12L4 6z M8 14v6 M12 14v8 M16 14v6"/>
                         </svg>
                     </div>
                     <div class="flex flex-col">
                         <span class="text-3xl font-serif font-bold text-primary leading-none transition-colors"><?= $accommodation['bathrooms'] ?? 2 ?></span>
-                        <span class="text-xs font-semibold text-charcoal/50 uppercase tracking-widest mt-1">Banhos</span>
+                        <span class="text-xs font-semibold text-charcoal/50 uppercase tracking-widest mt-1">Casa de Banho</span>
                     </div>
                 </div>
 
@@ -196,104 +199,118 @@ include INCLUDES_PATH . '/header.php';
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Main Content Section -->
-<section class="py-20 lg:py-28 bg-cream-50 overflow-hidden">
+<section class="py-20 lg:py-28 bg-white overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="grid lg:grid-cols-12 gap-12 lg:gap-20">
             <!-- Left Column: Details & Experience -->
-            <div class="lg:col-span-8 space-y-20">
+            <div class="lg:col-span-8 space-y-16">
                 
-                <!-- 1. The Experience (About) -->
+                <!-- 1. The Experience (Description) -->
                 <div class="animate-on-scroll" data-animation="fade-up">
-                    <span class="text-secondary font-medium tracking-[0.2em] uppercase text-sm block mb-4">A Experiência</span>
-                    <h2 class="font-serif text-3xl md:text-5xl text-primary mb-8 leading-tight">
+                    <span class="text-accent font-bold tracking-[0.2em] uppercase text-xs block mb-4">A Experiência</span>
+                    <h2 class="font-serif text-3xl md:text-5xl text-primary mb-8 !leading-[1.2]" style="line-height: 1.2 !important;">
                         Um refúgio de <span class="italic text-accent">charme</span> e tranquilidade.
                     </h2>
-                    <div class="prose prose-lg prose-charcoal max-w-none font-light leading-relaxed">
+                    <div class="prose prose-lg prose-charcoal max-w-none font-light leading-relaxed text-charcoal/80">
                         <?= $accTranslation['description'] ?? '<p>A Casa do Gi é sinónimo de simplicidade, acolhimento e momentos de convívio marcantes.</p>' ?>
                     </div>
-
-                    <?php if (($accommodation['host_type'] ?? '') === 'superhost'): ?>
-                    <div class="mt-8 inline-flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-sm border border-cream-200">
-                        <div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="block font-medium text-primary text-sm uppercase tracking-wider">Superhost</span>
-                        </div>
-                    </div>
-                    <?php endif; ?>
                 </div>
 
-                <!-- 2. Spaces (Bedrooms & Bathrooms) -->
+                <!-- 2. Highlights (Icons) -->
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-8 border-y border-cream-200 animate-on-scroll" data-animation="fade-up" data-delay="100">
+                    <div class="flex items-center gap-4 group">
+                        <div class="w-12 h-12 rounded-full bg-cream-50 border border-cream-200 flex items-center justify-center text-secondary group-hover:scale-110 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                        </div>
+                        <span class="font-medium text-primary text-sm tracking-wide">Check-in autónomo</span>
+                    </div>
+                    <div class="flex items-center gap-4 group">
+                        <div class="w-12 h-12 rounded-full bg-cream-50 border border-cream-200 flex items-center justify-center text-secondary group-hover:scale-110 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        </div>
+                        <span class="font-medium text-primary text-sm tracking-wide">max. <?= $accommodation['max_guests'] ?? 6 ?> hóspedes</span>
+                    </div>
+                     <div class="flex items-center gap-4 group">
+                        <div class="w-12 h-12 rounded-full bg-cream-50 border border-cream-200 flex items-center justify-center text-secondary group-hover:scale-110 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6h12a1 1 0 011 1v2a1 1 0 01-1 1H6a1 1 0 01-1-1V7a1 1 0 011-1zM5 11h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2a1 1 0 011-1zM4 16h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a1 1 0 011-1z"/></svg>
+                        </div>
+                        <span class="font-medium text-primary text-sm tracking-wide">Toalhas e lençóis</span>
+                    </div>
+                </div>
+
+                <!-- 3. Spaces (Detailed List) -->
                 <div class="animate-on-scroll" data-animation="fade-up">
-                    <div class="flex items-end justify-between mb-10 border-b border-cream-200 pb-4">
-                         <h3 class="font-serif text-3xl text-primary">Os Espaços</h3>
-                    </div>
+                    <h3 class="font-serif text-2xl text-primary mb-8">Os Espaços</h3>
+                    <div class="bg-cream-50 rounded-2xl p-8 border border-cream-100">
+                        <div class="grid md:grid-cols-2 gap-x-12 gap-y-10">
+                            <!-- Dormidas -->
+                            <div class="space-y-6">
+                                <h4 class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-6 flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                                    Dormidas
+                                </h4>
+                                
+                                <ul class="space-y-5">
+                                    <li class="flex items-start gap-3">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 flex-shrink-0"></div>
+                                        <div>
+                                            <span class="block font-semibold text-primary">Quarto 1</span>
+                                            <span class="text-charcoal/70 text-sm font-light">2 camas de solteiro</span>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 flex-shrink-0"></div>
+                                        <div>
+                                            <span class="block font-semibold text-primary">Quarto 2</span>
+                                            <span class="text-charcoal/70 text-sm font-light">Sofá-cama de solteiro, Cama de casal</span>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 flex-shrink-0"></div>
+                                        <div>
+                                            <span class="block font-semibold text-primary">Quarto 3</span>
+                                            <span class="text-charcoal/70 text-sm font-light">Cama de casal</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
 
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <!-- Bedrooms Card -->
-                        <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-accent/20 group">
-                            <div class="w-12 h-12 bg-cream-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
-                                <svg class="w-6 h-6 text-primary group-hover:text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                            </div>
-                            <h4 class="font-serif text-xl text-primary mb-4">Dormidas</h4>
-                            <div class="space-y-4">
-                                <?php
-                                $displayBedrooms = !empty($bedrooms) ? $bedrooms : [
-                                    ['bedroom_number' => 1, 'room_name' => 'Suite Principal', 'beds_description' => 'Cama King Size'],
-                                    ['bedroom_number' => 2, 'room_name' => 'Quarto Duplo', 'beds_description' => '2 Camas Individuais'],
-                                    ['bedroom_number' => 3, 'room_name' => 'Quarto Conforto', 'beds_description' => 'Cama de Casal'],
-                                ];
-                                foreach ($displayBedrooms as $room):
-                                ?>
-                                <div class="flex items-start gap-4">
-                                    <span class="text-accent font-serif font-bold text-lg">0<?= $room['bedroom_number'] ?>.</span>
-                                    <div>
-                                        <div class="font-medium text-charcoal"><?= e($room['room_name'] ?? 'Quarto') ?></div>
-                                        <div class="text-sm text-charcoal/60 font-light"><?= e($room['beds_description']) ?></div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-
-                        <!-- Bathrooms Card -->
-                        <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-accent/20 group">
-                            <div class="w-12 h-12 bg-cream-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
-                                <svg class="w-6 h-6 text-primary group-hover:text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3v-8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                            </div>
-                            <h4 class="font-serif text-xl text-primary mb-4">Higiene & Conforto</h4>
-                            <div class="space-y-4">
-                                <?php
-                                $displayBathrooms = !empty($bathrooms) ? $bathrooms : [
-                                    ['bathroom_number' => 1, 'bathroom_name' => 'Casa de Banho 1', 'description' => 'Completa com banheira'],
-                                    ['bathroom_number' => 2, 'bathroom_name' => 'Casa de Banho 2', 'description' => 'Com duche'],
-                                ];
-                                foreach ($displayBathrooms as $bt):
-                                ?>
-                                <div class="flex items-start gap-4">
-                                    <span class="text-accent font-serif font-bold text-lg">0<?= $bt['bathroom_number'] ?>.</span>
-                                    <div>
-                                        <div class="font-medium text-charcoal"><?= e($bt['bathroom_name'] ?? 'Casa de Banho') ?></div>
-                                        <div class="text-sm text-charcoal/60 font-light"><?= e($bt['description']) ?></div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
+                            <!-- Higiene -->
+                            <div class="space-y-6">
+                                <h4 class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-6 flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v4 M4 6h16l-2 5h-12L4 6z M8 14v6 M12 14v8 M16 14v6"/></svg>
+                                    Higiene
+                                </h4>
+                                
+                                <ul class="space-y-5">
+                                    <li class="flex items-start gap-3">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 flex-shrink-0"></div>
+                                        <div>
+                                            <span class="block font-semibold text-primary">Quarto de banho 1</span>
+                                            <span class="text-charcoal/70 text-sm font-light">Sanita, chuveiro</span>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 flex-shrink-0"></div>
+                                        <div>
+                                            <span class="block font-semibold text-primary">Quarto de banho 2</span>
+                                            <span class="text-charcoal/70 text-sm font-light">Sanita, chuveiro</span>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Amenities Highlight -->
+                <!-- 4. Amenities Highlight -->
                 <div class="animate-on-scroll" data-animation="fade-up">
                     <div class="flex items-end justify-between mb-8 border-b border-cream-200 pb-4">
-                         <h3 class="font-serif text-3xl text-primary">Comodidades</h3>
+                         <h3 class="font-serif text-2xl text-primary">Comodidades</h3>
                          <?php if (count($amenities) > 8): ?>
                          <button onclick="openAmenitiesModal()" class="text-secondary hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase border-b border-secondary/30 pb-0.5 hover:border-primary">
                              Ver Tudo
@@ -304,11 +321,11 @@ include INCLUDES_PATH . '/header.php';
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <?php 
                         $displayAmenities = array_slice($amenities, 0, 8);
-                        if(empty($displayAmenities)) $displayAmenities = [['name' => 'WIFI'], ['name' => 'AC'], ['name' => 'TV'], ['name' => 'Cozinha']]; // Fallback
+                        if(empty($displayAmenities)) $displayAmenities = [['name' => 'WIFI'], ['name' => 'AC'], ['name' => 'TV'], ['name' => 'Cozinha']]; 
                         foreach ($displayAmenities as $am): 
                         ?>
                         <div class="flex items-center gap-3 p-4 bg-white rounded-xl border border-cream-100 hover:border-accent/30 transition-all duration-300 hover:shadow-md group">
-                            <div class="w-2 h-2 rounded-full bg-cream-200 group-hover:bg-accent transition-colors"></div>
+                            <div class="w-2 h-2 rounded-full bg-cream-200 group-hover:bg-accent transition-colors flex-shrink-0"></div>
                             <span class="text-sm text-charcoal-600 font-medium group-hover:text-primary transition-colors"><?= e($am['name']) ?></span>
                         </div>
                         <?php endforeach; ?>
@@ -318,67 +335,80 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Right Column: Booking Sidebar (Sticky) -->
-            <div class="lg:col-span-4 space-y-8">
+            <div class="lg:col-span-4 space-y-6">
                 
                 <!-- Booking Card -->
-                <div class="bg-white rounded-3xl shadow-xl p-8 border border-cream-100 sticky top-32 animate-on-scroll" data-animation="fade-left">
+                <div class="bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-8 border border-cream-200 sticky top-32 animate-on-scroll" data-animation="fade-left">
                     <div class="text-center mb-8">
-                        <span class="text-accent text-xs font-bold tracking-widest uppercase">Reserve a sua estadia</span>
-                        <h3 class="font-serif text-3xl text-primary mt-2">Pronto para relaxar?</h3>
+                        <span class="text-accent text-xs font-bold tracking-widest uppercase mb-2 block">Disponibilidade</span>
+                        <h3 class="font-serif text-3xl text-primary">Reserve Já</h3>
+                        <p class="text-charcoal/60 text-sm mt-2">Escolha a sua plataforma preferida</p>
                     </div>
 
                     <div class="space-y-4">
                         <?php if ($guestreadyUrl): ?>
-                        <a href="<?= e($guestreadyUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-cream-50 hover:bg-primary group transition-all duration-300 border border-transparent hover:shadow-lg">
-                            <div class="flex items-center gap-3">
-                                <img src="<?= asset('images/guestreadylogo.png') ?>" alt="GuestReady" class="h-6 w-auto object-contain grayscale group-hover:grayscale-0 group-hover:brightness-200 transition-all">
-                                <span class="font-medium text-primary group-hover:text-white transition-colors">GuestReady</span>
+                        <a href="<?= e($guestreadyUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#800020]/10 hover:border-[#800020] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
+                            <div class="flex items-center gap-4 relative z-10">
+                                <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
+                                     <img src="<?= asset('images/guestreadylogo.png') ?>" alt="GuestReady" class="w-full h-full object-contain transition-all">
+                                </div>
+                                <span class="font-semibold text-primary group-hover:text-[#800020] transition-colors">GuestReady</span>
                             </div>
-                            <svg class="w-5 h-5 text-secondary group-hover:text-accent transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            <svg class="w-5 h-5 text-cream-300 group-hover:text-[#800020] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
                         <?php endif; ?>
 
                         <?php if ($bookingUrl): ?>
-                        <a href="<?= e($bookingUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-cream-50 hover:bg-[#003580] group transition-all duration-300 border border-transparent hover:shadow-lg">
-                            <div class="flex items-center gap-3">
-                                <img src="<?= asset('images/bookinglogo.jpg') ?>" alt="Booking" class="h-6 w-auto object-contain mix-blend-multiply group-hover:brightness-0 group-hover:invert transition-all">
-                                <span class="font-medium text-primary group-hover:text-white transition-colors">Booking.com</span>
+                        <a href="<?= e($bookingUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#003580]/10 hover:border-[#003580] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
+                             <div class="flex items-center gap-4 relative z-10">
+                                <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
+                                     <img src="<?= asset('images/bookinglogo.jpg') ?>" alt="Booking" class="w-full h-full object-contain mix-blend-multiply group-hover:mix-blend-normal transition-all">
+                                </div>
+                                <span class="font-semibold text-primary group-hover:text-[#003580] transition-colors">Booking.com</span>
                             </div>
-                            <svg class="w-5 h-5 text-secondary group-hover:text-white transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            <svg class="w-5 h-5 text-cream-300 group-hover:text-[#003580] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
                         <?php endif; ?>
 
                         <?php if ($airbnbUrl): ?>
-                        <a href="<?= e($airbnbUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-cream-50 hover:bg-[#FF385C] group transition-all duration-300 border border-transparent hover:shadow-lg">
-                            <div class="flex items-center gap-3">
-                                <img src="<?= asset('images/airbnblogo.png') ?>" alt="Airbnb" class="h-6 w-auto object-contain group-hover:brightness-0 group-hover:invert transition-all">
-                                <span class="font-medium text-primary group-hover:text-white transition-colors">Airbnb</span>
+                        <a href="<?= e($airbnbUrl) ?>" target="_blank" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#FF385C]/10 hover:border-[#FF385C] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
+                             <div class="flex items-center gap-4 relative z-10">
+                                <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
+                                      <img src="<?= asset('images/airbnblogo.png') ?>" alt="Airbnb" class="w-full h-full object-contain transition-all">
+                                </div>
+                                <span class="font-semibold text-primary group-hover:text-[#FF385C] transition-colors">Airbnb</span>
                             </div>
-                            <svg class="w-5 h-5 text-secondary group-hover:text-white transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            <svg class="w-5 h-5 text-cream-300 group-hover:text-[#FF385C] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
                         <?php endif; ?>
                     </div>
 
+                     <!-- Need Help CTA -->
+                    <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+                        <p class="text-charcoal/60 text-sm mb-4">Tem alguma dúvida ou pedido especial?</p>
+                        <a href="<?= $base . ($lang->isEnglish() ? '/en/contact/' : '/contactos/') ?>" class="inline-flex items-center justify-center w-full px-6 py-3 border-2 border-primary text-primary font-medium rounded-xl hover:bg-primary hover:text-white transition-all duration-300 group">
+                            <span class="mr-2">Entrar em Contacto</span>
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </a>
+                    </div>
+
                     <!-- Essential Info Summary -->
-                    <div class="mt-8 pt-8 border-t border-gray-100">
-                        <h4 class="font-serif text-lg text-primary mb-4">Informações Essenciais</h4>
-                        <ul class="space-y-3">
-                            <li class="flex justify-between text-sm">
-                                <span class="text-charcoal/60">Check-in</span>
-                                <span class="font-semibold text-primary"><?= substr($accommodation['check_in_time'], 0, 5) ?></span>
-                            </li>
-                            <li class="flex justify-between text-sm">
-                                <span class="text-charcoal/60">Check-out</span>
-                                <span class="font-semibold text-primary"><?= substr($accommodation['check_out_time'], 0, 5) ?></span>
-                            </li>
-                            <li class="flex justify-between text-sm">
-                                <span class="text-charcoal/60">Licença</span>
-                                <span class="font-semibold text-primary"><?= $accommodation['license_number'] ?? '146729/AL' ?></span>
-                            </li>
-                        </ul>
-                         <button onclick="openPoliciesModal()" class="w-full mt-6 py-2.5 rounded-lg border border-secondary/30 text-secondary text-sm font-medium hover:bg-secondary hover:text-white transition-all uppercase tracking-wide">
-                            Ver Regras da Casa
-                        </button>
+                    <div class="mt-8 pt-6 border-t border-gray-100 bg-cream-50/50 -mx-8 -mb-8 p-8 rounded-b-3xl">
+                        <h4 class="font-serif text-sm font-bold text-primary mb-4 uppercase tracking-widest">Check-in / Out</h4>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-center">
+                                <span class="block text-xs uppercase text-charcoal/50 font-bold tracking-wide mb-1">Entrada</span>
+                                <span class="font-serif text-xl text-primary"><?= substr($accommodation['check_in_time'], 0, 5) ?></span>
+                            </div>
+                            <div class="h-8 w-px bg-cream-300"></div>
+                            <div class="text-center">
+                                <span class="block text-xs uppercase text-charcoal/50 font-bold tracking-wide mb-1">Saída</span>
+                                <span class="font-serif text-xl text-primary"><?= substr($accommodation['check_out_time'], 0, 5) ?></span>
+                            </div>
+                        </div>
+                         <div class="text-center">
+                            <span class="text-[10px] uppercase text-charcoal/40 tracking-widest">Licença <?= $accommodation['license_number'] ?? '146729/AL' ?></span>
+                         </div>
                     </div>
                 </div>
 
@@ -389,11 +419,16 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Gallery Section -->
-<section class="py-16 bg-white overflow-hidden" id="gallery-section">
+<section class="py-16 pt-24 bg-cream-50 overflow-hidden" id="gallery-section">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-10 animate-on-scroll">
-            <h2 class="font-serif text-3xl md:text-4xl text-primary">Galeria</h2>
-            <p class="text-charcoal/60 mt-2">Um olhar por dentro da Casa do Gi</p>
+        <div class="mb-14 animate-on-scroll">
+            <span class="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3 block">Interiores</span>
+            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">
+                Galeria de Imagens
+            </h2>
+            <p class="text-charcoal/70 max-w-2xl leading-relaxed">
+                Um olhar por dentro da Casa do Gi, onde cada detalhe conta uma história.
+            </p>
         </div>
 
         <?php if (!empty($galleryImages)): ?>
@@ -440,15 +475,21 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Location & Policy Combined Section -->
-<section class="py-20 bg-white">
+<section class="relative py-20 bg-white">
+    <!-- Top Wave Divider connecting from Gallery -->
+    <div class="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[60px] text-cream-50 fill-current">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+    </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-16 items-start">
             
             <!-- Left: Location & Activities -->
             <div class="space-y-8 animate-on-scroll" data-animation="fade-right">
                 <div>
-                    <span class="text-secondary font-medium tracking-[0.2em] uppercase text-sm block mb-4">O Destino</span>
-                    <h2 class="font-serif text-3xl md:text-4xl text-primary mb-6">Mogadouro & Arredores</h2>
+                    <span class="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3 block">O Destino</span>
+                    <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Mogadouro & Envolvência</h2>
                     <div class="prose prose-charcoal text-charcoal/80 leading-relaxed mb-8">
                         <?= $accTranslation['location_description'] ?? 'Mogadouro é uma vila histórica no coração do Planalto Mirandês, onde a tradição se funde com a natureza. A partir da Casa do Gi, poderá explorar o Castelo de Mogadouro, percorrer trilhos no Parque Natural do Douro Internacional e saborear a gastronomia local única.' ?>
                     </div>
@@ -464,7 +505,7 @@ include INCLUDES_PATH . '/header.php';
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
                     
-                    <button onclick="document.getElementById('contact-map').scrollIntoView({behavior: 'smooth'})" class="inline-flex items-center justify-center gap-2 border border-secondary text-secondary px-8 py-4 rounded-full hover:bg-secondary hover:text-white transition-all">
+                    <button onclick="document.getElementById('map-section-title').scrollIntoView({behavior: 'smooth'})" class="inline-flex items-center justify-center gap-2 border border-secondary text-secondary px-8 py-4 rounded-full hover:bg-secondary hover:text-white transition-all">
                         <span class="font-medium tracking-wide">Ver no Mapa</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                     </button>
@@ -520,11 +561,21 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Map Section -->
-<section class="relative py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10 animate-on-scroll">
-            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-3">Onde Estamos</h2>
-            <p class="text-charcoal/60">Visite-nos em Mogadouro, no coracao de Tras-os-Montes</p>
+<section class="relative py-20 bg-cream-50">
+    <!-- Visual Divider (Wave) for smooth transition -->
+    <div class="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[60px] text-white fill-current">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 animate-on-scroll" id="map-section-title">
+            <span class="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3 inline-block">Localização</span>
+            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Onde Estamos</h2>
+            <p class="text-charcoal/70 max-w-2xl mx-auto">
+                Visite-nos em Mogadouro, no coração de Trás-os-Montes.
+            </p>
         </div>
 
         <div class="animate-on-scroll" data-delay="200">
@@ -606,7 +657,7 @@ include INCLUDES_PATH . '/header.php';
             <div id="thumbnail-carousel" class="flex items-center justify-center gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide">
                 <?php foreach ($galleryImages as $index => $image): ?>
                 <button onclick="goToImage(<?= $index ?>)"
-                        class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 <?= $index === 0 ? 'border-accent opacity-100 scale-110' : 'border-transparent opacity-50' ?>"
+                        class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 relative <?= $index === 0 ? 'border-accent opacity-100 scale-110 z-20 shadow-lg' : 'border-transparent opacity-50 z-0 hover:opacity-80' ?>"
                         data-index="<?= $index ?>">
                     <img src="<?= upload(str_replace('uploads/', '', $image['file_path'])) ?>" alt="" class="w-full h-full object-cover">
                 </button>

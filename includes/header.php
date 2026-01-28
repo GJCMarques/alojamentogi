@@ -185,6 +185,28 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             scroll-behavior: smooth;
         }
 
+        /* Custom Scrollbar - Sleek & Modern */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F0EFEA; /* Slightly darker cream for track contrast */
+            border-left: 1px solid rgba(0,0,0,0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #5D7A4F; /* Olive Green */
+            border-radius: 6px; /* Pill shape */
+            border: 3px solid transparent; /* Creates padding inside/floating effect */
+            background-clip: content-box; /* Ensures color stays inside border padding */
+            transition: background-color 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #4A633E; /* Darker Olive */
+        }
+
         /* Smooth parallax */
         .parallax-bg {
             background-attachment: fixed;
