@@ -654,7 +654,7 @@ include INCLUDES_PATH . '/header.php';
 
     <div class="bg-gradient-to-t from-black/70 to-transparent py-4 md:py-6">
         <div class="max-w-4xl mx-auto px-4">
-            <div id="thumbnail-carousel" class="flex items-center justify-center gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            <div id="thumbnail-carousel" class="flex items-center justify-center gap-2 md:gap-3 overflow-x-auto py-4 scrollbar-hide">
                 <?php foreach ($galleryImages as $index => $image): ?>
                 <button onclick="goToImage(<?= $index ?>)"
                         class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 relative <?= $index === 0 ? 'border-accent opacity-100 scale-110 z-20 shadow-lg' : 'border-transparent opacity-50 z-0 hover:opacity-80' ?>"

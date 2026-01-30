@@ -1,6 +1,6 @@
 <?php
 /**
- * A Casa do Gi - Activities / Tourist Guide Page (Portuguese)
+ * A Casa do Gi - Activities / Tourist Guide Page
  */
 
 require_once dirname(__DIR__) . '/includes/init.php';
@@ -21,468 +21,336 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative py-20 lg:py-32 bg-primary overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIwOS0xLjc5MS00LTQtNHMtNCAxLjc5MS00IDQgMS43OTEgNCA0IDQgNC0xLjc5MSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')]"></div>
+<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+             style="background-image: url('<?= asset('images/MogadouroAtividades.jpg') ?>');">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
     </div>
-    <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-b from-primary/50 to-primary"></div>
-    
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-fade-in">
+
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             Descubra Mogadouro
         </span>
-        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-lg">
+        
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
             O Que Fazer
         </h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto font-light leading-relaxed">
-            De paisagens deslumbrantes a sabores únicos, Mogadouro e o nordeste transmontano têm muito para oferecer.
+
+        <p class="text-lg md:text-xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="200">
+            De paisagens deslumbrantes a sabores únicos, o nordeste transmontano tem muito para oferecer.
         </p>
     </div>
 </section>
 
 <!-- Category Filter -->
-<section class="py-8 bg-cream border-b border-accent/20 sticky top-20 z-40 shadow-sm backdrop-blur-md bg-cream/95">
+<div class="sticky top-[80px] z-40 py-6 bg-white/90 backdrop-blur-md border-b border-cream-100 shadow-sm transition-all duration-300" id="filter-bar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap items-center justify-center gap-4">
-            <button class="activity-filter active px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-secondary text-cream shadow-md hover:scale-105 hover:bg-secondary-600" data-filter="all">
-                Todas
+        <div class="flex flex-wrap items-center justify-center gap-3 md:gap-4" id="filters-container">
+            <button class="activity-filter active group relative px-6 py-2.5 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-secondary text-white shadow-lg shadow-secondary/20 hover:scale-105" data-filter="all">
+                <span>Todas</span>
             </button>
-            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="natureza">
-                Natureza
+            
+            <button class="activity-filter group relative px-6 py-2.5 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-50 text-charcoal/60 hover:bg-white hover:text-accent border border-cream-200 hover:border-accent hover:shadow-md hover:scale-105" data-filter="natureza">
+                <span>Natureza</span>
             </button>
-            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="cultura">
-                Cultura
+            
+            <button class="activity-filter group relative px-6 py-2.5 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-50 text-charcoal/60 hover:bg-white hover:text-accent border border-cream-200 hover:border-accent hover:shadow-md hover:scale-105" data-filter="cultura">
+                <span>Cultura</span>
             </button>
-            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="gastronomia">
-                Gastronomia
+            
+            <button class="activity-filter group relative px-6 py-2.5 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-50 text-charcoal/60 hover:bg-white hover:text-accent border border-cream-200 hover:border-accent hover:shadow-md hover:scale-105" data-filter="gastronomia">
+                <span>Gastronomia</span>
             </button>
-            <button class="activity-filter px-8 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-100 text-charcoal hover:bg-accent hover:text-white border border-charcoal/5 hover:border-transparent hover:shadow-md hover:scale-105" data-filter="aventura">
-                Aventura
+            
+            <button class="activity-filter group relative px-6 py-2.5 rounded-full text-sm font-bold tracking-wide uppercase transition-all duration-300 bg-cream-50 text-charcoal/60 hover:bg-white hover:text-accent border border-cream-200 hover:border-accent hover:shadow-md hover:scale-105" data-filter="aventura">
+                <span>Aventura</span>
             </button>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Activities Grid -->
-<section class="py-16 lg:py-24 bg-cream-100">
+<section class="py-20 bg-cream-50 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="activities-grid">
 
             <!-- Activity 1: Parque Natural do Douro Internacional -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="natureza">
+            <article class="activity-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-category="natureza">
                 <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('<?= asset('images/douro_internacional.jpg') ?>'); background-color: #5D7A4F;">
+                       <!-- Fallback if image missing -->
+                       <div class="w-full h-full bg-gradient-to-br from-secondary/80 to-primary/80 flex items-center justify-center opacity-90">
+                           <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                       </div>
                     </div>
-                    <span class="absolute top-4 left-4 bg-secondary text-cream text-xs font-medium px-3 py-1 rounded-full">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+                    <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-secondary text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-sm">
                         Natureza
                     </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Parque Natural do Douro Internacional</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Paisagens de cortar a respiração ao longo das arribas do rio Douro. Observe aves de rapina como o grifo e a águia-real nos seus habitats naturais.
+                <div class="p-8">
+                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors">Parque Natural Douro</h3>
+                    <p class="text-charcoal/70 text-sm leading-relaxed mb-6 font-light">
+                        Paisagens de cortar a respiração ao longo das arribas do Douro. Observe aves de rapina nos seus habitats naturais.
                     </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
+                    <div class="flex items-center text-xs font-medium text-accent uppercase tracking-wider">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         20 km de Mogadouro
                     </div>
                 </div>
             </article>
 
             <!-- Activity 2: Castelo de Mogadouro -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="cultura">
+            <article class="activity-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-category="cultura">
                 <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-charcoal/30 to-charcoal/50 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-color: #C5A059;">
+                         <div class="w-full h-full bg-gradient-to-br from-accent/80 to-primary/80 flex items-center justify-center opacity-90">
+                           <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                       </div>
                     </div>
-                    <span class="absolute top-4 left-4 bg-accent text-cream text-xs font-medium px-3 py-1 rounded-full">
+                    <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-secondary text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-sm">
                         Cultura & História
                     </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Castelo de Mogadouro</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Torre de menagem do antigo castelo medieval, símbolo da vila. Desfrute de vistas panorâmicas e descubra a história templária da região.
+                <div class="p-8">
+                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors">Castelo de Mogadouro</h3>
+                    <p class="text-charcoal/70 text-sm leading-relaxed mb-6 font-light">
+                        Torre de menagem medieval, símbolo da vila. Desfrute de vistas panorâmicas e descubra a história templária.
                     </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
+                    <div class="flex items-center text-xs font-medium text-accent uppercase tracking-wider">
+                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Centro de Mogadouro
                     </div>
                 </div>
             </article>
 
-            <!-- Activity 3: Gastronomia Transmontana -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="gastronomia">
+            <!-- Activity 3: Gastronomia -->
+            <article class="activity-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-category="gastronomia">
                 <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                        </svg>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-color: #8B4513;">
+                        <div class="w-full h-full bg-gradient-to-br from-orange-900/80 to-primary/80 flex items-center justify-center opacity-90">
+                           <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                       </div>
                     </div>
-                    <span class="absolute top-4 left-4 bg-accent text-cream text-xs font-medium px-3 py-1 rounded-full">
+                    <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-secondary text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-sm">
                         Gastronomia
                     </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Gastronomia Transmontana</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Prove a famosa posta mirandesa, os enchidos artesanais, o azeite DOP de Trás-os-Montes e os vinhos do Douro em restaurantes locais.
+                <div class="p-8">
+                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors">Sabores da Região</h3>
+                    <p class="text-charcoal/70 text-sm leading-relaxed mb-6 font-light">
+                        Prove a famosa posta mirandesa, os enchidos artesanais e o azeite único em restaurantes locais de excelência.
                     </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                    <div class="flex items-center text-xs font-medium text-accent uppercase tracking-wider">
+                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Experiência imperdível
                     </div>
                 </div>
             </article>
 
-            <!-- Activity 4: Trilhos Pedestres -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="aventura">
+            <!-- Activity 4: Trilhos -->
+            <article class="activity-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-category="aventura">
                 <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-olive-300 to-olive-500 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                        </svg>
+                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-color: #2F4F4F;">
+                        <div class="w-full h-full bg-gradient-to-br from-green-900/80 to-primary/80 flex items-center justify-center opacity-90">
+                           <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                       </div>
                     </div>
-                    <span class="absolute top-4 left-4 bg-secondary text-white text-xs font-medium px-3 py-1 rounded-full">
+                    <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-secondary text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-sm">
                         Aventura
                     </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Trilhos Pedestres</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Explore os percursos pedestres da região, desde caminhadas suaves até trilhos mais desafiantes pelas serras e vales transmontanos.
+                <div class="p-8">
+                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors">Trilhos Pedestres</h3>
+                    <p class="text-charcoal/70 text-sm leading-relaxed mb-6 font-light">
+                        Caminhadas suaves ou trilhos desafiantes pelas serras e vales. Explore a natureza ao seu próprio ritmo.
                     </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                        </svg>
+                    <div class="flex items-center text-xs font-medium text-accent uppercase tracking-wider">
+                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                         Vários percursos
                     </div>
                 </div>
             </article>
 
-            <!-- Activity 5: Convento de São Francisco -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="cultura">
+            <!-- Activity 5: Convento -->
+            <article class="activity-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-category="cultura">
                 <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-wood-200 to-wood-400 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
-                        </svg>
+                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-color: #8B0000;">
+                        <div class="w-full h-full bg-gradient-to-br from-red-900/80 to-primary/80 flex items-center justify-center opacity-90">
+                           <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+                       </div>
                     </div>
-                    <span class="absolute top-4 left-4 bg-terracotta-500 text-white text-xs font-medium px-3 py-1 rounded-full">
-                        Cultura & História
+                    <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-secondary text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-sm">
+                        Cultura
                     </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Convento de São Francisco</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Antigo convento franciscano do século XIII, hoje transformado em espaço cultural. Admire a arquitetura gótica e os azulejos históricos.
+                <div class="p-8">
+                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors">Convento de S. Francisco</h3>
+                    <p class="text-charcoal/70 text-sm leading-relaxed mb-6 font-light">
+                        Antigo convento do séc. XIII transformado em espaço cultural. Admire a arquitetura gótica e os azulejos.
                     </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
+                    <div class="flex items-center text-xs font-medium text-accent uppercase tracking-wider">
+                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Centro de Mogadouro
                     </div>
                 </div>
             </article>
 
-            <!-- Activity 6: Vinhas do Douro -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="gastronomia">
+            <!-- Activity 6: Enoturismo -->
+            <article class="activity-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-category="gastronomia">
                 <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-olive-200 to-wood-400 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                        </svg>
+                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-color: #556B2F;">
+                        <div class="w-full h-full bg-gradient-to-br from-lime-900/80 to-primary/80 flex items-center justify-center opacity-90">
+                           <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                       </div>
                     </div>
-                    <span class="absolute top-4 left-4 bg-wood-500 text-white text-xs font-medium px-3 py-1 rounded-full">
-                        Gastronomia
+                    <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-secondary text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-sm">
+                        Enoturismo
                     </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Enoturismo no Douro</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Visite quintas vinícolas na região do Douro Superior. Prove os vinhos locais e descubra os segredos da vindima transmontana.
+                <div class="p-8">
+                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors">Vinhos do Douro</h3>
+                    <p class="text-charcoal/70 text-sm leading-relaxed mb-6 font-light">
+                        Visite quintas vinícolas e descubra os segredos da vindima transmontana e do Vinho do Porto.
                     </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
+                    <div class="flex items-center text-xs font-medium text-accent uppercase tracking-wider">
+                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         30 km de Mogadouro
                     </div>
                 </div>
             </article>
 
-            <!-- Activity 7: Observação de Aves -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="natureza">
-                <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-cream-300 to-olive-300 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </div>
-                    <span class="absolute top-4 left-4 bg-secondary text-white text-xs font-medium px-3 py-1 rounded-full">
-                        Natureza
-                    </span>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Observação de Aves</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        A região é um paraíso para birdwatchers. Observe grifos, águias-reais, cegonhas-negras e muitas outras espécies nos seus habitats naturais.
-                    </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Primavera e Verão
-                    </div>
-                </div>
-            </article>
-
-            <!-- Activity 8: Passeios de Barco -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="aventura">
-                <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-granite-300 to-olive-400 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                        </svg>
-                    </div>
-                    <span class="absolute top-4 left-4 bg-secondary text-white text-xs font-medium px-3 py-1 rounded-full">
-                        Aventura
-                    </span>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Passeios de Barco no Douro</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Navegue pelo rio Douro e descubra as impressionantes arribas e a fauna única desta região classificada pela UNESCO.
-                    </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Abril a Outubro
-                    </div>
-                </div>
-            </article>
-
-            <!-- Activity 9: Aldeias Históricas -->
-            <article class="activity-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow" data-category="cultura">
-                <div class="aspect-[4/3] relative overflow-hidden">
-                    <div class="w-full h-full bg-gradient-to-br from-terracotta-200 to-granite-400 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                    </div>
-                    <span class="absolute top-4 left-4 bg-terracotta-500 text-white text-xs font-medium px-3 py-1 rounded-full">
-                        Cultura & História
-                    </span>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-serif text-xl text-primary mb-2">Aldeias Históricas</h3>
-                    <p class="text-charcoal text-sm mb-4">
-                        Visite as aldeias tradicionais do concelho: Bemposta, Bruçó, Castro Vicente. Descubra a arquitetura rural transmontana e o artesanato local.
-                    </p>
-                    <div class="flex items-center text-sm text-charcoal/70">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                        Concelho de Mogadouro
-                    </div>
-                </div>
-            </article>
-
         </div>
     </div>
 </section>
 
-<!-- Seasonal Activities -->
-<section class="py-16 lg:py-24 bg-cream-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="inline-block text-secondary text-sm font-medium uppercase tracking-wider mb-4">
-                Ao Longo do Ano
-            </span>
-            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Eventos e Festividades</h2>
-            <p class="text-charcoal max-w-2xl mx-auto">
-                Mogadouro vive de tradições. Ao longo do ano, várias festas e eventos animam a região.
+<!-- Seasonal Calendar -->
+<section class="py-24 bg-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 animate-on-scroll">
+            <span class="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3 inline-block">Ao Longo do Ano</span>
+            <h2 class="font-serif text-3xl md:text-5xl text-primary mb-4">Eventos e Festividades</h2>
+            <p class="text-charcoal/70 max-w-2xl mx-auto leading-relaxed">
+                Mogadouro vive de tradições. Descubra os eventos que marcam as estações.
             </p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Spring -->
-            <div class="bg-cream-100 rounded-lg p-6 border border-cream-300">
-                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                    </svg>
+            <div class="bg-cream-50 rounded-2xl p-8 border border-cream-100 hover:border-accent/30 transition-all duration-300 hover:shadow-lg group">
+                <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                 </div>
-                <h3 class="font-serif text-lg text-primary mb-2">Primavera</h3>
-                <ul class="text-charcoal text-sm space-y-2">
-                    <li>• Festa das Amendoeiras em Flor</li>
-                    <li>• Páscoa Tradicional</li>
-                    <li>• Romarias locais</li>
+                <h3 class="font-serif text-xl text-primary mb-4">Primavera</h3>
+                <ul class="text-charcoal/70 text-sm space-y-3">
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Amendoeiras em Flor</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Páscoa Tradicional</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Romarias locais</li>
                 </ul>
             </div>
 
             <!-- Summer -->
-            <div class="bg-cream-100 rounded-lg p-6 border border-cream-300">
-                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
+            <div class="bg-cream-50 rounded-2xl p-8 border border-cream-100 hover:border-accent/30 transition-all duration-300 hover:shadow-lg group">
+                 <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </div>
-                <h3 class="font-serif text-lg text-primary mb-2">Verão</h3>
-                <ul class="text-charcoal text-sm space-y-2">
-                    <li>• Festas de Nossa Senhora do Caminho</li>
-                    <li>• Festival Medieval</li>
-                    <li>• Noites de Verão</li>
+                <h3 class="font-serif text-xl text-primary mb-4">Verão</h3>
+                <ul class="text-charcoal/70 text-sm space-y-3">
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Festas N. Sra. Caminho</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Festival Medieval</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Noites de Verão</li>
                 </ul>
             </div>
 
             <!-- Autumn -->
-            <div class="bg-cream-100 rounded-lg p-6 border border-cream-300">
-                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
+            <div class="bg-cream-50 rounded-2xl p-8 border border-cream-100 hover:border-accent/30 transition-all duration-300 hover:shadow-lg group">
+                 <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 </div>
-                <h3 class="font-serif text-lg text-primary mb-2">Outono</h3>
-                <ul class="text-charcoal text-sm space-y-2">
-                    <li>• Vindimas no Douro</li>
-                    <li>• Feira da Castanha</li>
-                    <li>• Matança do Porco</li>
+                <h3 class="font-serif text-xl text-primary mb-4">Outono</h3>
+                <ul class="text-charcoal/70 text-sm space-y-3">
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Vindimas no Douro</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Feira da Castanha</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Matança do Porco</li>
                 </ul>
             </div>
 
             <!-- Winter -->
-            <div class="bg-cream-100 rounded-lg p-6 border border-cream-300">
-                <div class="w-12 h-12 bg-charcoal/10 rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                    </svg>
+            <div class="bg-cream-50 rounded-2xl p-8 border border-cream-100 hover:border-accent/30 transition-all duration-300 hover:shadow-lg group">
+                 <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
                 </div>
-                <h3 class="font-serif text-lg text-primary mb-2">Inverno</h3>
-                <ul class="text-charcoal text-sm space-y-2">
-                    <li>• Natal Tradicional</li>
-                    <li>• Dia de Reis</li>
-                    <li>• Carnaval Transmontano</li>
+                <h3 class="font-serif text-xl text-primary mb-4">Inverno</h3>
+                <ul class="text-charcoal/70 text-sm space-y-3">
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Natal Tradicional</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Dia de Reis</li>
+                    <li class="flex items-center"><div class="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>Carnaval Transmontano</li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Practical Info -->
-<section class="py-16 lg:py-24 bg-cream-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 items-start">
+<!-- Useful Info & Links -->
+<section class="py-24 bg-cream-50 overflow-hidden">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            
             <!-- Getting Around -->
-            <div>
-                <h2 class="font-serif text-2xl md:text-3xl text-primary mb-6">Como Chegar e Circular</h2>
+            <div class="animate-on-scroll" data-animation="fade-right">
+                <span class="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3 block">Info Prática</span>
+                <h2 class="font-serif text-3xl md:text-4xl text-primary mb-8">Como Chegar e Circular</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center flex-shrink-0 text-secondary border border-cream-100">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-serif text-lg text-primary mb-2">De Carro</h4>
+                            <p class="text-charcoal/70 text-sm leading-relaxed">A forma mais prática de explorar. Mogadouro está a cerca de 2h30 do Porto via A4/IP4.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center flex-shrink-0 text-secondary border border-cream-100">
+                              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-serif text-lg text-primary mb-2">Transportes Públicos</h4>
+                            <p class="text-charcoal/70 text-sm leading-relaxed">Existem autocarros da Rede Expressos que ligam Mogadouro ao Porto e a Bragança diariamente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-cream-100 animate-on-scroll" data-animation="fade-left">
+                <h3 class="font-serif text-2xl text-primary mb-8">Ligações Úteis</h3>
                 <div class="space-y-4">
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
-                            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-primary mb-1">De Carro</h3>
-                            <p class="text-charcoal text-sm">A forma mais prática de explorar a região. Mogadouro está a cerca de 2h30 do Porto via A4/IP4.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
-                            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-primary mb-1">Transportes Públicos</h3>
-                            <p class="text-charcoal text-sm">Existem autocarros que ligam Mogadouro a Bragança e outras localidades, mas com horários limitados.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
-                            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-primary mb-1">Dica Local</h3>
-                            <p class="text-charcoal text-sm">Para explorar as arribas do Douro e as aldeias mais remotas, recomendamos veículo próprio ou aluguer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Useful Links -->
-            <div>
-                <h2 class="font-serif text-2xl md:text-3xl text-primary mb-6">Ligações Úteis</h2>
-                <div class="bg-white rounded-lg p-6 shadow-md space-y-4">
-                    <a href="https://www.cm-mogadouro.pt/" target="_blank" rel="noopener" class="flex items-center justify-between p-3 bg-cream-50 rounded hover:bg-cream-100 transition-colors">
-                        <span class="text-primary font-medium">Câmara Municipal de Mogadouro</span>
-                        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
+                    <a href="https://www.cm-mogadouro.pt/" target="_blank" class="flex items-center justify-between p-4 bg-cream-50 rounded-xl hover:bg-cream-100 transition-colors group border border-transparent hover:border-cream-200">
+                        <span class="font-medium text-primary group-hover:text-secondary transition-colors">Câmara Municipal</span>
+                        <svg class="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
-                    <a href="https://natural.pt/protected-areas/parque-natural-do-douro-internacional" target="_blank" rel="noopener" class="flex items-center justify-between p-3 bg-cream-50 rounded hover:bg-cream-100 transition-colors">
-                        <span class="text-primary font-medium">Parque Natural do Douro Internacional</span>
-                        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
+                    <a href="https://natural.pt/protected-areas/parque-natural-do-douro-internacional" target="_blank" class="flex items-center justify-between p-4 bg-cream-50 rounded-xl hover:bg-cream-100 transition-colors group border border-transparent hover:border-cream-200">
+                        <span class="font-medium text-primary group-hover:text-secondary transition-colors">Parque Natural do Douro</span>
+                        <svg class="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
-                    <a href="https://www.visitportugal.com/pt-pt/destinos/porto-e-norte/tras-os-montes" target="_blank" rel="noopener" class="flex items-center justify-between p-3 bg-cream-50 rounded hover:bg-cream-100 transition-colors">
-                        <span class="text-primary font-medium">Visit Portugal - Trás-os-Montes</span>
-                        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
+                     <a href="https://www.visitportugal.com/pt-pt/destinos/porto-e-norte/tras-os-montes" target="_blank" class="flex items-center justify-between p-4 bg-cream-50 rounded-xl hover:bg-cream-100 transition-colors group border border-transparent hover:border-cream-200">
+                        <span class="font-medium text-primary group-hover:text-secondary transition-colors">Visit Portugal</span>
+                        <svg class="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
             </div>
+            
         </div>
-    </div>
+     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-16 lg:py-24 bg-secondary">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="font-serif text-3xl md:text-4xl text-cream mb-6">
-            Pronto para Explorar?
-        </h2>
-        <p class="text-xl text-accent/80 mb-10">
-            Reserve a sua estadia na Casa do Gi e descubra o melhor de Mogadouro.
-        </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="<?= $base ?>/alojamento/" class="inline-flex items-center px-8 py-4 bg-cream text-secondary font-medium rounded hover:bg-cream-100 transition-colors">
-                Ver Alojamento
-            </a>
-            <a href="<?= $base ?>/contactos/" class="inline-flex items-center px-8 py-4 bg-secondary text-cream font-medium rounded hover:bg-secondary-700 transition-colors border border-secondary">
-                Contactar-nos
-            </a>
-        </div>
-    </div>
-</section>
 
-<!-- Filter Script -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.activity-filter');
@@ -492,19 +360,22 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const filter = this.dataset.filter;
 
-            // Update active button
+            // Update active button state
             filterButtons.forEach(btn => {
-                btn.classList.remove('active', 'bg-secondary', 'text-cream');
-                btn.classList.add('bg-cream-100', 'text-charcoal');
+                btn.classList.remove('active', 'bg-secondary', 'text-white', 'shadow-lg', 'shadow-secondary/20');
+                btn.classList.add('bg-cream-50', 'text-charcoal/60');
             });
-            this.classList.add('active', 'bg-secondary', 'text-cream');
-            this.classList.remove('bg-cream-100', 'text-charcoal');
+            this.classList.remove('bg-cream-50', 'text-charcoal/60');
+            this.classList.add('active', 'bg-secondary', 'text-white', 'shadow-lg', 'shadow-secondary/20');
 
-            // Filter cards
+            // Filter cards with animation
             activityCards.forEach(card => {
                 if (filter === 'all' || card.dataset.category === filter) {
                     card.style.display = 'block';
-                    card.style.animation = 'fadeIn 0.3s ease-in-out';
+                    // Restart animation
+                    card.style.animation = 'none';
+                    card.offsetHeight; /* trigger reflow */
+                    card.style.animation = 'fadeInUp 0.5s ease forwards';
                 } else {
                     card.style.display = 'none';
                 }
@@ -515,8 +386,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 </style>
