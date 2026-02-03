@@ -5,9 +5,28 @@
 
 require_once __DIR__ . '/includes/init.php';
 
+use Core\Database;
+
 $lang = \Core\Language::getInstance();
+$db = Database::getInstance();
 $base = basePath();
 $content = $lang->getPageContents('home');
+
+// Get hero image from database
+$pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'home' AND is_active = 1");
+$heroImage = $pageHero['hero_image'] ?? 'images/MogadouroAtividades.jpg';
+$heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.30;
+
+// Helper to get image URL
+function getHeroImageUrl($imagePath, $default = '') {
+    if (!$imagePath) return $default;
+    if (strpos($imagePath, 'uploads/') === 0) {
+        return basePath() . '/' . $imagePath;
+    }
+    return asset($imagePath);
+}
+$heroUrl = getHeroImageUrl($heroImage, asset('images/MogadouroAtividades.jpg'));
+
 $pageTitle = 'Inicio';
 $pageDescription = 'A Casa do Gi - Alojamento Local e Produtos Regionais em Mogadouro.';
 $bodyClass = 'homepage-new';
@@ -15,23 +34,42 @@ $bodyClass = 'homepage-new';
 include INCLUDES_PATH . '/header.php';
 ?>
 
-<!-- SPLIT HERO SECTION -->
-<div class="relative h-screen w-full flex flex-col md:flex-row overflow-hidden bg-primary">
-    <!-- Noise Grain Overlay -->
-    <div class="absolute inset-0 z-40 pointer-events-none opacity-[0.03] mix-blend-overlay" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
-    
-    <!-- LEFT SIDE: Accommodation -->
-    <div class="relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden md:border-b-0 z-10">
-        <!-- Background Image -->
-        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105"
-             style="background-image: url('<?= asset('images/IgrejaMatriz.jpg') ?>');">
+<!-- MOUNTAIN HERO - Full Screen with Parallax -->
+<section class="relative h-screen w-full overflow-hidden parallax-mountain" id="mountain-hero" style="background-image: url('<?= $heroUrl ?>');">
+    <!-- Gradient Overlay with Dynamic Opacity -->
+    <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50"></div>
+
+    <!-- Content -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
+        <div class="transform transition-all duration-1000" id="hero-content">
+            <span class="text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block animate-fade-in-up">
+                Trás-os-Montes, Portugal
+            </span>
+            <h1 class="font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl animate-fade-in-up animation-delay-200">
+                A Casa do Gi
+            </h1>
+            <p class="text-cream/80 text-lg md:text-xl font-light max-w-2xl mx-auto animate-fade-in-up animation-delay-400">
+                Onde a tradição transmontana encontra o conforto moderno
+            </p>
         </div>
+    </div>
+</section>
+
+<!-- SPLIT HERO SECTION -->
+<div class="relative h-screen w-full flex flex-col md:flex-row overflow-hidden" id="split-hero">
+
+    <!-- LEFT SIDE: Accommodation -->
+    <div class="split-hero-left relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
+        <!-- Background Image -->
+        <img src="<?= asset('images/IgrejaMatriz.jpg') ?>"
+             alt="Igreja Matriz de Mogadouro"
+             class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/10 transition-colors duration-700"></div>
-        
+
         <!-- Content -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-20">
-            <!-- custom style for spacing -->
+        <div class="split-content-left absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
             <style>
                 .hero-text-spacing {
                     letter-spacing: 0.5em !important;
@@ -39,17 +77,17 @@ include INCLUDES_PATH . '/header.php';
                 }
                 .group:hover .hero-text-spacing {
                     letter-spacing: 0.8em !important;
-                    color: #C5A059 !important; /* text-accent */
+                    color: #C5A059 !important;
                 }
             </style>
-            <span class="hero-text-spacing text-white/80 text-sm md:text-sm font-bold uppercase mb-10 opacity-0 transform translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 delay-100 block">
+            <span class="hero-text-spacing text-white/80 text-sm font-bold uppercase mb-10 opacity-0 transform translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block">
                 Bem-vindo ao
             </span>
             <h2 class="font-cursive text-5xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:text-white">
                 Refúgio
             </h2>
             <div class="opacity-0 transform translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-200">
-                <a href="<?= $base ?>/alojamento/" 
+                <a href="<?= $base ?>/alojamento/"
                    class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary hover:border-white shadow-xl hover:shadow-2xl hover:scale-105 cursor-pointer">
                     Ver Alojamento
                 </a>
@@ -58,7 +96,7 @@ include INCLUDES_PATH . '/header.php';
     </div>
 
     <!-- CENTER BRANDING (Absolute) -->
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none hidden md:block">
+    <div class="split-center-logo absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none hidden md:block">
         <!-- Rotating Text Ring -->
         <div class="relative w-48 h-48 flex items-center justify-center">
             <div class="absolute w-full h-full animate-[spin_10s_linear_infinite] opacity-90">
@@ -86,28 +124,28 @@ include INCLUDES_PATH . '/header.php';
     </div>
 
     <!-- RIGHT SIDE: Region/Shop -->
-    <div class="relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden z-10">
+    <div class="split-hero-right relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
         <!-- Background Image -->
-        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105"
-             style="background-image: url('<?= asset('images/Castelo.jpg') ?>');">
-        </div>
+        <img src="<?= asset('images/Castelo.jpg') ?>"
+             alt="Castelo de Mogadouro"
+             class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700"></div>
 
         <!-- Content -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-30">
-             <span class="hero-text-spacing text-white/80 text-sm md:text-sm font-bold uppercase mb-10 opacity-0 transform translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 delay-100 block">
+        <div class="split-content-right absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
+             <span class="hero-text-spacing text-white/80 text-sm font-bold uppercase mb-10 opacity-0 transform translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block">
                 Descubra a
             </span>
             <h2 class="font-cursive text-5xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:text-white">
                 Tradição
             </h2>
             <div class="flex flex-col md:flex-row gap-4 opacity-0 transform translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-200">
-                <a href="<?= $base ?>/atividades/" 
+                <a href="<?= $base ?>/atividades/"
                    class="inline-flex items-center justify-center px-8 py-3 backdrop-blur-md bg-secondary/80 border border-transparent text-white font-medium tracking-widest uppercase text-xs rounded-full hover:bg-secondary hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-secondary/30 cursor-pointer">
                     Explorar
                 </a>
-                <a href="<?= $base ?>/loja/" 
+                <a href="<?= $base ?>/loja/"
                    class="inline-flex items-center justify-center px-8 py-3 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full hover:bg-white hover:text-primary hover:border-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-105 cursor-pointer">
                     Loja
                 </a>
@@ -329,6 +367,128 @@ include INCLUDES_PATH . '/header.php';
 .animate-bounce-slow {
     animation: bounce-slow 3s ease-in-out infinite;
 }
+
+/* Parallax Background - Simple CSS approach */
+.parallax-mountain {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+    .parallax-mountain {
+        background-attachment: scroll;
+    }
+}
+
+/* Fade In Up Animation */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in-up {
+    animation: fade-in-up 1s ease-out forwards;
+    opacity: 0;
+}
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-600 { animation-delay: 0.6s; }
+
+/* Split Hero Scroll Animations */
+.split-hero-left {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.split-hero-right {
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.2s;
+}
+
+.split-center-logo {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.5s;
+}
+
+/* Active states when in view */
+#split-hero.in-view .split-hero-left {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#split-hero.in-view .split-hero-right {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#split-hero.in-view .split-center-logo {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Content fade in */
+.split-content-left,
+.split-content-right {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.6s;
+}
+
+#split-hero.in-view .split-content-left,
+#split-hero.in-view .split-content-right {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mobile: Stack animations */
+@media (max-width: 768px) {
+    .split-hero-left {
+        transform: translateY(-50px);
+    }
+    .split-hero-right {
+        transform: translateY(50px);
+        transition-delay: 0.3s;
+    }
+    #split-hero.in-view .split-hero-left,
+    #split-hero.in-view .split-hero-right {
+        transform: translateY(0);
+    }
+}
 </style>
+
+<script>
+// Split Hero Scroll Animation
+document.addEventListener('DOMContentLoaded', function() {
+    const splitHero = document.getElementById('split-hero');
+
+    if (splitHero) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        observer.observe(splitHero);
+    }
+});
+</script>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>

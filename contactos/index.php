@@ -111,6 +111,21 @@ $contactEmail = setting('contact_email', '');
 $contactPhone = setting('contact_phone', '');
 $contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
 
+// Get hero image from database
+$pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'contact' AND is_active = 1");
+$heroImage = $pageHero['hero_image'] ?? 'images/MogadouroContacto.jpg';
+$heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
+
+// Helper to get image URL
+function getHeroImageUrl($imagePath, $default = '') {
+    if (!$imagePath) return $default;
+    if (strpos($imagePath, 'uploads/') === 0) {
+        return basePath() . '/' . $imagePath;
+    }
+    return asset($imagePath);
+}
+$heroUrl = getHeroImageUrl($heroImage, asset('images/MogadouroContacto.jpg'));
+
 // Page configuration
 $pageTitle = __('contact_title', 'Contactos');
 $pageDescription = 'Entre em contacto com A Casa do Gi. Estamos disponíveis para responder às suas questões.';
@@ -119,13 +134,12 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<!-- Hero Section -->
 <section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed" 
-             style="background-image: url('<?= asset('images/MogadouroContacto.jpg') ?>');">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+             style="background-image: url('<?= $heroUrl ?>');">
         </div>
-        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">

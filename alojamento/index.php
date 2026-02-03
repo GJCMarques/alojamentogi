@@ -2,6 +2,7 @@
 /**
  * A Casa do Gi - Accommodation Page (Portuguese)
  * Dual accommodation support: Casa 1 and Casa 2
+ * Shows main page first, then specific casa when selected
  */
 
 require_once dirname(__DIR__) . '/includes/init.php';
@@ -14,21 +15,32 @@ $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Get selected accommodation (from URL or session, default to Casa 1)
-$selectedAccommodationNumber = (int)($_GET['casa'] ?? Session::get('selected_accommodation') ?? 1);
-if (!in_array($selectedAccommodationNumber, [1, 2])) {
-    $selectedAccommodationNumber = 1;
-}
-Session::set('selected_accommodation', $selectedAccommodationNumber);
+// Check if a specific casa is selected via URL parameter
+$casaParam = $_GET['casa'] ?? null;
+$showMainPage = ($casaParam === null); // Show main page if no casa parameter
 
-// Get accommodation data by accommodation_number
-$accommodation = $db->fetch(
-    "SELECT * FROM accommodation WHERE accommodation_number = ? AND is_active = 1",
-    [$selectedAccommodationNumber]
-);
+// Get selected accommodation number (only if parameter exists)
+$selectedAccommodationNumber = null;
+if ($casaParam !== null) {
+    $selectedAccommodationNumber = (int)$casaParam;
+    if (!in_array($selectedAccommodationNumber, [1, 2])) {
+        $selectedAccommodationNumber = 1;
+    }
+    Session::set('selected_accommodation', $selectedAccommodationNumber);
+}
+
+// Get accommodation data (for specific casa or first one for general info)
+if ($selectedAccommodationNumber) {
+    $accommodation = $db->fetch(
+        "SELECT * FROM accommodation WHERE accommodation_number = ? AND is_active = 1",
+        [$selectedAccommodationNumber]
+    );
+} else {
+    // Get first accommodation for general page info
+    $accommodation = $db->fetch("SELECT * FROM accommodation WHERE is_active = 1 LIMIT 1");
+}
 
 if (!$accommodation) {
-    // Fallback to any accommodation if selected one doesn't exist
     $accommodation = $db->fetch("SELECT * FROM accommodation WHERE is_active = 1 LIMIT 1");
 }
 
@@ -36,6 +48,21 @@ $accTranslation = $db->fetch(
     "SELECT * FROM accommodation_translations WHERE accommodation_id = ? AND language_id = ?",
     [$accommodation['id'] ?? 1, $lang->getCurrentLangId()]
 );
+
+// Get main page hero image from page_heroes table
+$mainPageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'accommodation_main'");
+
+// Get both accommodations for selection cards (main page)
+$allAccommodations = $db->fetchAll("SELECT * FROM accommodation WHERE is_active = 1 ORDER BY accommodation_number");
+
+// Helper function to get image URL
+function getAccommodationImageUrl($imagePath, $default = '') {
+    if (!$imagePath) return $default;
+    if (strpos($imagePath, 'uploads/') === 0) {
+        return basePath() . '/' . $imagePath;
+    }
+    return asset($imagePath);
+}
 
 // Get highlighted amenities (max 8) + all amenities for modal
 $highlightedAmenities = $db->fetchAll(
@@ -129,17 +156,147 @@ $bookingUrl = $accommodation['booking_url'] ?? null;
 $airbnbUrl = $accommodation['airbnb_url'] ?? null;
 
 // Page configuration
-$pageTitle = __('accommodation_title', 'Alojamento');
+$pageTitle = $showMainPage ? 'Alojamento' : 'Casa do Gi ' . $selectedAccommodationNumber;
 $pageDescription = 'A Casa do Gi - Alojamento Local em Mogadouro. Casa de férias de 100m² para 6 hóspedes.';
 
 include INCLUDES_PATH . '/header.php';
 ?>
 
-<!-- Hero Section -->
+<?php if ($showMainPage): ?>
+<!-- ========================================== -->
+<!-- MAIN PAGE: A Casa do Gi - Choose Your Casa -->
+<!-- ========================================== -->
+
+<!-- Hero Section - Main -->
+<?php
+$mainHeroImage = $mainPageHero['hero_image'] ?? 'images/MogadouroAlojamento.jpg';
+$mainHeroUrl = getAccommodationImageUrl($mainHeroImage, asset('images/MogadouroAlojamento.jpg'));
+$mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
+?>
 <section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
-             style="background-image: url('<?= asset('images/MogadouroAlojamento.jpg') ?>');">
+             style="background-image: url('<?= $mainHeroUrl ?>');">
+        </div>
+        <div class="absolute inset-0 bg-black" style="opacity: <?= $mainHeroOverlay ?>"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
+    </div>
+
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <span class="inline-block text-white/80 text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
+            Alojamento Local
+        </span>
+
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
+            A Casa do Gi
+        </h1>
+
+        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="200">
+            Acolhimento transmontano, momentos em família e memórias para sempre.
+        </p>
+    </div>
+</section>
+
+<!-- Choose Your Casa Section -->
+<section class="pt-24 pb-0 bg-white relative overflow-hidden" id="choose-casa">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-16 animate-on-scroll" data-animation="fade-up">
+            <span class="text-accent text-sm font-bold tracking-[0.2em] uppercase mb-4 block">Duas Casas, Uma Experiência</span>
+            <h2 class="font-serif text-3xl md:text-5xl text-primary mb-6">Escolha o Seu Refúgio</h2>
+            <p class="text-charcoal/70 text-lg max-w-2xl mx-auto">
+                Ambas as casas oferecem o mesmo conforto e hospitalidade transmontana. Escolha a que melhor se adapta às suas necessidades.
+            </p>
+        </div>
+
+        <!-- Casa Selection Cards -->
+        <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+            <?php foreach ($allAccommodations as $idx => $casa):
+                // Get cover image URL for this casa
+                $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.jpg' : 'images/Castelo.jpg');
+                $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.jpg' : 'images/Castelo.jpg'));
+            ?>
+            <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('<?= $coverUrl ?>');"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent group-hover:from-primary/95 transition-all duration-300"></div>
+
+                <div class="relative h-[500px] flex flex-col justify-end p-8 text-white">
+                    <div class="transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-accent text-xs font-bold tracking-widest uppercase mb-3 block">Alojamento</span>
+                        <h3 class="font-cursive text-5xl md:text-6xl mb-4 drop-shadow-lg">Casa do Gi <?= $casa['accommodation_number'] ?></h3>
+                        <p class="text-white/80 mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                            <?= $casa['accommodation_number'] == 1
+                                ? 'Descubra o conforto e a tradição transmontana nesta casa acolhedora, perfeita para famílias e grupos de amigos.'
+                                : 'Um espaço único com vista para as paisagens transmontanas, ideal para momentos de descanso e conexão com a natureza.' ?>
+                        </p>
+                        <div class="flex items-center gap-6 text-sm text-white/70 mb-6">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <?= $casa['max_guests'] ?? 6 ?> Hóspedes
+                            </span>
+                            <span class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                <?= $casa['bedrooms'] ?? 3 ?> Quartos
+                            </span>
+                        </div>
+                        <span class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-accent group-hover:text-white transition-colors">
+                            Ver Detalhes
+                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </a>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Common Features -->
+        <div class="mt-20 mb-16 text-center animate-on-scroll" data-animation="fade-up" data-delay="300">
+            <h3 class="font-serif text-2xl text-primary mb-8">O Que Ambas as Casas Oferecem</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="flex flex-col items-center gap-3 p-4">
+                    <div class="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center text-secondary">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                    </div>
+                    <span class="text-sm font-medium text-charcoal">Wi-Fi Grátis</span>
+                </div>
+                <div class="flex flex-col items-center gap-3 p-4">
+                    <div class="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center text-secondary">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                    </div>
+                    <span class="text-sm font-medium text-charcoal">Check-in Autónomo</span>
+                </div>
+                <div class="flex flex-col items-center gap-3 p-4">
+                    <div class="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center text-secondary">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                    </div>
+                    <span class="text-sm font-medium text-charcoal">Roupa de Cama</span>
+                </div>
+                <div class="flex flex-col items-center gap-3 p-4">
+                    <div class="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center text-secondary">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <span class="text-sm font-medium text-charcoal">Localização Central</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php else: ?>
+<!-- ========================================== -->
+<!-- SPECIFIC CASA PAGE: Casa do Gi 1 or 2     -->
+<!-- ========================================== -->
+
+<!-- Hero Section -->
+<?php
+// Get hero image for this specific casa
+$casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.jpg';
+$casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.jpg'));
+?>
+<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+             style="background-image: url('<?= $casaHeroUrl ?>');">
         </div>
         <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
     </div>
@@ -147,7 +304,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
         <!-- Rating Badge -->
         <?php if (!empty($accommodation['rating'])): ?>
-        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full mb-8 animate-on-scroll" data-animation="fade-up">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full mb-8 animate-on-scroll" data-animation="fade-up" data-delay="50">
             <div class="flex items-center gap-1.5 text-accent">
                 <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
@@ -162,7 +319,7 @@ include INCLUDES_PATH . '/header.php';
         <?php endif; ?>
 
         <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-lg animate-on-scroll" data-animation="fade-up" data-delay="100">
-            <?= e($accTranslation['name'] ?? 'A Casa do Gi') ?>
+            Casa do Gi <?= $selectedAccommodationNumber ?>
         </h1>
 
         <?php if (!empty($accTranslation['tagline'])): ?>
@@ -183,12 +340,20 @@ include INCLUDES_PATH . '/header.php';
         <!-- Casa Switcher -->
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 mt-10 animate-on-scroll" data-animation="fade-up" data-delay="400">
             <a href="?casa=1"
-               class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md <?= $selectedAccommodationNumber === 1 ? 'bg-accent text-primary shadow-xl scale-105' : 'bg-white/10 text-white border border-white/30 hover:bg-white hover:text-primary hover:border-white hover:scale-105' ?> font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl cursor-pointer min-w-[180px]">
+               class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md <?= $selectedAccommodationNumber === 1 ? 'bg-white/95 text-charcoal border-2 border-white shadow-xl scale-105' : 'bg-white/10 text-white border border-white/30 hover:bg-white/20 hover:border-white/50 hover:scale-105' ?> font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl cursor-pointer min-w-[180px]">
                 Casa do Gi 1
             </a>
             <a href="?casa=2"
-               class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md <?= $selectedAccommodationNumber === 2 ? 'bg-accent text-primary shadow-xl scale-105' : 'bg-white/10 text-white border border-white/30 hover:bg-white hover:text-primary hover:border-white hover:scale-105' ?> font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl cursor-pointer min-w-[180px]">
+               class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md <?= $selectedAccommodationNumber === 2 ? 'bg-white/95 text-charcoal border-2 border-white shadow-xl scale-105' : 'bg-white/10 text-white border border-white/30 hover:bg-white/20 hover:border-white/50 hover:scale-105' ?> font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl cursor-pointer min-w-[180px]">
                 Casa do Gi 2
+            </a>
+        </div>
+
+        <!-- Back Link -->
+        <div class="mt-8 animate-on-scroll" data-animation="fade-up" data-delay="500">
+            <a href="<?= $base ?>/alojamento/" class="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group">
+                <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <span class="text-sm font-medium">Ver Todas as Casas</span>
             </a>
         </div>
     </div>
@@ -614,7 +779,7 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Map Section -->
-<section class="relative py-20 bg-cream-50">
+<section class="relative pt-20 pb-16 bg-cream-50">
     <div class="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[60px] text-white fill-current">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
@@ -970,6 +1135,11 @@ document.addEventListener('DOMContentLoaded', function() {
 .thumbnail-item:hover { transform: scale(1.05); }
 .thumbnail-item.scale-110 { transform: scale(1.1); z-index: 10; }
 #lightbox-image { transition: opacity 0.3s ease-in-out; }
+</style>
+
+<?php endif; ?>
+
+<style>
 footer { margin-top: 0 !important; }
 </style>
 

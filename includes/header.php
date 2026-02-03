@@ -542,16 +542,29 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const header = document.getElementById('main-header');
+        const isHomepage = document.body.classList.contains('homepage-new');
+        const splitHero = document.getElementById('split-hero');
 
         // Scroll Effect with debouncing using requestAnimationFrame
         let ticking = false;
         let lastScrollY = 0;
 
         function handleScroll() {
-            if (lastScrollY > 50) {
-                header.classList.add('scrolled');
+            // For homepage, keep transparent through both heroes
+            if (isHomepage && splitHero) {
+                const splitHeroBottom = splitHero.offsetTop + splitHero.offsetHeight;
+                if (lastScrollY > splitHeroBottom - 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
             } else {
-                header.classList.remove('scrolled');
+                // Normal behavior for other pages
+                if (lastScrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
             }
             ticking = false;
         }

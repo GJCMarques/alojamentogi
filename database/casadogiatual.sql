@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30-Jan-2026 às 02:40
+-- Tempo de geração: 02-Fev-2026 às 22:29
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -54,15 +54,20 @@ CREATE TABLE `accommodation` (
   `checkin_instructions` text DEFAULT NULL COMMENT 'Check-in instructions (internal)',
   `towels_linens_included` tinyint(1) DEFAULT 1 COMMENT 'Towels and linens provided',
   `min_nights` int(10) UNSIGNED DEFAULT 1 COMMENT 'Minimum nights stay',
-  `instant_booking` tinyint(1) DEFAULT 0 COMMENT 'Instant booking available'
+  `instant_booking` tinyint(1) DEFAULT 0 COMMENT 'Instant booking available',
+  `accommodation_number` int(10) UNSIGNED DEFAULT 1 COMMENT 'Casa 1 or Casa 2',
+  `guestready_url` varchar(500) DEFAULT NULL COMMENT 'GuestReady booking URL',
+  `booking_url` varchar(500) DEFAULT NULL COMMENT 'Booking.com URL',
+  `airbnb_url` varchar(500) DEFAULT NULL COMMENT 'Airbnb URL'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `accommodation`
 --
 
-INSERT INTO `accommodation` (`id`, `slug`, `max_guests`, `bedrooms`, `bathrooms`, `area_sqm`, `floor_number`, `has_elevator`, `check_in_time`, `check_out_time`, `latitude`, `longitude`, `license_number`, `created_at`, `updated_at`, `is_active`, `rating`, `reviews_count`, `city`, `region`, `country`, `host_type`, `checkin_type`, `checkin_instructions`, `towels_linens_included`, `min_nights`, `instant_booking`) VALUES
-(1, 'casa-do-gi', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-19 12:51:19', '2026-01-28 20:55:31', 1, 4.8, 127, 'Mogadouro', 'Trás-os-Montes', 'Portugal', 'superhost', 'self_checkin', NULL, 1, 2, 1);
+INSERT INTO `accommodation` (`id`, `slug`, `max_guests`, `bedrooms`, `bathrooms`, `area_sqm`, `floor_number`, `has_elevator`, `check_in_time`, `check_out_time`, `latitude`, `longitude`, `license_number`, `created_at`, `updated_at`, `is_active`, `rating`, `reviews_count`, `city`, `region`, `country`, `host_type`, `checkin_type`, `checkin_instructions`, `towels_linens_included`, `min_nights`, `instant_booking`, `accommodation_number`, `guestready_url`, `booking_url`, `airbnb_url`) VALUES
+(1, 'casa-do-gi-1', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-19 12:51:19', '2026-01-30 02:30:59', 1, 4.8, 127, 'Mogadouro', 'Trás-os-Montes', 'Portugal', 'superhost', 'self_checkin', NULL, 1, 2, 1, 1, 'https://book.guestready.com/pt/properties/mogadouro/fuga-ecletica-em-mogadouro/72622?adults=1&amp;children=0&amp;infants=0&amp;checkin=&amp;checkout=', '', ''),
+(2, 'casa-do-gi-2', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-30 02:22:49', '2026-01-30 02:22:49', 1, 4.8, 127, 'Mogadouro', 'Trás-os-Montes', 'Portugal', 'superhost', 'self_checkin', NULL, 1, 2, 1, 2, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -72,54 +77,96 @@ INSERT INTO `accommodation` (`id`, `slug`, `max_guests`, `bedrooms`, `bathrooms`
 
 CREATE TABLE `accommodation_amenities` (
   `accommodation_id` int(10) UNSIGNED NOT NULL,
-  `amenity_id` int(10) UNSIGNED NOT NULL
+  `amenity_id` int(10) UNSIGNED NOT NULL,
+  `is_highlighted` tinyint(1) DEFAULT 0 COMMENT 'Show in main section (top 8)',
+  `sort_order` int(10) UNSIGNED DEFAULT 0 COMMENT 'Display order'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `accommodation_amenities`
 --
 
-INSERT INTO `accommodation_amenities` (`accommodation_id`, `amenity_id`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5),
-(1, 6),
-(1, 7),
-(1, 8),
-(1, 9),
-(1, 10),
-(1, 11),
-(1, 12),
-(1, 13),
-(1, 14),
-(1, 15),
-(1, 16),
-(1, 17),
-(1, 18),
-(1, 19),
-(1, 20),
-(1, 21),
-(1, 22),
-(1, 23),
-(1, 24),
-(1, 25),
-(1, 26),
-(1, 27),
-(1, 28),
-(1, 29),
-(1, 30),
-(1, 31),
-(1, 32),
-(1, 33),
-(1, 34),
-(1, 35),
-(1, 36),
-(1, 37),
-(1, 38),
-(1, 39),
-(1, 40);
+INSERT INTO `accommodation_amenities` (`accommodation_id`, `amenity_id`, `is_highlighted`, `sort_order`) VALUES
+(1, 1, 1, 1),
+(1, 2, 1, 2),
+(1, 3, 1, 3),
+(1, 4, 1, 4),
+(1, 5, 1, 23),
+(1, 6, 1, 24),
+(1, 7, 1, 25),
+(1, 8, 1, 26),
+(1, 9, 0, 5),
+(1, 10, 0, 7),
+(1, 11, 0, 19),
+(1, 12, 0, 6),
+(1, 13, 0, 8),
+(1, 14, 0, 9),
+(1, 15, 0, 10),
+(1, 16, 0, 11),
+(1, 17, 0, 12),
+(1, 18, 0, 13),
+(1, 19, 0, 14),
+(1, 20, 0, 15),
+(1, 21, 0, 16),
+(1, 22, 0, 17),
+(1, 23, 0, 18),
+(1, 24, 0, 20),
+(1, 25, 0, 21),
+(1, 26, 0, 22),
+(1, 27, 0, 31),
+(1, 28, 0, 32),
+(1, 29, 0, 33),
+(1, 30, 0, 34),
+(1, 31, 0, 35),
+(1, 32, 0, 36),
+(1, 33, 0, 37),
+(1, 34, 0, 38),
+(1, 35, 0, 27),
+(1, 36, 0, 28),
+(1, 37, 0, 29),
+(1, 38, 0, 30),
+(1, 39, 0, 39),
+(1, 40, 0, 40),
+(2, 1, 1, 1),
+(2, 2, 1, 2),
+(2, 3, 1, 3),
+(2, 4, 1, 4),
+(2, 5, 1, 5),
+(2, 6, 1, 6),
+(2, 7, 1, 7),
+(2, 8, 1, 8),
+(2, 9, 0, 0),
+(2, 10, 0, 0),
+(2, 11, 0, 0),
+(2, 12, 0, 0),
+(2, 13, 0, 0),
+(2, 14, 0, 0),
+(2, 15, 0, 0),
+(2, 16, 0, 0),
+(2, 17, 0, 0),
+(2, 18, 0, 0),
+(2, 19, 0, 0),
+(2, 20, 0, 0),
+(2, 21, 0, 0),
+(2, 22, 0, 0),
+(2, 23, 0, 0),
+(2, 24, 0, 0),
+(2, 25, 0, 0),
+(2, 26, 0, 0),
+(2, 27, 0, 0),
+(2, 28, 0, 0),
+(2, 29, 0, 0),
+(2, 30, 0, 0),
+(2, 31, 0, 0),
+(2, 32, 0, 0),
+(2, 33, 0, 0),
+(2, 34, 0, 0),
+(2, 35, 0, 0),
+(2, 36, 0, 0),
+(2, 37, 0, 0),
+(2, 38, 0, 0),
+(2, 39, 0, 0),
+(2, 40, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -141,16 +188,21 @@ CREATE TABLE `accommodation_translations` (
   `location_description` text DEFAULT NULL COMMENT 'Description of the location/neighborhood',
   `refund_policy` text DEFAULT NULL COMMENT 'Refund/cancellation policy text',
   `checkin_description` varchar(255) DEFAULT NULL COMMENT 'Check-in description for guests',
-  `host_description` text DEFAULT NULL COMMENT 'About the host'
+  `host_description` text DEFAULT NULL COMMENT 'About the host',
+  `cancellation_policy` text DEFAULT NULL COMMENT 'Cancellation policy text',
+  `activity_section_title` varchar(255) DEFAULT NULL COMMENT 'Title for activities section',
+  `activity_section_description` text DEFAULT NULL COMMENT 'Description for activities section'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `accommodation_translations`
 --
 
-INSERT INTO `accommodation_translations` (`id`, `accommodation_id`, `language_id`, `title`, `short_description`, `full_description`, `house_rules`, `name`, `tagline`, `description`, `location_description`, `refund_policy`, `checkin_description`, `host_description`) VALUES
-(1, 1, 1, 'A Casa do Gi', 'Casa de ferias de 100m2, andar nr 1, sem elevador', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', NULL, 'A Casa do Gi', '', '', 'Localizado no coração de Mogadouro, a poucos passos do centro histórico. A zona é tranquila e segura, ideal para famílias. Perto de restaurantes, supermercados e dos principais pontos turísticos da região de Trás-os-Montes.', 'Cancelamento gratuito até 7 dias antes do check-in. Após essa data, será cobrado o valor da primeira noite. Não comparência resulta em cobrança total.', 'Self check-in com cofre de chaves. Instruções enviadas 24h antes da chegada.', 'Somos uma família local apaixonada por Mogadouro e Trás-os-Montes. Adoramos partilhar a nossa terra com visitantes de todo o mundo.'),
-(2, 1, 2, 'A Casa do Gi', 'Holiday home of 100m2, 1st floor, no elevator', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', NULL, '', 'Um espaço pensado para proporcionar momentos de tranquilidade e bem-estar no coração de Trás-os-Montes.', '', 'Located in the heart of Mogadouro, just steps from the historic center. The area is quiet and safe, ideal for families. Close to restaurants, supermarkets and the main tourist attractions of the Trás-os-Montes region.', 'Free cancellation up to 7 days before check-in. After that date, the first night will be charged. No-show results in full charge.', 'Self check-in with lockbox. Instructions sent 24h before arrival.', 'We are a local family passionate about Mogadouro and Trás-os-Montes. We love sharing our land with visitors from all over the world.');
+INSERT INTO `accommodation_translations` (`id`, `accommodation_id`, `language_id`, `title`, `short_description`, `full_description`, `house_rules`, `name`, `tagline`, `description`, `location_description`, `refund_policy`, `checkin_description`, `host_description`, `cancellation_policy`, `activity_section_title`, `activity_section_description`) VALUES
+(1, 1, 1, 'A Casa do Gi', 'Casa de ferias de 100m2, andar nr 1, sem elevador', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', NULL, 'A Casa do Gi', '', '', 'Localizado no coração de Mogadouro, a poucos passos do centro histórico. A zona é tranquila e segura, ideal para famílias. Perto de restaurantes, supermercados e dos principais pontos turísticos da região de Trás-os-Montes.', 'Cancelamento gratuito até 7 dias antes do check-in. Após essa data, será cobrado o valor da primeira noite. Não comparência resulta em cobrança total.', 'Self check-in com cofre de chaves. Instruções enviadas 24h antes da chegada.', 'Somos uma família local apaixonada por Mogadouro e Trás-os-Montes. Adoramos partilhar a nossa terra com visitantes de todo o mundo.', 'Cancelamento gratuito até 30 dias antes do check-in. Cancelamentos após este período sujeitos a taxas de acordo com a plataforma de reserva.', 'Mogadouro &amp; Envolvência', 'Mogadouro é uma vila histórica no coração do Planalto Mirandês, onde a tradição se funde com a natureza. A partir da Casa do Gi, poderá explorar o Castelo de Mogadouro, percorrer trilhos no Parque Natural do Douro Internacional e saborear a gastronomia local única.'),
+(2, 1, 2, 'A Casa do Gi', 'Holiday home of 100m2, 1st floor, no elevator', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', NULL, '', 'Um espaço pensado para proporcionar momentos de tranquilidade e bem-estar no coração de Trás-os-Montes.', '', 'Located in the heart of Mogadouro, just steps from the historic center. The area is quiet and safe, ideal for families. Close to restaurants, supermarkets and the main tourist attractions of the Trás-os-Montes region.', 'Free cancellation up to 7 days before check-in. After that date, the first night will be charged. No-show results in full charge.', 'Self check-in with lockbox. Instructions sent 24h before arrival.', 'We are a local family passionate about Mogadouro and Trás-os-Montes. We love sharing our land with visitors from all over the world.', 'Free cancellation up to 30 days before check-in. Cancellations after this period subject to fees according to the booking platform.', 'Mogadouro &amp; Surroundings', 'Mogadouro is a historic town in the heart of the Mirandês Plateau, where tradition merges with nature. From Casa do Gi, you can explore Mogadouro Castle, walk trails in the Douro International Natural Park and savor the unique local gastronomy.'),
+(3, 2, 1, '', NULL, NULL, NULL, 'A Casa do Gi 2', '', '', 'Localizado no coração de Mogadouro, a poucos passos do centro histórico. A zona é tranquila e segura, ideal para famílias. Perto de restaurantes, supermercados e dos principais pontos turísticos da região de Trás-os-Montes.', 'Cancelamento gratuito até 7 dias antes do check-in. Após essa data, será cobrado o valor da primeira noite. Não comparência resulta em cobrança total.', 'Self check-in com cofre de chaves. Instruções enviadas 24h antes da chegada.', 'Somos uma família local apaixonada por Mogadouro e Trás-os-Montes. Adoramos partilhar a nossa terra com visitantes de todo o mundo.', 'Cancelamento gratuito até 30 dias antes do check-in. Cancelamentos após este período sujeitos a taxas de acordo com a plataforma de reserva.', 'Mogadouro & Envolvência', 'Mogadouro é uma vila histórica no coração do Planalto Mirandês, onde a tradição se funde com a natureza. A partir da Casa do Gi, poderá explorar o Castelo de Mogadouro, percorrer trilhos no Parque Natural do Douro Internacional e saborear a gastronomia local única.'),
+(4, 2, 2, '', NULL, NULL, NULL, ' 2', 'Um espaço pensado para proporcionar momentos de tranquilidade e bem-estar no coração de Trás-os-Montes.', '', 'Located in the heart of Mogadouro, just steps from the historic center. The area is quiet and safe, ideal for families. Close to restaurants, supermarkets and the main tourist attractions of the Trás-os-Montes region.', 'Free cancellation up to 7 days before check-in. After that date, the first night will be charged. No-show results in full charge.', 'Self check-in with lockbox. Instructions sent 24h before arrival.', 'We are a local family passionate about Mogadouro and Trás-os-Montes. We love sharing our land with visitors from all over the world.', 'Free cancellation up to 30 days before check-in. Cancellations after this period subject to fees according to the booking platform.', 'Mogadouro & Surroundings', 'Mogadouro is a historic town in the heart of the Mirandês Plateau, where tradition merges with nature. From Casa do Gi, you can explore Mogadouro Castle, walk trails in the Douro International Natural Park and savor the unique local gastronomy.');
 
 -- --------------------------------------------------------
 
@@ -245,7 +297,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `email`, `password_hash`, `full_name`, `role`, `avatar`, `is_active`, `last_login`, `login_attempts`, `locked_until`, `password_reset_token`, `password_reset_expires`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin@acasadogi.pt', '$2y$12$95JaIzBEov7tZz0SfnUwPOIecK1ujIWqumI74Ndw.e2RHwm/FpVqy', 'Administrador', 'super_admin', NULL, 1, '2026-01-28 18:50:15', 0, NULL, NULL, NULL, '2026-01-19 12:51:19', '2026-01-28 18:50:15');
+(1, 'admin', 'admin@acasadogi.pt', '$2y$12$95JaIzBEov7tZz0SfnUwPOIecK1ujIWqumI74Ndw.e2RHwm/FpVqy', 'Administrador', 'super_admin', NULL, 1, '2026-02-02 21:17:58', 0, NULL, NULL, NULL, '2026-01-19 12:51:19', '2026-02-02 21:17:58');
 
 -- --------------------------------------------------------
 
@@ -448,7 +500,11 @@ INSERT INTO `audit_log` (`id`, `admin_id`, `action`, `entity_type`, `entity_id`,
 (15, 1, 'logout', 'admin', 1, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-26 22:30:59'),
 (16, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-26 22:31:08'),
 (17, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-27 13:26:18'),
-(18, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-28 18:50:15');
+(18, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-28 18:50:15'),
+(19, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-30 02:23:24'),
+(20, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-30 19:01:50'),
+(21, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-02 17:40:12'),
+(22, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-02 21:17:58');
 
 -- --------------------------------------------------------
 
@@ -474,7 +530,9 @@ CREATE TABLE `bathrooms` (
 
 INSERT INTO `bathrooms` (`id`, `accommodation_id`, `bathroom_number`, `is_ensuite`, `has_shower`, `has_bathtub`, `has_bidet`, `created_at`, `image`) VALUES
 (1, 1, 1, 0, 1, 1, 1, '2026-01-26 22:31:24', NULL),
-(2, 1, 2, 0, 1, 0, 0, '2026-01-26 22:31:24', NULL);
+(2, 1, 2, 0, 1, 0, 0, '2026-01-26 22:31:24', NULL),
+(3, 2, 1, 0, 1, 1, 1, '2026-01-30 02:22:50', NULL),
+(4, 2, 2, 0, 1, 0, 0, '2026-01-30 02:22:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -487,18 +545,23 @@ CREATE TABLE `bathroom_translations` (
   `bathroom_id` int(10) UNSIGNED NOT NULL,
   `language_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(100) DEFAULT NULL COMMENT 'Bathroom name',
-  `description` varchar(255) NOT NULL COMMENT 'Bathroom description'
+  `description` varchar(255) NOT NULL COMMENT 'Bathroom description',
+  `title` varchar(50) DEFAULT NULL COMMENT 'Section title like "Higiene"'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `bathroom_translations`
 --
 
-INSERT INTO `bathroom_translations` (`id`, `bathroom_id`, `language_id`, `name`, `description`) VALUES
-(1, 1, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bidé, secador de cabelo'),
-(2, 1, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer'),
-(3, 2, 1, 'Casa de Banho Secundária', 'Chuveiro, lavatório'),
-(4, 2, 2, 'Secondary Bathroom', 'Shower, sink');
+INSERT INTO `bathroom_translations` (`id`, `bathroom_id`, `language_id`, `name`, `description`, `title`) VALUES
+(1, 1, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bidé, secador de cabelo', 'Higiene'),
+(2, 1, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer', 'Bathrooms'),
+(3, 2, 1, 'Casa de Banho Secundária', 'Chuveiro, lavatório', 'Higiene'),
+(4, 2, 2, 'Secondary Bathroom', 'Shower, sink', 'Bathrooms'),
+(5, 3, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bidé, secador de cabelo', 'Higiene'),
+(6, 3, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer', 'Bathrooms'),
+(7, 4, 1, 'Casa de Banho Secundária', 'Chuveiro, lavatório', 'Higiene'),
+(8, 4, 2, 'Secondary Bathroom', 'Shower, sink', 'Bathrooms');
 
 -- --------------------------------------------------------
 
@@ -521,7 +584,10 @@ CREATE TABLE `bedrooms` (
 INSERT INTO `bedrooms` (`id`, `accommodation_id`, `bedroom_number`, `created_at`, `image`) VALUES
 (1, 1, 1, '2026-01-19 12:51:19', NULL),
 (2, 1, 2, '2026-01-19 12:51:19', NULL),
-(3, 1, 3, '2026-01-19 12:51:19', NULL);
+(3, 1, 3, '2026-01-19 12:51:19', NULL),
+(4, 2, 1, '2026-01-30 02:22:50', NULL),
+(5, 2, 2, '2026-01-30 02:22:50', NULL),
+(6, 2, 3, '2026-01-30 02:22:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -534,20 +600,27 @@ CREATE TABLE `bedroom_translations` (
   `bedroom_id` int(10) UNSIGNED NOT NULL,
   `language_id` int(10) UNSIGNED NOT NULL,
   `beds_description` varchar(255) NOT NULL,
-  `name` varchar(100) DEFAULT NULL COMMENT 'Bedroom name (e.g., Master Suite)'
+  `name` varchar(100) DEFAULT NULL COMMENT 'Bedroom name (e.g., Master Suite)',
+  `title` varchar(50) DEFAULT NULL COMMENT 'Section title like "Dormidas"'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `bedroom_translations`
 --
 
-INSERT INTO `bedroom_translations` (`id`, `bedroom_id`, `language_id`, `beds_description`, `name`) VALUES
-(1, 1, 1, '2 camas de solteiro', 'Quarto Principal'),
-(2, 1, 2, '2 single beds', 'Master Bedroom'),
-(3, 2, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo'),
-(4, 2, 2, 'Single sofa bed, Double bed', 'Twin Room'),
-(5, 3, 1, 'Cama de casal', 'Quarto de Hóspedes'),
-(6, 3, 2, 'Double bed', 'Guest Room');
+INSERT INTO `bedroom_translations` (`id`, `bedroom_id`, `language_id`, `beds_description`, `name`, `title`) VALUES
+(1, 1, 1, '2 camas de solteiro', 'Quarto Principal', 'Dormidas'),
+(2, 1, 2, '2 single beds', 'Master Bedroom', 'Sleeping Arrangements'),
+(3, 2, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo', 'Dormidas'),
+(4, 2, 2, 'Single sofa bed, Double bed', 'Twin Room', 'Sleeping Arrangements'),
+(5, 3, 1, 'Cama de casal', 'Quarto de Hóspedes', 'Dormidas'),
+(6, 3, 2, 'Double bed', 'Guest Room', 'Sleeping Arrangements'),
+(7, 4, 1, '2 camas de solteiro', 'Quarto Principal', 'Dormidas'),
+(8, 4, 2, '2 single beds', 'Master Bedroom', 'Sleeping Arrangements'),
+(9, 5, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo', 'Dormidas'),
+(10, 5, 2, 'Single sofa bed, Double bed', 'Twin Room', 'Sleeping Arrangements'),
+(11, 6, 1, 'Cama de casal', 'Quarto de Hóspedes', 'Dormidas'),
+(12, 6, 2, 'Double bed', 'Guest Room', 'Sleeping Arrangements');
 
 -- --------------------------------------------------------
 
@@ -623,6 +696,75 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `house_rules`
+--
+
+CREATE TABLE `house_rules` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `accommodation_id` int(10) UNSIGNED NOT NULL,
+  `is_highlighted` tinyint(1) DEFAULT 0 COMMENT 'Show in main section (not just modal)',
+  `sort_order` int(10) UNSIGNED DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `house_rules`
+--
+
+INSERT INTO `house_rules` (`id`, `accommodation_id`, `is_highlighted`, `sort_order`, `created_at`) VALUES
+(1, 1, 1, 1, '2026-01-30 02:22:49'),
+(2, 1, 1, 2, '2026-01-30 02:22:49'),
+(3, 1, 1, 3, '2026-01-30 02:22:49'),
+(4, 1, 0, 4, '2026-01-30 02:22:49'),
+(5, 1, 0, 5, '2026-01-30 02:22:49'),
+(6, 2, 1, 1, '2026-01-30 02:22:50'),
+(7, 2, 1, 2, '2026-01-30 02:22:50'),
+(8, 2, 1, 3, '2026-01-30 02:22:50'),
+(9, 2, 0, 4, '2026-01-30 02:22:50'),
+(10, 2, 0, 5, '2026-01-30 02:22:50');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `house_rule_translations`
+--
+
+CREATE TABLE `house_rule_translations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `rule_id` int(10) UNSIGNED NOT NULL,
+  `language_id` int(10) UNSIGNED NOT NULL,
+  `rule_text` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `house_rule_translations`
+--
+
+INSERT INTO `house_rule_translations` (`id`, `rule_id`, `language_id`, `rule_text`) VALUES
+(1, 1, 1, 'Não são permitidas festas ou eventos.'),
+(2, 1, 2, 'No parties or events allowed.'),
+(3, 2, 1, 'Horário de silêncio: 22h00 - 08h00.'),
+(4, 2, 2, 'Quiet hours: 22:00 - 08:00.'),
+(5, 3, 1, 'Proibido fumar no interior.'),
+(6, 3, 2, 'No smoking inside.'),
+(7, 4, 1, 'Animais de estimação não são permitidos.'),
+(8, 4, 2, 'Pets are not allowed.'),
+(9, 5, 1, 'Respeite os vizinhos e a propriedade.'),
+(10, 5, 2, 'Respect neighbors and property.'),
+(11, 6, 1, 'Não são permitidas festas ou eventos.'),
+(12, 6, 2, 'No parties or events allowed.'),
+(13, 7, 1, 'Horário de silêncio: 22h00 - 08h00.'),
+(14, 7, 2, 'Quiet hours: 22:00 - 08:00.'),
+(15, 8, 1, 'Proibido fumar no interior.'),
+(16, 8, 2, 'No smoking inside.'),
+(17, 9, 1, 'Animais de estimação não são permitidos.'),
+(18, 9, 2, 'Pets are not allowed.'),
+(19, 10, 1, 'Respeite os vizinhos e a propriedade.'),
+(20, 10, 2, 'Respect neighbors and property.');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `languages`
 --
 
@@ -663,30 +805,31 @@ CREATE TABLE `media` (
   `category` enum('gallery','products','activities','content','other') DEFAULT 'other',
   `sort_order` int(10) UNSIGNED DEFAULT 0,
   `uploaded_by` int(10) UNSIGNED DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `accommodation_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Link to specific accommodation'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `media`
 --
 
-INSERT INTO `media` (`id`, `filename`, `original_name`, `file_path`, `file_type`, `file_size`, `alt_text_pt`, `alt_text_en`, `category`, `sort_order`, `uploaded_by`, `created_at`) VALUES
-(8, '6976756e94c17_1769370990.jpg', 'AlojamentoQuarto8.jpg', '/uploads/media/6976756e94c17_1769370990.jpg', 'image/jpeg', 77675, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(9, '6976756e992d1_1769370990.jpg', 'AlojamentoQuarto7.jpg', '/uploads/media/6976756e992d1_1769370990.jpg', 'image/jpeg', 78878, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(10, '6976756e9adb4_1769370990.jpg', 'AlojamentoQuarto6.jpg', '/uploads/media/6976756e9adb4_1769370990.jpg', 'image/jpeg', 86814, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(11, '6976756e9c308_1769370990.jpg', 'AlojamentoQuarto5.jpg', '/uploads/media/6976756e9c308_1769370990.jpg', 'image/jpeg', 82471, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(12, '6976756e9d47d_1769370990.jpg', 'AlojamentoQuarto4.jpg', '/uploads/media/6976756e9d47d_1769370990.jpg', 'image/jpeg', 100462, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(13, '6976756e9e5a6_1769370990.jpg', 'AlojamentoQuarto3.jpg', '/uploads/media/6976756e9e5a6_1769370990.jpg', 'image/jpeg', 93303, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(14, '6976756e9f8b2_1769370990.jpg', 'AlojamentoQuarto2.jpg', '/uploads/media/6976756e9f8b2_1769370990.jpg', 'image/jpeg', 75318, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(15, '6976756ea0995_1769370990.jpg', 'AlojamentoQuarto1.jpg', '/uploads/media/6976756ea0995_1769370990.jpg', 'image/jpeg', 97800, 'Quarto Cama de Casal', 'Double Bed Room', 'gallery', 0, 1, '2026-01-25 19:56:30'),
-(18, '6976986c675eb_1769379948.jpg', 'AlojamentoQuarto50.jpg', '/uploads/media/6976986c675eb_1769379948.jpg', 'image/jpeg', 54673, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48'),
-(19, '6976986c696fb_1769379948.jpg', 'AlojamentoQuarto49.jpg', '/uploads/media/6976986c696fb_1769379948.jpg', 'image/jpeg', 57394, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48'),
-(20, '6976986c6ad28_1769379948.jpg', 'AlojamentoQuarto48.jpg', '/uploads/media/6976986c6ad28_1769379948.jpg', 'image/jpeg', 163886, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48'),
-(21, '6976986c6c3a6_1769379948.jpg', 'AlojamentoQuarto47.jpg', '/uploads/media/6976986c6c3a6_1769379948.jpg', 'image/jpeg', 129213, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48'),
-(22, '6976986c6e346_1769379948.jpg', 'AlojamentoQuarto46.jpg', '/uploads/media/6976986c6e346_1769379948.jpg', 'image/jpeg', 98581, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48'),
-(23, '6976986c7080e_1769379948.jpg', 'AlojamentoQuarto45.jpg', '/uploads/media/6976986c7080e_1769379948.jpg', 'image/jpeg', 67252, '', '', 'gallery', 0, 1, '2026-01-25 22:25:48'),
-(24, '6976986c72fde_1769379948.jpg', 'AlojamentoQuarto44.jpg', '/uploads/media/6976986c72fde_1769379948.jpg', 'image/jpeg', 63988, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48'),
-(25, 'accommodation_697698bc063af.jpg', 'AlojamentoQuarto26.jpg', '/uploads/accommodation/accommodation_697698bc063af.jpg', 'image/jpeg', 69718, '', '', 'gallery', 1, NULL, '2026-01-25 22:27:08');
+INSERT INTO `media` (`id`, `filename`, `original_name`, `file_path`, `file_type`, `file_size`, `alt_text_pt`, `alt_text_en`, `category`, `sort_order`, `uploaded_by`, `created_at`, `accommodation_id`) VALUES
+(8, '6976756e94c17_1769370990.jpg', 'AlojamentoQuarto8.jpg', '/uploads/media/6976756e94c17_1769370990.jpg', 'image/jpeg', 77675, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(9, '6976756e992d1_1769370990.jpg', 'AlojamentoQuarto7.jpg', '/uploads/media/6976756e992d1_1769370990.jpg', 'image/jpeg', 78878, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(10, '6976756e9adb4_1769370990.jpg', 'AlojamentoQuarto6.jpg', '/uploads/media/6976756e9adb4_1769370990.jpg', 'image/jpeg', 86814, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(11, '6976756e9c308_1769370990.jpg', 'AlojamentoQuarto5.jpg', '/uploads/media/6976756e9c308_1769370990.jpg', 'image/jpeg', 82471, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(12, '6976756e9d47d_1769370990.jpg', 'AlojamentoQuarto4.jpg', '/uploads/media/6976756e9d47d_1769370990.jpg', 'image/jpeg', 100462, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(13, '6976756e9e5a6_1769370990.jpg', 'AlojamentoQuarto3.jpg', '/uploads/media/6976756e9e5a6_1769370990.jpg', 'image/jpeg', 93303, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(14, '6976756e9f8b2_1769370990.jpg', 'AlojamentoQuarto2.jpg', '/uploads/media/6976756e9f8b2_1769370990.jpg', 'image/jpeg', 75318, '', '', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(15, '6976756ea0995_1769370990.jpg', 'AlojamentoQuarto1.jpg', '/uploads/media/6976756ea0995_1769370990.jpg', 'image/jpeg', 97800, 'Quarto Cama de Casal', 'Double Bed Room', 'gallery', 0, 1, '2026-01-25 19:56:30', 1),
+(18, '6976986c675eb_1769379948.jpg', 'AlojamentoQuarto50.jpg', '/uploads/media/6976986c675eb_1769379948.jpg', 'image/jpeg', 54673, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48', NULL),
+(19, '6976986c696fb_1769379948.jpg', 'AlojamentoQuarto49.jpg', '/uploads/media/6976986c696fb_1769379948.jpg', 'image/jpeg', 57394, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48', NULL),
+(20, '6976986c6ad28_1769379948.jpg', 'AlojamentoQuarto48.jpg', '/uploads/media/6976986c6ad28_1769379948.jpg', 'image/jpeg', 163886, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48', NULL),
+(21, '6976986c6c3a6_1769379948.jpg', 'AlojamentoQuarto47.jpg', '/uploads/media/6976986c6c3a6_1769379948.jpg', 'image/jpeg', 129213, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48', NULL),
+(22, '6976986c6e346_1769379948.jpg', 'AlojamentoQuarto46.jpg', '/uploads/media/6976986c6e346_1769379948.jpg', 'image/jpeg', 98581, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48', NULL),
+(23, '6976986c7080e_1769379948.jpg', 'AlojamentoQuarto45.jpg', '/uploads/media/6976986c7080e_1769379948.jpg', 'image/jpeg', 67252, '', '', 'gallery', 0, 1, '2026-01-25 22:25:48', 1),
+(24, '6976986c72fde_1769379948.jpg', 'AlojamentoQuarto44.jpg', '/uploads/media/6976986c72fde_1769379948.jpg', 'image/jpeg', 63988, NULL, NULL, 'other', 0, 1, '2026-01-25 22:25:48', NULL),
+(25, 'accommodation_697698bc063af.jpg', 'AlojamentoQuarto26.jpg', '/uploads/accommodation/accommodation_697698bc063af.jpg', 'image/jpeg', 69718, '', '', 'gallery', 1, NULL, '2026-01-25 22:27:08', 1);
 
 -- --------------------------------------------------------
 
@@ -925,7 +1068,8 @@ INSERT INTO `settings` (`id`, `setting_key`, `setting_value`, `setting_type`, `s
 -- Índices para tabela `accommodation`
 --
 ALTER TABLE `accommodation`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_accommodation_number` (`accommodation_number`);
 
 --
 -- Índices para tabela `accommodation_amenities`
@@ -1046,6 +1190,22 @@ ALTER TABLE `content_blocks`
   ADD KEY `idx_section` (`section`);
 
 --
+-- Índices para tabela `house_rules`
+--
+ALTER TABLE `house_rules`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_accommodation` (`accommodation_id`),
+  ADD KEY `idx_highlighted` (`is_highlighted`);
+
+--
+-- Índices para tabela `house_rule_translations`
+--
+ALTER TABLE `house_rule_translations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_rule_lang` (`rule_id`,`language_id`),
+  ADD KEY `language_id` (`language_id`);
+
+--
 -- Índices para tabela `languages`
 --
 ALTER TABLE `languages`
@@ -1154,13 +1314,13 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT de tabela `accommodation`
 --
 ALTER TABLE `accommodation`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `accommodation_translations`
 --
 ALTER TABLE `accommodation_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `activities`
@@ -1196,31 +1356,31 @@ ALTER TABLE `amenity_translations`
 -- AUTO_INCREMENT de tabela `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de tabela `bathrooms`
 --
 ALTER TABLE `bathrooms`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `bathroom_translations`
 --
 ALTER TABLE `bathroom_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `bedrooms`
 --
 ALTER TABLE `bedrooms`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `bedroom_translations`
 --
 ALTER TABLE `bedroom_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `contact_submissions`
@@ -1233,6 +1393,18 @@ ALTER TABLE `contact_submissions`
 --
 ALTER TABLE `content_blocks`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT de tabela `house_rules`
+--
+ALTER TABLE `house_rules`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de tabela `house_rule_translations`
+--
+ALTER TABLE `house_rule_translations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de tabela `languages`
@@ -1369,6 +1541,19 @@ ALTER TABLE `bedroom_translations`
 --
 ALTER TABLE `content_blocks`
   ADD CONSTRAINT `content_blocks_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE;
+
+--
+-- Limitadores para a tabela `house_rules`
+--
+ALTER TABLE `house_rules`
+  ADD CONSTRAINT `house_rules_ibfk_1` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodation` (`id`) ON DELETE CASCADE;
+
+--
+-- Limitadores para a tabela `house_rule_translations`
+--
+ALTER TABLE `house_rule_translations`
+  ADD CONSTRAINT `house_rule_translations_ibfk_1` FOREIGN KEY (`rule_id`) REFERENCES `house_rules` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `house_rule_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE;
 
 --
 -- Limitadores para a tabela `media`

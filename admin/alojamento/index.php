@@ -216,7 +216,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity']) && !i
             }
         }
 
-        // Handle image upload
+        // Handle hero image upload
+        if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = ROOT_PATH . '/uploads/accommodation/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            if (in_array($_FILES['hero_image']['type'], $allowedTypes)) {
+                $ext = pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION);
+                $newName = 'hero_casa' . $selectedAccommodationNumber . '_' . time() . '.' . $ext;
+
+                if (move_uploaded_file($_FILES['hero_image']['tmp_name'], $uploadDir . $newName)) {
+                    // Delete old hero image if exists
+                    if ($accommodation['hero_image'] && strpos($accommodation['hero_image'], 'uploads/') === 0) {
+                        $oldPath = ROOT_PATH . '/' . $accommodation['hero_image'];
+                        if (file_exists($oldPath)) {
+                            @unlink($oldPath);
+                        }
+                    }
+                    $db->update('accommodation', ['hero_image' => 'uploads/accommodation/' . $newName], 'id = ?', [$accommodation['id']]);
+                }
+            }
+        }
+
+        // Handle cover image upload
+        if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = ROOT_PATH . '/uploads/accommodation/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            if (in_array($_FILES['cover_image']['type'], $allowedTypes)) {
+                $ext = pathinfo($_FILES['cover_image']['name'], PATHINFO_EXTENSION);
+                $newName = 'cover_casa' . $selectedAccommodationNumber . '_' . time() . '.' . $ext;
+
+                if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $uploadDir . $newName)) {
+                    // Delete old cover image if exists
+                    if ($accommodation['cover_image'] && strpos($accommodation['cover_image'], 'uploads/') === 0) {
+                        $oldPath = ROOT_PATH . '/' . $accommodation['cover_image'];
+                        if (file_exists($oldPath)) {
+                            @unlink($oldPath);
+                        }
+                    }
+                    $db->update('accommodation', ['cover_image' => 'uploads/accommodation/' . $newName], 'id = ?', [$accommodation['id']]);
+                }
+            }
+        }
+
+        // Handle gallery image upload
         if (!empty($_FILES['gallery']['name'][0])) {
             $uploadDir = ROOT_PATH . '/uploads/accommodation/';
             if (!is_dir($uploadDir)) {
@@ -794,6 +844,89 @@ include dirname(__DIR__) . '/includes/header.php';
 
     <!-- Tab: Gallery -->
     <div id="panel-gallery" class="admin-tab-panel hidden">
+        <!-- Main Images: Hero & Cover -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 class="text-lg font-medium text-gray-800 mb-2">Imagens Principais - Casa <?= $selectedAccommodationNumber ?></h2>
+            <p class="text-sm text-gray-500 mb-6">Defina as imagens de destaque para esta casa.</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Hero Image -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                        <h3 class="font-medium text-gray-700">Imagem do Hero</h3>
+                        <p class="text-xs text-gray-500">Aparece no topo da página da Casa <?= $selectedAccommodationNumber ?></p>
+                    </div>
+                    <div class="p-4">
+                        <?php
+                        $heroImage = $accommodation['hero_image'] ?? '';
+                        $heroUrl = '';
+                        if ($heroImage) {
+                            if (strpos($heroImage, 'uploads/') === 0) {
+                                $heroUrl = basePath() . '/' . $heroImage;
+                            } else {
+                                $heroUrl = asset($heroImage);
+                            }
+                        }
+                        ?>
+                        <div class="relative aspect-video bg-gray-100 rounded-lg overflow-hidden mb-3">
+                            <?php if ($heroUrl): ?>
+                            <img src="<?= $heroUrl ?>" alt="Hero Image" id="preview-hero-img" class="w-full h-full object-cover">
+                            <?php else: ?>
+                            <div id="placeholder-hero" class="w-full h-full flex items-center justify-center text-gray-400">
+                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <img src="" alt="Hero Image" id="preview-hero-img" class="w-full h-full object-cover hidden absolute inset-0">
+                            <?php endif; ?>
+                        </div>
+                        <input type="file" name="hero_image" accept="image/jpeg,image/png,image/webp"
+                               onchange="previewAccommodationImage(this, 'hero')"
+                               class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-secondary-50 file:text-secondary-700 hover:file:bg-secondary-100 cursor-pointer">
+                        <p class="text-xs text-gray-400 mt-2">JPG, PNG ou WebP (recomendado: 1920x1080)</p>
+                    </div>
+                </div>
+
+                <!-- Cover Image -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                        <h3 class="font-medium text-gray-700">Imagem de Capa</h3>
+                        <p class="text-xs text-gray-500">Aparece no cartão de seleção da página principal</p>
+                    </div>
+                    <div class="p-4">
+                        <?php
+                        $coverImage = $accommodation['cover_image'] ?? '';
+                        $coverUrl = '';
+                        if ($coverImage) {
+                            if (strpos($coverImage, 'uploads/') === 0) {
+                                $coverUrl = basePath() . '/' . $coverImage;
+                            } else {
+                                $coverUrl = asset($coverImage);
+                            }
+                        }
+                        ?>
+                        <div class="relative aspect-video bg-gray-100 rounded-lg overflow-hidden mb-3">
+                            <?php if ($coverUrl): ?>
+                            <img src="<?= $coverUrl ?>" alt="Cover Image" id="preview-cover-img" class="w-full h-full object-cover">
+                            <?php else: ?>
+                            <div id="placeholder-cover" class="w-full h-full flex items-center justify-center text-gray-400">
+                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <img src="" alt="Cover Image" id="preview-cover-img" class="w-full h-full object-cover hidden absolute inset-0">
+                            <?php endif; ?>
+                        </div>
+                        <input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp"
+                               onchange="previewAccommodationImage(this, 'cover')"
+                               class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-secondary-50 file:text-secondary-700 hover:file:bg-secondary-100 cursor-pointer">
+                        <p class="text-xs text-gray-400 mt-2">JPG, PNG ou WebP (recomendado: 800x600)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Images -->
         <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-medium text-gray-800 mb-4">Galeria de Imagens - Casa <?= $selectedAccommodationNumber ?></h2>
 
@@ -1108,6 +1241,46 @@ include dirname(__DIR__) . '/includes/header.php';
 
     const csrfToken = '<?= CSRF::getToken() ?>';
     const currentCasa = <?= $selectedAccommodationNumber ?>;
+
+    // Image Preview for Hero and Cover Images
+    window.previewAccommodationImage = function(input, type) {
+        const previewImg = document.getElementById('preview-' + type + '-img');
+        const placeholder = document.getElementById('placeholder-' + type);
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                alert('Formato inválido. Use JPG, PNG ou WebP.');
+                input.value = '';
+                return;
+            }
+
+            // Validate file size (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('Ficheiro demasiado grande. Máximo 10MB.');
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                // Show preview image
+                previewImg.src = e.target.result;
+                previewImg.classList.remove('hidden');
+
+                // Hide placeholder if exists
+                if (placeholder) {
+                    placeholder.classList.add('hidden');
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    };
 
     // Tab Switching
     function switchTabById(tabName) {

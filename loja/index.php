@@ -7,12 +7,29 @@ require_once dirname(__DIR__) . '/includes/init.php';
 
 use Core\Language;
 use Core\Cart;
+use Core\Database;
 use Models\Product;
 use Models\ProductCategory;
 
 $lang = Language::getInstance();
 $cart = Cart::getInstance();
+$db = Database::getInstance();
 $base = basePath();
+
+// Get hero image from database
+$pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
+$heroImage = $pageHero['hero_image'] ?? 'images/MogadouroNeve.jpeg';
+$heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
+
+// Helper to get image URL
+function getHeroImageUrl($imagePath, $default = '') {
+    if (!$imagePath) return $default;
+    if (strpos($imagePath, 'uploads/') === 0) {
+        return basePath() . '/' . $imagePath;
+    }
+    return asset($imagePath);
+}
+$heroUrl = getHeroImageUrl($heroImage, asset('images/MogadouroNeve.jpeg'));
 
 // Get filter parameters
 $categorySlug = isset($_GET['categoria']) ? sanitize($_GET['categoria']) : null;
@@ -52,10 +69,11 @@ include INCLUDES_PATH . '/header.php';
 <!-- Hero Section -->
 <section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
-         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed" 
-             style="background-image: url('<?= asset('images/MogadouroNeve.jpeg') ?>');">
+         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+             style="background-image: url('<?= $heroUrl ?>');">
         </div>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
+        <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
