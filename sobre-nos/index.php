@@ -17,18 +17,12 @@ $content = $lang->getPageContents('about');
 
 // Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'about' AND is_active = 1");
-$heroImage = $pageHero['hero_image'] ?? 'images/MogadouroSobre.png';
+$heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroSobre.png';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Helper to get image URL
-function getHeroImageUrl($imagePath, $default = '') {
-    if (!$imagePath) return $default;
-    if (strpos($imagePath, 'uploads/') === 0) {
-        return basePath() . '/' . $imagePath;
-    }
-    return asset($imagePath);
-}
-$heroUrl = getHeroImageUrl($heroImage, asset('images/MogadouroSobre.png'));
+// Build hero URL (file_path from media already has leading slash)
+$heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 // Page configuration
 $pageTitle = 'Sobre Nós';
@@ -59,148 +53,141 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- Story Section -->
-<section class="py-16 lg:py-24 bg-cream-100 relative">
+
+
+<!-- The Story - Asymmetrical Layout -->
+<section class="py-20 lg:py-32 bg-cream-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <!-- Image -->
-            <div class="relative group animate-on-scroll" data-animation="fade-right">
-                <div class="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border-4 border-white transform transition-transform duration-700 hover:scale-[1.02]">
-                    <div class="w-full h-full bg-gradient-to-br from-accent/20 to-cream flex items-center justify-center">
-                        <img src="<?= asset('images/FotoGi.png') ?>" class="w-full h-full object-cover opacity-90 transition-opacity duration-700 group-hover:opacity-100" alt="Mogadouro">
-                    </div>
+        <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+            
+            <!-- Visual Side (Left) -->
+            <div class="w-full lg:w-1/2 relative animate-on-scroll" data-animation="fade-right">
+                <!-- Main Image Frame -->
+                <div class="relative z-10 w-full aspect-[4/5] max-w-md mx-auto lg:mr-auto lg:ml-0">
+                     <div class="absolute inset-0 bg-primary/5 transform translate-x-4 translate-y-4 rounded-sm"></div>
+                     <div class="absolute inset-0 border border-primary/10 transform -translate-x-4 -translate-y-4 rounded-sm"></div>
+                     <div class="relative h-full w-full bg-white p-4 shadow-2xl transform transition-transform duration-700 hover:rotate-1">
+                        <div class="h-full w-full overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000">
+                            <img src="<?= asset('images/FotoGi.png') ?>" alt="A Casa do Gi Antigamente" class="w-full h-full object-cover">
+                        </div>
+                     </div>
                 </div>
-            </div>
-
-            <!-- Content -->
-            <div class="space-y-8 animate-on-scroll" data-animation="fade-left" data-delay="200">
-                <h2 class="font-serif text-4xl md:text-5xl text-primary leading-tight">
-                    Uma Casa com <br><span class="text-secondary italic">História & Alma</span>
-                </h2>
-                <div class="prose prose-lg text-charcoal/80 space-y-6 font-light">
-                    <p>
-                        <strong class="text-primary font-serif">Construída nos anos 80</strong>, altura em que os "artistas da construção" e os "materiais" eram escassos por Terras de Mogadouro, este edifício foi mandado construir desde terras de Santa Cruz, por carta, e com os recursos de quem saiu da terra em busca de uma melhor oportunidade!
-                    </p>
-                    <p>
-                        A Casa do Gi... é sinónimo de simplicidade, acolhimento, momentos de convívio marcantes, calor da família, alegria, diversão, gargalhadas e muito amor!
-                    </p>
-                    <div class="border-l-4 border-accent pl-6 py-2 italic text-primary/70">
-                        "Hoje, abrimos as portas desta casa especial para que possam experimentar o mesmo calor e acolhimento que sempre caracterizou este lugar."
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Values Section -->
-<section class="py-16 lg:py-24 bg-cream-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 animate-on-scroll">
-            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">O Que Nos Define</h2>
-            <p class="text-charcoal max-w-2xl mx-auto">
-                A Casa do Gi é mais do que um alojamento - é uma experiência autêntica da hospitalidade transmontana.
-            </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 animate-on-scroll" data-delay="200">
-            <!-- Value 1 -->
-            <div class="text-center">
-                <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-primary mb-2">Acolhimento</h3>
-                <p class="text-charcoal text-sm">
-                    Recebemos cada hóspede como se fosse da família, com o calor característico das gentes transmontanas.
-                </p>
-            </div>
-
-            <!-- Value 2 -->
-            <div class="text-center">
-                <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-primary mb-2">Simplicidade</h3>
-                <p class="text-charcoal text-sm">
-                    Valorizamos as coisas simples da vida - uma boa refeição, uma boa conversa, um pôr do sol.
-                </p>
-            </div>
-
-            <!-- Value 3 -->
-            <div class="text-center">
-                <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-primary mb-2">Família</h3>
-                <p class="text-charcoal text-sm">
-                    Esta casa foi construída por amor à família, e é esse espírito que queremos partilhar consigo.
-                </p>
-            </div>
-
-            <!-- Value 4 -->
-            <div class="text-center">
-                <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-primary mb-2">Autenticidade</h3>
-                <p class="text-charcoal text-sm">
-                    Proporcionamos uma experiência genuína, longe do turismo de massas, imersa na cultura local.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Mogadouro Section -->
-<section class="py-16 lg:py-24 bg-cream-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <!-- Content -->
-            <div class="order-2 lg:order-1 animate-on-scroll">
-                <span class="inline-block text-secondary text-sm font-medium uppercase tracking-wider mb-4">
-                    A Nossa Terra
+                
+                <!-- Decorative textual element behind -->
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[120px] lg:text-[180px] font-cursive text-primary/5 whitespace-nowrap z-0 pointer-events-none select-none">
+                    1980
                 </span>
-                <h2 class="font-serif text-3xl md:text-4xl text-primary mb-6">
-                    Mogadouro, Trás-os-Montes
-                </h2>
-                <div class="prose prose-lg text-charcoal space-y-4">
-                    <p>
-                        Mogadouro é uma vila encantadora situada no nordeste de Portugal, no coração de Trás-os-Montes. Com uma história que remonta a tempos medievais, esta terra oferece um património rico e paisagens deslumbrantes.
-                    </p>
-                    <p>
-                        Entre as escarpas do rio Douro e as serras do Sabor, Mogadouro é um tesouro escondido para quem procura natureza, tranquilidade e autenticidade. O Parque Natural do Douro Internacional é apenas uma das muitas maravilhas que pode descobrir.
-                    </p>
-                    <p>
-                        A gastronomia transmontana é outro dos grandes atrativos - a posta mirandesa, os enchidos, o mel, o azeite e os vinhos do Douro são experiências que não pode perder.
-                    </p>
-                </div>
-                <a href="<?= $base ?>/atividades/" class="inline-flex items-center mt-6 text-secondary font-medium hover:text-secondary">
-                    Descobrir o que fazer em Mogadouro
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
             </div>
 
-            <!-- Image Grid -->
-            <div class="order-1 lg:order-2 animate-on-scroll" data-delay="200">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-4">
-                        <div class="aspect-square bg-gradient-to-br from-accent/20 to-cream rounded-lg shadow-lg"></div>
-                        <div class="aspect-[4/3] bg-gradient-to-br from-accent/20 to-cream rounded-lg shadow-lg"></div>
+            <!-- Narrative Side (Right) -->
+            <div class="w-full lg:w-1/2 space-y-10 animate-on-scroll" data-animation="fade-left">
+                <div class="space-y-4">
+                    <h3 class="font-serif text-4xl lg:text-5xl text-primary">
+                        As Raízes
+                    </h3>
+                    <div class="w-20 h-1 bg-accent"></div>
+                </div>
+
+                <div class="prose prose-lg text-charcoal/80 font-light space-y-6">
+                    <p class="first-letter:text-5xl first-letter:font-serif first-letter:text-accent first-letter:mr-3 first-letter:float-left">
+                        Erguida nos anos 80, esta casa conta a história de quem partiu para longe mas nunca esqueceu as suas origens. Foi construída "por carta", tijolo a tijolo, com a saudade e o sonho de um dia regressar a casa.
+                    </p>
+                    <p>
+                        Numa altura em que os materiais escasseavam mas a determinação abundava, a Casa do Gi tornou-se um marco de perseverança em Mogadouro. 
+                    </p>
+                    <p class="font-medium text-primary">
+                        Hoje, mantém a mesma alma: acolhedora, familiar e portas abertas para quem vem por bem.
+                    </p>
+                </div>
+
+                <!-- Signature / Personal Touch -->
+                <div class="pt-6 flex items-center gap-4 opacity-80">
+                    <div class="h-px bg-charcoal/20 flex-1"></div>
+                    <span class="font-cursive text-2xl text-secondary">A Família Gi</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- The Pillars - Dark Mode Section -->
+<section class="py-24 bg-primary text-cream relative overflow-hidden">
+    <!-- Background Noise/Texture -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
+            
+            <!-- Pillar 1 -->
+            <div class="group cursor-default animate-on-scroll" data-delay="100">
+                <div class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent/30 text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <h4 class="font-serif text-2xl mb-4 text-white group-hover:text-accent transition-colors">Acolhimento</h4>
+                <p class="text-cream/70 leading-relaxed font-light border-l border-accent/20 pl-4 group-hover:border-accent transition-colors duration-500">
+                    Mais do que hóspedes, recebemos amigos. A hospitalidade transmontana não é uma obrigação, é a nossa forma de estar na vida.
+                </p>
+            </div>
+
+            <!-- Pillar 2 -->
+            <div class="group cursor-default animate-on-scroll" data-delay="200">
+                <div class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent/30 text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-500">
+                   <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <h4 class="font-serif text-2xl mb-4 text-white group-hover:text-accent transition-colors">Simplicidade</h4>
+                <p class="text-cream/70 leading-relaxed font-light border-l border-accent/20 pl-4 group-hover:border-accent transition-colors duration-500">
+                    O luxo está nos detalhes simples: no silêncio da noite, no sabor do pão fresco, na conversa sem pressas.
+                </p>
+            </div>
+
+            <!-- Pillar 3 -->
+            <div class="group cursor-default animate-on-scroll" data-delay="300">
+                <div class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent/30 text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </div>
+                <h4 class="font-serif text-2xl mb-4 text-white group-hover:text-accent transition-colors">Família</h4>
+                <p class="text-cream/70 leading-relaxed font-light border-l border-accent/20 pl-4 group-hover:border-accent transition-colors duration-500">
+                    Esta casa foi feita por uma família, para famílias. Um espaço seguro e amplo onde crianças e adultos criam laços.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Location Section - Magazine Style -->
+<section class="pt-20 lg:pt-32 pb-0 bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative">
+            <!-- Background Shape -->
+            <div class="absolute -top-20 -right-20 w-[500px] h-[500px] bg-cream-100 rounded-full opacity-50 blur-3xl z-0"></div>
+
+            <div class="flex flex-col lg:flex-row items-center">
+                <!-- Text Box (Overlapping) -->
+                <div class="w-full lg:w-5/12 relative z-20 mb-10 lg:mb-0 lg:-mr-16 order-2 lg:order-1 animate-on-scroll" data-animation="fade-right">
+                    <div class="bg-white p-8 md:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.08)] rounded-xl border border-cream-200">
+                        <span class="text-secondary text-xs font-bold tracking-[0.2em] uppercase mb-4 block">O Destino</span>
+                        <h2 class="font-serif text-4xl text-primary mb-6">Mogadouro,<br>Trás-os-Montes</h2>
+                        <p class="text-charcoal/70 mb-8 leading-relaxed font-light">
+                            Um território de horizontes vastos, onde o Douro Internacional esculpe a paisagem e a amendoeira em flor pinta a primavera. Aqui, respira-se o ar puro do interior e vive-se ao ritmo da natureza.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="<?= $base ?>/atividades/" class="inline-flex items-center justify-center px-6 py-3 bg-secondary text-white font-medium rounded hover:bg-secondary-700 transition-colors">
+                                Explorar Região
+                            </a>
+                            <a href="<?= $base ?>/contactos/" class="inline-flex items-center justify-center px-6 py-3 border border-charcoal/20 text-primary font-medium rounded hover:bg-charcoal/5 transition-colors">
+                                Como Chegar
+                            </a>
+                        </div>
                     </div>
-                    <div class="pt-8 space-y-4">
-                        <div class="aspect-[4/3] bg-gradient-to-br from-accent/20 to-cream rounded-lg shadow-lg"></div>
-                        <div class="aspect-square bg-gradient-to-br from-charcoal/20 to-cream rounded-lg shadow-lg"></div>
-                    </div>
+                </div>
+
+                <!-- Image (Large) -->
+                <div class="w-full lg:w-8/12 h-[400px] lg:h-[600px] relative z-10 order-1 lg:order-2 rounded-2xl overflow-hidden shadow-lg animate-on-scroll" data-animation="fade-left">
+                     <!-- Using generic scenic placeholder or specific image if exists -->
+                     <img src="<?= asset('images/Castelo.jpg') ?>" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[2s]" alt="Mogadouro Paisagem">
+                     <div class="absolute inset-0 bg-gradient-to-l from-transparent to-black/20"></div>
                 </div>
             </div>
         </div>

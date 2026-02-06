@@ -169,8 +169,9 @@ include INCLUDES_PATH . '/header.php';
 
 <!-- Hero Section - Main -->
 <?php
-$mainHeroImage = $mainPageHero['hero_image'] ?? 'images/MogadouroAlojamento.jpg';
-$mainHeroUrl = getAccommodationImageUrl($mainHeroImage, asset('images/MogadouroAlojamento.jpg'));
+$mainHeroMedia = $mainPageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$mainPageHero['id']]) : null;
+$mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.jpg';
+$mainHeroUrl = $mainHeroImage[0] === '/' ? basePath() . $mainHeroImage : asset($mainHeroImage);
 $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 ?>
 <section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">

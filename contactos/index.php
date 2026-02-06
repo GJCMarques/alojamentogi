@@ -113,18 +113,12 @@ $contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
 
 // Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'contact' AND is_active = 1");
-$heroImage = $pageHero['hero_image'] ?? 'images/MogadouroContacto.jpg';
+$heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroContacto.jpg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Helper to get image URL
-function getHeroImageUrl($imagePath, $default = '') {
-    if (!$imagePath) return $default;
-    if (strpos($imagePath, 'uploads/') === 0) {
-        return basePath() . '/' . $imagePath;
-    }
-    return asset($imagePath);
-}
-$heroUrl = getHeroImageUrl($heroImage, asset('images/MogadouroContacto.jpg'));
+// Build hero URL (file_path from media already has leading slash)
+$heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 // Page configuration
 $pageTitle = __('contact_title', 'Contactos');
@@ -375,13 +369,8 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- Gradient Transition -->
-<div class="h-24 bg-gradient-to-b from-cream-100 to-white"></div>
-
 <!-- Map Section -->
-<section class="relative pb-16 lg:pb-24 pt-8 bg-white">
-    <!-- Bottom Gradient -->
-    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-cream-100"></div>
+<section class="relative pt-8 bg-white">
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-12 animate-on-scroll">

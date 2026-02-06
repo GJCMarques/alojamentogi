@@ -16,12 +16,12 @@ $base = basePath();
 
 // Default page heroes configuration
 $defaultHeroes = [
-    ['page_key' => 'home', 'page_name_pt' => 'Página Inicial', 'page_name_en' => 'Homepage', 'hero_image' => 'images/MogadouroAtividades.jpg', 'sort_order' => 1],
-    ['page_key' => 'accommodation_main', 'page_name_pt' => 'Alojamento (Página Principal)', 'page_name_en' => 'Accommodation (Main Page)', 'hero_image' => 'images/MogadouroAlojamento.jpg', 'sort_order' => 2],
-    ['page_key' => 'activities', 'page_name_pt' => 'Atividades', 'page_name_en' => 'Activities', 'hero_image' => 'images/MogadouroAtividades.jpg', 'sort_order' => 3],
-    ['page_key' => 'about', 'page_name_pt' => 'Sobre Nós', 'page_name_en' => 'About Us', 'hero_image' => 'images/MogadouroAlojamento.jpg', 'sort_order' => 4],
-    ['page_key' => 'contact', 'page_name_pt' => 'Contactos', 'page_name_en' => 'Contact', 'hero_image' => 'images/MogadouroAlojamento.jpg', 'sort_order' => 5],
-    ['page_key' => 'shop', 'page_name_pt' => 'Loja', 'page_name_en' => 'Shop', 'hero_image' => 'images/MogadouroNeve.jpeg', 'sort_order' => 6],
+    ['page_key' => 'home', 'page_name_pt' => 'Página Inicial', 'page_name_en' => 'Homepage', 'sort_order' => 1],
+    ['page_key' => 'accommodation_main', 'page_name_pt' => 'Alojamento (Página Principal)', 'page_name_en' => 'Accommodation (Main Page)', 'sort_order' => 2],
+    ['page_key' => 'activities', 'page_name_pt' => 'Atividades', 'page_name_en' => 'Activities', 'sort_order' => 3],
+    ['page_key' => 'about', 'page_name_pt' => 'Sobre Nós', 'page_name_en' => 'About Us', 'sort_order' => 4],
+    ['page_key' => 'contact', 'page_name_pt' => 'Contactos', 'page_name_en' => 'Contact', 'sort_order' => 5],
+    ['page_key' => 'shop', 'page_name_pt' => 'Loja', 'page_name_en' => 'Shop', 'sort_order' => 6],
 ];
 
 // Auto-seed missing page heroes if table exists
@@ -35,7 +35,6 @@ try {
                     'page_key' => $hero['page_key'],
                     'page_name_pt' => $hero['page_name_pt'],
                     'page_name_en' => $hero['page_name_en'],
-                    'hero_image' => $hero['hero_image'],
                     'hero_overlay_opacity' => 0.40,
                     'is_active' => 1,
                     'sort_order' => $hero['sort_order']
@@ -76,18 +75,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
 
                 if (in_array($fileType, $allowedTypes) && $fileSize <= $maxSize) {
                     $ext = pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION);
+                    $originalName = $_FILES['hero_image']['name'];
                     $newName = 'hero_' . $pageKey . '_' . time() . '.' . $ext;
                     $targetPath = $uploadDir . $newName;
 
                     if (move_uploaded_file($_FILES['hero_image']['tmp_name'], $targetPath)) {
-                        // Delete old image if exists and is in uploads folder
-                        if ($pageHero['hero_image'] && strpos($pageHero['hero_image'], 'uploads/') === 0) {
-                            $oldPath = ROOT_PATH . '/' . $pageHero['hero_image'];
+                        // Delete old image from media table and filesystem
+                        $oldMedia = $db->fetch(
+                            "SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1",
+                            [$pageHero['id']]
+                        );
+
+                        if ($oldMedia) {
+                            // Delete physical file
+                            $oldPath = ROOT_PATH . ltrim($oldMedia['file_path'], '/');
                             if (file_exists($oldPath)) {
                                 @unlink($oldPath);
                             }
+                            // Delete database record
+                            $db->delete('media', 'id = ?', [$oldMedia['id']]);
                         }
-                        $updateData['hero_image'] = 'uploads/heroes/' . $newName;
+
+                        // Insert new image into media table
+                        $db->insert('media', [
+                            'filename' => $newName,
+                            'original_name' => $originalName,
+                            'file_path' => '/uploads/heroes/' . $newName,
+                            'file_type' => $fileType,
+                            'file_size' => $fileSize,
+                            'category' => 'content',
+                            'entity_type' => 'hero',
+                            'entity_id' => $pageHero['id'],
+                            'is_cover' => 1,
+                            'sort_order' => 0,
+                            'uploaded_by' => $_SESSION['admin_id'] ?? null
+                        ]);
                     }
                 } else {
                     Session::flash('error', 'Ficheiro inválido. Use JPG, PNG ou WebP até 10MB.');
@@ -108,6 +130,20 @@ $pageHeroes = $db->fetchAll("SELECT * FROM page_heroes WHERE is_active = 1 ORDER
 // If table doesn't exist yet, show migration message
 if ($pageHeroes === false) {
     $pageHeroes = [];
+}
+
+// Fetch hero images from media table
+$heroImages = [];
+if (!empty($pageHeroes)) {
+    foreach ($pageHeroes as $hero) {
+        $image = $db->fetch(
+            "SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1",
+            [$hero['id']]
+        );
+        if ($image) {
+            $heroImages[$hero['id']] = $image;
+        }
+    }
 }
 
 $pageTitle = 'Gestão de Heroes';
@@ -138,14 +174,10 @@ include dirname(__DIR__) . '/includes/header.php';
         <!-- Preview Image -->
         <div class="relative h-48 bg-gray-100 overflow-hidden group flex-shrink-0 rounded-t-xl">
             <?php
-            $imagePath = $hero['hero_image'] ?? '';
+            $currentImage = $heroImages[$hero['id']] ?? null;
             $imageUrl = '';
-            if ($imagePath) {
-                if (strpos($imagePath, 'uploads/') === 0) {
-                    $imageUrl = $base . '/' . $imagePath;
-                } else {
-                    $imageUrl = asset($imagePath);
-                }
+            if ($currentImage && $currentImage['file_path']) {
+                $imageUrl = $base . $currentImage['file_path'];
             }
             ?>
             <?php if ($imageUrl): ?>
@@ -185,8 +217,9 @@ include dirname(__DIR__) . '/includes/header.php';
             <div class="font-medium text-gray-800 text-sm"><?= e($hero['page_name_pt']) ?></div>
 
             <!-- Current Image Path -->
-            <div class="text-xs text-gray-500 truncate" title="<?= e($hero['hero_image'] ?? '') ?>">
-                <?= $hero['hero_image'] ? e($hero['hero_image']) : 'Sem imagem definida' ?>
+            <?php $currentImage = $heroImages[$hero['id']] ?? null; ?>
+            <div class="text-xs text-gray-500 truncate" title="<?= $currentImage ? e($currentImage['file_path']) : '' ?>">
+                <?= $currentImage ? e($currentImage['file_path']) : 'Sem imagem definida' ?>
             </div>
 
             <!-- Upload New Image -->

@@ -18,18 +18,12 @@ $base = basePath();
 
 // Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
-$heroImage = $pageHero['hero_image'] ?? 'images/MogadouroNeve.jpeg';
+$heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Helper to get image URL
-function getHeroImageUrl($imagePath, $default = '') {
-    if (!$imagePath) return $default;
-    if (strpos($imagePath, 'uploads/') === 0) {
-        return basePath() . '/' . $imagePath;
-    }
-    return asset($imagePath);
-}
-$heroUrl = getHeroImageUrl($heroImage, asset('images/MogadouroNeve.jpeg'));
+// Build hero URL (file_path from media already has leading slash)
+$heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 // Get filter parameters
 $categorySlug = isset($_GET['categoria']) ? sanitize($_GET['categoria']) : null;
