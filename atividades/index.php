@@ -27,27 +27,40 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 // Build hero URL (file_path from media already has leading slash)
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Get all categories for filter
+// Get all categories for filter from database
+$categoriesFromDb = $db->fetchAll(
+    "SELECT c.id, c.slug, c.icon, ct.name
+     FROM categories c
+     INNER JOIN category_translations ct ON c.id = ct.category_id
+     WHERE c.type = 'activity' AND c.is_active = 1 AND ct.language_id = ?
+     ORDER BY c.sort_order ASC",
+    [$currentLangId]
+);
+
+// Build categories array with 'all' option
 $categories = [
-    'all' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Todas' : 'All', 'icon' => 'grid'],
-    'nature' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Natureza' : 'Nature', 'icon' => 'tree'],
-    'culture' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Cultura' : 'Culture', 'icon' => 'landmark'],
-    'gastronomy' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Gastronomia' : 'Gastronomy', 'icon' => 'utensils'],
-    'restaurants' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Restaurantes' : 'Restaurants', 'icon' => 'utensils-crossed'],
-    'cafes' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Cafés' : 'Cafés', 'icon' => 'coffee'],
-    'architecture' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Arquitetura' : 'Architecture', 'icon' => 'building'],
-    'adventure' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Aventura' : 'Adventure', 'icon' => 'compass'],
-    'events' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Eventos' : 'Events', 'icon' => 'calendar'],
+    'all' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Todas' : 'All', 'icon' => 'grid', 'slug' => 'all']
 ];
+foreach ($categoriesFromDb as $cat) {
+    $categories[$cat['slug']] = [
+        'label' => $cat['name'],
+        'icon' => $cat['icon'] ?? 'tag',
+        'slug' => $cat['slug'],
+        'id' => $cat['id']
+    ];
+}
 
 // If viewing specific activity
 if ($viewingActivity) {
     $activity = $db->fetch(
-        "SELECT a.*, at.title, at.short_description, at.full_description, at.tips, at.address_description
+        "SELECT a.*, at.title, at.short_description, at.full_description, at.tips, at.address_description,
+                c.slug as category_slug, ct.name as category_name
          FROM activities a
          JOIN activity_translations at ON a.id = at.activity_id
+         LEFT JOIN categories c ON a.category_id = c.id
+         LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_id = ?
          WHERE a.slug = ? AND a.is_active = 1 AND at.language_id = ?",
-        [$slug, $currentLangId]
+        [$currentLangId, $slug, $currentLangId]
     );
 
     if (!$activity) {
@@ -90,12 +103,15 @@ if ($viewingActivity) {
     // Get all active activities
     $activities = $db->fetchAll(
         "SELECT a.*, at.title, at.short_description,
+                c.slug as category_slug, ct.name as category_name,
                 (SELECT file_path FROM media WHERE entity_type = 'activity' AND entity_id = a.id AND is_cover = 1 LIMIT 1) as cover_img
          FROM activities a
          JOIN activity_translations at ON a.id = at.activity_id
+         LEFT JOIN categories c ON a.category_id = c.id
+         LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_id = ?
          WHERE a.is_active = 1 AND at.language_id = ?
          ORDER BY a.is_featured DESC, a.sort_order, a.id",
-        [$currentLangId]
+        [$currentLangId, $currentLangId]
     );
 
     // Get external links
@@ -160,7 +176,7 @@ include INCLUDES_PATH . '/header.php';
 
         <!-- Category Badge -->
         <span class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full mb-4 animate-on-scroll" data-animation="fade-up" data-delay="50">
-            <?= $categories[$activity['category']]['label'] ?? ucfirst($activity['category']) ?>
+            <?= e($activity['category_name'] ?? '') ?>
         </span>
 
         <!-- Title -->
@@ -270,6 +286,7 @@ include INCLUDES_PATH . '/header.php';
                             <div class="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center flex-shrink-0">
                                 <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                             </div>
@@ -579,7 +596,8 @@ footer {
                     $imageUrl = $base . $actImage;
                 }
 
-                // Category colors
+                // Category colors based on slug
+                $categorySlug = $act['category_slug'] ?? '';
                 $categoryColors = [
                     'nature' => 'from-green-700/80 to-primary/80',
                     'culture' => 'from-amber-700/80 to-primary/80',
@@ -593,13 +611,13 @@ footer {
                     'rural_tourism' => 'from-lime-700/80 to-primary/80',
                     'leisure' => 'from-sky-700/80 to-primary/80',
                 ];
-                $gradientClass = $categoryColors[$act['category']] ?? 'from-secondary/80 to-primary/80';
+                $gradientClass = $categoryColors[$categorySlug] ?? 'from-secondary/80 to-primary/80';
                 $animDelay = min($idx * 50, 300); // Cap delay at 300ms
             ?>
             <article class="activity-card group <?= $isBig ? 'md:col-span-2 md:row-span-2' : '' ?> bg-white rounded-xl overflow-hidden border border-cream-200 hover:border-secondary/30 shadow-sm hover:shadow-md transition-all duration-300 animate-on-scroll"
                      data-animation="fade-up"
                      data-delay="<?= $animDelay ?>"
-                     data-category="<?= $act['category'] ?>"
+                     data-category="<?= e($categorySlug) ?>"
                      data-title="<?= strtolower(e($act['title'])) ?>"
                      data-description="<?= strtolower(e($act['short_description'] ?? '')) ?>">
                 <a href="<?= $base ?>/atividades/?slug=<?= e($act['slug']) ?>" class="block h-full">
@@ -619,7 +637,7 @@ footer {
 
                         <!-- Category Badge -->
                         <span class="absolute top-3 left-3 md:top-4 md:left-4 bg-white/95 backdrop-blur-sm text-secondary text-[10px] md:text-xs font-semibold tracking-wide px-3 py-1.5 rounded-lg shadow-sm border border-white/20">
-                            <?= $categories[$act['category']]['label'] ?? ucfirst($act['category']) ?>
+                            <?= e($act['category_name'] ?? '') ?>
                         </span>
 
                         <?php if ($act['is_featured']): ?>
@@ -640,6 +658,7 @@ footer {
                             <div class="flex items-center gap-1.5 text-white/90 text-xs md:text-sm font-medium">
                                 <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                                 <?= $act['distance_km'] > 0 ? number_format($act['distance_km'], 1) . ' km' : ($lang->getCurrentLang() === 'pt' ? 'Centro' : 'Center') ?>
                             </div>
@@ -660,15 +679,29 @@ footer {
         </div>
 
         <!-- No Results Message -->
-        <div id="no-results" class="hidden text-center py-16">
-            <svg class="w-16 h-16 mx-auto text-charcoal/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <p class="text-charcoal/60 text-lg">
-                <?= $lang->getCurrentLang() === 'pt' ? 'Nenhuma atividade encontrada' : 'No activities found' ?>
+        <!-- No Results Message -->
+        <div id="no-results" class="hidden flex flex-col items-center justify-center min-h-[40vh] py-16 text-center animate-on-scroll" data-animation="fade-up">
+            <div class="w-32 h-32 bg-cream-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                <svg class="w-16 h-16 text-charcoal/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            
+            <p class="text-primary text-3xl md:text-4xl font-serif mb-4 drop-shadow-sm">
+                <?= $lang->getCurrentLang() === 'pt' ? 'Nada encontrado...' : 'Nothing found...' ?>
             </p>
-            <button onclick="resetFilters()" class="mt-4 text-secondary hover:text-primary font-medium transition-colors">
-                <?= $lang->getCurrentLang() === 'pt' ? 'Limpar filtros' : 'Clear filters' ?>
+            
+            <p class="text-charcoal/60 text-lg mb-8 max-w-md mx-auto leading-relaxed font-light">
+                <?= $lang->getCurrentLang() === 'pt'
+                    ? 'Não encontrámos nenhuma atividade com esses critérios.'
+                    : 'We couldn\'t find any activities matching your criteria.' ?>
+            </p>
+            
+            <button onclick="resetFilters()" class="inline-flex items-center gap-2 bg-secondary text-white hover:bg-primary px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg font-medium group">
+                <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span><?= $lang->getCurrentLang() === 'pt' ? 'Limpar e ver tudo' : 'Clear and view all' ?></span>
             </button>
         </div>
 

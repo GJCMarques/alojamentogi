@@ -190,6 +190,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <span class="flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                         Atividades
                     </span>
@@ -291,6 +292,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <div class="p-12 text-center">
             <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
             <p class="text-gray-500 mb-4">Nenhuma atividade encontrada</p>
             <a href="<?= basePath() ?>/admin/atividades/criar/" class="text-primary hover:underline">
@@ -587,11 +589,26 @@ include dirname(__DIR__) . '/includes/header.php';
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Ícone</label>
                             <select name="icon" id="link_icon"
                                     class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
-                                <option value="map">Mapa</option>
-                                <option value="building">Edifício</option>
-                                <option value="tree">Árvore</option>
-                                <option value="star">Estrela</option>
-                                <option value="compass">Bússola</option>
+                                <option value="map">🗺️ Mapa</option>
+                                <option value="building">🏛️ Edifício</option>
+                                <option value="tree">🌳 Árvore</option>
+                                <option value="star">⭐ Estrela</option>
+                                <option value="compass">🧭 Bússola</option>
+                                <option value="mountain">⛰️ Montanha</option>
+                                <option value="water">💧 Água</option>
+                                <option value="utensils">🍴 Talheres</option>
+                                <option value="coffee">☕ Café</option>
+                                <option value="wine-glass">🍷 Vinho</option>
+                                <option value="camera">📷 Câmara</option>
+                                <option value="ticket">🎫 Bilhete</option>
+                                <option value="calendar">📅 Calendário</option>
+                                <option value="clock">🕐 Relógio</option>
+                                <option value="info">ℹ️ Informação</option>
+                                <option value="phone">📞 Telefone</option>
+                                <option value="mail">✉️ Email</option>
+                                <option value="globe">🌍 Website</option>
+                                <option value="heart">❤️ Favorito</option>
+                                <option value="bookmark">🔖 Marcador</option>
                             </select>
                         </div>
                     </div>

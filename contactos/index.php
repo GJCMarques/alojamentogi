@@ -370,7 +370,7 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Map Section -->
-<section class="relative pt-8 bg-white">
+<section class="relative pt-12 bg-white" style="padding-bottom: 3rem;">
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-12 animate-on-scroll">

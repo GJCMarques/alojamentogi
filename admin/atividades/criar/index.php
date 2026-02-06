@@ -16,20 +16,14 @@ $db = Database::getInstance();
 // Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Categories
-$categories = [
-    'nature' => 'Natureza',
-    'culture' => 'Cultura',
-    'gastronomy' => 'Gastronomia',
-    'restaurants' => 'Restaurantes',
-    'cafes' => 'Cafés',
-    'architecture' => 'Arquitetura',
-    'adventure' => 'Aventura',
-    'events' => 'Eventos',
-    'wellness' => 'Bem-estar',
-    'rural_tourism' => 'Turismo Rural',
-    'leisure' => 'Lazer',
-];
+// Get activity categories from database
+$categories = $db->fetchAll(
+    "SELECT c.id, ct.name
+     FROM categories c
+     INNER JOIN category_translations ct ON c.id = ct.category_id
+     WHERE c.type = 'activity' AND c.is_active = 1 AND ct.language_id = 1
+     ORDER BY c.sort_order ASC"
+);
 
 $priceRanges = [
     '' => 'Não especificado',
@@ -50,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'O título (PT) é obrigatório.';
         }
 
-        $category = $_POST['category'] ?? '';
-        if (!isset($categories[$category])) {
+        $categoryId = (int)($_POST['category_id'] ?? 0);
+        if ($categoryId <= 0) {
             $errors[] = 'Categoria inválida.';
         }
 
@@ -72,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insert activity
             $db->insert('activities', [
                 'slug' => $slug,
-                'category' => $category,
+                'category_id' => $categoryId,
                 'address' => sanitize($_POST['address'] ?? ''),
                 'phone' => sanitize($_POST['phone'] ?? ''),
                 'email' => sanitize($_POST['email'] ?? ''),
@@ -468,11 +462,11 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                         <h2 class="font-bold text-gray-800">Categoria</h2>
                     </div>
                     <div class="p-6">
-                        <select name="category" required
+                        <select name="category_id" required
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
                             <option value="">Selecionar...</option>
-                            <?php foreach ($categories as $key => $label): ?>
-                            <option value="<?= $key ?>"><?= $label ?></option>
+                            <?php foreach ($categories as $cat): ?>
+                            <option value="<?= $cat['id'] ?>"><?= e($cat['name']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
