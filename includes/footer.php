@@ -217,22 +217,24 @@ $instagramUrl = setting('instagram_url', '');
 
     <!-- Booking Modal -->
     <div id="bookingModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[100] px-4">
-        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
-            <!-- Modal Header -->
-            <div class="sticky top-0 bg-primary p-6 flex items-center justify-between rounded-t-2xl">
-                <div>
-                    <h3 class="text-2xl font-serif font-bold text-white"><?= $isEnglish ? 'Choose Your Casa' : 'Escolha a Sua Casa' ?></h3>
-                    <p class="text-cream-200 text-sm mt-1"><?= $isEnglish ? 'Select which accommodation to book' : 'Selecione qual alojamento quer reservar' ?></p>
+        <div class="max-w-5xl w-full max-h-[90vh] overflow-hidden">
+            <div class="bg-primary rounded-t-2xl">
+                <!-- Modal Header -->
+                <div class="sticky top-0 p-6 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-serif font-bold text-white"><?= $isEnglish ? 'Choose Your Casa' : 'Escolha a Sua Casa' ?></h3>
+                        <p class="text-cream-200 text-sm mt-1"><?= $isEnglish ? 'Select which accommodation to book' : 'Selecione qual alojamento quer reservar' ?></p>
+                    </div>
+                    <button onclick="closeBookingModal()" class="text-white/80 hover:text-white p-2 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
-                <button onclick="closeBookingModal()" class="text-white/80 hover:text-white p-2 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
             </div>
 
             <!-- Modal Body -->
-            <div class="p-8 bg-cream-50 rounded-b-2xl">
+            <div class="p-8 bg-cream-50 rounded-b-2xl shadow-2xl">
                 <div class="grid md:grid-cols-2 gap-6">
                     <!-- Casa do Gi 1 -->
                     <div class="bg-white p-6 rounded-xl">

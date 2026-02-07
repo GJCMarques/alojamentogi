@@ -217,8 +217,7 @@ include dirname(__DIR__) . '/includes/header.php';
     <div class="divide-y divide-gray-200">
         <?php foreach ($messages as $msg): ?>
         <div class="p-6 hover:bg-gray-50 transition-colors cursor-pointer message-row <?= !$msg['is_read'] ? 'bg-blue-50' : '' ?>"
-             data-id="<?= $msg['id'] ?>"
-             onclick="openMessageModal(<?= $msg['id'] ?>)">
+             data-id="<?= $msg['id'] ?>">
             <div class="flex items-start justify-between">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-3 mb-2">
@@ -248,7 +247,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     </div>
                 </div>
 
-                <div class="ml-4 flex items-center gap-2" onclick="event.stopPropagation();">
+                <div class="ml-4 flex items-center gap-2">
                     <!-- Mark as read/unread -->
                     <?php if (!$msg['is_read']): ?>
                     <a href="?read=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
@@ -299,14 +298,16 @@ include dirname(__DIR__) . '/includes/header.php';
 
                     <!-- Spam/Unspam -->
                     <?php if (!$msg['is_spam']): ?>
-                    <a href="?spam=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-yellow-600 hover:text-yellow-800 transition-colors"
-                       title="Marcar como spam"
-                       onclick="return confirm('Marcar como spam? Todas as mensagens futuras deste email (<?= e($msg['email']) ?>) serão automaticamente marcadas como spam.')">
+                    <button type="button"
+                            class="spam-message-btn text-sm text-yellow-600 hover:text-yellow-800 transition-colors"
+                            data-id="<?= $msg['id'] ?>"
+                            data-name="<?= e($msg['name']) ?>"
+                            data-email="<?= e($msg['email']) ?>"
+                            title="Marcar como spam">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                         </svg>
-                    </a>
+                    </button>
                     <?php else: ?>
                     <a href="?unspam=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
                        class="text-sm text-green-600 hover:text-green-800 transition-colors"
@@ -405,6 +406,36 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </div>
 
+<!-- Spam Confirmation Modal -->
+<div id="spamModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="flex items-start mb-4">
+            <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Marcar como Spam</h3>
+                <div class="mt-2 text-sm text-gray-500">
+                    Tem a certeza que deseja marcar a mensagem de <strong id="spamName"></strong> (<strong id="spamEmail"></strong>) como spam?
+                    <div class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
+                        <strong>Atenção:</strong> Todas as mensagens futuras deste email serão automaticamente marcadas como spam.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-3">
+            <button type="button" onclick="closeSpamModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
+                Cancelar
+            </button>
+            <a href="#" id="confirmSpamBtn" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+                Marcar como Spam
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Message Details Modal -->
 <div id="messageModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
@@ -474,93 +505,171 @@ include dirname(__DIR__) . '/includes/header.php';
 </div>
 
 <script>
-// Delete Modal
-function closeDeleteModal() {
-    const modal = document.getElementById('deleteModal');
-    if (modal) {
-        modal.classList.remove('flex');
-        modal.classList.add('hidden');
-    }
-}
-
-// Event delegation for delete buttons
-document.addEventListener('click', function(e) {
-    const deleteBtn = e.target.closest('.delete-message-btn');
-
-    if (deleteBtn) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const id = deleteBtn.dataset.id;
-        const name = deleteBtn.dataset.name;
+document.addEventListener('DOMContentLoaded', function() {
+    // Delete Modal
+    function closeDeleteModal() {
         const modal = document.getElementById('deleteModal');
-        const nameEl = document.getElementById('messageName');
-        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    }
+    window.closeDeleteModal = closeDeleteModal;
 
-        if (modal && nameEl && confirmBtn) {
-            nameEl.textContent = name;
-            confirmBtn.href = '?delete=' + id + '&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>';
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+    // Spam Modal
+    function closeSpamModal() {
+        const modal = document.getElementById('spamModal');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    }
+    window.closeSpamModal = closeSpamModal;
+
+    // Event delegation for action buttons (delete, spam, links)
+    document.addEventListener('click', function(e) {
+        // Check if click is on any action button/link - stop propagation to prevent opening message modal
+        const actionContainer = e.target.closest('.ml-4.flex.items-center.gap-2');
+        if (actionContainer) {
+            // Stop propagation for any click in the action buttons area
+            if (!e.target.closest('.message-row')) {
+                e.stopPropagation();
+            }
         }
 
-        return false;
+        // Delete button
+        const deleteBtn = e.target.closest('.delete-message-btn');
+        if (deleteBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = deleteBtn.dataset.id;
+            const name = deleteBtn.dataset.name;
+            const modal = document.getElementById('deleteModal');
+            const nameEl = document.getElementById('messageName');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+            if (modal && nameEl && confirmBtn) {
+                nameEl.textContent = name;
+                confirmBtn.href = '?delete=' + id + '&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>';
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            return false;
+        }
+
+        // Spam button
+        const spamBtn = e.target.closest('.spam-message-btn');
+        if (spamBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = spamBtn.dataset.id;
+            const name = spamBtn.dataset.name;
+            const email = spamBtn.dataset.email;
+            const modal = document.getElementById('spamModal');
+            const nameEl = document.getElementById('spamName');
+            const emailEl = document.getElementById('spamEmail');
+            const confirmBtn = document.getElementById('confirmSpamBtn');
+
+            if (modal && nameEl && emailEl && confirmBtn) {
+                nameEl.textContent = name;
+                emailEl.textContent = email;
+                confirmBtn.href = '?spam=' + id + '&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>';
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            return false;
+        }
+
+        // Stop propagation for action links (read, unread, reply, ignore, unignore, unspam)
+        const actionLink = e.target.closest('.ml-4.flex.items-center.gap-2 a, .ml-4.flex.items-center.gap-2 button');
+        if (actionLink) {
+            e.stopPropagation();
+        }
+
+        // Message row click - open details modal (only if not clicking on action buttons)
+        const messageRow = e.target.closest('.message-row');
+        if (messageRow && !e.target.closest('.delete-message-btn') && !e.target.closest('.spam-message-btn') && !actionLink) {
+            const id = messageRow.dataset.id;
+            if (id) {
+                openMessageModal(id);
+            }
+        }
+    });
+
+    // Message Details Modal
+    function openMessageModal(id) {
+        const dataEl = document.getElementById('message-data-' + id);
+        if (!dataEl) return;
+
+        const data = JSON.parse(dataEl.textContent);
+        const modal = document.getElementById('messageModal');
+
+        // Populate modal
+        document.getElementById('modal-name').textContent = data.name;
+        document.getElementById('modal-email').textContent = data.email;
+        document.getElementById('modal-email').href = 'mailto:' + data.email;
+        document.getElementById('modal-phone').textContent = data.phone || '-';
+        document.getElementById('modal-subject').textContent = data.subject || '-';
+        document.getElementById('modal-message').textContent = data.message;
+        document.getElementById('modal-date').textContent = data.created_at;
+        document.getElementById('modal-ip').textContent = data.ip_address;
+        document.getElementById('modal-language').textContent = data.language.toUpperCase();
+        document.getElementById('modal-useragent').textContent = data.user_agent;
+
+        // Show modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Mark as read if not already
+        if (!data.is_read) {
+            fetch('?read=' + id + '&token=<?= CSRF::getToken() ?>');
+        }
     }
-});
+    window.openMessageModal = openMessageModal;
 
-// Message Details Modal
-function openMessageModal(id) {
-    const dataEl = document.getElementById('message-data-' + id);
-    if (!dataEl) return;
-
-    const data = JSON.parse(dataEl.textContent);
-    const modal = document.getElementById('messageModal');
-
-    // Populate modal
-    document.getElementById('modal-name').textContent = data.name;
-    document.getElementById('modal-email').textContent = data.email;
-    document.getElementById('modal-email').href = 'mailto:' + data.email;
-    document.getElementById('modal-phone').textContent = data.phone || '-';
-    document.getElementById('modal-subject').textContent = data.subject || '-';
-    document.getElementById('modal-message').textContent = data.message;
-    document.getElementById('modal-date').textContent = data.created_at;
-    document.getElementById('modal-ip').textContent = data.ip_address;
-    document.getElementById('modal-language').textContent = data.language.toUpperCase();
-    document.getElementById('modal-useragent').textContent = data.user_agent;
-
-    // Show modal
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-
-    // Mark as read if not already
-    if (!data.is_read) {
-        fetch('?read=' + id + '&token=<?= CSRF::getToken() ?>');
+    function closeMessageModal() {
+        const modal = document.getElementById('messageModal');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
     }
-}
+    window.closeMessageModal = closeMessageModal;
 
-function closeMessageModal() {
-    const modal = document.getElementById('messageModal');
-    if (modal) {
-        modal.classList.remove('flex');
-        modal.classList.add('hidden');
+    // Close modals on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+            closeSpamModal();
+            closeMessageModal();
+        }
+    });
+
+    // Close modals on background click
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
     }
-}
 
-// Close modals on ESC key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeDeleteModal();
-        closeMessageModal();
+    const spamModal = document.getElementById('spamModal');
+    if (spamModal) {
+        spamModal.addEventListener('click', function(e) {
+            if (e.target === this) closeSpamModal();
+        });
     }
-});
 
-// Close modals on background click
-document.getElementById('deleteModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeDeleteModal();
-});
-
-document.getElementById('messageModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeMessageModal();
+    const messageModal = document.getElementById('messageModal');
+    if (messageModal) {
+        messageModal.addEventListener('click', function(e) {
+            if (e.target === this) closeMessageModal();
+        });
+    }
 });
 </script>
 
