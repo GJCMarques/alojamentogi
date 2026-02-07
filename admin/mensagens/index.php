@@ -22,12 +22,87 @@ if (isset($_GET['read']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle mark as spam
+// Handle mark as unread
+if (isset($_GET['unread']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $id = (int)$_GET['unread'];
+        $db->update('contact_submissions', ['is_read' => 0], 'id = ?', [$id]);
+        Session::flash('success', 'Mensagem marcada como não lida.');
+    }
+    redirect('/admin/mensagens/');
+}
+
+// Handle mark as ignored
+if (isset($_GET['ignore']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $id = (int)$_GET['ignore'];
+        $db->update('contact_submissions', ['is_ignored' => 1], 'id = ?', [$id]);
+        Session::flash('success', 'Mensagem ignorada.');
+    }
+    redirect('/admin/mensagens/');
+}
+
+// Handle unignore
+if (isset($_GET['unignore']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $id = (int)$_GET['unignore'];
+        $db->update('contact_submissions', ['is_ignored' => 0], 'id = ?', [$id]);
+        Session::flash('success', 'Mensagem restaurada.');
+    }
+    redirect('/admin/mensagens/');
+}
+
+// Handle mark as spam (and add email to spam list)
 if (isset($_GET['spam']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['spam'];
-        $db->update('contact_submissions', ['is_spam' => 1], 'id = ?', [$id]);
-        Session::flash('success', 'Mensagem marcada como spam.');
+
+        // Get the message to extract email
+        $message = $db->fetch("SELECT email FROM contact_submissions WHERE id = ?", [$id]);
+
+        if ($message) {
+            // Mark message as spam
+            $db->update('contact_submissions', ['is_spam' => 1], 'id = ?', [$id]);
+
+            // Add email to spam list (ignore if already exists)
+            try {
+                $db->insert('spam_emails', [
+                    'email' => $message['email'],
+                    'reason' => 'Marcado como spam manualmente pelo administrador'
+                ]);
+            } catch (Exception $e) {
+                // Email already in spam list, that's ok
+            }
+
+            // Mark all other messages from this email as spam
+            $db->query(
+                "UPDATE contact_submissions SET is_spam = 1 WHERE email = ? AND id != ?",
+                [$message['email'], $id]
+            );
+
+            Session::flash('success', 'Mensagem marcada como spam. Todas as mensagens futuras deste email serão automaticamente marcadas como spam.');
+        }
+    }
+    redirect('/admin/mensagens/');
+}
+
+// Handle unspam
+if (isset($_GET['unspam']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $id = (int)$_GET['unspam'];
+
+        // Get the message to extract email
+        $message = $db->fetch("SELECT email FROM contact_submissions WHERE id = ?", [$id]);
+
+        if ($message) {
+            // Unmark message as spam
+            $db->update('contact_submissions', ['is_spam' => 0], 'id = ?', [$id]);
+
+            // Remove email from spam list
+            $db->delete('spam_emails', 'email = ?', [$message['email']]);
+
+            Session::flash('success', 'Mensagem removida do spam.');
+        }
     }
     redirect('/admin/mensagens/');
 }
@@ -54,23 +129,27 @@ $params = [];
 
 switch ($filter) {
     case 'unread':
-        $where .= " AND is_read = 0 AND is_spam = 0";
+        $where .= " AND is_read = 0 AND is_spam = 0 AND is_ignored = 0";
         break;
     case 'read':
-        $where .= " AND is_read = 1 AND is_spam = 0";
+        $where .= " AND is_read = 1 AND is_spam = 0 AND is_ignored = 0";
+        break;
+    case 'ignored':
+        $where .= " AND is_ignored = 1 AND is_spam = 0";
         break;
     case 'spam':
         $where .= " AND is_spam = 1";
         break;
     default:
-        $where .= " AND is_spam = 0";
+        $where .= " AND is_spam = 0 AND is_ignored = 0";
 }
 
 // Get counts
 $counts = [
-    'all' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 0")['c'],
-    'unread' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 0 AND is_spam = 0")['c'],
-    'read' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 1 AND is_spam = 0")['c'],
+    'all' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 0 AND is_ignored = 0")['c'],
+    'unread' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 0 AND is_spam = 0 AND is_ignored = 0")['c'],
+    'read' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 1 AND is_spam = 0 AND is_ignored = 0")['c'],
+    'ignored' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_ignored = 1 AND is_spam = 0")['c'],
     'spam' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 1")['c'],
 ];
 
@@ -96,6 +175,13 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </div>
 
+<!-- Flash Messages -->
+<?php if ($flash = Session::getFlash('success')): ?>
+<div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
+    <?= e($flash) ?>
+</div>
+<?php endif; ?>
+
 <!-- Filters -->
 <div class="bg-white rounded-lg shadow-sm mb-6">
     <div class="flex border-b border-gray-200">
@@ -107,6 +193,9 @@ include dirname(__DIR__) . '/includes/header.php';
         </a>
         <a href="?filter=read" class="px-6 py-3 text-sm font-medium <?= $filter === 'read' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Lidas (<?= $counts['read'] ?>)
+        </a>
+        <a href="?filter=ignored" class="px-6 py-3 text-sm font-medium <?= $filter === 'ignored' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
+            Ignoradas (<?= $counts['ignored'] ?>)
         </a>
         <a href="?filter=spam" class="px-6 py-3 text-sm font-medium <?= $filter === 'spam' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Spam (<?= $counts['spam'] ?>)
@@ -127,14 +216,19 @@ include dirname(__DIR__) . '/includes/header.php';
     <?php else: ?>
     <div class="divide-y divide-gray-200">
         <?php foreach ($messages as $msg): ?>
-        <div class="p-6 hover:bg-gray-50 <?= !$msg['is_read'] ? 'bg-secondary-50' : '' ?>">
+        <div class="p-6 hover:bg-gray-50 transition-colors cursor-pointer message-row <?= !$msg['is_read'] ? 'bg-blue-50' : '' ?>"
+             data-id="<?= $msg['id'] ?>"
+             onclick="openMessageModal(<?= $msg['id'] ?>)">
             <div class="flex items-start justify-between">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-3 mb-2">
                         <?php if (!$msg['is_read']): ?>
-                        <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-secondary-100 text-olive-800 rounded">Nova</span>
+                        <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-lg">Nova</span>
                         <?php endif; ?>
-                        <h3 class="text-sm font-semibold text-gray-900 truncate">
+                        <?php if ($msg['is_ignored']): ?>
+                        <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 rounded-lg">Ignorada</span>
+                        <?php endif; ?>
+                        <h3 class="text-sm font-semibold text-gray-900">
                             <?= e($msg['name']) ?>
                         </h3>
                         <span class="text-sm text-gray-500">&lt;<?= e($msg['email']) ?>&gt;</span>
@@ -154,45 +248,106 @@ include dirname(__DIR__) . '/includes/header.php';
                     </div>
                 </div>
 
-                <div class="ml-4 flex items-center gap-2">
+                <div class="ml-4 flex items-center gap-2" onclick="event.stopPropagation();">
+                    <!-- Mark as read/unread -->
                     <?php if (!$msg['is_read']): ?>
-                    <a href="?read=<?= $msg['id'] ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-secondary-600 hover:text-olive-800"
+                    <a href="?read=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
+                       class="text-sm text-blue-600 hover:text-blue-800 transition-colors"
                        title="Marcar como lida">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </a>
+                    <?php else: ?>
+                    <a href="?unread=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
+                       class="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                       title="Marcar como não lida">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
                         </svg>
                     </a>
                     <?php endif; ?>
 
+                    <!-- Reply -->
                     <a href="mailto:<?= e($msg['email']) ?>?subject=Re: <?= e($msg['subject'] ?? 'Contacto Casa do Gi') ?>"
-                       class="text-sm text-blue-600 hover:text-blue-800"
+                       class="text-sm text-green-600 hover:text-green-800 transition-colors"
                        title="Responder">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
                         </svg>
                     </a>
 
-                    <?php if (!$msg['is_spam']): ?>
-                    <a href="?spam=<?= $msg['id'] ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-yellow-600 hover:text-yellow-800"
-                       title="Marcar como spam">
+                    <!-- Ignore/Unignore -->
+                    <?php if (!$msg['is_ignored'] && !$msg['is_spam']): ?>
+                    <a href="?ignore=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
+                       class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                       title="Ignorar">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                        </svg>
+                    </a>
+                    <?php elseif ($msg['is_ignored']): ?>
+                    <a href="?unignore=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
+                       class="text-sm text-blue-500 hover:text-blue-700 transition-colors"
+                       title="Restaurar">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                     </a>
                     <?php endif; ?>
 
-                    <a href="?delete=<?= $msg['id'] ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-red-600 hover:text-red-800"
-                       title="Eliminar"
-                       onclick="return confirm('Eliminar esta mensagem?')">
+                    <!-- Spam/Unspam -->
+                    <?php if (!$msg['is_spam']): ?>
+                    <a href="?spam=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
+                       class="text-sm text-yellow-600 hover:text-yellow-800 transition-colors"
+                       title="Marcar como spam"
+                       onclick="return confirm('Marcar como spam? Todas as mensagens futuras deste email (<?= e($msg['email']) ?>) serão automaticamente marcadas como spam.')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </a>
+                    <?php else: ?>
+                    <a href="?unspam=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
+                       class="text-sm text-green-600 hover:text-green-800 transition-colors"
+                       title="Remover do spam">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </a>
+                    <?php endif; ?>
+
+                    <!-- Delete -->
+                    <button type="button"
+                            class="delete-message-btn text-sm text-red-600 hover:text-red-800 transition-colors"
+                            data-id="<?= $msg['id'] ?>"
+                            data-name="<?= e($msg['name']) ?>"
+                            title="Eliminar">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
-                    </a>
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Hidden message details for modal -->
+        <div id="message-data-<?= $msg['id'] ?>" style="display:none;">
+            <?= json_encode([
+                'id' => $msg['id'],
+                'name' => $msg['name'],
+                'email' => $msg['email'],
+                'phone' => $msg['phone'],
+                'subject' => $msg['subject'],
+                'message' => $msg['message'],
+                'created_at' => formatDateTime($msg['created_at']),
+                'ip_address' => $msg['ip_address'],
+                'user_agent' => $msg['user_agent'],
+                'language' => $msg['language'],
+                'is_read' => $msg['is_read'],
+                'is_spam' => $msg['is_spam'],
+                'is_ignored' => $msg['is_ignored'],
+            ]) ?>
         </div>
         <?php endforeach; ?>
     </div>
@@ -206,13 +361,13 @@ include dirname(__DIR__) . '/includes/header.php';
         <div class="flex gap-2">
             <?php if ($page > 1): ?>
             <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>"
-               class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+               class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                 Anterior
             </a>
             <?php endif; ?>
             <?php if ($page < $totalPages): ?>
             <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>"
-               class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+               class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                 Seguinte
             </a>
             <?php endif; ?>
@@ -221,5 +376,192 @@ include dirname(__DIR__) . '/includes/header.php';
     <?php endif; ?>
     <?php endif; ?>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="flex items-start mb-4">
+            <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Eliminar Mensagem</h3>
+                <div class="mt-2 text-sm text-gray-500">
+                    Tem a certeza que deseja eliminar a mensagem de <strong id="messageName"></strong>?
+                    Esta ação não pode ser revertida.
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-3">
+            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
+                Cancelar
+            </button>
+            <a href="#" id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                Eliminar
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Message Details Modal -->
+<div id="messageModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+        <!-- Header -->
+        <div class="sticky top-0 bg-primary p-6 flex items-center justify-between rounded-t-2xl">
+            <h2 class="text-xl font-semibold text-cream">Detalhes da Mensagem</h2>
+            <button onclick="closeMessageModal()" class="text-cream hover:text-accent transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 88px);">
+            <div class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                        <div id="modal-name" class="text-gray-900"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <a id="modal-email" href="" class="text-blue-600 hover:underline"></a>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <div id="modal-phone" class="text-gray-900"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                        <div id="modal-date" class="text-gray-900"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Assunto</label>
+                    <div id="modal-subject" class="text-gray-900"></div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mensagem</label>
+                    <div id="modal-message" class="text-gray-900 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg border border-gray-200"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 text-xs text-gray-500">
+                    <div>
+                        <label class="block font-medium mb-1">IP Address</label>
+                        <div id="modal-ip"></div>
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Idioma</label>
+                        <div id="modal-language"></div>
+                    </div>
+                </div>
+
+                <div class="text-xs text-gray-500">
+                    <label class="block font-medium mb-1">User Agent</label>
+                    <div id="modal-useragent" class="break-all"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Delete Modal
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+}
+
+// Event delegation for delete buttons
+document.addEventListener('click', function(e) {
+    const deleteBtn = e.target.closest('.delete-message-btn');
+
+    if (deleteBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const id = deleteBtn.dataset.id;
+        const name = deleteBtn.dataset.name;
+        const modal = document.getElementById('deleteModal');
+        const nameEl = document.getElementById('messageName');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+        if (modal && nameEl && confirmBtn) {
+            nameEl.textContent = name;
+            confirmBtn.href = '?delete=' + id + '&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        return false;
+    }
+});
+
+// Message Details Modal
+function openMessageModal(id) {
+    const dataEl = document.getElementById('message-data-' + id);
+    if (!dataEl) return;
+
+    const data = JSON.parse(dataEl.textContent);
+    const modal = document.getElementById('messageModal');
+
+    // Populate modal
+    document.getElementById('modal-name').textContent = data.name;
+    document.getElementById('modal-email').textContent = data.email;
+    document.getElementById('modal-email').href = 'mailto:' + data.email;
+    document.getElementById('modal-phone').textContent = data.phone || '-';
+    document.getElementById('modal-subject').textContent = data.subject || '-';
+    document.getElementById('modal-message').textContent = data.message;
+    document.getElementById('modal-date').textContent = data.created_at;
+    document.getElementById('modal-ip').textContent = data.ip_address;
+    document.getElementById('modal-language').textContent = data.language.toUpperCase();
+    document.getElementById('modal-useragent').textContent = data.user_agent;
+
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // Mark as read if not already
+    if (!data.is_read) {
+        fetch('?read=' + id + '&token=<?= CSRF::getToken() ?>');
+    }
+}
+
+function closeMessageModal() {
+    const modal = document.getElementById('messageModal');
+    if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+}
+
+// Close modals on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
+        closeMessageModal();
+    }
+});
+
+// Close modals on background click
+document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+
+document.getElementById('messageModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeMessageModal();
+});
+</script>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>

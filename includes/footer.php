@@ -8,6 +8,23 @@ $currentLang = $lang->getCurrentLang();
 $isEnglish = $lang->isEnglish();
 $base = basePath();
 
+// Get accommodation booking URLs
+$db = \Core\Database::getInstance();
+$casa1 = $db->fetch(
+    "SELECT a.*, at.name
+     FROM accommodation a
+     LEFT JOIN accommodation_translations at ON a.id = at.accommodation_id AND at.language_id = ?
+     WHERE a.accommodation_number = 1",
+    [$lang->getCurrentLangId()]
+);
+$casa2 = $db->fetch(
+    "SELECT a.*, at.name
+     FROM accommodation a
+     LEFT JOIN accommodation_translations at ON a.id = at.accommodation_id AND at.language_id = ?
+     WHERE a.accommodation_number = 2",
+    [$lang->getCurrentLangId()]
+);
+
 // Quick links
 $quickLinks = $isEnglish ? [
     ['url' => $base . '/en/accommodation/', 'label' => 'Accommodation'],
@@ -136,24 +153,21 @@ $instagramUrl = setting('instagram_url', '');
                         <?= $isEnglish ? 'Book Now' : 'Reserve Já' ?>
                     </h4>
                     <div class="space-y-4">
-                        <?php if ($guestreadyUrl = setting('guestready_url')): ?>
-                        <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener"
-                           class="flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                        <button onclick="openBookingModal('guestready')" type="button"
+                           class="w-full flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
                             <div class="w-10 h-10 bg-[#800020]/10 rounded-md flex items-center justify-center mr-3 text-white p-1">
                                 <!-- GuestReady Logo -->
                                 <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
-                                <span class="text-xs text-[#800020]/80 uppercase tracking-wide">Direto</span>
+                                <span class="text-xs text-[#800020]/80 uppercase tracking-wide">Parceiro</span>
                                 <span class="text-[#800020] font-bold">GuestReady</span>
                             </div>
-                        </a>
-                        <?php endif; ?>
+                        </button>
 
-                        <?php if ($bookingUrl = setting('booking_url')): ?>
                         <!-- Booking.com Custom Button (#003580) -->
-                        <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener"
-                           class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                        <button onclick="openBookingModal('booking')" type="button"
+                           class="w-full flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
                            style="background-color: #003580;">
                             <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white p-1">
                                 <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
@@ -162,23 +176,20 @@ $instagramUrl = setting('instagram_url', '');
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
                                 <span class="text-white font-bold">Booking.com</span>
                             </div>
-                        </a>
-                        <?php endif; ?>
+                        </button>
 
-                        <?php if ($airbnbUrl = setting('airbnb_url')): ?>
                         <!-- Airbnb Custom Button (#FF385C) -->
-                        <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener"
-                           class="flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                        <button onclick="openBookingModal('airbnb')" type="button"
+                           class="w-full flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
                            style="background-color: #FF385C;">
                             <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white p-1">
                                 <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
-                                <span class="text-white font-bold">Airbnb</span>
+                                <span class="text-white font-bold">Airb nb</span>
                             </div>
-                        </a>
-                        <?php endif; ?>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -203,6 +214,137 @@ $instagramUrl = setting('instagram_url', '');
             </div>
         </div>
     </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[100] px-4">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-primary p-6 flex items-center justify-between rounded-t-2xl">
+                <div>
+                    <h3 class="text-2xl font-serif font-bold text-white"><?= $isEnglish ? 'Choose Your Casa' : 'Escolha a Sua Casa' ?></h3>
+                    <p class="text-cream-200 text-sm mt-1"><?= $isEnglish ? 'Select which accommodation to book' : 'Selecione qual alojamento quer reservar' ?></p>
+                </div>
+                <button onclick="closeBookingModal()" class="text-white/80 hover:text-white p-2 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-8 bg-cream-50 rounded-b-2xl">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Casa do Gi 1 -->
+                    <div class="bg-white p-6 rounded-xl">
+                        <h4 class="font-serif text-lg font-bold text-primary mb-4 pb-3 border-b"><?= e($casa1['name'] ?? 'A Casa do Gi 1') ?></h4>
+
+                        <div class="space-y-3">
+                            <?php if (!empty($casa1['guestready_url'])): ?>
+                            <a href="<?= e($casa1['guestready_url']) ?>" target="_blank" rel="noopener"
+                               class="flex items-center p-3 bg-[#FAF9F6] hover:bg-[#EAE8E0] transition-colors group w-full rounded-lg">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
+                                    <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex-1">
+                                    <span class="text-[#800020] font-semibold">GuestReady</span>
+                                </div>
+                                <svg class="w-4 h-4 text-[#800020]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($casa1['booking_url'])): ?>
+                            <a href="<?= e($casa1['booking_url']) ?>" target="_blank" rel="noopener"
+                               class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
+                               style="background-color: #003580;">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
+                                    <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex-1">
+                                    <span class="text-white font-semibold">Booking.com</span>
+                                </div>
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($casa1['airbnb_url'])): ?>
+                            <a href="<?= e($casa1['airbnb_url']) ?>" target="_blank" rel="noopener"
+                               class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
+                               style="background-color: #FF385C;">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
+                                    <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex-1">
+                                    <span class="text-white font-semibold">Airbnb</span>
+                                </div>
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Casa do Gi 2 -->
+                    <div class="bg-white p-6 rounded-xl">
+                        <h4 class="font-serif text-lg font-bold text-primary mb-4 pb-3 border-b"><?= e($casa2['name'] ?? 'A Casa do Gi 2') ?></h4>
+
+                        <div class="space-y-3">
+                            <?php if (!empty($casa2['guestready_url'])): ?>
+                            <a href="<?= e($casa2['guestready_url']) ?>" target="_blank" rel="noopener"
+                               class="flex items-center p-3 bg-[#FAF9F6] hover:bg-[#EAE8E0] transition-colors group w-full rounded-lg">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
+                                    <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex-1">
+                                    <span class="text-[#800020] font-semibold">GuestReady</span>
+                                </div>
+                                <svg class="w-4 h-4 text-[#800020]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($casa2['booking_url'])): ?>
+                            <a href="<?= e($casa2['booking_url']) ?>" target="_blank" rel="noopener"
+                               class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
+                               style="background-color: #003580;">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
+                                    <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex-1">
+                                    <span class="text-white font-semibold">Booking.com</span>
+                                </div>
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($casa2['airbnb_url'])): ?>
+                            <a href="<?= e($casa2['airbnb_url']) ?>" target="_blank" rel="noopener"
+                               class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
+                               style="background-color: #FF385C;">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
+                                    <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex-1">
+                                    <span class="text-white font-semibold">Airbnb</span>
+                                </div>
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script>
@@ -247,6 +389,39 @@ $instagramUrl = setting('instagram_url', '');
         })
         .catch(() => {});
         <?php endif; ?>
+
+        // Booking Modal Functions
+        function openBookingModal(platform) {
+            const modal = document.getElementById('bookingModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeBookingModal() {
+            const modal = document.getElementById('bookingModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('bookingModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeBookingModal();
+            }
+        });
     </script>
 
     <!-- Page-specific scripts -->

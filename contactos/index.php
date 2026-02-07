@@ -71,6 +71,12 @@ if (isPost() && $formEnabled) {
                 if ($recentSubmissions >= 3) {
                     $errors['limit'] = 'Demasiadas submissões. Por favor, aguarde um pouco antes de tentar novamente.';
                 } else {
+                    // Check if email is in spam list
+                    $isSpamEmail = $db->fetch(
+                        "SELECT id FROM spam_emails WHERE email = ?",
+                        [$formData['email']]
+                    );
+
                     // Save to database
                     $db->insert('contact_submissions', [
                         'name' => $formData['name'],
@@ -81,6 +87,7 @@ if (isPost() && $formEnabled) {
                         'ip_address' => getClientIp(),
                         'user_agent' => substr(getUserAgent(), 0, 500),
                         'language' => $lang->getCurrentLang(),
+                        'is_spam' => $isSpamEmail ? 1 : 0,
                     ]);
 
                     // Send email notifications
