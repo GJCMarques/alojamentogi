@@ -245,6 +245,112 @@ class Mailer
     }
 
     /**
+     * Send invoice email
+     */
+    public function sendInvoice(array $invoice, array $order): bool
+    {
+        if (empty($invoice['customer_email'])) {
+            return false;
+        }
+
+        $barcodeFormatted = substr($invoice['barcode'], 0, 3) . ' ' . substr($invoice['barcode'], 3, 3) . ' ' . substr($invoice['barcode'], 6, 3);
+        $subject = "Fatura {$barcodeFormatted} - A Casa do Gi";
+
+        $items = json_decode($invoice['items_json'], true) ?: [];
+
+        $body = $this->renderTemplate('invoice', [
+            'invoice' => $invoice,
+            'order' => $order,
+            'items' => $items,
+        ]);
+
+        return $this->send($invoice['customer_email'], $subject, $body);
+    }
+
+    /**
+     * Send order shipped notification
+     */
+    public function sendOrderShipped(array $order, string $trackingCode = '', array $items = []): bool
+    {
+        if (empty($order['customer_email'])) {
+            return false;
+        }
+
+        $subject = "Encomenda Enviada - #{$order['order_number']} - A Casa do Gi";
+
+        $body = $this->renderTemplate('order-shipped', [
+            'order' => $order,
+            'trackingCode' => $trackingCode,
+            'items' => $items,
+        ]);
+
+        return $this->send($order['customer_email'], $subject, $body);
+    }
+
+    /**
+     * Send manual order received confirmation to customer
+     */
+    public function sendManualOrderReceived(array $manualOrder): bool
+    {
+        if (empty($manualOrder['customer_email'])) {
+            return false;
+        }
+
+        $subject = "Pedido Recebido - A Casa do Gi";
+
+        $body = $this->renderTemplate('manual-order-received', [
+            'manualOrder' => $manualOrder,
+        ]);
+
+        return $this->send($manualOrder['customer_email'], $subject, $body);
+    }
+
+    /**
+     * Send manual order notification to admin
+     */
+    public function sendManualOrderNotification(array $manualOrder): bool
+    {
+        $adminEmail = setting('contact_email', $this->config['mail']['from_email'] ?? '');
+
+        if (empty($adminEmail)) {
+            return false;
+        }
+
+        $items = json_decode($manualOrder['items_json'] ?? '[]', true) ?: [];
+        $itemsList = '';
+        foreach ($items as $item) {
+            $name = $item['name'] ?? $item['product_name'] ?? 'Produto';
+            $qty = (int)($item['quantity'] ?? 1);
+            $itemsList .= "- {$name} (x{$qty})\n";
+        }
+
+        $subject = "Novo Pedido Manual - {$manualOrder['customer_name']}";
+
+        $body = "<div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'>
+            <div style='background:#264653;padding:30px;text-align:center;border-radius:8px 8px 0 0;'>
+                <h1 style='color:#FDFBF7;margin:0;'>A Casa do Gi</h1>
+                <p style='color:#C5A059;margin:5px 0 0;'>Novo Pedido Manual</p>
+            </div>
+            <div style='padding:30px;background:#fff;border:1px solid #eee;'>
+                <h2 style='color:#264653;margin-top:0;'>Novo pedido manual recebido</h2>
+                <p><strong>Nome:</strong> " . htmlspecialchars($manualOrder['customer_name']) . "</p>
+                <p><strong>Email:</strong> " . htmlspecialchars($manualOrder['customer_email']) . "</p>
+                <p><strong>Telefone:</strong> " . htmlspecialchars($manualOrder['customer_phone'] ?? 'N/A') . "</p>
+                <p><strong>Total:</strong> " . number_format($manualOrder['total'] ?? 0, 2, ',', '.') . "&euro;</p>
+                <hr style='border:none;border-top:1px solid #eee;margin:15px 0;'>
+                <p><strong>Produtos:</strong></p>
+                <pre style='background:#f9f9f9;padding:12px;border-radius:4px;font-size:14px;'>" . htmlspecialchars($itemsList) . "</pre>
+                " . (!empty($manualOrder['notes']) ? "<p><strong>Notas:</strong> " . htmlspecialchars($manualOrder['notes']) . "</p>" : '') . "
+            </div>
+            <div style='background:#264653;padding:15px;text-align:center;border-radius:0 0 8px 8px;'>
+                <p style='color:#FDFBF7;font-size:12px;margin:0;'>&copy; " . date('Y') . " A Casa do Gi</p>
+            </div>
+        </div>";
+
+        return $this->send($adminEmail, $subject, $body);
+    }
+
+    /**
      * Render email template
      */
     private function renderTemplate(string $template, array $data = []): string

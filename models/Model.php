@@ -34,6 +34,22 @@ abstract class Model
     {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
+
+            // Also set typed public properties if they exist
+            if (property_exists($this, $key)) {
+                try {
+                    $rp = new \ReflectionProperty($this, $key);
+                    if ($rp->isPublic() && !$rp->isStatic()) {
+                        $type = $rp->getType();
+                        if ($type && !$type->allowsNull() && $value === null) {
+                            continue;
+                        }
+                        $this->$key = $value;
+                    }
+                } catch (\ReflectionException $e) {
+                    // Skip if reflection fails
+                }
+            }
         }
         return $this;
     }

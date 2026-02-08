@@ -41,6 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 $updateData['tracking_code'] = sanitize($_POST['tracking_code']);
             }
 
+            // Set timestamps
+            if ($newStatus === 'shipped') {
+                $updateData['shipped_at'] = date('Y-m-d H:i:s');
+            } elseif ($newStatus === 'delivered') {
+                $updateData['delivered_at'] = date('Y-m-d H:i:s');
+            }
+
             $db->update('orders', $updateData, 'id = ?', [$orderId]);
 
             // Add to history
@@ -51,8 +58,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 'changed_by' => $_SESSION['admin_id'] ?? null
             ]);
 
-            Session::flash('success', 'Estado da encomenda atualizado.');
-            redirect('/admin/encomendas/ver.php?id=' . $orderId);
+            // Send email when status changes to shipped
+            if ($newStatus === 'shipped') {
+                try {
+                    $orderData = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
+                    if ($orderData && !empty($orderData['customer_email'])) {
+                        $mailer = new \Core\Mailer();
+                        $trackingCode = $updateData['tracking_code'] ?? $orderData['tracking_code'] ?? '';
+                        $orderItems = $db->fetchAll("SELECT * FROM order_items WHERE order_id = ?", [$orderId]);
+                        $mailer->sendOrderShipped($orderData, $trackingCode, $orderItems);
+                        Session::flash('success', 'Estado atualizado e email de envio enviado ao cliente.');
+                    } else {
+                        Session::flash('success', 'Estado da encomenda atualizado.');
+                    }
+                } catch (\Exception $e) {
+                    logMessage("Shipped email error for order #{$orderId}: " . $e->getMessage(), 'error');
+                    Session::flash('success', 'Estado atualizado mas houve erro ao enviar email.');
+                }
+            } else {
+                Session::flash('success', 'Estado da encomenda atualizado.');
+            }
+
+            redirect(basePath() . '/admin/encomendas/ver.php?id=' . $orderId);
         }
     }
 }

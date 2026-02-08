@@ -12,6 +12,14 @@ use Core\CSRF;
 // Set JSON response header
 header('Content-Type: application/json; charset=utf-8');
 
+// Rate limit: max 60 cart operations per minute per IP
+$rateLimiter = \Core\RateLimiter::getInstance();
+if (!$rateLimiter->check('cart_api', 60, 60)) {
+    http_response_code(429);
+    echo json_encode(['success' => false, 'message' => 'Too many requests. Please slow down.']);
+    exit;
+}
+
 // Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

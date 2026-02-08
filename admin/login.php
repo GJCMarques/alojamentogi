@@ -17,10 +17,25 @@ if (Auth::check()) {
 $error = '';
 $username = '';
 
+// Rate limit login attempts: max 10 per 15 minutes per IP
+$rateLimiter = \Core\RateLimiter::getInstance();
+
+// Check if IP is heavily rate limited (brute force detection)
+$failureCount = $rateLimiter->getFailureCount('admin_login', 900);
+if ($failureCount >= 20) {
+    // Severe brute force: block completely for 15 min
+    http_response_code(429);
+    $error = 'Demasiadas tentativas de login. A sua conta foi temporariamente bloqueada por seguranca. Tente novamente em 15 minutos.';
+}
+
 // Handle form submission
-if (isPost()) {
+if (isPost() && $failureCount < 20) {
+    // Rate limit: 10 attempts per 5 minutes
+    if (!$rateLimiter->check('admin_login_submit', 10, 300)) {
+        $error = 'Demasiadas tentativas. Aguarde alguns minutos antes de tentar novamente.';
+    }
     // Verify CSRF
-    if (!CSRF::isValid()) {
+    elseif (!CSRF::isValid()) {
         $error = 'Sessao expirada. Por favor, tente novamente.';
     } else {
         $username = sanitize(post('username', ''));
@@ -38,6 +53,9 @@ if (isPost()) {
                 redirect($redirectTo);
             } else {
                 $error = $result['message'];
+                // Record failed attempt for brute force detection
+                $rateLimiter->recordFailure('admin_login');
+                logMessage("Failed admin login attempt: username='{$username}' from " . getClientIp(), 'warning');
             }
         }
     }

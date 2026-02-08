@@ -179,7 +179,7 @@ include INCLUDES_PATH . '/header.php';
                         <!-- Product Image -->
                         <a href="<?= $base ?>/en/shop/product/?slug=<?= e($product->slug) ?>" class="block aspect-square relative overflow-hidden">
                             <?php if ($product->getPrimaryImage()): ?>
-                            <img src="<?= e(UPLOADS_URL . '/products/' . $product->getPrimaryImage()) ?>"
+                            <img src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
                                  alt="<?= e($product->name) ?>"
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             <?php else: ?>

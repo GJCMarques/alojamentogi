@@ -65,15 +65,15 @@ class Validator
 
         if (method_exists($this, $method)) {
             if (!$this->$method($field, $value, $params)) {
-                $this->addError($field, $rule, $params);
+                $this->addRuleError($field, $rule, $params);
             }
         }
     }
 
     /**
-     * Add error message
+     * Add error message from validation rule
      */
-    private function addError(string $field, string $rule, array $params = []): void
+    private function addRuleError(string $field, string $rule, array $params = []): void
     {
         $messages = [
             'required' => 'O campo :field é obrigatório.',
@@ -240,6 +240,61 @@ class Validator
     {
         if (empty($value)) return true;
         return preg_match('/^[\pL\pN\s]+$/u', $value);
+    }
+
+    // ==================== Fluent Convenience Methods ====================
+
+    /**
+     * Validate a value is not empty (fluent API)
+     */
+    public function required(mixed $value, string $field, string $message = ''): self
+    {
+        $isEmpty = is_null($value) || (is_string($value) && trim($value) === '') || (is_array($value) && count($value) === 0);
+        if ($isEmpty) {
+            if (!isset($this->errors[$field])) {
+                $this->errors[$field] = [];
+            }
+            $this->errors[$field][] = $message ?: "O campo {$field} e obrigatorio.";
+        }
+        return $this;
+    }
+
+    /**
+     * Validate a value is a valid email (fluent API)
+     */
+    public function email(mixed $value, string $field, string $message = ''): self
+    {
+        if (!empty($value) && filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            if (!isset($this->errors[$field])) {
+                $this->errors[$field] = [];
+            }
+            $this->errors[$field][] = $message ?: "O campo {$field} deve ser um email valido.";
+        }
+        return $this;
+    }
+
+    /**
+     * Add a custom error (public, used by controllers)
+     */
+    public function addError(string $field, string $message): self
+    {
+        if (!isset($this->errors[$field])) {
+            $this->errors[$field] = [];
+        }
+        $this->errors[$field][] = $message;
+        return $this;
+    }
+
+    /**
+     * Get errors as flat associative array (first error per field)
+     */
+    public function getErrors(): array
+    {
+        $flat = [];
+        foreach ($this->errors as $field => $messages) {
+            $flat[$field] = $messages[0] ?? '';
+        }
+        return $flat;
     }
 
     // ==================== Result Methods ====================

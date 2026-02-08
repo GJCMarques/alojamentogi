@@ -132,6 +132,20 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                             800: '#2D3748',
                             900: '#1a2028',
                             DEFAULT: '#2D3748',
+                        },
+                        // Terracotta - Error/Delete actions
+                        'terracotta': {
+                            50: '#fff8f6',
+                            100: '#ffedeb',
+                            200: '#fcd7d4',
+                            300: '#fac1bd',
+                            400: '#f29891',
+                            500: '#E07A5F',
+                            600: '#cc6147',
+                            700: '#a64d38',
+                            800: '#8c402f',
+                            900: '#733629',
+                            DEFAULT: '#E07A5F',
                         }
                     },
                     fontFamily: {

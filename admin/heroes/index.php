@@ -22,6 +22,9 @@ $defaultHeroes = [
     ['page_key' => 'about', 'page_name_pt' => 'Sobre Nós', 'page_name_en' => 'About Us', 'sort_order' => 4],
     ['page_key' => 'contact', 'page_name_pt' => 'Contactos', 'page_name_en' => 'Contact', 'sort_order' => 5],
     ['page_key' => 'shop', 'page_name_pt' => 'Loja', 'page_name_en' => 'Shop', 'sort_order' => 6],
+    ['page_key' => 'product_detail', 'page_name_pt' => 'Produto (Detalhe)', 'page_name_en' => 'Product (Detail)', 'sort_order' => 7],
+    ['page_key' => 'cart', 'page_name_pt' => 'Carrinho de Compras', 'page_name_en' => 'Shopping Cart', 'sort_order' => 8],
+    ['page_key' => 'checkout', 'page_name_pt' => 'Finalizar Compra', 'page_name_en' => 'Checkout', 'sort_order' => 9],
 ];
 
 // Auto-seed missing page heroes if table exists

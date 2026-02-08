@@ -29,7 +29,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $categorySlug = isset($_GET['categoria']) ? sanitize($_GET['categoria']) : null;
 $search = isset($_GET['pesquisa']) ? sanitize($_GET['pesquisa']) : null;
 $page = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
-$perPage = 9; // Display 9 products per page for better grid alignment
+$perPage = 12; // Display 12 products per page for 4-column grid alignment
 $offset = ($page - 1) * $perPage;
 
 // Get current category if filtered
@@ -95,26 +95,29 @@ include INCLUDES_PATH . '/header.php';
         <div class="lg:flex lg:gap-12">
 
             <!-- Sidebar / Filters -->
-            <aside class="lg:w-72 flex-shrink-0 mb-12 lg:mb-0">
+            <aside class="lg:w-80 flex-shrink-0 mb-12 lg:mb-0 animate-on-scroll" data-animation="fade-up">
                 <!-- Mobile Filter Toggle -->
-                <button id="filter-toggle" class="lg:hidden w-full flex items-center justify-between bg-white px-6 py-4 rounded-full shadow-md mb-6 border border-cream-200 text-primary font-medium">
-                    <span>Filtrar Produtos</span>
-                    <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                <button id="filter-toggle" class="lg:hidden w-full flex items-center justify-between bg-white px-6 py-4 rounded-full shadow-md mb-6 border border-cream-200 text-primary font-medium hover:bg-cream-50 transition-colors">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                        Filtrar Produtos
+                    </span>
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
                 </button>
 
-                <div id="filter-sidebar" class="hidden lg:block bg-white rounded-3xl shadow-[0_5px_25px_rgba(0,0,0,0.03)] p-8 border border-cream-100 sticky top-32">
+                <div id="filter-sidebar" class="hidden lg:block bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-cream-200 p-8 sticky top-32 transition-all duration-300">
                     <!-- Search -->
-                    <div class="mb-8">
-                        <h3 class="font-serif text-lg text-primary mb-4">Pesquisar</h3>
+                    <div class="mb-10">
+                        <span class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-4 block">Pesquisa</span>
                         <form action="" method="get" class="relative group">
                             <input type="text"
                                    name="pesquisa"
                                    value="<?= e($search ?? '') ?>"
-                                   placeholder="O que procura?"
-                                   class="w-full px-4 py-3 pr-10 border border-cream-200 rounded-full focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 transition-all outline-none text-sm placeholder:text-charcoal/40">
-                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-secondary transition-colors">
+                                   placeholder="Procurar produtos..."
+                                   class="w-full pl-5 pr-12 py-4 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none text-sm placeholder:text-charcoal/40 font-medium text-primary">
+                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-charcoal/40 hover:text-secondary hover:bg-white rounded-lg transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                 </svg>
@@ -124,21 +127,25 @@ include INCLUDES_PATH . '/header.php';
 
                     <!-- Categories -->
                     <div>
-                        <h3 class="font-serif text-lg text-primary mb-4">Categorias</h3>
-                        <ul class="space-y-1">
+                        <span class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-4 block">Categorias</span>
+                        <ul class="space-y-2">
                             <li>
                                 <a href="<?= $base ?>/loja/"
-                                   class="flex items-center justify-between px-4 py-2.5 rounded-lg text-sm <?= !$currentCategory ? 'bg-secondary/5 text-secondary font-medium' : 'text-charcoal/70 hover:bg-cream-50 hover:text-primary' ?> transition-all duration-300">
-                                    <span>Todas</span>
-                                    <span class="text-xs bg-cream-200 px-2 py-0.5 rounded-full text-charcoal/60"><?= Product::countActive() ?></span>
+                                   class="flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group <?= !$currentCategory ? 'bg-primary text-white shadow-md' : 'text-charcoal hover:bg-cream-50 hover:pl-4' ?>">
+                                    <span class="font-medium">Todas as Categorias</span>
+                                    <span class="text-xs py-0.5 px-2 rounded-md <?= !$currentCategory ? 'bg-white/20 text-white' : 'bg-cream-100 text-charcoal/60 group-hover:bg-cream-200' ?> transition-colors">
+                                        <?= Product::countActive() ?>
+                                    </span>
                                 </a>
                             </li>
                             <?php foreach ($categories as $category): ?>
                             <li>
                                 <a href="<?= $base ?>/loja/?categoria=<?= e($category->slug) ?>"
-                                    class="flex items-center justify-between px-4 py-2.5 rounded-lg text-sm <?= ($currentCategory && $currentCategory->id === $category->id) ? 'bg-secondary/5 text-secondary font-medium' : 'text-charcoal/70 hover:bg-cream-50 hover:text-primary' ?> transition-all duration-300">
-                                    <span><?= e($category->name) ?></span>
-                                    <span class="text-xs bg-cream-200 px-2 py-0.5 rounded-full text-charcoal/60"><?= $category->getProductCount() ?></span>
+                                    class="flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group <?= ($currentCategory && $currentCategory->id === $category->id) ? 'bg-primary text-white shadow-md' : 'text-charcoal hover:bg-cream-50 hover:pl-4' ?>">
+                                    <span class="font-medium"><?= e($category->name) ?></span>
+                                    <span class="text-xs py-0.5 px-2 rounded-md <?= ($currentCategory && $currentCategory->id === $category->id) ? 'bg-white/20 text-white' : 'bg-cream-100 text-charcoal/60 group-hover:bg-cream-200' ?> transition-colors">
+                                        <?= $category->getProductCount() ?>
+                                    </span>
                                 </a>
                             </li>
                             <?php endforeach; ?>
@@ -148,21 +155,29 @@ include INCLUDES_PATH . '/header.php';
                     <?php if ($search || $currentCategory): ?>
                     <!-- Clear Filters -->
                     <div class="mt-8 pt-6 border-t border-cream-100 text-center">
-                        <a href="<?= $base ?>/loja/" class="inline-flex items-center text-xs uppercase tracking-widest text-secondary hover:text-secondary-700 font-medium transition-colors">
-                            <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
+                        <a href="<?= $base ?>/loja/" class="group inline-flex items-center gap-2 text-xs uppercase tracking-widest text-charcoal/50 hover:text-secondary font-bold transition-colors">
+                            <span class="group-hover:-translate-x-1 transition-transform duration-300">←</span>
                             Limpar filtros
                         </a>
                     </div>
                     <?php endif; ?>
+                    
+                    <!-- Need Help? -->
+                    <div class="mt-12 p-6 bg-cream-50 rounded-2xl border border-cream-100 text-center">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm text-secondary">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                        </div>
+                        <h4 class="font-serif text-primary mb-1">Precisa de Ajuda?</h4>
+                        <p class="text-xs text-charcoal/60 mb-3">Estamos disponíveis para esclarecer qualquer dúvida.</p>
+                        <a href="<?= $base ?>/contactos/" class="text-xs font-bold uppercase tracking-widest text-secondary hover:text-secondary-700">Contactar</a>
+                    </div>
                 </div>
             </aside>
 
             <!-- Products Grid -->
             <div class="flex-1">
                 <!-- Results Header -->
-                <div class="mb-8 flex items-center justify-between">
+                <div class="mb-8 flex items-center justify-between animate-on-scroll" data-animation="fade-up">
                     <p class="text-charcoal/60 text-sm font-light">
                         <?php if ($search): ?>
                             Encontrados <strong class="text-primary font-medium"><?= $totalProducts ?></strong> resultados para "<?= e($search) ?>"
@@ -174,7 +189,7 @@ include INCLUDES_PATH . '/header.php';
 
                 <?php if (empty($products)): ?>
                 <!-- No Products State -->
-                <div class="bg-white rounded-3xl shadow-sm p-16 text-center border border-cream-100">
+                <div class="bg-white rounded-3xl shadow-sm p-16 text-center border border-cream-100 animate-on-scroll" data-animation="fade-up">
                     <div class="w-20 h-20 bg-cream-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <svg class="w-10 h-10 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
@@ -195,13 +210,13 @@ include INCLUDES_PATH . '/header.php';
 
                 <?php else: ?>
                 <!-- Products Grid -->
-                <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
-                    <?php foreach ($products as $product): ?>
-                    <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 border border-cream-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <?php $pidx = 0; foreach ($products as $product): ?>
+                    <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 border border-cream-100 animate-on-scroll" data-animation="fade-up" data-delay="<?= min($pidx * 100, 300) ?>">
                          <!-- Image Container -->
-                        <a href="<?= $base ?>/loja/produto/?slug=<?= e($product->slug) ?>" class="block aspect-[4/5] relative overflow-hidden bg-cream-50">
+                        <a href="<?= $base ?>/loja/produto/?slug=<?= e($product->slug) ?>" class="block aspect-[4/3] relative overflow-hidden bg-cream-50">
                             <?php if ($product->getPrimaryImage()): ?>
-                            <img src="<?= e(UPLOADS_URL . '/products/' . $product->getPrimaryImage()) ?>"
+                            <img src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
                                  alt="<?= e($product->name) ?>"
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out">
                             <?php else: ?>
@@ -276,12 +291,12 @@ include INCLUDES_PATH . '/header.php';
                             </div>
                         </div>
                     </article>
-                    <?php endforeach; ?>
+                    <?php $pidx++; endforeach; ?>
                 </div>
 
                 <!-- Pagination -->
                 <?php if ($totalPages > 1): ?>
-                <nav class="mt-16 flex justify-center">
+                <nav class="mt-16 flex justify-center animate-on-scroll" data-animation="fade-up">
                     <ul class="flex items-center gap-3 bg-white p-2 rounded-full shadow-sm border border-cream-100">
                         <!-- Previous -->
                         <li>
@@ -305,8 +320,8 @@ include INCLUDES_PATH . '/header.php';
                                 <?= $i ?>
                             </a>
                         </li>
-                        <?php endfor; ?>
-                        
+                        <?php endfor;
+
                         if ($end < $totalPages - 1) { echo '<li><span class="text-charcoal/40 px-1">...</span></li>'; }
                         if ($end < $totalPages) { echo '<li><a class="w-10 h-10 flex items-center justify-center rounded-full text-sm text-charcoal hover:bg-cream-100 transition-all" href="?' . http_build_query(array_merge($_GET, ['pagina' => $totalPages])) . '">' . $totalPages . '</a></li>'; }
                         ?>
@@ -328,10 +343,10 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Features Section -->
-<section class="py-20 bg-white border-t border-cream-100">
+<section class="pt-20 pb-20 mb-0 bg-white border-t border-cream-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
-            <div class="text-center group">
+            <div class="text-center group animate-on-scroll" data-animation="fade-up">
                 <div class="w-16 h-16 bg-cream-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 border border-cream-100 text-secondary">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
                 </div>
@@ -339,7 +354,7 @@ include INCLUDES_PATH . '/header.php';
                 <p class="text-charcoal/60 text-sm leading-relaxed font-light">Selecionados diretamente de pequenos produtores locais de Trás-os-Montes.</p>
             </div>
 
-            <div class="text-center group">
+            <div class="text-center group animate-on-scroll" data-animation="fade-up" data-delay="100">
                 <div class="w-16 h-16 bg-cream-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 border border-cream-100 text-secondary">
                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </div>
@@ -347,7 +362,7 @@ include INCLUDES_PATH . '/header.php';
                 <p class="text-charcoal/60 text-sm leading-relaxed font-light">Todos os produtos são provados e aprovados pela equipa da Casa do Gi.</p>
             </div>
 
-            <div class="text-center group">
+            <div class="text-center group animate-on-scroll" data-animation="fade-up" data-delay="200">
                 <div class="w-16 h-16 bg-cream-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 border border-cream-100 text-secondary">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
                 </div>
@@ -355,7 +370,7 @@ include INCLUDES_PATH . '/header.php';
                 <p class="text-charcoal/60 text-sm leading-relaxed font-light">Embalagem sustentável que preserva a frescura e qualidade.</p>
             </div>
 
-            <div class="text-center group">
+            <div class="text-center group animate-on-scroll" data-animation="fade-up" data-delay="300">
                 <div class="w-16 h-16 bg-cream-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 border border-cream-100 text-secondary">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                 </div>
@@ -430,14 +445,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         btn.classList.remove('opacity-75', 'cursor-not-allowed');
                     }, 2000);
                 } else {
-                    alert(data.message || 'Erro ao adicionar ao carrinho');
+                    GiModal.alert(data.message || 'Erro ao adicionar ao carrinho', 'Erro', { type: 'error' });
                      btn.disabled = false;
                      btn.classList.remove('opacity-75', 'cursor-not-allowed');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Erro ao adicionar ao carrinho');
+                GiModal.alert('Erro ao adicionar ao carrinho. Por favor tente novamente.', 'Erro', { type: 'error' });
                 btn.disabled = false;
                 btn.classList.remove('opacity-75', 'cursor-not-allowed');
             });

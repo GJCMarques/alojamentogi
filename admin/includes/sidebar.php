@@ -41,6 +41,12 @@ $menuItems = [
         'active' => strpos($currentPath, $base . '/admin/alojamento') === 0
     ],
     [
+        'label' => 'Loja',
+        'url' => $base . '/admin/loja/',
+        'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z',
+        'active' => strpos($currentPath, $base . '/admin/loja') === 0
+    ],
+    [
         'label' => 'Produtos',
         'url' => $base . '/admin/produtos/',
         'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
@@ -57,7 +63,19 @@ $menuItems = [
         'url' => $base . '/admin/encomendas/',
         'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01',
         'active' => strpos($currentPath, $base . '/admin/encomendas') === 0,
-        'badge' => null // Could show pending orders count
+        'badge' => null
+    ],
+    [
+        'label' => 'Faturas',
+        'url' => $base . '/admin/faturas/',
+        'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z',
+        'active' => strpos($currentPath, $base . '/admin/faturas') === 0
+    ],
+    [
+        'label' => 'Pedidos Manuais',
+        'url' => $base . '/admin/pedidos-manuais/',
+        'icon' => 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z',
+        'active' => strpos($currentPath, $base . '/admin/pedidos-manuais') === 0
     ],
     [
         'label' => 'Atividades',

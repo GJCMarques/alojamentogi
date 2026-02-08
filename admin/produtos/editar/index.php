@@ -383,7 +383,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                 <div class="grid grid-cols-4 gap-4 mb-6">
                     <?php foreach ($images as $image): ?>
                     <div class="relative aspect-square bg-gray-100 rounded overflow-hidden group">
-                        <img src="<?= e($image['file_path']) ?>"
+                        <img src="<?= e(basePath() . $image['file_path']) ?>"
                              class="w-full h-full object-cover">
 
                         <?php if ($image['is_primary']): ?>

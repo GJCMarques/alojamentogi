@@ -49,7 +49,7 @@ $instagramUrl = setting('instagram_url', '');
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-cream-100 mt-20 border-t border-accent/20">
+    <footer class="bg-primary text-cream-100 border-t border-accent/20">
         <!-- Main Footer -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -187,7 +187,7 @@ $instagramUrl = setting('instagram_url', '');
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
-                                <span class="text-white font-bold">Airb nb</span>
+                                <span class="text-white font-bold">Airbnb</span>
                             </div>
                         </button>
                     </div>
@@ -348,8 +348,151 @@ $instagramUrl = setting('instagram_url', '');
         </div>
     </div>
 
+    <!-- Custom Modal System -->
+    <div id="gi-modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden opacity-0 transition-opacity duration-300">
+        <div class="flex items-center justify-center min-h-full p-4">
+            <div id="gi-modal-container" class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform scale-95 opacity-0 transition-all duration-300 overflow-hidden">
+                <!-- Modal Header -->
+                <div id="gi-modal-header" class="px-6 pt-6 pb-0">
+                    <div class="flex items-center gap-3">
+                        <div id="gi-modal-icon" class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center">
+                            <!-- Icon set dynamically -->
+                        </div>
+                        <h3 id="gi-modal-title" class="font-serif text-xl text-primary font-bold"></h3>
+                    </div>
+                </div>
+                <!-- Modal Body -->
+                <div class="px-6 py-4">
+                    <p id="gi-modal-message" class="text-granite-600 leading-relaxed"></p>
+                </div>
+                <!-- Modal Footer -->
+                <div id="gi-modal-footer" class="px-6 pb-6 flex gap-3 justify-end">
+                    <button id="gi-modal-cancel" class="px-5 py-2.5 text-granite-600 font-medium rounded-xl border-2 border-granite-200 hover:bg-granite-50 hover:border-granite-300 transition-all duration-200">
+                        Cancelar
+                    </button>
+                    <button id="gi-modal-confirm" class="px-5 py-2.5 font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md">
+                        Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
+        // ===== Custom Modal System =====
+        window.GiModal = {
+            _resolve: null,
+
+            show(options) {
+                const overlay = document.getElementById('gi-modal-overlay');
+                const container = document.getElementById('gi-modal-container');
+                const icon = document.getElementById('gi-modal-icon');
+                const title = document.getElementById('gi-modal-title');
+                const message = document.getElementById('gi-modal-message');
+                const cancelBtn = document.getElementById('gi-modal-cancel');
+                const confirmBtn = document.getElementById('gi-modal-confirm');
+
+                // Set content
+                title.textContent = options.title || 'Confirmação';
+                message.textContent = options.message || '';
+
+                // Set type styling
+                const type = options.type || 'confirm';
+                if (type === 'danger' || type === 'warning') {
+                    icon.className = 'flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-terracotta/10';
+                    icon.innerHTML = '<svg class="w-6 h-6 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+                    confirmBtn.className = 'px-5 py-2.5 font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-terracotta text-white hover:bg-terracotta/90';
+                } else if (type === 'error') {
+                    icon.className = 'flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-terracotta/10';
+                    icon.innerHTML = '<svg class="w-6 h-6 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+                    confirmBtn.className = 'px-5 py-2.5 font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-primary text-cream hover:bg-primary/90';
+                } else if (type === 'info') {
+                    icon.className = 'flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-primary/10';
+                    icon.innerHTML = '<svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+                    confirmBtn.className = 'px-5 py-2.5 font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-primary text-cream hover:bg-primary/90';
+                } else {
+                    icon.className = 'flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-secondary/10';
+                    icon.innerHTML = '<svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+                    confirmBtn.className = 'px-5 py-2.5 font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-primary text-cream hover:bg-primary/90';
+                }
+
+                // Button labels
+                confirmBtn.textContent = options.confirmText || 'Confirmar';
+                cancelBtn.textContent = options.cancelText || 'Cancelar';
+
+                // Show/hide cancel button (for alert-type modals)
+                cancelBtn.style.display = options.showCancel === false ? 'none' : '';
+
+                // Show modal with animation
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    overlay.classList.add('opacity-100');
+                    overlay.classList.remove('opacity-0');
+                    container.classList.add('scale-100', 'opacity-100');
+                    container.classList.remove('scale-95', 'opacity-0');
+                });
+                document.body.style.overflow = 'hidden';
+
+                return new Promise((resolve) => {
+                    this._resolve = resolve;
+                });
+            },
+
+            hide(result) {
+                const overlay = document.getElementById('gi-modal-overlay');
+                const container = document.getElementById('gi-modal-container');
+
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+                container.classList.remove('scale-100', 'opacity-100');
+                container.classList.add('scale-95', 'opacity-0');
+
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+
+                if (this._resolve) {
+                    this._resolve(result);
+                    this._resolve = null;
+                }
+            },
+
+            confirm(message, title, options = {}) {
+                return this.show({
+                    title: title || 'Confirmação',
+                    message: message,
+                    type: options.type || 'warning',
+                    confirmText: options.confirmText || 'Sim, confirmar',
+                    cancelText: options.cancelText || 'Cancelar',
+                    showCancel: true
+                });
+            },
+
+            alert(message, title, options = {}) {
+                return this.show({
+                    title: title || 'Aviso',
+                    message: message,
+                    type: options.type || 'info',
+                    confirmText: options.confirmText || 'OK',
+                    showCancel: false
+                });
+            }
+        };
+
+        // Modal event listeners
+        document.getElementById('gi-modal-confirm')?.addEventListener('click', () => GiModal.hide(true));
+        document.getElementById('gi-modal-cancel')?.addEventListener('click', () => GiModal.hide(false));
+        document.getElementById('gi-modal-overlay')?.addEventListener('click', function(e) {
+            if (e.target === this || e.target === this.firstElementChild) GiModal.hide(false);
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !document.getElementById('gi-modal-overlay')?.classList.contains('hidden')) {
+                GiModal.hide(false);
+            }
+        });
+
         // Auto-hide flash messages
         const flashMessages = document.querySelectorAll('.flash-message');
         flashMessages.forEach(msg => {

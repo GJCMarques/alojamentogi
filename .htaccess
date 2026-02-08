@@ -10,6 +10,9 @@ RewriteBase /alojamentogi/
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com https://unpkg.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdn.tailwindcss.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.tile.openstreetmap.org https://*.openstreetmap.org; frame-src 'self' https://ifthenpay.com https://*.ifthenpay.com https://www.google.com https://maps.google.com https://*.google.com https://*.openstreetmap.org; base-uri 'self'; form-action 'self' https://ifthenpay.com https://*.ifthenpay.com"
 </IfModule>
 
 # Prevent directory listing
@@ -35,6 +38,7 @@ Options -Indexes
     RewriteRule ^templates/ - [F,L]
     RewriteRule ^database/ - [F,L]
     RewriteRule ^logs/ - [F,L]
+    RewriteRule ^vendor/ - [F,L]
 </IfModule>
 
 # Enable DirectoryIndex for clean URLs
