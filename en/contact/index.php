@@ -12,8 +12,8 @@ use Core\Mailer;
 use Core\CSRF;
 use Core\Session;
 
-// Force English language
 Language::getInstance()->setLanguage(LANG_EN);
+
 $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
@@ -21,77 +21,117 @@ $base = basePath();
 // Check if contact form is enabled
 $formEnabled = isContactFormEnabled();
 
-// Get settings
-$contactEmail = setting('contact_email', '');
-$contactPhone = setting('contact_phone', '');
-$contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
-
 // Form handling
-$errors = [];
 $success = false;
+$errors = [];
 $formData = [
     'name' => '',
     'email' => '',
     'phone' => '',
     'subject' => '',
-    'message' => ''
+    'message' => '',
 ];
 
 if (isPost() && $formEnabled) {
-    if (CSRF::isValid()) {
-        $formData = [
-            'name' => sanitize(post('name', '')),
-            'email' => sanitizeEmail(post('email', '')),
-            'phone' => sanitize(post('phone', '')),
-            'subject' => sanitize(post('subject', '')),
-            'message' => sanitize(post('message', ''))
-        ];
+    // Verify CSRF
+    if (!CSRF::isValid()) {
+        $errors['csrf'] = 'Session expired. Please reload the page.';
+    } else {
+        // Honeypot check (anti-spam)
+        if (!empty($_POST['website'])) {
+            // Bot detected - silently ignore
+            $success = true;
+        } else {
+            // Get form data
+            $formData = [
+                'name' => sanitize(post('name', '')),
+                'email' => sanitizeEmail(post('email', '')),
+                'phone' => sanitize(post('phone', '')),
+                'subject' => sanitize(post('subject', '')),
+                'message' => sanitize(post('message', '')),
+            ];
 
-        // Validation
-        $validator = Validator::make($formData, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'message' => 'required|min:10'
-        ]);
-
-        if ($validator->passes()) {
-            // Save to database
-            $saved = $db->insert('contact_submissions', [
-                'name' => $formData['name'],
-                'email' => $formData['email'],
-                'phone' => $formData['phone'],
-                'subject' => $formData['subject'],
-                'message' => $formData['message'],
-                'ip_address' => getClientIp(),
-                'user_agent' => substr(getUserAgent(), 0, 500)
+            // Validate
+            $validator = Validator::make($formData, [
+                'name' => 'required|min:2|max:100',
+                'email' => 'required|email|max:255',
+                'phone' => 'phone|max:20',
+                'subject' => 'max:255',
+                'message' => 'required|min:10|max:5000',
             ]);
 
-            if ($saved) {
-                // Send email notification
-                try {
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+            } else {
+                // Rate limiting check
+                $recentSubmissions = $db->count(
+                    'contact_submissions',
+                    "ip_address = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)",
+                    [getClientIp()]
+                );
+
+                if ($recentSubmissions >= 3) {
+                    $errors['limit'] = 'Too many submissions. Please wait a while before trying again.';
+                } else {
+                    // Check if email is in spam list
+                    $isSpamEmail = $db->fetch(
+                        "SELECT id FROM spam_emails WHERE email = ?",
+                        [$formData['email']]
+                    );
+
+                    // Save to database
+                    $db->insert('contact_submissions', [
+                        'name' => $formData['name'],
+                        'email' => $formData['email'],
+                        'phone' => $formData['phone'] ?: null,
+                        'subject' => $formData['subject'] ?: null,
+                        'message' => $formData['message'],
+                        'ip_address' => getClientIp(),
+                        'user_agent' => substr(getUserAgent(), 0, 500),
+                        'language' => $lang->getCurrentLang(),
+                        'is_spam' => $isSpamEmail ? 1 : 0,
+                    ]);
+
+                    // Send email notifications
                     $mailer = new Mailer();
                     $mailer->sendContactNotification($formData);
-                } catch (\Exception $e) {
-                    // Silently fail email sending
-                }
+                    $mailer->sendContactConfirmation($formData);
 
-                Session::flash('success', 'Your message has been sent successfully. We will reply as soon as possible.');
-                $success = true;
-                $formData = ['name' => '', 'email' => '', 'phone' => '', 'subject' => '', 'message' => ''];
-            } else {
-                $errors['general'] = 'There was an error sending your message. Please try again.';
+                    $success = true;
+
+                    // Clear form data
+                    $formData = [
+                        'name' => '',
+                        'email' => '',
+                        'phone' => '',
+                        'subject' => '',
+                        'message' => '',
+                    ];
+
+                    Session::flash('success', 'Message sent successfully! We will get back to you soon.');
+                }
             }
-        } else {
-            $errors = $validator->errors();
         }
-    } else {
-        $errors['csrf'] = 'Session expired. Please try again.';
     }
 }
 
+// Get contact info
+$contactEmail = setting('contact_email', '');
+$contactPhone = setting('contact_phone', '');
+$contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
+
+// Get hero image from database
+$pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'contact' AND is_active = 1");
+$heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroContacto.jpg';
+$heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
+
+// Build hero URL (file_path from media already has leading slash)
+$heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
+
 // Page configuration
-$pageTitle = 'Contact';
-$pageDescription = 'Contact A Casa do Gi - local accommodation in Mogadouro. We are here to help you plan your stay.';
+$pageTitle = __('contact_title', 'Contact');
+$pageDescription = 'Get in touch with A Casa do Gi. We are available to answer your questions.';
 
 include INCLUDES_PATH . '/header.php';
 ?>
@@ -99,10 +139,10 @@ include INCLUDES_PATH . '/header.php';
 <!-- Hero Section -->
 <section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed" 
-             style="background-image: url('<?= asset('images/MogadouroContacto.jpg') ?>');">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+             style="background-image: url('<?= $heroUrl ?>');">
         </div>
-        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
@@ -110,10 +150,10 @@ include INCLUDES_PATH . '/header.php';
             Get in Touch
         </span>
         <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-lg animate-on-scroll" data-animation="fade-up" data-delay="200">
-            Contact Us
+            <?= _e('contact_title', 'Contact Us') ?>
         </h1>
         <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="400">
-            Have questions? We're here to help you plan your perfect stay.
+            <?= _e('contact_intro', 'Have any questions? Get in touch with us') ?>
         </p>
     </div>
 </section>
@@ -132,7 +172,6 @@ include INCLUDES_PATH . '/header.php';
                         <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
                             <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
                         </div>
@@ -178,9 +217,9 @@ include INCLUDES_PATH . '/header.php';
 
                 <!-- Booking Links -->
                 <div class="mt-10 p-6 bg-primary rounded-lg animate-on-scroll" data-animation="fade-up" data-delay="300">
-                    <h3 class="font-serif text-lg text-cream mb-4">Ready to book?</h3>
+                    <h3 class="font-serif text-lg text-cream mb-4">Want to make a booking?</h3>
                     <p class="text-cream/80 text-sm mb-4">
-                        Book your stay through our trusted partners.
+                        Book your stay through our partner platforms.
                     </p>
                     <a href="<?= $base ?>/en/accommodation/" class="inline-flex items-center text-accent hover:text-accent/70 text-sm font-medium">
                         View booking options
@@ -196,7 +235,15 @@ include INCLUDES_PATH . '/header.php';
                 <div class="bg-white rounded-lg shadow-sm p-8 border border-charcoal/20">
                     <h2 class="font-serif text-2xl text-primary mb-6">Send us a Message</h2>
 
-                    <?php if (Session::hasFlash('success') || $success): ?>
+                    <?php if (!$formEnabled): ?>
+                    <div class="p-6 bg-charcoal/10 rounded-lg text-center">
+                        <svg class="w-12 h-12 mx-auto text-charcoal/60 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <p class="text-charcoal">The contact form is temporarily unavailable.</p>
+                        <p class="text-charcoal/70 text-sm mt-2">Please contact us via email or phone.</p>
+                    </div>
+                    <?php elseif ($success): ?>
                     <div class="p-8 bg-accent/5 rounded-lg text-center border border-accent/20">
                         <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,18 +251,10 @@ include INCLUDES_PATH . '/header.php';
                             </svg>
                         </div>
                         <h3 class="font-serif text-xl text-primary mb-2">Message Sent!</h3>
-                        <p class="text-charcoal mb-4">Thank you for contacting us. We will reply as soon as possible.</p>
+                        <p class="text-charcoal mb-4">Thank you for your message. We will respond as soon as possible.</p>
                         <a href="<?= $base ?>/en/contact/" class="inline-flex items-center text-secondary hover:text-olive-700 font-medium">
                             Send new message
                         </a>
-                    </div>
-                    <?php elseif (!$formEnabled): ?>
-                    <div class="p-6 bg-charcoal/10 rounded-lg text-center">
-                        <svg class="w-12 h-12 mx-auto text-charcoal/60 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <p class="text-charcoal">The contact form is temporarily unavailable.</p>
-                        <p class="text-charcoal/70 text-sm mt-2">Please contact us via email or phone.</p>
                     </div>
                     <?php else: ?>
 
@@ -228,8 +267,10 @@ include INCLUDES_PATH . '/header.php';
                             <div>
                                 <p class="font-medium text-red-700">Please correct the errors below:</p>
                                 <ul class="mt-2 text-sm text-red-600 list-disc list-inside">
-                                    <?php foreach ($errors as $error): ?>
-                                    <li><?= is_array($error) ? implode(', ', $error) : $error ?></li>
+                                    <?php foreach ($errors as $field => $fieldErrors): ?>
+                                        <?php foreach ((array)$fieldErrors as $error): ?>
+                                        <li><?= e($error) ?></li>
+                                        <?php endforeach; ?>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
@@ -239,6 +280,12 @@ include INCLUDES_PATH . '/header.php';
 
                     <form method="POST" action="" class="space-y-6">
                         <?= CSRF::tokenField() ?>
+
+                        <!-- Honeypot field (hidden) -->
+                        <div style="display:none;" aria-hidden="true">
+                            <label for="website">Website</label>
+                            <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+                        </div>
 
                         <div class="grid md:grid-cols-2 gap-6">
                             <!-- Name -->
@@ -251,7 +298,7 @@ include INCLUDES_PATH . '/header.php';
                                        name="name"
                                        value="<?= e($formData['name']) ?>"
                                        required
-                                       class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors"
+                                       class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors <?= isset($errors['name']) ? 'border-terracotta-500' : '' ?>"
                                        placeholder="Your name">
                             </div>
 
@@ -265,7 +312,7 @@ include INCLUDES_PATH . '/header.php';
                                        name="email"
                                        value="<?= e($formData['email']) ?>"
                                        required
-                                       class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors"
+                                       class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors <?= isset($errors['email']) ? 'border-terracotta-500' : '' ?>"
                                        placeholder="Your email">
                             </div>
                         </div>
@@ -281,7 +328,7 @@ include INCLUDES_PATH . '/header.php';
                                        name="phone"
                                        value="<?= e($formData['phone']) ?>"
                                        class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors"
-                                       placeholder="+1 234 567 890">
+                                       placeholder="+351 XXX XXX XXX">
                             </div>
 
                             <!-- Subject -->
@@ -294,7 +341,7 @@ include INCLUDES_PATH . '/header.php';
                                        name="subject"
                                        value="<?= e($formData['subject']) ?>"
                                        class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors"
-                                       placeholder="Subject">
+                                       placeholder="Message subject">
                             </div>
                         </div>
 
@@ -307,7 +354,7 @@ include INCLUDES_PATH . '/header.php';
                                       name="message"
                                       rows="6"
                                       required
-                                      class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors resize-none"
+                                      class="w-full px-4 py-3 border border-charcoal/20 rounded focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-colors resize-none <?= isset($errors['message']) ? 'border-terracotta-500' : '' ?>"
                                       placeholder="Your message..."><?= e($formData['message']) ?></textarea>
                         </div>
 
@@ -331,20 +378,15 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- Gradient Transition -->
-<div class="h-24 bg-gradient-to-b from-cream-100 to-white"></div>
-
 <!-- Map Section -->
-<section class="relative pb-16 lg:pb-24 pt-8 bg-white">
-    <!-- Bottom Gradient -->
-    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-cream-100"></div>
+<section class="relative pt-12 bg-white" style="padding-bottom: 3rem;">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-12 animate-on-scroll">
             <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">Location</span>
-            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Find Us</h2>
+            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Where We Are</h2>
             <p class="text-charcoal/70 max-w-2xl mx-auto">
-                Visit us in Mogadouro, in the heart of Trás-os-Montes region
+                Visit us in Mogadouro, in the heart of Trás-os-Montes
             </p>
         </div>
 
@@ -360,14 +402,13 @@ include INCLUDES_PATH . '/header.php';
                             <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-primary text-lg">A Casa do Gi</h3>
                             <p class="text-charcoal/80 text-sm mt-1">
-                                Casa do Gi<br>
-                                5200-207 Mogadouro, Portugal
+                                A Casa do Gi<br>
+                                5200-207 Mogadouro
                             </p>
                             <a href="https://www.google.com/maps/dir/?api=1&destination=41.34217,-6.71347"
                                target="_blank"
@@ -406,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
         scrollWheelZoom: false // Disable scroll zoom for better UX
     }).setView([lat, lng], 15);
 
-    // Add OpenStreetMap tiles
+    // Add OpenStreetMap tiles with custom styling
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -444,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div style="text-align: center; padding: 8px;">
             <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
             <span style="color: #2D3748; font-size: 12px;">Casa do Gi</span><br>
-            <span style="color: #2D3748; font-size: 12px;">52 Avenida Nossa Senhora do Caminho, Mogadouro, Portugal</span>
+            <span style="color: #2D3748; font-size: 12px;">52 Avenida Nossa Senhora do Caminho, Mogadouro</span>
         </div>
     `, {
         className: 'custom-popup'

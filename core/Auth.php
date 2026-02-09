@@ -76,6 +76,7 @@ class Auth
 
         // Set session
         Session::setAdmin($admin->id);
+        Session::set('_admin_last_activity', time());
 
         // Log the action
         self::logAction($admin->id, 'login', 'admin', $admin->id);

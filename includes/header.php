@@ -55,6 +55,26 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
 
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?= e($pageTitle) ?> | A Casa do Gi">
+    <meta property="og:description" content="<?= e($pageDescription) ?>">
+    <meta property="og:url" content="<?= e(rtrim($base, '/') . ($_SERVER['REQUEST_URI'] ?? '/')) ?>">
+    <meta property="og:site_name" content="A Casa do Gi">
+    <meta property="og:image" content="<?= isset($ogImage) ? e($ogImage) : asset('images/MogadouroPanorama.jpg') ?>">
+    <meta property="og:locale" content="<?= $isEnglish ? 'en_GB' : 'pt_PT' ?>">
+    <?php if ($isEnglish): ?>
+    <meta property="og:locale:alternate" content="pt_PT">
+    <?php else: ?>
+    <meta property="og:locale:alternate" content="en_GB">
+    <?php endif; ?>
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= e($pageTitle) ?> | A Casa do Gi">
+    <meta name="twitter:description" content="<?= e($pageDescription) ?>">
+    <meta name="twitter:image" content="<?= isset($ogImage) ? e($ogImage) : asset('images/MogadouroPanorama.jpg') ?>">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -69,6 +69,9 @@ if (isPost() && $failureCount < 20) {
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Login | A Casa do Gi</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

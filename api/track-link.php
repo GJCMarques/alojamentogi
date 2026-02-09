@@ -36,6 +36,16 @@ $db->query(
     [$linkId]
 );
 
-// Redirect to the external URL
+// Check if request is AJAX (fetch/XHR) - return JSON instead of redirect
+$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+$isFetch = isset($_SERVER['HTTP_SEC_FETCH_MODE']) && $_SERVER['HTTP_SEC_FETCH_MODE'] !== 'navigate';
+$isPost = $_SERVER['REQUEST_METHOD'] === 'POST';
+
+if ($isAjax || $isFetch || $isPost) {
+    echo json_encode(['status' => 'ok', 'url' => $link['url']]);
+    exit;
+}
+
+// Direct browser navigation - redirect
 header('Location: ' . $link['url']);
 exit;
