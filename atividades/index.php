@@ -90,6 +90,42 @@ if ($viewingActivity) {
         $coverImage = $activityImages[0];
     }
 
+    // Get related activities (same category, excluding current)
+    $relatedActivities = $db->fetchAll(
+        "SELECT a.*, at.title, at.short_description,
+                c.slug as category_slug, ct.name as category_name,
+                (SELECT file_path FROM media WHERE entity_type = 'activity' AND entity_id = a.id AND is_cover = 1 LIMIT 1) as cover_img
+         FROM activities a
+         JOIN activity_translations at ON a.id = at.activity_id
+         LEFT JOIN categories c ON a.category_id = c.id
+         LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_id = ?
+         WHERE a.is_active = 1 AND at.language_id = ? AND a.id != ? AND a.category_id = ?
+         ORDER BY a.is_featured DESC, RAND()
+         LIMIT 4",
+        [$currentLangId, $currentLangId, $activity['id'], $activity['category_id']]
+    );
+
+    // If not enough from same category, fill with other activities
+    if (count($relatedActivities) < 4) {
+        $excludeIds = array_merge([$activity['id']], array_column($relatedActivities, 'id'));
+        $placeholders = implode(',', array_fill(0, count($excludeIds), '?'));
+        $remaining = 4 - count($relatedActivities);
+        $fillActivities = $db->fetchAll(
+            "SELECT a.*, at.title, at.short_description,
+                    c.slug as category_slug, ct.name as category_name,
+                    (SELECT file_path FROM media WHERE entity_type = 'activity' AND entity_id = a.id AND is_cover = 1 LIMIT 1) as cover_img
+             FROM activities a
+             JOIN activity_translations at ON a.id = at.activity_id
+             LEFT JOIN categories c ON a.category_id = c.id
+             LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_id = ?
+             WHERE a.is_active = 1 AND at.language_id = ? AND a.id NOT IN ({$placeholders})
+             ORDER BY a.is_featured DESC, RAND()
+             LIMIT {$remaining}",
+            array_merge([$currentLangId, $currentLangId], $excludeIds)
+        );
+        $relatedActivities = array_merge($relatedActivities, $fillActivities);
+    }
+
     $pageTitle = $activity['title'] . ' - O Que Fazer em Mogadouro';
     $pageDescription = $activity['short_description'] ?? 'Descubra ' . $activity['title'] . ' em Mogadouro.';
 
@@ -383,6 +419,64 @@ include INCLUDES_PATH . '/header.php';
         </div>
     </div>
 </section>
+
+<!-- Related Activities -->
+<?php if (!empty($relatedActivities)): ?>
+<section class="py-16 lg:py-20 bg-cream-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 animate-on-scroll" data-animation="fade-up">
+            <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">
+                <?= $lang->getCurrentLang() === 'pt' ? 'Descubra Mais' : 'Discover More' ?>
+            </span>
+            <h2 class="font-serif text-3xl md:text-4xl text-primary">
+                <?= $lang->getCurrentLang() === 'pt' ? 'Atividades Relacionadas' : 'Related Activities' ?>
+            </h2>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <?php foreach ($relatedActivities as $ridx => $relAct):
+                $relImage = !empty($relAct['cover_img']) ? $base . $relAct['cover_img'] : null;
+            ?>
+            <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-cream-200 animate-on-scroll" data-animation="fade-up" data-delay="<?= $ridx * 100 ?>">
+                <a href="<?= $base ?>/atividades/?slug=<?= e($relAct['slug']) ?>" class="block">
+                    <div class="aspect-[4/3] relative overflow-hidden">
+                        <?php if ($relImage): ?>
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                             style="background-image: url('<?= $relImage ?>');"></div>
+                        <?php else: ?>
+                        <div class="absolute inset-0 bg-gradient-to-br from-secondary/60 to-primary/80 flex items-center justify-center">
+                            <svg class="w-12 h-12 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <?php endif; ?>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+                        <span class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-secondary text-[10px] font-semibold tracking-wide px-3 py-1.5 rounded-lg">
+                            <?= e($relAct['category_name'] ?? '') ?>
+                        </span>
+
+                        <div class="absolute bottom-0 left-0 right-0 p-4">
+                            <h3 class="font-serif text-lg text-white font-medium leading-tight line-clamp-2">
+                                <?= e($relAct['title']) ?>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <?php if (!empty($relAct['short_description'])): ?>
+                    <div class="p-4 border-t border-cream-100">
+                        <p class="text-charcoal/60 text-sm leading-relaxed line-clamp-2">
+                            <?= e($relAct['short_description']) ?>
+                        </p>
+                    </div>
+                    <?php endif; ?>
+                </a>
+            </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- Map Script -->
 <?php if (!empty($activity['latitude']) && !empty($activity['longitude']) && empty($activity['google_maps_embed'])): ?>

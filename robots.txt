@@ -1,0 +1,22 @@
+# A Casa do Gi - Robots.txt
+User-agent: *
+Allow: /
+
+# Block admin and private directories
+Disallow: /admin/
+Disallow: /api/
+Disallow: /config/
+Disallow: /core/
+Disallow: /models/
+Disallow: /includes/
+Disallow: /templates/
+Disallow: /database/
+Disallow: /logs/
+Disallow: /vendor/
+
+# Block query parameters for duplicate content
+Disallow: /*?pesquisa=
+Disallow: /*?pagina=
+
+# Sitemap
+Sitemap: http://localhost/alojamentogi/sitemap.xml

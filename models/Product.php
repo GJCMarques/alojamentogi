@@ -94,6 +94,35 @@ class Product extends Model
     }
 
     /**
+     * Get product by SKU with translation
+     */
+    public static function findBySku(string $sku): ?self
+    {
+        $db = Database::getInstance();
+        $lang = Language::getInstance();
+        $langId = $lang->getCurrentLangId();
+
+        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description
+                FROM products p
+                LEFT JOIN product_translations pt
+                    ON p.id = pt.product_id AND pt.language_id = ?
+                WHERE p.sku = ? AND p.is_active = 1";
+
+        $row = $db->fetch($sql, [$langId, $sku]);
+
+        if (!$row) {
+            return null;
+        }
+
+        $product = new self();
+        $product->fill($row);
+        $product->loadImages();
+        $product->loadCategory();
+
+        return $product;
+    }
+
+    /**
      * Get all active products with translations
      */
     public static function getAllActive(?int $categoryId = null, ?int $limit = null, int $offset = 0): array

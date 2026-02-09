@@ -203,10 +203,10 @@ $instagramUrl = setting('instagram_url', '');
                         &copy; <?= date('Y') ?> <?= e($siteName) ?>. <?= $isEnglish ? 'All rights reserved.' : 'Todos os direitos reservados.' ?>
                     </p>
                     <div class="flex items-center space-x-6 text-sm">
-                        <a href="<?= $lang->url('politica-privacidade') ?>" class="text-cream-300 hover:text-accent transition-colors">
+                        <a href="<?= $base ?>/politica-privacidade/" class="text-cream-300 hover:text-accent transition-colors">
                             <?= $isEnglish ? 'Privacy Policy' : 'Política de Privacidade' ?>
                         </a>
-                        <a href="<?= $lang->url('termos-condicoes') ?>" class="text-cream-300 hover:text-accent transition-colors">
+                        <a href="<?= $base ?>/termos-condicoes/" class="text-cream-300 hover:text-accent transition-colors">
                             <?= $isEnglish ? 'Terms & Conditions' : 'Termos e Condicoes' ?>
                         </a>
                     </div>
@@ -573,5 +573,102 @@ $instagramUrl = setting('instagram_url', '');
     <?php if (isset($pageScripts)): ?>
     <?= $pageScripts ?>
     <?php endif; ?>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[90] shadow-2xl" style="display:none;">
+        <!-- Details panel (above main bar) -->
+        <div id="cookie-details" class="bg-primary-700 border-b border-accent/10 px-4 sm:px-6 lg:px-8">
+            <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out;">
+                <div class="py-5">
+                    <div class="max-w-7xl mx-auto">
+                        <h3 class="text-cream font-semibold text-base mb-3">
+                            <?= $isEnglish ? 'About Cookies' : 'Sobre os Cookies' ?>
+                        </h3>
+                        <div class="space-y-2 text-cream-200 text-sm">
+                            <p class="leading-relaxed">
+                                <?= $isEnglish
+                                    ? 'We use the following types of cookies:'
+                                    : 'Utilizamos os seguintes tipos de cookies:' ?>
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                                <li><?= $isEnglish ? '<strong class="text-cream">Essential cookies:</strong> Required for the website to function properly (shopping cart, session management)' : '<strong class="text-cream">Cookies essenciais:</strong> Necessarios para o funcionamento do website (carrinho de compras, gestao de sessao)' ?></li>
+                                <li><?= $isEnglish ? '<strong class="text-cream">Preference cookies:</strong> Remember your preferences (language, consent choices)' : '<strong class="text-cream">Cookies de preferencias:</strong> Guardam as suas preferencias (idioma, escolhas de consentimento)' ?></li>
+                            </ul>
+                            <p class="leading-relaxed pt-2">
+                                <?= $isEnglish
+                                    ? 'For more information, please read our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">privacy policy</a>.'
+                                    : 'Para mais informacoes, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">politica de privacidade</a>.' ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main bar -->
+        <div class="bg-primary border-t border-accent/20 px-4 sm:px-6 lg:px-8 py-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <p class="text-cream-100 text-sm leading-relaxed">
+                            <?= $isEnglish
+                                ? 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'
+                                : 'Utilizamos cookies para melhorar a sua experiencia no nosso website. Ao continuar a navegar, concorda com a utilizacao de cookies. Saiba mais nos nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">politica de privacidade</a>.' ?>
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
+                            <?= $isEnglish ? 'Details' : 'Ver Detalhes' ?>
+                        </button>
+                        <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all duration-200 shadow-md hover:shadow-lg text-sm whitespace-nowrap">
+                            <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Cookie consent banner
+    (function() {
+        const banner = document.getElementById('cookie-banner');
+        const detailsInner = document.getElementById('cookie-details-inner');
+        const detailsBtn = document.getElementById('cookie-details-btn');
+        let detailsOpen = false;
+
+        // Show banner if consent not given
+        if (!localStorage.getItem('cookie_consent')) {
+            banner.style.display = 'block';
+            banner.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+            banner.style.transform = 'translateY(100%)';
+            banner.style.opacity = '0';
+            setTimeout(() => {
+                banner.style.transform = 'translateY(0)';
+                banner.style.opacity = '1';
+            }, 100);
+        }
+
+        // Accept cookies
+        window.acceptCookies = function() {
+            localStorage.setItem('cookie_consent', 'accepted');
+            banner.style.transform = 'translateY(100%)';
+            banner.style.opacity = '0';
+            setTimeout(() => { banner.style.display = 'none'; }, 300);
+        };
+
+        // Toggle details panel
+        window.toggleCookieDetails = function() {
+            detailsOpen = !detailsOpen;
+            if (detailsOpen) {
+                detailsInner.style.maxHeight = detailsInner.scrollHeight + 'px';
+                detailsBtn.textContent = '<?= $isEnglish ? "Hide Details" : "Ocultar Detalhes" ?>';
+            } else {
+                detailsInner.style.maxHeight = '0';
+                detailsBtn.textContent = '<?= $isEnglish ? "Details" : "Ver Detalhes" ?>';
+            }
+        };
+    })();
+    </script>
 </body>
 </html>

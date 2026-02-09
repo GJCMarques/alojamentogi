@@ -414,10 +414,10 @@ include INCLUDES_PATH . '/header.php';
 
                     <!-- Payment Methods Accepted -->
                     <div class="mt-6 pt-6 border-t border-granite-200">
-                        <p class="text-xs text-granite-500 uppercase tracking-wider font-medium mb-3">
+                        <p class="text-xs text-granite-500 uppercase tracking-wider font-medium mb-3 text-center">
                             <?= $isEnglish ? 'Accepted Payment Methods' : 'Metodos de Pagamento Aceites' ?>
                         </p>
-                        <div class="flex items-center gap-3 flex-wrap">
+                        <div class="flex items-center justify-center gap-3 flex-wrap">
                             <img src="<?= asset('images/MB_WAY.jpg') ?>" alt="MB WAY" class="h-8 rounded shadow-sm">
                             <img src="<?= asset('images/multibanco.png') ?>" alt="Multibanco" class="h-8 rounded shadow-sm">
                             <img src="<?= asset('images/VISA.png') ?>" alt="Visa" class="h-8 rounded shadow-sm">
@@ -471,6 +471,11 @@ include INCLUDES_PATH . '/header.php';
                         <?= $isEnglish
                             ? 'We will contact you by phone or email to finalize payment.'
                             : 'Iremos contacta-lo por telefone ou email para finalizar o pagamento.' ?>
+                    </p>
+                    <p class="text-xs text-granite-500 text-center mt-2">
+                        <?= $isEnglish
+                            ? 'By submitting, you agree to our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'
+                            : 'Ao enviar, concorda com os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">politica de privacidade</a>.' ?>
                     </p>
                 </div>
             </div>

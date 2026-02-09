@@ -1,0 +1,4 @@
+# A Casa do Gi - Security Contact
+Contact: mailto:info@acasadogi.pt
+Preferred-Languages: pt, en
+Expires: 2026-12-31T23:59:59Z

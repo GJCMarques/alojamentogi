@@ -1,0 +1,15 @@
+/* TEAM */
+Site: A Casa do Gi
+Location: Mogadouro, Trás-os-Montes, Portugal
+Contact: info@acasadogi.pt
+
+/* SITE */
+Last update: 2025
+Standards: HTML5, CSS3, PHP 8
+Components: PHP, Tailwind CSS, MySQL
+Software: Apache, XAMPP
+Languages: Portuguese, English
+
+/* THANKS */
+Nature lovers, history enthusiasts, and all visitors who help preserve
+the beauty and traditions of Trás-os-Montes.

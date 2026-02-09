@@ -23,8 +23,11 @@ if (!$slug) {
     redirect($base . '/loja/');
 }
 
-// Get product
+// Get product by slug, fallback to SKU
 $product = Product::findBySlug($slug);
+if (!$product) {
+    $product = Product::findBySku($slug);
+}
 
 if (!$product) {
     http_response_code(404);

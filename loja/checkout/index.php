@@ -533,8 +533,8 @@ include INCLUDES_PATH . '/header.php';
 
                     <p class="text-xs text-granite-500 text-center mt-4">
                         <?= $isEnglish
-                            ? 'By placing your order, you agree to our terms and conditions.'
-                            : 'Ao efetuar a encomenda, concorda com os nossos termos e condicoes.' ?>
+                            ? 'By placing your order, you agree to our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'
+                            : 'Ao efetuar a encomenda, concorda com os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">politica de privacidade</a>.' ?>
                     </p>
                 </div>
             </div>
