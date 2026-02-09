@@ -24,7 +24,7 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-<FilesMatch "(composer\.(json|lock)|package\.json|\.md|\.sql)$">
+<FilesMatch "(composer\.(json|lock)|package\.json|\.md|\.sql|\.key)$">
     Order allow,deny
     Deny from all
 </FilesMatch>

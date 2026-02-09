@@ -136,197 +136,347 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Get hero image from database (checkout hero, fallback to shop)
+$checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'checkout' AND is_active = 1");
+if (!$checkoutHero) {
+    $checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
+}
+$heroMedia = $checkoutHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$checkoutHero['id']]) : null;
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
+$heroOverlay = $checkoutHero['hero_overlay_opacity'] ?? 0.40;
+$heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
+
 $pageTitle = $isEnglish ? 'Order Request' : 'Pedido de Encomenda';
 $pageDescription = $isEnglish ? 'Submit your order request' : 'Envie o seu pedido de encomenda';
 
 include INCLUDES_PATH . '/header.php';
 ?>
 
-<!-- Breadcrumb -->
-<nav class="bg-cream-200 py-3 border-b border-cream-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ol class="flex items-center text-sm text-charcoal/60">
-            <li><a href="<?= $base ?>/" class="hover:text-secondary"><?= $isEnglish ? 'Home' : 'Inicio' ?></a></li>
-            <li><span class="mx-2">/</span></li>
-            <li><a href="<?= $base ?>/loja/" class="hover:text-secondary"><?= $isEnglish ? 'Shop' : 'Loja' ?></a></li>
-            <li><span class="mx-2">/</span></li>
-            <li class="text-primary font-medium"><?= $isEnglish ? 'Order Request' : 'Pedido' ?></li>
-        </ol>
+<!-- Hero Banner with Breadcrumbs -->
+<section class="relative h-[45vh] min-h-[400px] flex items-end pb-16 bg-primary overflow-hidden">
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+             style="background-image: url('<?= $heroUrl ?>');">
+        </div>
+        <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
     </div>
-</nav>
 
-<section class="py-12 lg:py-16 bg-cream-50 min-h-[60vh]">
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <!-- Breadcrumbs -->
+        <nav class="mb-4 animate-on-scroll" data-animation="fade-up" aria-label="Breadcrumb">
+            <ol class="flex items-center text-sm text-white/90 flex-wrap">
+                <li>
+                    <a href="<?= $base ?>/" class="hover:text-white transition-colors"><?= $isEnglish ? 'Home' : 'Inicio' ?></a>
+                </li>
+                <li>
+                    <svg class="w-4 h-4 mx-2 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>
+                <li>
+                    <a href="<?= $base ?>/loja/" class="hover:text-white transition-colors"><?= $isEnglish ? 'Shop' : 'Loja' ?></a>
+                </li>
+                <li>
+                    <svg class="w-4 h-4 mx-2 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>
+                <li>
+                    <a href="<?= $base ?>/loja/carrinho/" class="hover:text-white transition-colors"><?= $isEnglish ? 'Cart' : 'Carrinho' ?></a>
+                </li>
+                <li>
+                    <svg class="w-4 h-4 mx-2 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>
+                <li class="text-white font-medium"><?= $isEnglish ? 'Order Request' : 'Pedido' ?></li>
+            </ol>
+        </nav>
+
+        <!-- Product Count -->
+        <?php if (!$success): ?>
+        <p class="inline-block text-accent text-lg font-medium tracking-[0.15em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
+            <?= count($cartItems) ?> <?= count($cartItems) === 1 ? ($isEnglish ? 'item' : 'produto') : ($isEnglish ? 'items' : 'produtos') ?>
+        </p>
+        <?php endif; ?>
+
+        <!-- Title -->
+        <h1 class="font-cursive text-4xl md:text-5xl lg:text-6xl text-cream drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
+            <?= $isEnglish ? 'Order Request' : 'Pedido de Encomenda' ?>
+        </h1>
+    </div>
+</section>
+
+<?php if ($success): ?>
+<!-- Success State -->
+<section class="py-12 lg:py-16 bg-cream-100 min-h-[60vh]">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <?php if ($success): ?>
-        <!-- Success State -->
-        <div class="bg-white rounded-3xl shadow-sm border border-cream-100 p-10 text-center">
+        <div class="bg-white rounded-2xl shadow-sm border border-cream-100 p-10 lg:p-16 text-center animate-on-scroll" data-animation="fade-up">
             <div class="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg class="w-10 h-10 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
             </div>
-            <h1 class="font-serif text-3xl text-primary mb-4"><?= $isEnglish ? 'Request Submitted!' : 'Pedido Enviado!' ?></h1>
-            <p class="text-charcoal/60 max-w-lg mx-auto mb-4">
+            <h2 class="font-serif text-3xl text-primary mb-4"><?= $isEnglish ? 'Request Submitted!' : 'Pedido Enviado!' ?></h2>
+            <p class="text-charcoal/60 max-w-lg mx-auto mb-4 leading-relaxed">
                 <?= $isEnglish
-                    ? 'Your order request has been sent. We will contact you by phone to finalize the payment and confirm the order.'
-                    : 'O seu pedido de encomenda foi enviado. Iremos contacta-lo por telefone para finalizar o pagamento e confirmar a encomenda.' ?>
+                    ? 'Your order request has been sent. We will contact you by phone or email to finalize the payment and confirm the order.'
+                    : 'O seu pedido de encomenda foi enviado. Iremos contacta-lo por telefone ou email para finalizar o pagamento e confirmar a encomenda.' ?>
             </p>
-            <p class="text-charcoal/60 max-w-lg mx-auto mb-8">
+            <p class="text-charcoal/60 max-w-lg mx-auto mb-8 leading-relaxed">
                 <?= $isEnglish
                     ? 'Please keep your phone available. We will contact you within 24 hours.'
                     : 'Por favor mantenha o telefone disponivel. Iremos contacta-lo dentro de 24 horas.' ?>
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="<?= $base ?>/" class="inline-flex items-center justify-center px-8 py-3 bg-primary text-white font-medium rounded-full hover:bg-primary-700 transition-all">
+
+            <div class="bg-accent/10 rounded-2xl p-5 mb-8 border border-accent/20 max-w-md mx-auto animate-on-scroll" data-animation="fade-up" data-delay="100">
+                <div class="flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    <span class="text-sm text-charcoal/70 font-medium">
+                        <?= $isEnglish ? 'We will contact you by phone or email' : 'Iremos contacta-lo por telefone ou email' ?>
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center animate-on-scroll" data-animation="fade-up" data-delay="200">
+                <a href="<?= $base ?>/" class="inline-flex items-center justify-center px-8 py-4 bg-primary text-cream font-semibold rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg">
                     <?= $isEnglish ? 'Back to Home' : 'Voltar ao Inicio' ?>
                 </a>
-                <a href="<?= $base ?>/loja/" class="inline-flex items-center justify-center px-8 py-3 bg-white text-primary font-medium rounded-full border border-cream-200 hover:bg-cream-50 transition-all">
+                <a href="<?= $base ?>/loja/" class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-semibold rounded-xl border-2 border-cream-200 hover:bg-cream-50 transition-all duration-200">
                     <?= $isEnglish ? 'Continue Shopping' : 'Continuar a Comprar' ?>
                 </a>
             </div>
         </div>
+    </div>
+</section>
 
-        <?php else: ?>
-
-        <!-- Manual Order Info -->
-        <div class="bg-accent/10 rounded-3xl border border-accent/20 p-6 mb-8">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-serif text-lg text-primary mb-2"><?= $isEnglish ? 'Manual Payment Mode' : 'Modo de Pagamento Manual' ?></h3>
-                    <p class="text-sm text-charcoal/70">
-                        <?= $isEnglish
-                            ? 'Online payment is currently not available. Submit your order and we will contact you by phone to arrange payment.'
-                            : 'O pagamento online nao esta disponivel de momento. Envie o seu pedido e iremos contacta-lo por telefone para finalizar o pagamento.' ?>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <h1 class="font-serif text-3xl text-primary mb-8"><?= $isEnglish ? 'Order Request' : 'Pedido de Encomenda' ?></h1>
+<?php else: ?>
+<!-- Manual Order Form -->
+<section class="py-12 lg:py-16 bg-cream-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <?php if (!empty($errors['general'])): ?>
-        <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-sm">
+        <div class="mb-6 p-4 bg-terracotta-50 border border-terracotta-200 text-terracotta-700 rounded-xl text-sm">
             <?= e($errors['general']) ?>
         </div>
         <?php endif; ?>
 
-        <form method="POST" class="lg:grid lg:grid-cols-3 lg:gap-8">
+        <form method="POST" action="" class="lg:grid lg:grid-cols-3 lg:gap-8">
             <?= CSRF::tokenField() ?>
 
-            <div class="lg:col-span-2 space-y-6">
+            <!-- Left Column - Form -->
+            <div class="lg:col-span-2 space-y-8">
                 <!-- Contact Info -->
-                <div class="bg-white rounded-3xl shadow-sm border border-cream-100 p-6">
-                    <h2 class="font-serif text-xl text-primary mb-6"><?= $isEnglish ? 'Contact Information' : 'Informacoes de Contacto' ?></h2>
+                <div class="bg-white rounded-lg shadow-sm p-6 animate-on-scroll" data-animation="fade-up">
+                    <h2 class="font-serif text-xl text-granite-800 mb-6">
+                        <?= $isEnglish ? 'Contact Information' : 'Informacoes de Contacto' ?>
+                    </h2>
 
-                    <div class="grid md:grid-cols-2 gap-5">
+                    <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-charcoal/70 mb-2"><?= $isEnglish ? 'Full Name' : 'Nome Completo' ?> *</label>
-                            <input type="text" name="customer_name" value="<?= e($formData['customer_name']) ?>" required
-                                   class="w-full px-4 py-3 border <?= isset($errors['customer_name']) ? 'border-red-400' : 'border-cream-200' ?> rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm">
+                            <label for="customer_name" class="block text-sm font-medium text-granite-700 mb-2">
+                                <?= $isEnglish ? 'Full Name' : 'Nome Completo' ?> <span class="text-terracotta-500">*</span>
+                            </label>
+                            <input type="text" id="customer_name" name="customer_name" value="<?= e($formData['customer_name']) ?>" required
+                                   class="w-full px-4 py-3 border <?= isset($errors['customer_name']) ? 'border-terracotta-400' : 'border-granite-200' ?> rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
                             <?php if (isset($errors['customer_name'])): ?>
-                            <p class="mt-1 text-xs text-red-500"><?= e($errors['customer_name']) ?></p>
+                            <p class="mt-1 text-sm text-terracotta-500"><?= e($errors['customer_name']) ?></p>
                             <?php endif; ?>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-charcoal/70 mb-2">Email *</label>
-                            <input type="email" name="customer_email" value="<?= e($formData['customer_email']) ?>" required
-                                   class="w-full px-4 py-3 border <?= isset($errors['customer_email']) ? 'border-red-400' : 'border-cream-200' ?> rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm">
+                            <label for="customer_email" class="block text-sm font-medium text-granite-700 mb-2">
+                                Email <span class="text-terracotta-500">*</span>
+                            </label>
+                            <input type="email" id="customer_email" name="customer_email" value="<?= e($formData['customer_email']) ?>" required
+                                   class="w-full px-4 py-3 border <?= isset($errors['customer_email']) ? 'border-terracotta-400' : 'border-granite-200' ?> rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
                             <?php if (isset($errors['customer_email'])): ?>
-                            <p class="mt-1 text-xs text-red-500"><?= e($errors['customer_email']) ?></p>
+                            <p class="mt-1 text-sm text-terracotta-500"><?= e($errors['customer_email']) ?></p>
                             <?php endif; ?>
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-charcoal/70 mb-2"><?= $isEnglish ? 'Phone' : 'Telefone' ?> *</label>
-                            <input type="tel" name="customer_phone" value="<?= e($formData['customer_phone']) ?>" required placeholder="9XX XXX XXX"
-                                   class="w-full px-4 py-3 border <?= isset($errors['customer_phone']) ? 'border-red-400' : 'border-cream-200' ?> rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm">
+                            <label for="customer_phone" class="block text-sm font-medium text-granite-700 mb-2">
+                                <?= $isEnglish ? 'Phone' : 'Telefone' ?> <span class="text-terracotta-500">*</span>
+                            </label>
+                            <input type="tel" id="customer_phone" name="customer_phone" value="<?= e($formData['customer_phone']) ?>" required placeholder="9XX XXX XXX"
+                                   class="w-full px-4 py-3 border <?= isset($errors['customer_phone']) ? 'border-terracotta-400' : 'border-granite-200' ?> rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
                             <?php if (isset($errors['customer_phone'])): ?>
-                            <p class="mt-1 text-xs text-red-500"><?= e($errors['customer_phone']) ?></p>
+                            <p class="mt-1 text-sm text-terracotta-500"><?= e($errors['customer_phone']) ?></p>
                             <?php endif; ?>
+                            <p class="mt-1 text-xs text-granite-400">
+                                <?= $isEnglish ? 'We will contact you by phone or email to arrange payment' : 'Iremos contacta-lo por telefone ou email para combinar o pagamento' ?>
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Shipping (optional for manual orders) -->
-                <div class="bg-white rounded-3xl shadow-sm border border-cream-100 p-6">
-                    <h2 class="font-serif text-xl text-primary mb-2"><?= $isEnglish ? 'Shipping Address' : 'Morada de Envio' ?></h2>
-                    <p class="text-xs text-charcoal/40 mb-6"><?= $isEnglish ? '(Optional - can be provided later by phone)' : '(Opcional - pode ser fornecida por telefone)' ?></p>
+                <!-- Shipping Address -->
+                <div class="bg-white rounded-lg shadow-sm p-6 animate-on-scroll" data-animation="fade-up" data-delay="100">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-serif text-xl text-granite-800">
+                            <?= $isEnglish ? 'Shipping Address' : 'Morada de Envio' ?>
+                        </h2>
+                        <span class="text-xs text-granite-400 bg-cream-100 px-3 py-1 rounded-full">
+                            <?= $isEnglish ? 'Optional' : 'Opcional' ?>
+                        </span>
+                    </div>
+                    <p class="text-sm text-granite-500 mb-6">
+                        <?= $isEnglish ? 'You can provide your address later by phone.' : 'Pode fornecer a morada mais tarde por telefone.' ?>
+                    </p>
 
-                    <div class="space-y-5">
+                    <div class="space-y-6">
                         <div>
-                            <label class="block text-sm font-medium text-charcoal/70 mb-2"><?= $isEnglish ? 'Address' : 'Morada' ?></label>
-                            <input type="text" name="shipping_address" value="<?= e($formData['shipping_address']) ?>"
-                                   class="w-full px-4 py-3 border border-cream-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm">
+                            <label for="shipping_address" class="block text-sm font-medium text-granite-700 mb-2">
+                                <?= $isEnglish ? 'Address' : 'Morada' ?>
+                            </label>
+                            <input type="text" id="shipping_address" name="shipping_address" value="<?= e($formData['shipping_address']) ?>"
+                                   class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
                         </div>
-                        <div class="grid md:grid-cols-2 gap-5">
+                        <div class="grid md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-charcoal/70 mb-2"><?= $isEnglish ? 'City' : 'Cidade' ?></label>
-                                <input type="text" name="shipping_city" value="<?= e($formData['shipping_city']) ?>"
-                                       class="w-full px-4 py-3 border border-cream-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm">
+                                <label for="shipping_city" class="block text-sm font-medium text-granite-700 mb-2">
+                                    <?= $isEnglish ? 'City' : 'Cidade' ?>
+                                </label>
+                                <input type="text" id="shipping_city" name="shipping_city" value="<?= e($formData['shipping_city']) ?>"
+                                       class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-charcoal/70 mb-2"><?= $isEnglish ? 'Postal Code' : 'Codigo Postal' ?></label>
-                                <input type="text" name="shipping_postal_code" value="<?= e($formData['shipping_postal_code']) ?>" placeholder="XXXX-XXX"
-                                       class="w-full px-4 py-3 border border-cream-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm">
+                                <label for="shipping_postal_code" class="block text-sm font-medium text-granite-700 mb-2">
+                                    <?= $isEnglish ? 'Postal Code' : 'Codigo Postal' ?>
+                                </label>
+                                <input type="text" id="shipping_postal_code" name="shipping_postal_code" value="<?= e($formData['shipping_postal_code']) ?>" placeholder="XXXX-XXX"
+                                       class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-charcoal/70 mb-2"><?= $isEnglish ? 'Notes' : 'Notas' ?></label>
-                            <textarea name="notes" rows="3"
-                                      class="w-full px-4 py-3 border border-cream-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary bg-cream-50 outline-none text-sm resize-none"><?= e($formData['notes']) ?></textarea>
+                            <label for="notes" class="block text-sm font-medium text-granite-700 mb-2">
+                                <?= $isEnglish ? 'Notes' : 'Notas' ?>
+                            </label>
+                            <textarea id="notes" name="notes" rows="3"
+                                      class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none resize-none"><?= e($formData['notes']) ?></textarea>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Cart Summary -->
-            <div class="lg:col-span-1 mt-6 lg:mt-0">
-                <div class="bg-white rounded-3xl shadow-sm border border-cream-100 p-6 sticky top-32">
-                    <h3 class="font-serif text-lg text-primary mb-4"><?= $isEnglish ? 'Your Cart' : 'Seu Carrinho' ?></h3>
+            <!-- Right Column - Order Summary -->
+            <div class="lg:col-span-1 mt-8 lg:mt-0 animate-on-scroll" data-animation="fade-up" data-delay="100">
+                <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+                    <h2 class="font-serif text-xl text-granite-800 mb-6">
+                        <?= $isEnglish ? 'Order Summary' : 'Resumo da Encomenda' ?>
+                    </h2>
 
-                    <div class="space-y-3 mb-4">
-                        <?php foreach ($cartItems as $item): ?>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-charcoal/70 truncate mr-2"><?= e($item['product']->name) ?> <span class="text-charcoal/40">x<?= $item['quantity'] ?></span></span>
-                            <span class="font-medium text-primary whitespace-nowrap"><?= formatPrice($item['subtotal']) ?></span>
+                    <!-- Items -->
+                    <div class="space-y-4 mb-6">
+                        <?php foreach ($cartItems as $item):
+                            $productImage = $item['product']->getPrimaryImage();
+                        ?>
+                        <div class="flex items-center gap-3 text-sm">
+                            <div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-cream-100 border border-granite-100">
+                                <?php if ($productImage): ?>
+                                <img src="<?= e(basePath() . $productImage) ?>" alt="<?= e($item['product']->name) ?>" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-granite-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-granite-700 truncate"><?= e($item['product']->name) ?></p>
+                                <p class="text-granite-400 text-xs">x<?= $item['quantity'] ?></p>
+                            </div>
+                            <span class="font-medium text-granite-800 whitespace-nowrap"><?= formatPrice($item['subtotal']) ?></span>
                         </div>
                         <?php endforeach; ?>
                     </div>
 
-                    <div class="border-t border-cream-100 pt-3 space-y-2">
+                    <!-- Totals -->
+                    <div class="border-t border-granite-200 pt-4 space-y-3">
                         <div class="flex justify-between text-sm">
-                            <span class="text-charcoal/60">Subtotal</span>
-                            <span><?= formatPrice($cartSubtotal) ?></span>
+                            <span class="text-granite-600">Subtotal</span>
+                            <span class="text-granite-800"><?= formatPrice($cartSubtotal) ?></span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-charcoal/60"><?= $isEnglish ? 'Shipping' : 'Envio' ?></span>
-                            <span><?= $shipping > 0 ? formatPrice($shipping) : '<span class="text-secondary">' . ($isEnglish ? 'Free' : 'Gratis') . '</span>' ?></span>
+                            <span class="text-granite-600"><?= $isEnglish ? 'Shipping' : 'Envio' ?></span>
+                            <span class="text-granite-800">
+                                <?= $shipping > 0 ? formatPrice($shipping) : '<span class="text-secondary font-medium">' . ($isEnglish ? 'Free' : 'Gratis') . '</span>' ?>
+                            </span>
                         </div>
-                        <div class="flex justify-between text-lg font-bold border-t border-cream-100 pt-2">
-                            <span class="text-primary">Total</span>
-                            <span class="text-primary"><?= formatPrice($cartTotal) ?></span>
+                        <div class="flex justify-between text-lg font-bold border-t border-granite-200 pt-3">
+                            <span class="text-granite-800">Total</span>
+                            <span class="text-granite-800"><?= formatPrice($cartTotal) ?></span>
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-6 py-3.5 bg-secondary text-white font-medium rounded-full hover:bg-secondary-700 transition-all shadow-lg hover:shadow-xl">
+                    <!-- Payment Methods Accepted -->
+                    <div class="mt-6 pt-6 border-t border-granite-200">
+                        <p class="text-xs text-granite-500 uppercase tracking-wider font-medium mb-3">
+                            <?= $isEnglish ? 'Accepted Payment Methods' : 'Metodos de Pagamento Aceites' ?>
+                        </p>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <img src="<?= asset('images/MB_WAY.jpg') ?>" alt="MB WAY" class="h-8 rounded shadow-sm">
+                            <img src="<?= asset('images/multibanco.png') ?>" alt="Multibanco" class="h-8 rounded shadow-sm">
+                            <img src="<?= asset('images/VISA.png') ?>" alt="Visa" class="h-8 rounded shadow-sm">
+                            <img src="<?= asset('images/Mastercard.png') ?>" alt="Mastercard" class="h-8 rounded shadow-sm">
+                        </div>
+                    </div>
+
+                    <!-- How it works -->
+                    <div class="mt-6 pt-6 border-t border-granite-200">
+                        <p class="text-xs text-granite-500 uppercase tracking-wider font-medium mb-3">
+                            <?= $isEnglish ? 'How it works' : 'Como funciona' ?>
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-xs font-bold text-secondary">1</span>
+                                </div>
+                                <span class="text-xs text-granite-500 leading-relaxed">
+                                    <?= $isEnglish ? 'Submit your order request' : 'Envie o seu pedido' ?>
+                                </span>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-xs font-bold text-secondary">2</span>
+                                </div>
+                                <span class="text-xs text-granite-500 leading-relaxed">
+                                    <?= $isEnglish ? 'We contact you by phone or email to confirm and arrange payment' : 'Contactamos por telefone ou email para confirmar e combinar pagamento' ?>
+                                </span>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-xs font-bold text-secondary">3</span>
+                                </div>
+                                <span class="text-xs text-granite-500 leading-relaxed">
+                                    <?= $isEnglish ? 'We ship your order' : 'Enviamos a sua encomenda' ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="w-full mt-6 py-4 bg-primary text-cream font-semibold text-lg rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
                         <?= $isEnglish ? 'Submit Order Request' : 'Enviar Pedido' ?>
                     </button>
 
-                    <p class="text-[11px] text-charcoal/40 text-center mt-3">
+                    <p class="text-xs text-granite-500 text-center mt-4">
                         <?= $isEnglish
-                            ? 'We will contact you by phone to finalize payment.'
-                            : 'Iremos contacta-lo por telefone para finalizar o pagamento.' ?>
+                            ? 'We will contact you by phone or email to finalize payment.'
+                            : 'Iremos contacta-lo por telefone ou email para finalizar o pagamento.' ?>
                     </p>
                 </div>
             </div>
         </form>
-        <?php endif; ?>
     </div>
 </section>
+<?php endif; ?>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>

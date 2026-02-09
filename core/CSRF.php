@@ -127,6 +127,15 @@ class CSRF
             ?? null;
 
         if (!self::validateToken($token)) {
+            // If this is an admin page, destroy session and redirect to login
+            $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+            if (str_contains($requestUri, '/admin/')) {
+                Session::destroy();
+                http_response_code(403);
+                header('Location: ' . basePath() . '/admin/login.php?expired=1');
+                exit;
+            }
+
             http_response_code(403);
             die('Invalid or expired security token. Please refresh the page and try again.');
         }

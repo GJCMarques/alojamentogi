@@ -22,11 +22,12 @@ $isEnglish = $lang->isEnglish();
 $shopMode = setting('shop_mode', 'active');
 
 if ($shopMode === 'closed') {
-    // Shop is completely closed
-    Session::flash('warning', $isEnglish
-        ? 'Our shop is currently not accepting orders. For more information, please contact us.'
-        : 'De momento nao estamos a aceitar encomendas. Para mais informacoes, contacte-nos na pagina de contactos.');
-    redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
+    // Shop is completely closed - show toast notification and redirect back
+    Session::flash('success', $isEnglish
+        ? 'Our shop is temporarily closed. For more information, please contact us.'
+        : 'A nossa loja esta temporariamente fechada. Para mais informacoes, contacte-nos.');
+    $referer = $_SERVER['HTTP_REFERER'] ?? ($base . ($isEnglish ? '/en/shop/' : '/loja/'));
+    redirect($referer);
 }
 
 if ($shopMode === 'manual') {

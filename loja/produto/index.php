@@ -471,14 +471,17 @@ include INCLUDES_PATH . '/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Image gallery data
-    const images = [
-        <?php foreach ($product->images as $index => $image): ?>
-        {
-            src: '<?= e(basePath() . $image['image_path']) ?>',
-            alt: '<?= e($product->name) ?> - Imagem <?= $index + 1 ?>'
-        }<?= $index < count($product->images) - 1 ? ',' : '' ?>
-        <?php endforeach; ?>
-    ];
+    const images = <?php
+        $productImages = array_values($product->images);
+        $jsImages = [];
+        foreach ($productImages as $index => $image) {
+            $jsImages[] = [
+                'src' => basePath() . $image['image_path'],
+                'alt' => $product->name . ' - Imagem ' . ($index + 1)
+            ];
+        }
+        echo json_encode($jsImages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
+    ?>;
 
     let currentImageIndex = 0;
 

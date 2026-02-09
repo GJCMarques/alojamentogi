@@ -29,37 +29,46 @@ class Mailer
 
     /**
      * Initialize PHPMailer with SMTP settings
+     *
+     * Priority: DB settings (encrypted, via setting()) > config.php fallback
      */
     private function initPHPMailer(): void
     {
         $this->mailer = new PHPMailer(true);
 
         try {
-            $mail = $this->config['mail'];
+            $fileMail = $this->config['mail'];
+
+            // Read from DB settings (auto-decrypted) with config.php fallback
+            $host = setting('smtp_host', $fileMail['host'] ?? '');
+            $port = (int) setting('smtp_port', $fileMail['port'] ?? 587);
+            $username = setting('smtp_user', $fileMail['username'] ?? '');
+            $password = setting('smtp_pass', $fileMail['password'] ?? '');
+            $fromEmail = setting('smtp_from_email', $fileMail['from_email'] ?? 'noreply@acasadogi.pt');
+            $fromName = setting('smtp_from_name', $fileMail['from_name'] ?? 'A Casa do Gi');
 
             // Server settings
-            if (!empty($mail['host'])) {
+            if (!empty($host)) {
                 $this->mailer->isSMTP();
-                $this->mailer->Host = $mail['host'];
-                $this->mailer->Port = $mail['port'] ?? 587;
+                $this->mailer->Host = $host;
+                $this->mailer->Port = $port;
 
-                if (!empty($mail['username'])) {
+                if (!empty($username)) {
                     $this->mailer->SMTPAuth = true;
-                    $this->mailer->Username = $mail['username'];
-                    $this->mailer->Password = $mail['password'];
+                    $this->mailer->Username = $username;
+                    $this->mailer->Password = $password;
                 }
 
-                $this->mailer->SMTPSecure = $mail['encryption'] ?? PHPMailer::ENCRYPTION_STARTTLS;
+                $encryption = $fileMail['encryption'] ?? 'tls';
+                $this->mailer->SMTPSecure = $encryption === 'ssl' ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
             }
 
             // Default sender
-            $this->mailer->setFrom(
-                $mail['from_email'] ?? 'noreply@acasadogi.pt',
-                $mail['from_name'] ?? 'A Casa do Gi'
-            );
+            $this->mailer->setFrom($fromEmail, $fromName);
 
-            if (!empty($mail['reply_to'])) {
-                $this->mailer->addReplyTo($mail['reply_to']);
+            $replyTo = $fileMail['reply_to'] ?? '';
+            if (!empty($replyTo)) {
+                $this->mailer->addReplyTo($replyTo);
             }
 
             // Character encoding

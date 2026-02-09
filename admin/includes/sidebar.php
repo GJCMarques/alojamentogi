@@ -4,9 +4,16 @@
  */
 
 use Core\Auth;
+use Core\Database;
 
 $base = basePath();
 $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$db = Database::getInstance();
+
+// Get badge counts
+$pendingOrders = $db->count('orders', "status IN ('pending', 'confirmed')");
+$newManualOrders = $db->count('manual_orders', "status = 'new'");
+$unreadMessages = $db->count('contact_submissions', 'is_read = 0');
 
 // Menu items
 $menuItems = [
@@ -16,6 +23,7 @@ $menuItems = [
         'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
         'active' => $currentPath === $base . '/admin/' || $currentPath === $base . '/admin/index.php'
     ],
+    ['type' => 'separator', 'label' => 'Website'],
     [
         'label' => 'Conteudos',
         'url' => $base . '/admin/conteudos/',
@@ -41,6 +49,13 @@ $menuItems = [
         'active' => strpos($currentPath, $base . '/admin/alojamento') === 0
     ],
     [
+        'label' => 'Atividades',
+        'url' => $base . '/admin/atividades/',
+        'icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z',
+        'active' => strpos($currentPath, $base . '/admin/atividades') === 0
+    ],
+    ['type' => 'separator', 'label' => 'Loja Online'],
+    [
         'label' => 'Loja',
         'url' => $base . '/admin/loja/',
         'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z',
@@ -63,7 +78,7 @@ $menuItems = [
         'url' => $base . '/admin/encomendas/',
         'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01',
         'active' => strpos($currentPath, $base . '/admin/encomendas') === 0,
-        'badge' => null
+        'badge' => $pendingOrders > 0 ? $pendingOrders : null
     ],
     [
         'label' => 'Faturas',
@@ -75,19 +90,16 @@ $menuItems = [
         'label' => 'Pedidos Manuais',
         'url' => $base . '/admin/pedidos-manuais/',
         'icon' => 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z',
-        'active' => strpos($currentPath, $base . '/admin/pedidos-manuais') === 0
+        'active' => strpos($currentPath, $base . '/admin/pedidos-manuais') === 0,
+        'badge' => $newManualOrders > 0 ? $newManualOrders : null
     ],
-    [
-        'label' => 'Atividades',
-        'url' => $base . '/admin/atividades/',
-        'icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z',
-        'active' => strpos($currentPath, $base . '/admin/atividades') === 0
-    ],
+    ['type' => 'separator', 'label' => 'Comunicacao'],
     [
         'label' => 'Mensagens',
         'url' => $base . '/admin/mensagens/',
         'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
-        'active' => strpos($currentPath, $base . '/admin/mensagens') === 0
+        'active' => strpos($currentPath, $base . '/admin/mensagens') === 0,
+        'badge' => $unreadMessages > 0 ? $unreadMessages : null
     ],
 ];
 
@@ -119,35 +131,41 @@ $adminItems[] = [
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 px-4 py-6 overflow-y-auto">
+    <nav class="flex-1 px-4 py-4 overflow-y-auto">
         <!-- Main Menu -->
-        <div class="space-y-1">
+        <div class="space-y-0.5">
             <?php foreach ($menuItems as $item): ?>
-            <a href="<?= $item['url'] ?>"
-               class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
-                      <?= $item['active']
-                          ? 'bg-secondary text-cream'
-                          : 'text-cream-200 hover:bg-primary-600 hover:text-cream' ?>">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<?= $item['icon'] ?>"/>
-                </svg>
-                <span class="sidebar-text ml-3"><?= e($item['label']) ?></span>
-                <?php if (!empty($item['badge'])): ?>
-                <span class="sidebar-text ml-auto bg-accent text-primary text-xs font-bold px-2 py-0.5 rounded-full shadow">
-                    <?= $item['badge'] ?>
-                </span>
+                <?php if (isset($item['type']) && $item['type'] === 'separator'): ?>
+                <div class="pt-5 pb-2">
+                    <p class="sidebar-text px-3 text-[10px] font-semibold text-cream/30 uppercase tracking-widest"><?= $item['label'] ?></p>
+                </div>
+                <?php else: ?>
+                <a href="<?= $item['url'] ?>"
+                   class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                          <?= $item['active']
+                              ? 'bg-secondary text-cream'
+                              : 'text-cream-200 hover:bg-primary-600 hover:text-cream' ?>">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<?= $item['icon'] ?>"/>
+                    </svg>
+                    <span class="sidebar-text ml-3"><?= e($item['label']) ?></span>
+                    <?php if (!empty($item['badge'])): ?>
+                    <span class="sidebar-text ml-auto bg-accent text-primary text-xs font-bold px-2 py-0.5 rounded-full shadow">
+                        <?= $item['badge'] ?>
+                    </span>
+                    <?php endif; ?>
+                </a>
                 <?php endif; ?>
-            </a>
             <?php endforeach; ?>
         </div>
 
         <!-- Admin Menu -->
         <?php if (!empty($adminItems)): ?>
-        <div class="mt-8 pt-6 border-t border-primary-600">
-            <p class="sidebar-text px-3 mb-3 text-xs font-semibold text-accent uppercase tracking-wider">
+        <div class="mt-6 pt-5 border-t border-primary-600">
+            <p class="sidebar-text px-3 mb-2 text-[10px] font-semibold text-accent uppercase tracking-widest">
                 Administracao
             </p>
-            <div class="space-y-1">
+            <div class="space-y-0.5">
                 <?php foreach ($adminItems as $item): ?>
                 <a href="<?= $item['url'] ?>"
                    class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors

@@ -158,6 +158,17 @@ if (isPost() && $failureCount < 20) {
                         <p class="text-charcoal-500 mt-2">Inicie sessao para continuar</p>
                     </div>
 
+                    <?php if (isset($_GET['expired'])): ?>
+                    <div class="mb-6 p-4 bg-accent/10 border border-accent/30 rounded text-primary text-sm">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            A sua sessao expirou por seguranca. Por favor, inicie sessao novamente.
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
                     <?php if ($error): ?>
                     <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-600 text-sm">
                         <div class="flex items-center">

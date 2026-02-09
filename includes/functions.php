@@ -107,9 +107,10 @@ function basePath(): string
  */
 function redirect(string $url, int $statusCode = 302): void
 {
-    // If URL starts with /, prepend the base path
-    if (str_starts_with($url, '/') && !str_starts_with($url, '//')) {
-        $url = basePath() . $url;
+    // If URL starts with /, prepend the base path (but avoid double-prepending)
+    $base = basePath();
+    if (str_starts_with($url, '/') && !str_starts_with($url, '//') && !str_starts_with($url, $base . '/')) {
+        $url = $base . $url;
     }
 
     header('Location: ' . $url, true, $statusCode);
@@ -444,6 +445,11 @@ function setting(string $key, mixed $default = null): mixed
 
         foreach ($rows as $row) {
             $value = $row['setting_value'];
+
+            // Auto-decrypt sensitive settings
+            if (\Core\Encryption::isSensitive($row['setting_key']) && is_string($value) && !empty($value)) {
+                $value = \Core\Encryption::decrypt($value);
+            }
 
             // Type casting
             switch ($row['setting_type']) {

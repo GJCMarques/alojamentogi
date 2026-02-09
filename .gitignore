@@ -2,6 +2,7 @@
 
 # Configuration (contains credentials)
 config/config.php
+config/encryption.key
 
 # Uploads (user content)
 uploads/*
