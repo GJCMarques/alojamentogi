@@ -113,7 +113,7 @@ include INCLUDES_PATH . '/header.php';
                 <h2 class="font-serif text-3xl text-granite-800 mb-3">O seu carrinho está vazio</h2>
                 <p class="text-granite-600 text-lg mb-8">Ainda não adicionou nenhum produto ao carrinho.</p>
                 <a href="<?= $base ?>/loja/"
-                   class="inline-flex items-center justify-center px-8 py-4 bg-olive-600 text-white font-medium rounded-lg hover:bg-olive-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                   class="inline-flex items-center justify-center text-lg text-primary hover:text-primary-800 transition-colors duration-200 group">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
@@ -243,7 +243,7 @@ include INCLUDES_PATH . '/header.php';
                     <!-- Cart Actions -->
                     <div class="px-6 py-5 bg-granite-50 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <a href="<?= $base ?>/loja/"
-                           class="inline-flex items-center text-olive-600 hover:text-olive-700 font-medium transition-colors duration-200 group">
+                           class="inline-flex items-center text-primary hover:text-primary-800 transition-colors duration-200 group">
                             <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                             </svg>

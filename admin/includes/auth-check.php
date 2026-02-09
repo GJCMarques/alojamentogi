@@ -23,10 +23,23 @@ if (!Auth::check()) {
 // Require authentication
 Auth::requireAuth('/admin/login.php');
 
+// Hard session expiry: 30 minutes since login/last activity
+$adminSessionLifetime = 1800; // 30 minutes
+if (!isset($_SESSION['_admin_last_activity'])) {
+    $_SESSION['_admin_last_activity'] = time();
+} elseif (time() - $_SESSION['_admin_last_activity'] > $adminSessionLifetime) {
+    // Session expired - force logout
+    Auth::logout();
+    \Core\Session::flash('error', 'Sessao expirada. Por favor, faca login novamente.');
+    redirect('/admin/login.php');
+}
+// Update last activity timestamp on each page load
+$_SESSION['_admin_last_activity'] = time();
+
 // Regenerate session ID periodically to prevent session fixation
 if (!isset($_SESSION['_last_regenerated'])) {
     $_SESSION['_last_regenerated'] = time();
-} elseif (time() - $_SESSION['_last_regenerated'] > 1800) {
+} elseif (time() - $_SESSION['_last_regenerated'] > 300) { // Every 5 minutes
     session_regenerate_id(true);
     $_SESSION['_last_regenerated'] = time();
 }

@@ -18,41 +18,48 @@ $pageDescription = $isEnglish
 include INCLUDES_PATH . '/header.php';
 ?>
 
-<!-- Hero Section -->
-<section class="relative min-h-[40vh] flex items-center justify-center bg-gradient-to-br from-primary via-primary-600 to-primary-700">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 right-10 w-64 h-64 bg-accent rounded-full blur-3xl"></div>
-        <div class="absolute bottom-10 left-10 w-80 h-80 bg-secondary rounded-full blur-3xl"></div>
+<!-- Hero Banner with Breadcrumbs -->
+<section class="relative h-[40vh] min-h-[350px] bg-gray-900 overflow-hidden">
+    <!-- Hero Image -->
+    <div class="absolute inset-0">
+        <img src="<?= $base ?>/assets/images/MogadouroNeve.jpeg"
+             alt="Privacy Policy"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
     </div>
 
-    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-cream mb-4 animate-on-scroll">
+    <!-- Content -->
+    <div class="relative h-full flex flex-col justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <!-- Breadcrumbs -->
+        <nav class="mb-4 animate-on-scroll" data-animation="fade-up">
+            <ol class="flex items-center space-x-2 text-sm text-white/90">
+                <li>
+                    <a href="<?= $isEnglish ? $base . '/en/' : $base . '/' ?>" class="hover:text-accent transition-colors">
+                        <?= $isEnglish ? 'Home' : 'Início' ?>
+                    </a>
+                </li>
+                <li>
+                    <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>
+                <li class="text-white font-medium">
+                    <?= $isEnglish ? 'Privacy Policy' : 'Política de Privacidade' ?>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Title -->
+        <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl text-white drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
             <?= $isEnglish ? 'Privacy Policy' : 'Política de Privacidade' ?>
         </h1>
-        <p class="text-cream-200 text-lg sm:text-xl animate-on-scroll" data-delay="100">
-            <?= $isEnglish
+        <p class="mt-4 text-lg text-white/90 max-w-2xl animate-on-scroll" data-delay="200">
+             <?= $isEnglish
                 ? 'How we protect and process your personal data'
                 : 'Como protegemos e tratamos os seus dados pessoais' ?>
         </p>
     </div>
 </section>
-
-<!-- Breadcrumbs -->
-<nav class="bg-cream-100 border-b border-primary/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <ol class="flex items-center space-x-2 text-sm">
-            <li>
-                <a href="<?= $isEnglish ? $base . '/en/' : $base . '/' ?>" class="text-primary-600 hover:text-accent transition-colors">
-                    <?= $isEnglish ? 'Home' : 'Início' ?>
-                </a>
-            </li>
-            <li class="text-primary-400">/</li>
-            <li class="text-charcoal font-medium">
-                <?= $isEnglish ? 'Privacy Policy' : 'Política de Privacidade' ?>
-            </li>
-        </ol>
-    </div>
-</nav>
 
 <!-- Content Section -->
 <section class="py-16 bg-cream">

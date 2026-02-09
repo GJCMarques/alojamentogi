@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                 mkdir($uploadDir, 0755, true);
             }
 
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             $maxSize = 5 * 1024 * 1024; // 5MB
             $uploaded = 0;
             $errors = [];
@@ -29,16 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
             foreach ($_FILES['files']['tmp_name'] as $key => $tmpName) {
                 $fileName = $_FILES['files']['name'][$key];
                 $fileSize = $_FILES['files']['size'][$key];
-                $fileType = $_FILES['files']['type'][$key];
                 $fileError = $_FILES['files']['error'][$key];
 
                 if ($fileError !== UPLOAD_ERR_OK) {
                     $errors[] = "Erro ao carregar: {$fileName}";
-                    continue;
-                }
-
-                if (!in_array($fileType, $allowedTypes)) {
-                    $errors[] = "Tipo nao permitido: {$fileName}";
                     continue;
                 }
 
@@ -47,10 +42,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                     continue;
                 }
 
-                // Generate unique filename
-                $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-                $newName = uniqid() . '_' . time() . '.' . $ext;
+                // Validate extension from original filename
+                $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                if (!in_array($ext, $allowedExtensions)) {
+                    $errors[] = "Extensao nao permitida: {$fileName}";
+                    continue;
+                }
+
+                // Validate REAL MIME type using file contents (not client-supplied header)
+                $realMimeType = mime_content_type($tmpName);
+                if (!in_array($realMimeType, $allowedMimeTypes)) {
+                    $errors[] = "Tipo de ficheiro invalido: {$fileName} ({$realMimeType})";
+                    continue;
+                }
+
+                // Double-check with getimagesize (ensures it's actually an image)
+                $imageInfo = @getimagesize($tmpName);
+                if ($imageInfo === false) {
+                    $errors[] = "Ficheiro nao e uma imagem valida: {$fileName}";
+                    continue;
+                }
+
+                // Use MIME-derived extension to prevent extension spoofing
+                $mimeToExt = [
+                    'image/jpeg' => 'jpg',
+                    'image/png' => 'png',
+                    'image/gif' => 'gif',
+                    'image/webp' => 'webp',
+                ];
+                $safeExt = $mimeToExt[$realMimeType] ?? $ext;
+
+                // Generate unique filename with safe extension
+                $newName = bin2hex(random_bytes(16)) . '.' . $safeExt;
                 $targetPath = $uploadDir . $newName;
+                $fileType = $realMimeType;
 
                 if (move_uploaded_file($tmpName, $targetPath)) {
                     // Save to database (using correct column names from schema)
