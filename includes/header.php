@@ -314,11 +314,12 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         /* Mobile menu animation */
         .mobile-menu {
-            /* Handled by Tailwind classes for opacity and pointer-events */
+            /* Handled by Tailwind classes */
         }
 
         .mobile-menu.open {
             opacity: 1;
+            visibility: visible;
         }
 
         /* Mobile menu backdrop */
@@ -493,47 +494,70 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button type="button" id="mobile-menu-btn" class="lg:hidden p-4 -mr-2 text-cream hover:text-accent transition-colors relative z-50 cursor-pointer select-none" aria-label="Menu">
-                    <svg class="w-8 h-8 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
+                <!-- Mobile Menu Button - Unified Toggle -->
+                <button type="button" id="mobile-menu-btn" class="lg:hidden p-4 -mr-4 text-cream hover:text-accent transition-colors cursor-pointer relative z-[10000] group" aria-label="Menu">
+                   <div class="relative w-8 h-6 flex flex-col justify-between items-center transition-all duration-300">
+                        <!-- Top Line -->
+                        <span class="w-8 h-[2px] bg-current rounded-full transform transition-all duration-300 origin-center group-[.open]:translate-y-[11px] group-[.open]:rotate-45"></span>
+                        <!-- Middle Line -->
+                        <span class="w-8 h-[2px] bg-current rounded-full transform transition-all duration-300 group-[.open]:opacity-0"></span>
+                        <!-- Bottom Line -->
+                        <span class="w-8 h-[2px] bg-current rounded-full transform transition-all duration-300 origin-center group-[.open]:-translate-y-[11px] group-[.open]:-rotate-45"></span>
+                   </div>
                 </button>
             </div>
         </nav>
 
-        <!-- Mobile Menu Backdrop -->
-        <div id="mobile-backdrop" class="mobile-backdrop fixed inset-0 bg-primary/90 backdrop-blur-md lg:hidden z-[9990]"></div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu fixed inset-0 w-full h-full lg:hidden z-[9999] flex flex-col justify-center items-center pointer-events-none opacity-0 transition-opacity duration-200">
-            <!-- Close Button (Absolute Top Right) -->
-            <button type="button" id="mobile-menu-close" class="absolute top-6 right-6 p-2 text-cream hover:text-accent transition-colors pointer-events-auto">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
+            
+            <!-- Background with Gradient and Blur -->
 
-            <nav class="flex flex-col items-center space-y-8 pointer-events-auto">
-                <?php foreach ($navItems as $item):
+
+    </header>
+
+    <!-- Mobile Menu - Moved Outside Header for Perfect Stacking -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-0 w-full h-full lg:hidden z-[9999] opacity-0 invisible transition-all duration-300 ease-in-out">
+        
+        <!-- Background with Gradient and Blur -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-900/98 via-primary-800/95 to-primary-900/98 backdrop-blur-xl"></div>
+        
+        <!-- Decorative Watermark (Optional) -->
+        <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none opacity-[0.03]">
+                 <span class="font-cursive text-[40vh] text-cream leading-none select-none">Gi</span>
+        </div>
+
+        <!-- Menu Content -->
+        <div class="relative z-10 flex flex-col justify-center items-center h-full w-full px-6">
+            <nav class="flex flex-col items-center space-y-6 md:space-y-8">
+                <?php 
+                $delay = 0; // Start immediately
+                foreach ($navItems as $item):
                     // Active logic
                     $homeUrlPT = $base . '/'; $homeUrlEN = $base . '/en/';
                     $isActive = ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN)
                             ? ($currentPath === $item['url'])
                             : (strpos($currentPath, rtrim($item['url'], '/')) === 0);
                 ?>
-                <a href="<?= $item['url'] ?>"
-                   class="mobile-nav-link text-3xl md:text-4xl font-serif font-light tracking-wide <?= $isActive ? 'text-accent' : 'text-cream' ?> hover:text-accent transition-colors transform hover:scale-105 duration-300">
-                    <?= e($item['label']) ?>
-                </a>
-                <?php endforeach; ?>
+                <div class="mobile-item overflow-hidden px-4 w-full flex justify-center">
+                    <a href="<?= $item['url'] ?>"
+                       class="mobile-nav-link block w-full text-center text-4xl md:text-5xl font-serif font-light tracking-wide py-1 px-2 <?= $isActive ? 'text-accent italic' : 'text-cream' ?> hover:text-accent hover:italic transition-all duration-300 transform translate-y-8 opacity-0"
+                       style="transition-delay: <?= $delay ?>ms">
+                        <?= e($item['label']) ?>
+                    </a>
+                </div>
+                <?php 
+                $delay += 50; // Fast stagger
+                endforeach; 
+                ?>
 
-                <div class="h-px w-24 bg-cream/20 my-8"></div>
+                <div class="h-px w-48 bg-gradient-to-r from-transparent via-accent/50 to-transparent my-8 transform scale-x-0 transition-transform duration-500 delay-300" id="mobile-separator"></div>
 
-                <div class="flex items-center gap-8">
+                <!-- Footer Actions (Lang, Cart) -->
+                <div class="flex items-center gap-8 mobile-footer transform translate-y-4 opacity-0 transition-all duration-500 delay-500">
                      <!-- Language Switcher Mobile -->
                     <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
                        class="flex items-center gap-3 text-cream/80 hover:text-accent transition-colors group">
-                        <div class="w-8 h-8 rounded-full overflow-hidden border border-cream/20 group-hover:border-accent transition-colors">
+                       <div class="w-8 h-8 rounded-full overflow-hidden border border-cream/20 group-hover:border-accent transition-colors shadow-sm">
                              <?php if ($isEnglish): ?>
                                 <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
                                     <path fill="#214524" d="M0 0h220v480H0z"/>
@@ -550,24 +574,37 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                                 </svg>
                             <?php endif; ?>
                         </div>
-                        <span class="text-sm font-medium uppercase tracking-widest"><?= $isEnglish ? 'Português' : 'English' ?></span>
+                         <span class="text-sm font-medium uppercase tracking-[0.2em]"><?= $isEnglish ? 'PT' : 'EN' ?></span>
                     </a>
 
                     <!-- Cart Mobile -->
                     <?php if (isShopEnabled()): ?>
+                    <div class="w-px h-4 bg-cream/20"></div>
                     <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
                        class="relative flex items-center gap-3 text-cream/80 hover:text-accent transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                         <span class="text-sm font-medium uppercase tracking-widest"><?= $isEnglish ? 'Cart' : 'Carrinho' ?></span>
+                         </svg>
                          <span id="mobile-cart-count" class="absolute -top-2 -right-2 w-5 h-5 bg-accent text-primary text-[10px] font-bold rounded-full flex items-center justify-center hidden shadow-sm">0</span>
                     </a>
                     <?php endif; ?>
                 </div>
             </nav>
         </div>
-    </header>
+    </div>
+
+    <!-- Mobile Menu Transparency Fix -->
+    <style>
+        #main-header.menu-open {
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            box-shadow: none !important;
+            z-index: 10000 !important;
+            transition: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
 
     <!-- Header Scroll Script -->
     <script>
@@ -575,6 +612,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         const header = document.getElementById('main-header');
         const isHomepage = document.body.classList.contains('homepage-new');
         const splitHero = document.getElementById('split-hero');
+        const mobileHeader = document.getElementById('mobile-menu-header');
 
         // Scroll Effect with debouncing using requestAnimationFrame
         let ticking = false;
@@ -597,6 +635,18 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     header.classList.remove('scrolled');
                 }
             }
+            
+            // Adjust mobile menu close button position to match header
+            if (mobileHeader) {
+                if (window.scrollY > 50) {
+                     mobileHeader.classList.remove('h-[8.5rem]', 'md:h-32');
+                     mobileHeader.classList.add('h-[6rem]');
+                } else {
+                     mobileHeader.classList.add('h-[8.5rem]', 'md:h-32');
+                     mobileHeader.classList.remove('h-[6rem]');
+                }
+            }
+
             ticking = false;
         }
 
@@ -613,31 +663,62 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         // Mobile Menu Logic with backdrop
         const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileClose = document.getElementById('mobile-menu-close');
         const mobileMenu = document.getElementById('mobile-menu');
-        const mobileBackdrop = document.getElementById('mobile-backdrop');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        const mobileSeparator = document.getElementById('mobile-separator');
+        const mobileFooter = document.querySelector('.mobile-footer');
 
         function openMenu() {
+            header.classList.add('menu-open'); // Priority: layout/z-index first
             mobileMenu.classList.add('open');
-            mobileBackdrop.classList.add('open');
+            mobileBtn.classList.add('open');
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden'; // Ensure lock on HTML too
+            
+            // Trigger Animation Stagger
+            // Reduced timeout for snappier feel
+            setTimeout(() => {
+                mobileNavLinks.forEach(link => {
+                    link.classList.remove('translate-y-8', 'opacity-0');
+                });
+                if(mobileSeparator) mobileSeparator.classList.remove('scale-x-0');
+                if(mobileFooter) {
+                    mobileFooter.classList.remove('translate-y-4', 'opacity-0');
+                }
+            }, 10); 
         }
 
         function closeMenu() {
+            // Reset Animations first
+            mobileNavLinks.forEach(link => {
+                link.classList.add('translate-y-8', 'opacity-0');
+            });
+            if(mobileSeparator) mobileSeparator.classList.add('scale-x-0');
+             if(mobileFooter) {
+                mobileFooter.classList.add('translate-y-4', 'opacity-0');
+            }
+
             mobileMenu.classList.remove('open');
-            mobileBackdrop.classList.remove('open');
+            mobileBtn.classList.remove('open'); // Revert hamburger
+            header.classList.remove('menu-open'); // Restore header styles
             document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         }
 
-        if (mobileBtn) mobileBtn.addEventListener('click', openMenu);
-        if (mobileClose) mobileClose.addEventListener('click', closeMenu);
-        if (mobileBackdrop) mobileBackdrop.addEventListener('click', closeMenu);
+        function toggleMenu() {
+            if (mobileMenu.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
+        // mobile-menu-close listener removed as element is gone
 
         // Close menu when clicking nav links
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
-                // Small delay to allow navigation
                 setTimeout(closeMenu, 100);
             });
         });
@@ -648,6 +729,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 closeMenu();
             }
         });
+
 
         // Scroll Animations with Intersection Observer
         const animatedElements = document.querySelectorAll('.animate-on-scroll');
