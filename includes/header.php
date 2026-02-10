@@ -519,7 +519,11 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <div id="mobile-menu" class="mobile-menu fixed inset-0 w-full h-full lg:hidden z-[9999] opacity-0 invisible transition-all duration-300 ease-in-out">
         
         <!-- Background with Gradient and Blur -->
-        <div class="absolute inset-0 bg-gradient-to-br from-primary-900/98 via-primary-800/95 to-primary-900/98 backdrop-blur-xl"></div>
+        <!-- Background with Original Glass Gradient (Lighter Corners) -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-800/98 via-primary-700/95 to-primary-800/98 backdrop-blur-xl"></div>
+        
+        <!-- Solid Overlay for Scroll (Lighter Corners) -->
+        <div id="mobile-menu-bg-solid" class="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-800 transition-opacity duration-500 opacity-0"></div>
         
         <!-- Decorative Watermark (Optional) -->
         <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none opacity-[0.03]">
@@ -540,13 +544,13 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 ?>
                 <div class="mobile-item overflow-hidden px-4 w-full flex justify-center">
                     <a href="<?= $item['url'] ?>"
-                       class="mobile-nav-link block w-full text-center text-4xl md:text-5xl font-serif font-light tracking-wide py-1 px-2 <?= $isActive ? 'text-accent italic' : 'text-cream' ?> hover:text-accent hover:italic transition-all duration-300 transform translate-y-8 opacity-0"
+                       class="mobile-nav-link block w-full text-center text-4xl md:text-5xl font-serif font-light tracking-wide py-1 px-2 <?= $isActive ? 'text-accent italic' : 'text-cream' ?> hover:text-accent hover:italic transition-all duration-700 transform translate-y-8 opacity-0"
                        style="transition-delay: <?= $delay ?>ms">
                         <?= e($item['label']) ?>
                     </a>
                 </div>
                 <?php 
-                $delay += 50; // Fast stagger
+                $delay += 75; // Slower stagger
                 endforeach; 
                 ?>
 
@@ -619,6 +623,18 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         let lastScrollY = 0;
 
         function handleScroll() {
+            // Adjust mobile menu background opacity
+            const mobileBgSolid = document.getElementById('mobile-menu-bg-solid');
+            if (mobileBgSolid) {
+                if (window.scrollY > 50) {
+                     mobileBgSolid.classList.remove('opacity-0');
+                     mobileBgSolid.classList.add('opacity-100');
+                } else {
+                     mobileBgSolid.classList.add('opacity-0');
+                     mobileBgSolid.classList.remove('opacity-100');
+                }
+            }
+
             // For homepage, keep transparent through both heroes
             if (isHomepage && splitHero) {
                 const splitHeroBottom = splitHero.offsetTop + splitHero.offsetHeight;
@@ -676,7 +692,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             document.documentElement.style.overflow = 'hidden'; // Ensure lock on HTML too
             
             // Trigger Animation Stagger
-            // Reduced timeout for snappier feel
+            // Increased timeout for smoother entrance
             setTimeout(() => {
                 mobileNavLinks.forEach(link => {
                     link.classList.remove('translate-y-8', 'opacity-0');
@@ -685,7 +701,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 if(mobileFooter) {
                     mobileFooter.classList.remove('translate-y-4', 'opacity-0');
                 }
-            }, 10); 
+            }, 100); 
         }
 
         function closeMenu() {
