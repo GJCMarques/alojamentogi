@@ -44,10 +44,16 @@ class Product extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description
+        $sql = "SELECT p.*, 
+                       COALESCE(pt.name, pt_def.name) as name, 
+                       COALESCE(pt.short_description, pt_def.short_description) as short_description, 
+                       COALESCE(pt.description, pt_def.description) as description
                 FROM products p
                 LEFT JOIN product_translations pt
                     ON p.id = pt.product_id AND pt.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_translations pt_def 
+                    ON p.id = pt_def.product_id AND pt_def.language_id = l_def.id
                 WHERE p.id = ?";
 
         $row = $db->fetch($sql, [$langId, $id]);
@@ -73,10 +79,16 @@ class Product extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description
+        $sql = "SELECT p.*, 
+                       COALESCE(pt.name, pt_def.name) as name, 
+                       COALESCE(pt.short_description, pt_def.short_description) as short_description, 
+                       COALESCE(pt.description, pt_def.description) as description
                 FROM products p
                 LEFT JOIN product_translations pt
                     ON p.id = pt.product_id AND pt.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_translations pt_def 
+                    ON p.id = pt_def.product_id AND pt_def.language_id = l_def.id
                 WHERE p.slug = ? AND p.is_active = 1";
 
         $row = $db->fetch($sql, [$langId, $slug]);
@@ -102,10 +114,16 @@ class Product extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description
+        $sql = "SELECT p.*, 
+                       COALESCE(pt.name, pt_def.name) as name, 
+                       COALESCE(pt.short_description, pt_def.short_description) as short_description, 
+                       COALESCE(pt.description, pt_def.description) as description
                 FROM products p
                 LEFT JOIN product_translations pt
                     ON p.id = pt.product_id AND pt.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_translations pt_def 
+                    ON p.id = pt_def.product_id AND pt_def.language_id = l_def.id
                 WHERE p.sku = ? AND p.is_active = 1";
 
         $row = $db->fetch($sql, [$langId, $sku]);
@@ -131,23 +149,44 @@ class Product extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $params = [$langId];
+        // Parameters array - one for product translations, one for category translations
+        $params = [$langId]; 
         $where = "WHERE p.is_active = 1";
 
         if ($categoryId !== null) {
             $where .= " AND p.category_id = ?";
-            $params[] = $categoryId;
+            // categoryId comes last
         }
 
-        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description,
+        $sql = "SELECT p.*, 
+                       COALESCE(pt.name, pt_def.name) as name, 
+                       COALESCE(pt.short_description, pt_def.short_description) as short_description, 
+                       COALESCE(pt.description, pt_def.description) as description,
+                       c.slug as category_slug,
+                       COALESCE(ct.name, ct_def.name) as category_name,
                        (SELECT m.file_path FROM product_images pi
                         JOIN media m ON pi.media_id = m.id
                         WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image
                 FROM products p
                 LEFT JOIN product_translations pt
                     ON p.id = pt.product_id AND pt.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_translations pt_def 
+                    ON p.id = pt_def.product_id AND pt_def.language_id = l_def.id
+                LEFT JOIN product_categories c ON p.category_id = c.id
+                LEFT JOIN product_category_translations ct
+                    ON c.id = ct.category_id AND ct.language_id = ?
+                LEFT JOIN product_category_translations ct_def 
+                    ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 {$where}
                 ORDER BY p.is_featured DESC, p.created_at DESC";
+        
+        // We need to insert the second langId before categoryId if present
+        // Actually, let's rebuild params array to be safe
+        $params = [$langId, $langId];
+        if ($categoryId !== null) {
+            $params[] = $categoryId;
+        }
 
         if ($limit !== null) {
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
@@ -159,6 +198,9 @@ class Product extends Model
         foreach ($rows as $row) {
             $product = new self();
             $product->fill($row);
+            // Manually inject extra fields
+            $product->category_slug = $row['category_slug'] ?? null;
+            $product->category_name = $row['category_name'] ?? null;
             $products[] = $product;
         }
 
@@ -174,13 +216,19 @@ class Product extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description,
+        $sql = "SELECT p.*, 
+                       COALESCE(pt.name, pt_def.name) as name, 
+                       COALESCE(pt.short_description, pt_def.short_description) as short_description, 
+                       COALESCE(pt.description, pt_def.description) as description,
                        (SELECT m.file_path FROM product_images pi
                         JOIN media m ON pi.media_id = m.id
                         WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image
                 FROM products p
                 LEFT JOIN product_translations pt
                     ON p.id = pt.product_id AND pt.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_translations pt_def 
+                    ON p.id = pt_def.product_id AND pt_def.language_id = l_def.id
                 WHERE p.is_active = 1 AND p.is_featured = 1
                 ORDER BY p.created_at DESC
                 LIMIT {$limit}";
@@ -369,13 +417,19 @@ class Product extends Model
 
         $searchTerm = '%' . $query . '%';
 
-        $sql = "SELECT p.*, pt.name, pt.short_description, pt.description,
+        $sql = "SELECT p.*, 
+                       COALESCE(pt.name, pt_def.name) as name, 
+                       COALESCE(pt.short_description, pt_def.short_description) as short_description, 
+                       COALESCE(pt.description, pt_def.description) as description,
                        (SELECT m.file_path FROM product_images pi
                         JOIN media m ON pi.media_id = m.id
                         WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image
                 FROM products p
                 LEFT JOIN product_translations pt
                     ON p.id = pt.product_id AND pt.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_translations pt_def 
+                    ON p.id = pt_def.product_id AND pt_def.language_id = l_def.id
                 WHERE p.is_active = 1
                   AND (pt.name LIKE ? OR pt.short_description LIKE ? OR p.sku LIKE ?)
                 ORDER BY p.is_featured DESC, pt.name ASC

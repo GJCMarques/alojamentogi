@@ -11,7 +11,7 @@ $lang = \Core\Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 $isEnglish = $lang->isEnglish();
-$content = $lang->getPageContents('home');
+
 
 // Hero image
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'home' AND is_active = 1");

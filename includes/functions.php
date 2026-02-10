@@ -570,3 +570,24 @@ function verifyCsrf(): void
 {
     \Core\CSRF::check();
 }
+
+/**
+ * Get content block from database
+ */
+function content(string $key, string $default = ''): string
+{
+    static $blocks = null;
+    $langId = \Core\Language::getInstance()->getCurrentLangId();
+
+    if ($blocks === null) {
+        $db = \Core\Database::getInstance();
+        $rows = $db->fetchAll("SELECT block_key, content FROM content_blocks WHERE language_id = ?", [$langId]);
+        
+        $blocks = [];
+        foreach ($rows as $row) {
+            $blocks[$row['block_key']] = $row['content'];
+        }
+    }
+
+    return $blocks[$key] ?? $default;
+}

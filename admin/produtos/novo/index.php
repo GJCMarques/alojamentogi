@@ -472,24 +472,32 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
 document.addEventListener('DOMContentLoaded', function() {
     // Language tabs
     const tabs = document.querySelectorAll('.lang-tab');
-    const contents = document.querySelectorAll('.lang-content');
-
+    
     tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const langId = this.dataset.lang;
-
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            const langId = this.getAttribute('data-lang');
+            
+            // Update tabs styling
             tabs.forEach(t => {
                 t.classList.remove('border-secondary-600', 'text-secondary-600');
                 t.classList.add('border-transparent', 'text-gray-500');
             });
-            this.classList.add('border-secondary-600', 'text-secondary-600');
+            
             this.classList.remove('border-transparent', 'text-gray-500');
-
+            this.classList.add('border-secondary-600', 'text-secondary-600');
+            
+            // Show/Hide content
+            const contents = document.querySelectorAll('.lang-content');
+            
             contents.forEach(c => {
-                if (c.dataset.lang === langId) {
+                const contentLang = c.getAttribute('data-lang');
+                if (contentLang == langId) {
                     c.classList.remove('hidden');
+                    c.style.display = 'block';
                 } else {
                     c.classList.add('hidden');
+                    c.style.display = 'none';
                 }
             });
         });

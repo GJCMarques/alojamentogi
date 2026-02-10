@@ -75,6 +75,14 @@ class Language
             return;
         }
 
+        // SPECIAL CASE: 404 Pages
+        // If we are on a 404 page (defined constant), we want to respect the user's
+        // session language instead of forcing Portuguese because of the missing URL prefix.
+        if (defined('IS_404') && Session::get(SESSION_LANG) === LANG_EN) {
+            $this->setLanguage(LANG_EN);
+            return;
+        }
+
         // Any path NOT starting with /en/ is Portuguese
         // This ensures Portuguese pages always show Portuguese content
         // regardless of session language
@@ -325,6 +333,10 @@ class Language
             $pathMap = [
                 '/' => '/en/',
                 '/alojamento' => '/en/accommodation',
+                // Shop sub-pages (must come before /loja)
+                '/loja/produto' => '/en/shop/product',
+                '/loja/carrinho' => '/en/shop/cart',
+                '/loja/checkout' => '/en/shop/checkout',
                 '/loja' => '/en/shop',
                 '/atividades' => '/en/activities',
                 '/contactos' => '/en/contact',
@@ -355,6 +367,10 @@ class Language
         if ($this->currentLang === LANG_EN && $toLang === LANG_PT) {
             $pathMap = [
                 '/en/accommodation' => '/alojamento',
+                // Shop sub-pages (must come before /en/shop)
+                '/en/shop/product' => '/loja/produto',
+                '/en/shop/cart' => '/loja/carrinho',
+                '/en/shop/checkout' => '/loja/checkout',
                 '/en/shop' => '/loja',
                 '/en/activities' => '/atividades',
                 '/en/contact' => '/contactos',

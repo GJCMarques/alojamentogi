@@ -326,11 +326,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
             Casa do Gi <?= $selectedAccommodationNumber ?>
         </h1>
 
-        <?php if (!empty($accTranslation['tagline'])): ?>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto font-light leading-relaxed mb-8 animate-on-scroll" data-animation="fade-up" data-delay="200">
-            <?= e($accTranslation['tagline']) ?>
-        </p>
-        <?php endif; ?>
+
 
         <!-- Location -->
         <div class="flex items-center justify-center gap-2 text-cream/80 animate-on-scroll" data-animation="fade-up" data-delay="300">

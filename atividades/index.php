@@ -612,17 +612,15 @@ footer {
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
         <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
-            <?= $lang->getCurrentLang() === 'pt' ? 'Descubra Mogadouro' : 'Discover Mogadouro' ?>
+            <?= content('activities_hero_tagline') ?>
         </span>
 
         <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
-            <?= $lang->getCurrentLang() === 'pt' ? 'O Que Fazer' : 'What to Do' ?>
+            <?= content('activities_hero_title') ?>
         </h1>
 
         <p class="text-lg md:text-xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="200">
-            <?= $lang->getCurrentLang() === 'pt'
-                ? 'De paisagens deslumbrantes a sabores únicos, o nordeste transmontano tem muito para oferecer.'
-                : 'From stunning landscapes to unique flavors, the northeast of Trás-os-Montes has much to offer.' ?>
+            <?= content('activities_hero_subtitle') ?>
         </p>
     </div>
 </section>

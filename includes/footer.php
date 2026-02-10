@@ -42,7 +42,7 @@ $quickLinks = $isEnglish ? [
 $siteName = setting('site_name', 'A Casa do Gi');
 $contactEmail = setting('contact_email', '');
 $contactPhone = setting('contact_phone', '');
-$contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
+$contactAddress = content('footer_address', '52 Avenida Nossa Senhora do Caminho, Mogadouro');
 $facebookUrl = setting('facebook_url', '');
 $instagramUrl = setting('instagram_url', '');
 ?>
@@ -57,9 +57,7 @@ $instagramUrl = setting('instagram_url', '');
                 <div class="lg:col-span-1">
                     <h3 class="font-cursive text-4xl text-cream mb-6">A Casa do Gi</h3>
                     <p class="text-cream-200 leading-relaxed mb-6 font-light">
-                        <?= $isEnglish
-                            ? 'Simplicity, warmth and love in Mogadouro, Portugal.'
-                            : 'Simplicidade, acolhimento e muito amor em Mogadouro, Portugal.' ?>
+                        <?= content('footer_description') ?>
                     </p>
                     <!-- Social Links -->
                     <?php if ($facebookUrl || $instagramUrl): ?>
@@ -89,7 +87,7 @@ $instagramUrl = setting('instagram_url', '');
                 <!-- Quick Links -->
                 <div>
                     <h4 class="font-serif text-xl font-bold text-cream mb-6 border-b border-accent/30 pb-2 inline-block">
-                        <?= $isEnglish ? 'Quick Links' : 'Links Rápidos' ?>
+                        <?= content('footer_quicklinks_title') ?>
                     </h4>
                     <ul class="space-y-4">
                         <?php foreach ($quickLinks as $link): ?>
@@ -106,7 +104,7 @@ $instagramUrl = setting('instagram_url', '');
                 <!-- Contact Info -->
                 <div>
                     <h4 class="font-serif text-xl font-bold text-cream mb-6 border-b border-accent/30 pb-2 inline-block">
-                        <?= $isEnglish ? 'Contact' : 'Contacto' ?>
+                        <?= content('footer_contact_title') ?>
                     </h4>
                     <ul class="space-y-4">
                         <?php if ($contactAddress): ?>
@@ -150,7 +148,7 @@ $instagramUrl = setting('instagram_url', '');
                 <!-- Book Now -->
                 <div>
                     <h4 class="font-serif text-xl font-bold text-cream mb-6 border-b border-accent/30 pb-2 inline-block">
-                        <?= $isEnglish ? 'Book Now' : 'Reserve Já' ?>
+                        <?= content('footer_book_title') ?>
                     </h4>
                     <div class="space-y-4">
                         <button onclick="openBookingModal('guestready')" type="button"
@@ -200,7 +198,7 @@ $instagramUrl = setting('instagram_url', '');
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
                     <p class="text-cream-300 text-sm font-light">
-                        &copy; <?= date('Y') ?> <?= e($siteName) ?>. <?= $isEnglish ? 'All rights reserved.' : 'Todos os direitos reservados.' ?>
+                        &copy; <?= date('Y') ?> <?= e($siteName) ?>. <?= content('footer_rights_text') ?>
                     </p>
                     <div class="flex items-center space-x-6 text-sm">
                         <a href="<?= $base ?>/politica-privacidade/" class="text-cream-300 hover:text-accent transition-colors">
@@ -238,7 +236,7 @@ $instagramUrl = setting('instagram_url', '');
                 <div class="grid md:grid-cols-2 gap-6">
                     <!-- Casa do Gi 1 -->
                     <div class="bg-white p-6 rounded-xl">
-                        <h4 class="font-serif text-lg font-bold text-primary mb-4 pb-3 border-b"><?= e($casa1['name'] ?? 'A Casa do Gi 1') ?></h4>
+                        <h4 class="font-serif text-lg font-bold text-primary mb-4 pb-3 border-b">A Casa do Gi 1</h4>
 
                         <div class="space-y-3">
                             <?php if (!empty($casa1['guestready_url'])): ?>
@@ -292,7 +290,7 @@ $instagramUrl = setting('instagram_url', '');
 
                     <!-- Casa do Gi 2 -->
                     <div class="bg-white p-6 rounded-xl">
-                        <h4 class="font-serif text-lg font-bold text-primary mb-4 pb-3 border-b"><?= e($casa2['name'] ?? 'A Casa do Gi 2') ?></h4>
+                        <h4 class="font-serif text-lg font-bold text-primary mb-4 pb-3 border-b">A Casa do Gi 2</h4>
 
                         <div class="space-y-3">
                             <?php if (!empty($casa2['guestready_url'])): ?>
@@ -611,17 +609,15 @@ $instagramUrl = setting('instagram_url', '');
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex-1">
                         <p class="text-cream-100 text-sm leading-relaxed">
-                            <?= $isEnglish
-                                ? 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'
-                                : 'Utilizamos cookies para melhorar a sua experiencia no nosso website. Ao continuar a navegar, concorda com a utilizacao de cookies. Saiba mais nos nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">politica de privacidade</a>.' ?>
+                            <?= content('cookie_banner_text') ?>
                         </p>
                     </div>
                     <div class="flex items-center gap-3">
                         <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
-                            <?= $isEnglish ? 'Details' : 'Ver Detalhes' ?>
+                            <?= content('cookie_banner_details') ?>
                         </button>
                         <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all duration-200 shadow-md hover:shadow-lg text-sm whitespace-nowrap">
-                            <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
+                            <?= content('cookie_banner_accept') ?>
                         </button>
                     </div>
                 </div>

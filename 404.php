@@ -3,20 +3,49 @@
  * A Casa do Gi - 404 Page Not Found
  */
 
+// Define flag for Language detection to know we shouldn't force default language
+define('IS_404', true);
+require_once __DIR__ . '/includes/init.php';
+
 // Set 404 HTTP response code
 http_response_code(404);
 
-require_once __DIR__ . '/includes/init.php';
-
 $lang = \Core\Language::getInstance();
+
+// FORCE ENGLISH if the URL contains /en/ segment
+// This fixes 404 pages not detecting language correctly because of base path issues
+$reqUri = $_SERVER['REQUEST_URI'] ?? '';
+if (strpos($reqUri, '/en/') !== false || substr($reqUri, -3) === '/en') {
+    $lang->setLanguage('en');
+}
+
 $isEnglish = $lang->isEnglish();
 $base = basePath();
 
+// Define translations hardcoded in file (No Database)
+$t = $isEnglish ? [
+    'title' => 'Page Not Found',
+    'description' => 'The page you are looking for does not exist or has been moved.',
+    '404_text' => '404',
+    'hero_title' => 'Page Not Found',
+    'hero_message' => 'The page you are looking for does not exist or has been moved. Please check the URL or navigate to one of the links below.',
+    'btn_back' => 'Go Back',
+    'btn_home' => 'Go Home',
+    'home_link' => $base . '/en/'
+] : [
+    'title' => 'Página Não Encontrada',
+    'description' => 'A página que procura não existe ou foi movida.',
+    '404_text' => '404',
+    'hero_title' => 'Página Não Encontrada',
+    'hero_message' => 'A página que procura não existe ou foi movida. Por favor, verifique o URL ou navegue para um dos links abaixo.',
+    'btn_back' => 'Voltar',
+    'btn_home' => 'Início',
+    'home_link' => $base . '/'
+];
+
 // Page meta
-$pageTitle = $isEnglish ? 'Page Not Found' : 'Página Não Encontrada';
-$pageDescription = $isEnglish
-    ? 'The page you are looking for does not exist or has been moved.'
-    : 'A página que procura não existe ou foi movida.';
+$pageTitle = $t['title'];
+$pageDescription = $t['description'];
 
 include INCLUDES_PATH . '/header.php';
 ?>
@@ -33,19 +62,17 @@ include INCLUDES_PATH . '/header.php';
         <!-- 404 Number -->
         <div class="animate-on-scroll" data-animation="zoom-in">
             <h1 class="font-serif text-[120px] sm:text-[180px] md:text-[220px] font-black text-white/20 leading-none select-none tracking-tighter mix-blend-overlay">
-                404
+                <?= $t['404_text'] ?>
             </h1>
         </div>
 
         <!-- Main Message -->
         <div class="relative z-20 space-y-6 animate-on-scroll" data-delay="200">
             <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide drop-shadow-lg">
-                <?= $isEnglish ? 'Page Not Found' : 'Página Não Encontrada' ?>
+                <?= $t['hero_title'] ?>
             </h2>
             <p class="text-gray-100 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-light drop-shadow-md">
-                <?= $isEnglish
-                    ? 'The page you are looking for does not exist or has been moved. Please check the URL or navigate to one of the links below.'
-                    : 'A página que procura não existe ou foi movida. Por favor, verifique o URL ou navegue para um dos links abaixo.' ?>
+                <?= $t['hero_message'] ?>
             </p>
         </div>
 
@@ -57,16 +84,16 @@ include INCLUDES_PATH . '/header.php';
                 <svg class="w-5 h-5 mr-3 relative z-10 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
-                <span class="relative z-10"><?= $isEnglish ? 'Go Back' : 'Voltar' ?></span>
+                <span class="relative z-10"><?= $t['btn_back'] ?></span>
             </button>
 
-            <a href="<?= $isEnglish ? $base . '/en/' : $base . '/' ?>"
+            <a href="<?= $t['home_link'] ?>"
                class="group relative inline-flex items-center px-8 py-4 bg-accent text-white font-semibold rounded-full shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                 <div class="absolute inset-0 w-full h-full bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                 <svg class="w-5 h-5 mr-3 relative z-10 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
-                <span class="relative z-10"><?= $isEnglish ? 'Go Home' : 'Início' ?></span>
+                <span class="relative z-10"><?= $t['btn_home'] ?></span>
             </a>
         </div>
     </div>

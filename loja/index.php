@@ -25,36 +25,15 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 // Build hero URL (file_path from media already has leading slash)
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Get filter parameters
-$categorySlug = isset($_GET['categoria']) ? sanitize($_GET['categoria']) : null;
-$search = isset($_GET['pesquisa']) ? sanitize($_GET['pesquisa']) : null;
-$page = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
-$perPage = 12; // Display 12 products per page for 4-column grid alignment
-$offset = ($page - 1) * $perPage;
-
-// Get current category if filtered
-$currentCategory = null;
-if ($categorySlug) {
-    $currentCategory = ProductCategory::findBySlug($categorySlug);
-}
-
-// Get products
-if ($search) {
-    $products = Product::search($search, 50);
-    $totalProducts = count($products);
-} else {
-    $categoryId = $currentCategory ? $currentCategory->id : null;
-    $products = Product::getAllActive($categoryId, $perPage, $offset);
-    $totalProducts = Product::countActive($categoryId);
-}
-
-$totalPages = ceil($totalProducts / $perPage);
+// Get ALL products (Client-side filtering)
+$products = Product::getAllActive();
+$totalProducts = count($products);
 
 // Get all categories for filter
 $categories = ProductCategory::getAllActive();
 
 // Page configuration
-$pageTitle = $currentCategory ? $currentCategory->name . ' - Loja' : 'Loja';
+$pageTitle = 'Loja';
 $pageDescription = 'Descubra os melhores produtos regionais de Trás-os-Montes. Azeite, mel, enchidos, amêndoas e muito mais da Casa do Gi.';
 
 include INCLUDES_PATH . '/header.php';
@@ -76,15 +55,11 @@ include INCLUDES_PATH . '/header.php';
         </span>
         
         <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
-            <?= $currentCategory ? e($currentCategory->name) : 'A Nossa Loja' ?>
+            A Nossa Loja
         </h1>
 
         <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="200">
-             <?php if ($currentCategory && $currentCategory->description): ?>
-                <?= e($currentCategory->description) ?>
-            <?php else: ?>
-                Sabores autênticos de Trás-os-Montes, selecionados com carinho para a sua mesa.
-            <?php endif; ?>
+            <?= nl2br(e(content('shop_intro'))) ?>
         </p>
     </div>
 </section>
@@ -111,18 +86,22 @@ include INCLUDES_PATH . '/header.php';
                     <!-- Search -->
                     <div class="mb-10">
                         <span class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-4 block">Pesquisa</span>
-                        <form action="" method="get" class="relative group">
+                        <div class="relative group">
                             <input type="text"
-                                   name="pesquisa"
-                                   value="<?= e($search ?? '') ?>"
+                                   id="shop-search"
                                    placeholder="Procurar produtos..."
                                    class="w-full pl-5 pr-12 py-4 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none text-sm placeholder:text-charcoal/40 font-medium text-primary">
-                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-charcoal/40 hover:text-secondary hover:bg-white rounded-lg transition-all">
+                            <div class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-charcoal/40">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                 </svg>
+                            </div>
+                            <button id="clear-search" class="absolute right-12 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-charcoal/30 hover:text-charcoal hover:bg-cream-100 rounded-lg hidden transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
                             </button>
-                        </form>
+                        </div>
                     </div>
 
                     <!-- Categories -->
@@ -130,37 +109,37 @@ include INCLUDES_PATH . '/header.php';
                         <span class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-4 block">Categorias</span>
                         <ul class="space-y-2">
                             <li>
-                                <a href="<?= $base ?>/loja/"
-                                   class="flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group <?= !$currentCategory ? 'bg-primary text-white shadow-md' : 'text-charcoal hover:bg-cream-50 hover:pl-4' ?>">
+                                <button type="button" 
+                                   class="shop-filter w-full flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group active bg-primary text-white shadow-md"
+                                   data-filter="all">
                                     <span class="font-medium">Todas as Categorias</span>
-                                    <span class="text-xs py-0.5 px-2 rounded-md <?= !$currentCategory ? 'bg-white/20 text-white' : 'bg-cream-100 text-charcoal/60 group-hover:bg-cream-200' ?> transition-colors">
+                                    <span class="text-xs py-0.5 px-2 rounded-md bg-white/20 text-white transition-colors">
                                         <?= Product::countActive() ?>
                                     </span>
-                                </a>
+                                </button>
                             </li>
                             <?php foreach ($categories as $category): ?>
                             <li>
-                                <a href="<?= $base ?>/loja/?categoria=<?= e($category->slug) ?>"
-                                    class="flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group <?= ($currentCategory && $currentCategory->id === $category->id) ? 'bg-primary text-white shadow-md' : 'text-charcoal hover:bg-cream-50 hover:pl-4' ?>">
+                                <button type="button"
+                                    class="shop-filter w-full flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group text-charcoal hover:bg-cream-50 hover:pl-4 border border-transparent hover:border-cream-100"
+                                    data-filter="<?= e($category->slug) ?>">
                                     <span class="font-medium"><?= e($category->name) ?></span>
-                                    <span class="text-xs py-0.5 px-2 rounded-md <?= ($currentCategory && $currentCategory->id === $category->id) ? 'bg-white/20 text-white' : 'bg-cream-100 text-charcoal/60 group-hover:bg-cream-200' ?> transition-colors">
+                                    <span class="text-xs py-0.5 px-2 rounded-md bg-cream-100 text-charcoal/60 group-hover:bg-cream-200 transition-colors">
                                         <?= $category->getProductCount() ?>
                                     </span>
-                                </a>
+                                </button>
                             </li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
 
-                    <?php if ($search || $currentCategory): ?>
-                    <!-- Clear Filters -->
-                    <div class="mt-8 pt-6 border-t border-cream-100 text-center">
-                        <a href="<?= $base ?>/loja/" class="group inline-flex items-center gap-2 text-xs uppercase tracking-widest text-charcoal/50 hover:text-secondary font-bold transition-colors">
+                    <!-- Clear Filters Message (Hidden by default) -->
+                    <div id="active-filters-msg" class="hidden mt-8 pt-6 border-t border-cream-100 text-center">
+                        <button onclick="resetFilters()" class="group inline-flex items-center gap-2 text-xs uppercase tracking-widest text-charcoal/50 hover:text-secondary font-bold transition-colors">
                             <span class="group-hover:-translate-x-1 transition-transform duration-300">←</span>
                             Limpar filtros
-                        </a>
+                        </button>
                     </div>
-                    <?php endif; ?>
                     
                     <!-- Need Help? -->
                     <div class="mt-12 p-6 bg-cream-50 rounded-2xl border border-cream-100 text-center">
@@ -179,41 +158,21 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Results Header -->
                 <div class="mb-8 flex items-center justify-between animate-on-scroll" data-animation="fade-up">
                     <p class="text-charcoal/60 text-sm font-light">
-                        <?php if ($search): ?>
-                            Encontrados <strong class="text-primary font-medium"><?= $totalProducts ?></strong> resultados para "<?= e($search) ?>"
-                        <?php else: ?>
-                            A mostrar <strong class="text-primary font-medium"><?= count($products) ?></strong> de <?= $totalProducts ?> produtos
-                        <?php endif; ?>
+                        A mostrar <strong id="visible-count" class="text-primary font-medium"><?= count($products) ?></strong> de <?= $totalProducts ?> produtos
                     </p>
                 </div>
 
-                <?php if (empty($products)): ?>
-                <!-- No Products State -->
-                <div class="bg-white rounded-3xl shadow-sm p-16 text-center border border-cream-100 animate-on-scroll" data-animation="fade-up">
-                    <div class="w-20 h-20 bg-cream-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-10 h-10 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-serif text-2xl text-primary mb-3">Nenhum produto encontrado</h3>
-                    <p class="text-charcoal/60 mb-8 max-w-md mx-auto font-light">
-                        <?php if ($search): ?>
-                            Não conseguimos encontrar o que procura. Tente usar termos diferentes.
-                        <?php else: ?>
-                            Esta categoria ainda não tem produtos disponíveis.
-                        <?php endif; ?>
-                    </p>
-                    <a href="<?= $base ?>/loja/" class="inline-flex items-center px-8 py-3 bg-primary text-white font-medium rounded-full hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
-                        Ver todos os produtos
-                    </a>
-                </div>
-
-                <?php else: ?>
                 <!-- Products Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <?php $pidx = 0; foreach ($products as $product): ?>
-                    <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 border border-cream-100 animate-on-scroll" data-animation="fade-up" data-delay="<?= min($pidx * 100, 300) ?>">
-                         <!-- Image Container -->
+                    <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 border border-cream-100 animate-on-scroll" 
+                             data-animation="fade-up" 
+                             data-delay="<?= min($pidx * 50, 300) ?>"
+                             data-category="<?= e($product->category_slug ?? '') ?>"
+                             data-title="<?= strtolower(e($product->name)) ?>"
+                             data-description="<?= strtolower(e($product->short_description ?? '')) ?>">
+                         
+                        <!-- Image Container -->
                         <a href="<?= $base ?>/loja/produto/?slug=<?= e($product->slug) ?>" class="block aspect-[4/3] relative overflow-hidden bg-cream-50">
                             <?php if ($product->getPrimaryImage()): ?>
                             <img src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
@@ -294,49 +253,22 @@ include INCLUDES_PATH . '/header.php';
                     <?php $pidx++; endforeach; ?>
                 </div>
 
-                <!-- Pagination -->
-                <?php if ($totalPages > 1): ?>
-                <nav class="mt-16 flex justify-center animate-on-scroll" data-animation="fade-up">
-                    <ul class="flex items-center gap-3 bg-white p-2 rounded-full shadow-sm border border-cream-100">
-                        <!-- Previous -->
-                        <li>
-                            <a href="<?= $page > 1 ? '?' . http_build_query(array_merge($_GET, ['pagina' => $page - 1])) : '#' ?>"
-                               class="w-10 h-10 flex items-center justify-center rounded-full transition-all <?= $page > 1 ? 'text-charcoal hover:bg-cream-100' : 'text-charcoal/30 cursor-not-allowed' ?>">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                            </a>
-                        </li>
+                <!-- No Results Message (Hidden by default) -->
+                <div id="no-results" class="hidden bg-white rounded-3xl shadow-sm p-16 text-center border border-cream-100 animate-on-scroll">
+                    <div class="w-20 h-20 bg-cream-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-primary mb-3">Nenhum produto encontrado</h3>
+                    <p class="text-charcoal/60 mb-8 max-w-md mx-auto font-light">
+                        Não encontrámos produtos com esses critérios de pesquisa.
+                    </p>
+                    <button onclick="resetFilters()" class="inline-flex items-center px-8 py-3 bg-primary text-white font-medium rounded-full hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                        Ver todos os produtos
+                    </button>
+                </div>
 
-                        <!-- Page Numbers -->
-                        <?php
-                        $start = max(1, $page - 1);
-                        $end = min($totalPages, $page + 1);
-                        if ($start > 1) { echo '<li><a class="w-10 h-10 flex items-center justify-center rounded-full text-sm text-charcoal hover:bg-cream-100 transition-all" href="?' . http_build_query(array_merge($_GET, ['pagina' => 1])) . '">1</a></li>'; }
-                        if ($start > 2) { echo '<li><span class="text-charcoal/40 px-1">...</span></li>'; }
-                        
-                        for ($i = $start; $i <= $end; $i++): ?>
-                        <li>
-                            <a href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>"
-                               class="w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-all <?= $i === $page ? 'bg-secondary text-white shadow-md' : 'text-charcoal hover:bg-cream-100' ?>">
-                                <?= $i ?>
-                            </a>
-                        </li>
-                        <?php endfor;
-
-                        if ($end < $totalPages - 1) { echo '<li><span class="text-charcoal/40 px-1">...</span></li>'; }
-                        if ($end < $totalPages) { echo '<li><a class="w-10 h-10 flex items-center justify-center rounded-full text-sm text-charcoal hover:bg-cream-100 transition-all" href="?' . http_build_query(array_merge($_GET, ['pagina' => $totalPages])) . '">' . $totalPages . '</a></li>'; }
-                        ?>
-
-                        <!-- Next -->
-                        <li>
-                            <a href="<?= $page < $totalPages ? '?' . http_build_query(array_merge($_GET, ['pagina' => $page + 1])) : '#' ?>"
-                               class="w-10 h-10 flex items-center justify-center rounded-full transition-all <?= $page < $totalPages ? 'text-charcoal hover:bg-cream-100' : 'text-charcoal/30 cursor-not-allowed' ?>">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <?php endif; ?>
-                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -381,7 +313,7 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- Cart Script -->
+<!-- Shop Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile filter toggle
@@ -393,6 +325,138 @@ document.addEventListener('DOMContentLoaded', function() {
             filterSidebar.classList.toggle('hidden');
         });
     }
+    
+    // Filtering Logic
+    const filterButtons = document.querySelectorAll('.shop-filter');
+    const productCards = document.querySelectorAll('.product-card');
+    const searchInput = document.getElementById('shop-search');
+    const clearSearch = document.getElementById('clear-search');
+    const visibleCount = document.getElementById('visible-count');
+    const noResults = document.getElementById('no-results');
+    const grid = document.getElementById('products-grid');
+    const activeFiltersMsg = document.getElementById('active-filters-msg');
+
+    let currentFilter = 'all';
+    let searchTerm = '';
+
+    function filterProducts() {
+        let count = 0;
+        
+        productCards.forEach(card => {
+            const category = card.dataset.category;
+            const title = card.dataset.title || '';
+            const description = card.dataset.description || '';
+            
+            const matchesFilter = currentFilter === 'all' || category === currentFilter;
+            const matchesSearch = !searchTerm || 
+                                title.includes(searchTerm) || 
+                                description.includes(searchTerm);
+                                
+            if (matchesFilter && matchesSearch) {
+                card.style.display = 'block';
+                // Trigger reflow/animation if needed, or just let CSS handle it
+                card.style.animation = 'fadeInUp 0.4s ease forwards';
+                count++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        visibleCount.textContent = count;
+        
+        if (count === 0) {
+            noResults.classList.remove('hidden');
+            grid.classList.add('hidden');
+        } else {
+            noResults.classList.add('hidden');
+            grid.classList.remove('hidden');
+        }
+        
+        // Show "Clear Filters" if filtering is active
+        if (currentFilter !== 'all' || searchTerm !== '') {
+            activeFiltersMsg.classList.remove('hidden');
+        } else {
+            activeFiltersMsg.classList.add('hidden');
+        }
+    }
+    
+    // Filter Buttons Click
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentFilter = this.dataset.filter;
+            
+            // Update active state
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-md');
+                btn.classList.add('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
+                
+                // Reset pills styling
+                const pill = btn.querySelector('span:last-child');
+                pill.classList.remove('bg-white/20', 'text-white');
+                pill.classList.add('bg-cream-100', 'text-charcoal/60');
+            });
+            
+            // Activate current
+            this.classList.remove('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
+            this.classList.add('active', 'bg-primary', 'text-white', 'shadow-md');
+            
+            const pill = this.querySelector('span:last-child');
+            pill.classList.remove('bg-cream-100', 'text-charcoal/60');
+            pill.classList.add('bg-white/20', 'text-white');
+            
+            filterProducts();
+        });
+    });
+    
+    // Search Input
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            searchTerm = this.value.toLowerCase().trim();
+            if (clearSearch) {
+                clearSearch.classList.toggle('hidden', !searchTerm);
+            }
+            filterProducts();
+        });
+    }
+    
+    if (clearSearch) {
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            searchTerm = '';
+            this.classList.add('hidden');
+            filterProducts();
+        });
+    }
+    
+    // Global Reset
+    window.resetFilters = function() {
+        currentFilter = 'all';
+        searchTerm = '';
+        if (searchInput) searchInput.value = '';
+        if (clearSearch) clearSearch.classList.add('hidden');
+        
+        // Reset buttons visual state
+        filterButtons.forEach(btn => {
+            btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-md');
+            btn.classList.add('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
+            
+            const pill = btn.querySelector('span:last-child');
+            pill.classList.remove('bg-white/20', 'text-white');
+            pill.classList.add('bg-cream-100', 'text-charcoal/60');
+        });
+        
+        // Activate "All" (assuming first button)
+        if (filterButtons.length > 0) {
+            const first = filterButtons[0];
+            first.classList.remove('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
+            first.classList.add('active', 'bg-primary', 'text-white', 'shadow-md');
+            const pill = first.querySelector('span:last-child');
+            pill.classList.remove('bg-cream-100', 'text-charcoal/60');
+            pill.classList.add('bg-white/20', 'text-white');
+        }
+        
+        filterProducts();
+    };
 
     // Add to cart functionality
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
@@ -460,5 +524,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>

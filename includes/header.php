@@ -482,7 +482,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
                     <!-- Cart Icon (if shop enabled) -->
                     <?php if (isShopEnabled()): ?>
-                    <a href="<?= $lang->url('loja/carrinho') ?>"
+                    <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
                        class="relative p-2 text-cream hover:text-accent transition-colors ml-4"
                        title="<?= $isEnglish ? 'Shopping Cart' : 'Carrinho' ?>">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -557,7 +557,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     <!-- Cart in Mobile Menu -->
                     <?php if (isShopEnabled()): ?>
                     <div class="mt-6 pt-6 border-t border-accent/20">
-                        <a href="<?= $lang->url('loja/carrinho') ?>"
+                        <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
                            class="mobile-nav-link flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>

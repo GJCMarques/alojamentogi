@@ -34,10 +34,15 @@ class ProductCategory extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT c.*, ct.name, ct.description
+        $sql = "SELECT c.*, 
+                       COALESCE(ct.name, ct_def.name) as name, 
+                       COALESCE(ct.description, ct_def.description) as description
                 FROM product_categories c
                 LEFT JOIN product_category_translations ct
                     ON c.id = ct.category_id AND ct.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_category_translations ct_def 
+                    ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 WHERE c.id = ?";
 
         $row = $db->fetch($sql, [$langId, $id]);
@@ -60,12 +65,17 @@ class ProductCategory extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT c.*, ct.name, ct.description
+        $sql = "SELECT c.*, 
+                       COALESCE(ct.name, ct_def.name) as name, 
+                       COALESCE(ct.description, ct_def.description) as description
                 FROM product_categories c
                 LEFT JOIN product_category_translations ct
                     ON c.id = ct.category_id AND ct.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_category_translations ct_def 
+                    ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 WHERE c.is_active = 1
-                ORDER BY c.sort_order ASC, ct.name ASC";
+                ORDER BY c.sort_order ASC, name ASC";
 
         $rows = $db->fetchAll($sql, [$langId]);
 
@@ -88,10 +98,15 @@ class ProductCategory extends Model
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT c.*, ct.name, ct.description
+        $sql = "SELECT c.*, 
+                       COALESCE(ct.name, ct_def.name) as name, 
+                       COALESCE(ct.description, ct_def.description) as description
                 FROM product_categories c
                 LEFT JOIN product_category_translations ct
                     ON c.id = ct.category_id AND ct.language_id = ?
+                LEFT JOIN languages l_def ON l_def.is_default = 1
+                LEFT JOIN product_category_translations ct_def 
+                    ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 WHERE c.slug = ? AND c.is_active = 1";
 
         $row = $db->fetch($sql, [$langId, $slug]);
