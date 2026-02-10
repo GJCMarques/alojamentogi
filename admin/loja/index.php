@@ -105,7 +105,7 @@ include dirname(__DIR__) . '/includes/header.php';
 <div class="max-w-7xl mx-auto">
     <!-- Page Header -->
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-charcoal-800 mb-2">Gestão da Loja</h1>
+        <h1 class="text-2xl font-bold text-primary mb-2">Gestão da Loja</h1>
         <p class="text-charcoal-600">Configure o modo de funcionamento da loja e visualize estatísticas.</p>
     </div>
 

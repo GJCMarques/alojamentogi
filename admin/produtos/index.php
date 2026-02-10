@@ -99,7 +99,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Produtos</h1>
+        <h1 class="text-2xl font-bold text-primary">Produtos</h1>
         <p class="text-gray-600"><?= $total ?> produto(s) encontrado(s)</p>
     </div>
     <a href="./novo/" class="inline-flex items-center px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
@@ -252,11 +252,10 @@ include dirname(__DIR__) . '/includes/header.php';
                        title="<?= $product['is_active'] ? 'Desativar' : 'Ativar' ?>">
                         <?= $product['is_active'] ? 'Desativar' : 'Ativar' ?>
                     </a>
-                    <a href="<?= basePath() ?>/admin/produtos/?delete=<?= $product['id'] ?>&token=<?= \Core\CSRF::getToken() ?>"
-                       class="text-red-600 hover:text-red-900"
-                       onclick="return confirm('Tem a certeza que deseja eliminar este produto?')">
+                    <button onclick="openDeleteModal(<?= $product['id'] ?>, '<?= e($product['name']) ?>')"
+                            class="text-red-600 hover:text-red-900">
                         Eliminar
-                    </a>
+                    </button>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -287,5 +286,60 @@ include dirname(__DIR__) . '/includes/header.php';
     <?php endif; ?>
     <?php endif; ?>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="closeDeleteModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md m-4 transform transition-all scale-100">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Eliminar Produto</h3>
+            <p class="text-gray-600 mb-6">
+                Tem a certeza que deseja eliminar "<span id="deleteItemName" class="font-semibold text-gray-900"></span>"?
+                Esta ação não pode ser revertida.
+            </p>
+            <div class="flex gap-3 justify-center">
+                <button type="button"
+                        onclick="closeDeleteModal()"
+                        class="px-6 py-2.5 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium">
+                    Cancelar
+                </button>
+                <a href="#"
+                   id="confirmDelete"
+                   class="px-6 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium shadow-sm">
+                    Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(id, name) {
+    const modal = document.getElementById('deleteModal');
+    const nameSpan = document.getElementById('deleteItemName');
+    const confirmBtn = document.getElementById('confirmDelete');
+
+    nameSpan.textContent = name;
+    confirmBtn.href = '<?= basePath() ?>/admin/produtos/?delete=' + id + '&token=<?= \Core\CSRF::getToken() ?>';
+    modal.classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('hidden');
+}
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !document.getElementById('deleteModal').classList.contains('hidden')) {
+        closeDeleteModal();
+    }
+});
+</script>
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>

@@ -201,7 +201,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-granite-800">Utilizadores</h1>
+        <h1 class="text-2xl font-bold text-primary">Utilizadores</h1>
         <p class="text-granite-500 text-sm">Gerir utilizadores do back-office</p>
     </div>
     <div class="flex items-center gap-2 text-xs text-granite-400">

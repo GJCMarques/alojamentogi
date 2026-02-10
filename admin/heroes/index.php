@@ -155,7 +155,7 @@ include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Gestão de Heroes</h1>
+    <h1 class="text-2xl font-bold text-primary">Gestão de Heroes</h1>
     <p class="text-gray-600">Configure as imagens de hero para cada página do site</p>
 </div>
 

@@ -168,14 +168,14 @@ if ($currentGroup === 'payment') {
     $allSettings['ifthenpay_callback_url'] = $protocol . '://' . $host . basePath() . '/api/payment-callback.php';
 }
 
-$pageTitle = 'Configuracoes';
+$pageTitle = 'Configurações';
 $currentPage = 'configuracoes';
 include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-granite-800">Configurações</h1>
+        <h1 class="text-2xl font-bold text-primary">Configurações</h1>
         <p class="text-granite-500 text-sm">Configurações gerais do website</p>
     </div>
 </div>

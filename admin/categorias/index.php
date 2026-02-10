@@ -235,7 +235,7 @@ include dirname(__DIR__) . '/includes/header.php';
 <!-- Type Switcher -->
 <div class="mb-6">
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-800">
+        <h1 class="text-2xl font-bold text-primary">
             <?= $currentType === 'activity' ? 'Categorias de Atividades' : 'Categorias de Produtos' ?>
         </h1>
 

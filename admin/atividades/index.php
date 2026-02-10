@@ -179,7 +179,7 @@ include dirname(__DIR__) . '/includes/header.php';
     <div class="mb-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-                <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">Gestão de Atividades</h1>
+                <h1 class="text-2xl lg:text-3xl font-bold text-primary">Gestão de Atividades</h1>
                 <p class="text-gray-600 mt-1">Gerencie as atividades turísticas e links externos de Mogadouro</p>
             </div>
 

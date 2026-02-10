@@ -132,7 +132,7 @@ include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-granite-800">O Meu Perfil</h1>
+    <h1 class="text-2xl font-bold text-primary">O Meu Perfil</h1>
     <p class="text-granite-500 text-sm">Gerir informações da conta e segurança</p>
 </div>
 
@@ -143,7 +143,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <?= strtoupper(substr($admin->full_name ?: $admin->username, 0, 1)) ?>
         </div>
         <div class="flex-1">
-            <h2 class="text-lg font-semibold text-granite-800"><?= e($admin->full_name ?: $admin->username) ?></h2>
+            <h2 class="text-lg font-semibold text-primary"><?= e($admin->full_name ?: $admin->username) ?></h2>
             <p class="text-sm text-granite-500"><?= e($admin->email) ?></p>
         </div>
         <div class="text-right text-sm space-y-1">
@@ -163,7 +163,7 @@ include dirname(__DIR__) . '/includes/header.php';
 <div class="grid lg:grid-cols-2 gap-8">
     <!-- Profile Info -->
     <div class="bg-white rounded-lg shadow-sm p-6 border border-granite-200">
-        <h2 class="text-lg font-semibold text-granite-800 mb-1">Informações Pessoais</h2>
+        <h2 class="text-lg font-semibold text-primary mb-1">Informações Pessoais</h2>
         <p class="text-xs text-granite-400 mb-6">Atualize o seu nome, email e nome de utilizador</p>
 
         <form action="" method="post">
@@ -214,7 +214,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
     <!-- Password Change -->
     <div class="bg-white rounded-lg shadow-sm p-6 border border-granite-200">
-        <h2 class="text-lg font-semibold text-granite-800 mb-1">Alterar Password</h2>
+        <h2 class="text-lg font-semibold text-primary mb-1">Alterar Password</h2>
         <p class="text-xs text-granite-400 mb-6">Utilize uma password forte e única</p>
 
         <form action="" method="post">

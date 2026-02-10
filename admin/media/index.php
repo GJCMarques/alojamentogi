@@ -199,7 +199,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Biblioteca de Media</h1>
+        <h1 class="text-2xl font-bold text-primary">Biblioteca de Media</h1>
         <p class="text-gray-600"><?= $total ?> ficheiro(s)</p>
     </div>
     <button onclick="document.getElementById('uploadModal').classList.remove('hidden')"

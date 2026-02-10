@@ -118,7 +118,7 @@ include dirname(__DIR__) . '/includes/header.php';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Pedidos Manuais</h1>
+            <h1 class="text-3xl font-bold text-primary">Pedidos Manuais</h1>
             <p class="mt-2 text-sm text-gray-600">Gerir pedidos recebidos quando a loja está em modo manual</p>
         </div>
 
@@ -367,29 +367,31 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </div>
 
+
 <!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-lg bg-white">
-        <div class="mt-3">
-            <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
-                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+<div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="closeDeleteModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md m-4 transform transition-all scale-100">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 text-center mt-4">Eliminar Pedido</h3>
-            <p class="text-sm text-gray-500 text-center mt-2">
-                Tem a certeza que deseja eliminar o pedido de <strong id="deleteCustomerName"></strong>?
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Eliminar Pedido</h3>
+            <p class="text-gray-600 mb-6">
+                Tem a certeza que deseja eliminar o pedido de <strong id="deleteCustomerName" class="text-gray-900"></strong>?
                 Esta ação não pode ser revertida.
             </p>
-            <div class="flex gap-3 mt-6">
+            <div class="flex gap-3 justify-center">
                 <button type="button"
-                        id="cancelDelete"
-                        class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                        onclick="closeDeleteModal()"
+                        class="px-6 py-2.5 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium">
                     Cancelar
                 </button>
                 <a href="#"
                    id="confirmDelete"
-                   class="flex-1 px-4 py-2 bg-red-600 text-white text-center rounded-lg hover:bg-red-700 transition-colors">
+                   class="px-6 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium shadow-sm">
                     Eliminar
                 </a>
             </div>
@@ -398,17 +400,24 @@ include dirname(__DIR__) . '/includes/header.php';
 </div>
 
 <script>
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('hidden');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('deleteModal');
     const confirmBtn = document.getElementById('confirmDelete');
-    const cancelBtn = document.getElementById('cancelDelete');
     const customerNameSpan = document.getElementById('deleteCustomerName');
 
     // Event delegation for delete buttons
     document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-order-btn')) {
-            const orderId = e.target.dataset.orderId;
-            const customerName = e.target.dataset.customerName;
+        // Find closest button with class delete-order-btn
+        const btn = e.target.closest('.delete-order-btn');
+        if (btn) {
+            e.preventDefault();
+            const orderId = btn.dataset.orderId;
+            const customerName = btn.dataset.customerName;
             const deleteUrl = '<?php echo e($base); ?>/admin/pedidos-manuais/?delete=' + orderId + '&token=<?php echo CSRF::getToken(); ?>';
 
             customerNameSpan.textContent = customerName;
@@ -417,22 +426,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Cancel delete
-    cancelBtn.addEventListener('click', function() {
-        modal.classList.add('hidden');
-    });
-
-    // Close modal on background click
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-        }
-    });
-
     // Close modal on ESC key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-            modal.classList.add('hidden');
+            closeDeleteModal();
         }
     });
 });

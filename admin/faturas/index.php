@@ -73,7 +73,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-charcoal-800">Gestão de Faturas</h1>
+        <h1 class="text-2xl font-bold text-primary">Gestão de Faturas</h1>
         <p class="text-charcoal-600"><?= $totalInvoices ?> fatura(s)</p>
     </div>
 </div>
