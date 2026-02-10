@@ -119,7 +119,7 @@ include dirname(__DIR__) . '/includes/header.php';
                    name="search"
                    id="search"
                    value="<?= e($search) ?>"
-                   placeholder="Nome ou SKU..."
+                   placeholder="Nome..."
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
         </div>
         <div class="w-48">

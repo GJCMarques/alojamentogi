@@ -154,7 +154,12 @@ $houseRules = $db->fetchAll(
 );
 
 // Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity']) && !isset($_POST['edit_amenity'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && !isset($_POST['add_amenity']) && !isset($_POST['edit_amenity'])
+    && !isset($_POST['add_bedroom']) && !isset($_POST['edit_bedroom'])
+    && !isset($_POST['add_bathroom']) && !isset($_POST['edit_bathroom'])
+    && !isset($_POST['add_rule']) && !isset($_POST['edit_rule'])
+) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         // Update accommodation basic info
         $db->update('accommodation', [
@@ -164,9 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity']) && !i
             'area_sqm' => (float)($_POST['area_sqm'] ?? 0),
             'rating' => !empty($_POST['rating']) ? (float)$_POST['rating'] : null,
             'reviews_count' => (int)($_POST['reviews_count'] ?? 0),
-            'city' => sanitize($_POST['city'] ?? 'Mogadouro'),
-            'region' => sanitize($_POST['region'] ?? 'Trás-os-Montes'),
-            'country' => sanitize($_POST['country'] ?? 'Portugal'),
+            'city' => trim($_POST['city'] ?? 'Mogadouro'),
+            'region' => trim($_POST['region'] ?? 'Trás-os-Montes'),
+            'country' => trim($_POST['country'] ?? 'Portugal'),
             'host_type' => $_POST['host_type'] ?? 'standard',
             'checkin_type' => $_POST['checkin_type'] ?? 'self_checkin',
             'floor_number' => (int)($_POST['floor_number'] ?? 1),
@@ -176,28 +181,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity']) && !i
             'instant_booking' => isset($_POST['instant_booking']) ? 1 : 0,
             'check_in_time' => $_POST['check_in_time'] ?? '16:00:00',
             'check_out_time' => $_POST['check_out_time'] ?? '11:00:00',
-            'license_number' => sanitize($_POST['license_number'] ?? ''),
+            'license_number' => trim($_POST['license_number'] ?? ''),
             'latitude' => !empty($_POST['latitude']) ? (float)$_POST['latitude'] : null,
             'longitude' => !empty($_POST['longitude']) ? (float)$_POST['longitude'] : null,
-            'guestready_url' => sanitize($_POST['guestready_url'] ?? ''),
-            'booking_url' => sanitize($_POST['booking_url'] ?? ''),
-            'airbnb_url' => sanitize($_POST['airbnb_url'] ?? ''),
+            'guestready_url' => trim($_POST['guestready_url'] ?? ''),
+            'booking_url' => trim($_POST['booking_url'] ?? ''),
+            'airbnb_url' => trim($_POST['airbnb_url'] ?? ''),
             'is_active' => isset($_POST['is_active']) ? 1 : 0
         ], 'id = ?', [$accommodation['id']]);
 
         // Update translations
         foreach ($languages as $lang) {
             $db->update('accommodation_translations', [
-                'name' => sanitize($_POST['name_' . $lang['id']] ?? ''),
-                'tagline' => sanitize($_POST['tagline_' . $lang['id']] ?? ''),
-                'description' => $_POST['description_' . $lang['id']] ?? '',
-                'location_description' => $_POST['location_description_' . $lang['id']] ?? '',
-                'refund_policy' => $_POST['refund_policy_' . $lang['id']] ?? '',
-                'checkin_description' => sanitize($_POST['checkin_description_' . $lang['id']] ?? ''),
-                'host_description' => $_POST['host_description_' . $lang['id']] ?? '',
-                'cancellation_policy' => $_POST['cancellation_policy_' . $lang['id']] ?? '',
-                'activity_section_title' => sanitize($_POST['activity_section_title_' . $lang['id']] ?? ''),
-                'activity_section_description' => $_POST['activity_section_description_' . $lang['id']] ?? ''
+                'name' => trim($_POST['name_' . $lang['id']] ?? ''),
+                'tagline' => trim($_POST['tagline_' . $lang['id']] ?? ''),
+                'description' => trim($_POST['description_' . $lang['id']] ?? ''),
+                'location_description' => trim($_POST['location_description_' . $lang['id']] ?? ''),
+                'refund_policy' => trim($_POST['refund_policy_' . $lang['id']] ?? ''),
+                'checkin_description' => trim($_POST['checkin_description_' . $lang['id']] ?? ''),
+                'host_description' => trim($_POST['host_description_' . $lang['id']] ?? ''),
+                'cancellation_policy' => trim($_POST['cancellation_policy_' . $lang['id']] ?? ''),
+                'activity_section_title' => trim($_POST['activity_section_title_' . $lang['id']] ?? ''),
+                'activity_section_description' => trim($_POST['activity_section_description_' . $lang['id']] ?? '')
             ], 'accommodation_id = ? AND language_id = ?', [$accommodation['id'], $lang['id']]);
         }
 
@@ -313,14 +318,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity']) && !i
                 $altEn = $_POST['gallery_alt_en'][$id] ?? '';
 
                 $db->update('media', [
-                    'alt_text_pt' => sanitize($altPt),
-                    'alt_text_en' => sanitize($altEn)
+                    'alt_text_pt' => trim($altPt),
+                    'alt_text_en' => trim($altEn)
                 ], 'id = ?', [$id]);
             }
         }
 
         Session::flash('success', 'Alojamento atualizado com sucesso.');
-        redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber);
+        $activeTab = $_POST['active_tab'] ?? 'info';
+        redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#' . $activeTab);
     }
 }
 
@@ -345,9 +351,9 @@ if (isset($_GET['delete_image']) && isset($_GET['token'])) {
 // Handle amenity add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_amenity'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
-        $icon = sanitize($_POST['amenity_icon'] ?? '');
-        $namePt = sanitize($_POST['amenity_name_pt'] ?? '');
-        $nameEn = sanitize($_POST['amenity_name_en'] ?? '');
+        $icon = trim($_POST['amenity_icon'] ?? '');
+        $namePt = trim($_POST['amenity_name_pt'] ?? '');
+        $nameEn = trim($_POST['amenity_name_en'] ?? '');
         $category = $_POST['amenity_category'] ?? 'general';
 
         if ($namePt || $nameEn) {
@@ -381,9 +387,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_amenity'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_amenity'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $amenityId = (int)$_POST['amenity_id'];
-        $icon = sanitize($_POST['amenity_icon'] ?? '');
-        $namePt = sanitize($_POST['amenity_name_pt'] ?? '');
-        $nameEn = sanitize($_POST['amenity_name_en'] ?? '');
+        $icon = trim($_POST['amenity_icon'] ?? '');
+        $namePt = trim($_POST['amenity_name_pt'] ?? '');
+        $nameEn = trim($_POST['amenity_name_en'] ?? '');
         $category = $_POST['amenity_category'] ?? 'general';
 
         $db->update('amenities', ['icon' => $icon, 'category' => $category], 'id = ?', [$amenityId]);
@@ -421,6 +427,248 @@ if (isset($_GET['delete_amenity']) && isset($_GET['token'])) {
         Session::flash('success', 'Comodidade eliminada.');
     }
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber);
+}
+
+// Handle bedroom add
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_bedroom'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $maxNum = $db->fetch(
+            "SELECT MAX(bedroom_number) as max_num FROM bedrooms WHERE accommodation_id = ?",
+            [$accommodation['id']]
+        )['max_num'] ?? 0;
+
+        $db->insert('bedrooms', [
+            'accommodation_id' => $accommodation['id'],
+            'bedroom_number' => $maxNum + 1
+        ]);
+        $bedroomId = $db->lastInsertId();
+
+        foreach ($languages as $lang) {
+            $name = trim($_POST['bedroom_name_' . $lang['code']] ?? '');
+            $beds = trim($_POST['bedroom_beds_' . $lang['code']] ?? '');
+            if ($name || $beds) {
+                $db->insert('bedroom_translations', [
+                    'bedroom_id' => $bedroomId,
+                    'language_id' => $lang['id'],
+                    'name' => $name,
+                    'beds_description' => $beds
+                ]);
+            }
+        }
+
+        Session::flash('success', 'Quarto adicionado com sucesso.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
+}
+
+// Handle bedroom edit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_bedroom'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $bedroomId = (int)$_POST['bedroom_id'];
+
+        foreach ($languages as $lang) {
+            $name = trim($_POST['bedroom_name_' . $lang['code']] ?? '');
+            $beds = trim($_POST['bedroom_beds_' . $lang['code']] ?? '');
+
+            $existing = $db->fetch(
+                "SELECT id FROM bedroom_translations WHERE bedroom_id = ? AND language_id = ?",
+                [$bedroomId, $lang['id']]
+            );
+
+            if ($existing) {
+                $db->update('bedroom_translations', [
+                    'name' => $name,
+                    'beds_description' => $beds
+                ], 'id = ?', [$existing['id']]);
+            } else {
+                $db->insert('bedroom_translations', [
+                    'bedroom_id' => $bedroomId,
+                    'language_id' => $lang['id'],
+                    'name' => $name,
+                    'beds_description' => $beds
+                ]);
+            }
+        }
+
+        Session::flash('success', 'Quarto atualizado com sucesso.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
+}
+
+// Handle bedroom delete
+if (isset($_GET['delete_bedroom']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $bedroomId = (int)$_GET['delete_bedroom'];
+        $db->delete('bedroom_translations', 'bedroom_id = ?', [$bedroomId]);
+        $db->delete('bedrooms', 'id = ? AND accommodation_id = ?', [$bedroomId, $accommodation['id']]);
+        Session::flash('success', 'Quarto eliminado.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
+}
+
+// Handle bathroom add
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_bathroom'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $maxNum = $db->fetch(
+            "SELECT MAX(bathroom_number) as max_num FROM bathrooms WHERE accommodation_id = ?",
+            [$accommodation['id']]
+        )['max_num'] ?? 0;
+
+        $db->insert('bathrooms', [
+            'accommodation_id' => $accommodation['id'],
+            'bathroom_number' => $maxNum + 1,
+            'has_shower' => isset($_POST['has_shower']) ? 1 : 0,
+            'has_bathtub' => isset($_POST['has_bathtub']) ? 1 : 0,
+            'has_bidet' => isset($_POST['has_bidet']) ? 1 : 0,
+            'is_ensuite' => isset($_POST['is_ensuite']) ? 1 : 0
+        ]);
+        $bathroomId = $db->lastInsertId();
+
+        foreach ($languages as $lang) {
+            $name = trim($_POST['bathroom_name_' . $lang['code']] ?? '');
+            $desc = trim($_POST['bathroom_desc_' . $lang['code']] ?? '');
+            if ($name || $desc) {
+                $db->insert('bathroom_translations', [
+                    'bathroom_id' => $bathroomId,
+                    'language_id' => $lang['id'],
+                    'name' => $name,
+                    'description' => $desc
+                ]);
+            }
+        }
+
+        Session::flash('success', 'Casa de banho adicionada com sucesso.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
+}
+
+// Handle bathroom edit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_bathroom'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $bathroomId = (int)$_POST['bathroom_id'];
+
+        $db->update('bathrooms', [
+            'has_shower' => isset($_POST['has_shower']) ? 1 : 0,
+            'has_bathtub' => isset($_POST['has_bathtub']) ? 1 : 0,
+            'has_bidet' => isset($_POST['has_bidet']) ? 1 : 0,
+            'is_ensuite' => isset($_POST['is_ensuite']) ? 1 : 0
+        ], 'id = ? AND accommodation_id = ?', [$bathroomId, $accommodation['id']]);
+
+        foreach ($languages as $lang) {
+            $name = trim($_POST['bathroom_name_' . $lang['code']] ?? '');
+            $desc = trim($_POST['bathroom_desc_' . $lang['code']] ?? '');
+
+            $existing = $db->fetch(
+                "SELECT id FROM bathroom_translations WHERE bathroom_id = ? AND language_id = ?",
+                [$bathroomId, $lang['id']]
+            );
+
+            if ($existing) {
+                $db->update('bathroom_translations', [
+                    'name' => $name,
+                    'description' => $desc
+                ], 'id = ?', [$existing['id']]);
+            } else {
+                $db->insert('bathroom_translations', [
+                    'bathroom_id' => $bathroomId,
+                    'language_id' => $lang['id'],
+                    'name' => $name,
+                    'description' => $desc
+                ]);
+            }
+        }
+
+        Session::flash('success', 'Casa de banho atualizada com sucesso.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
+}
+
+// Handle bathroom delete
+if (isset($_GET['delete_bathroom']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $bathroomId = (int)$_GET['delete_bathroom'];
+        $db->delete('bathroom_translations', 'bathroom_id = ?', [$bathroomId]);
+        $db->delete('bathrooms', 'id = ? AND accommodation_id = ?', [$bathroomId, $accommodation['id']]);
+        Session::flash('success', 'Casa de banho eliminada.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
+}
+
+// Handle house rule add
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_rule'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $maxOrder = $db->fetch(
+            "SELECT MAX(sort_order) as max_order FROM house_rules WHERE accommodation_id = ?",
+            [$accommodation['id']]
+        )['max_order'] ?? 0;
+
+        $db->insert('house_rules', [
+            'accommodation_id' => $accommodation['id'],
+            'is_highlighted' => isset($_POST['rule_highlighted']) ? 1 : 0,
+            'sort_order' => $maxOrder + 1
+        ]);
+        $ruleId = $db->lastInsertId();
+
+        foreach ($languages as $lang) {
+            $text = trim($_POST['rule_text_' . $lang['code']] ?? '');
+            if ($text) {
+                $db->insert('house_rule_translations', [
+                    'rule_id' => $ruleId,
+                    'language_id' => $lang['id'],
+                    'rule_text' => $text
+                ]);
+            }
+        }
+
+        Session::flash('success', 'Regra adicionada com sucesso.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#rules');
+}
+
+// Handle house rule edit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_rule'])) {
+    if (CSRF::validate($_POST['csrf_token'] ?? '')) {
+        $ruleId = (int)$_POST['rule_id'];
+
+        $db->update('house_rules', [
+            'is_highlighted' => isset($_POST['rule_highlighted']) ? 1 : 0
+        ], 'id = ? AND accommodation_id = ?', [$ruleId, $accommodation['id']]);
+
+        foreach ($languages as $lang) {
+            $text = trim($_POST['rule_text_' . $lang['code']] ?? '');
+
+            $existing = $db->fetch(
+                "SELECT id FROM house_rule_translations WHERE rule_id = ? AND language_id = ?",
+                [$ruleId, $lang['id']]
+            );
+
+            if ($existing) {
+                $db->update('house_rule_translations', [
+                    'rule_text' => $text
+                ], 'id = ?', [$existing['id']]);
+            } else {
+                $db->insert('house_rule_translations', [
+                    'rule_id' => $ruleId,
+                    'language_id' => $lang['id'],
+                    'rule_text' => $text
+                ]);
+            }
+        }
+
+        Session::flash('success', 'Regra atualizada com sucesso.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#rules');
+}
+
+// Handle house rule delete
+if (isset($_GET['delete_rule']) && isset($_GET['token'])) {
+    if (CSRF::validate($_GET['token'])) {
+        $ruleId = (int)$_GET['delete_rule'];
+        $db->delete('house_rule_translations', 'rule_id = ?', [$ruleId]);
+        $db->delete('house_rules', 'id = ? AND accommodation_id = ?', [$ruleId, $accommodation['id']]);
+        Session::flash('success', 'Regra eliminada.');
+    }
+    redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#rules');
 }
 
 $pageTitle = 'Alojamento';
@@ -489,6 +737,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <form action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
+    <input type="hidden" name="active_tab" id="activeTabField" value="info">
 
     <!-- Tab: Info -->
     <div id="panel-info" class="admin-tab-panel">
@@ -805,39 +1054,113 @@ include dirname(__DIR__) . '/includes/header.php';
 
     <!-- Tab: Spaces (Bedrooms & Bathrooms) -->
     <div id="panel-spaces" class="admin-tab-panel hidden">
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-lg font-medium text-gray-800 mb-4">Quartos & Casas de Banho</h2>
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p class="text-sm text-blue-800">
-                    <strong>Nota:</strong> A gestão detalhada de quartos e casas de banho (com traduções PT/EN) será implementada numa atualização futura.
-                    Por agora, use os campos de números básicos na tab "Informações".
-                </p>
+        <!-- Bedrooms -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-medium text-gray-800">Quartos</h2>
+                <button type="button" id="btnAddBedroom" class="px-4 py-2 bg-secondary-600 text-white text-sm rounded-lg hover:bg-secondary-700 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Adicionar Quarto
+                </button>
             </div>
 
             <?php if (!empty($bedrooms)): ?>
-            <div class="mb-6">
-                <h3 class="text-base font-medium text-gray-700 mb-3">Quartos Existentes</h3>
-                <div class="space-y-2">
-                    <?php foreach ($bedrooms as $bedroom): ?>
-                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                        <p class="text-sm"><strong>Quarto <?= $bedroom['bedroom_number'] ?>:</strong> <?= e($bedroom['name_pt'] ?? 'Sem nome') ?> - <?= e($bedroom['beds_pt'] ?? 'Sem descrição') ?></p>
+            <div class="space-y-3">
+                <?php foreach ($bedrooms as $bedroom): ?>
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-secondary-100 text-secondary-700 text-xs font-bold"><?= $bedroom['bedroom_number'] ?></span>
+                            <h3 class="font-medium text-gray-800"><?= e($bedroom['name_pt'] ?? 'Quarto ' . $bedroom['bedroom_number']) ?></h3>
+                        </div>
+                        <div class="ml-9 space-y-0.5">
+                            <p class="text-sm text-gray-600"><span class="font-medium text-gray-500">PT:</span> <?= e($bedroom['beds_pt'] ?? '-') ?></p>
+                            <p class="text-sm text-gray-600"><span class="font-medium text-gray-500">EN:</span> <?= e($bedroom['beds_en'] ?? '-') ?></p>
+                        </div>
                     </div>
-                    <?php endforeach; ?>
+                    <div class="flex items-center gap-1 ml-4">
+                        <button type="button" class="btn-edit-bedroom p-2 text-gray-400 hover:text-secondary-600 rounded-lg hover:bg-secondary-50"
+                                data-edit-bedroom="<?= e(json_encode([
+                                    'id' => $bedroom['id'],
+                                    'name_pt' => $bedroom['name_pt'] ?? '',
+                                    'name_en' => $bedroom['name_en'] ?? '',
+                                    'beds_pt' => $bedroom['beds_pt'] ?? '',
+                                    'beds_en' => $bedroom['beds_en'] ?? '',
+                                    'number' => $bedroom['bedroom_number']
+                                ])) ?>">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                        <button type="button" class="btn-delete-bedroom p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                                data-delete-bedroom-id="<?= $bedroom['id'] ?>"
+                                data-delete-bedroom-name="Quarto <?= $bedroom['bedroom_number'] ?>">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
+            <?php else: ?>
+            <p class="text-gray-500 text-sm">Nenhum quarto definido.</p>
             <?php endif; ?>
+        </div>
+
+        <!-- Bathrooms -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-medium text-gray-800">Casas de Banho</h2>
+                <button type="button" id="btnAddBathroom" class="px-4 py-2 bg-secondary-600 text-white text-sm rounded-lg hover:bg-secondary-700 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Adicionar Casa de Banho
+                </button>
+            </div>
 
             <?php if (!empty($bathrooms)): ?>
-            <div>
-                <h3 class="text-base font-medium text-gray-700 mb-3">Casas de Banho Existentes</h3>
-                <div class="space-y-2">
-                    <?php foreach ($bathrooms as $bathroom): ?>
-                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                        <p class="text-sm"><strong>WC <?= $bathroom['bathroom_number'] ?>:</strong> <?= e($bathroom['name_pt'] ?? 'Sem nome') ?> - <?= e($bathroom['desc_pt'] ?? 'Sem descrição') ?></p>
+            <div class="space-y-3">
+                <?php foreach ($bathrooms as $bathroom): ?>
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 text-blue-700 text-xs font-bold"><?= $bathroom['bathroom_number'] ?></span>
+                            <h3 class="font-medium text-gray-800"><?= e($bathroom['name_pt'] ?? 'WC ' . $bathroom['bathroom_number']) ?></h3>
+                        </div>
+                        <div class="ml-9 space-y-0.5">
+                            <p class="text-sm text-gray-600"><span class="font-medium text-gray-500">PT:</span> <?= e($bathroom['desc_pt'] ?? '-') ?></p>
+                            <p class="text-sm text-gray-600"><span class="font-medium text-gray-500">EN:</span> <?= e($bathroom['desc_en'] ?? '-') ?></p>
+                        </div>
+                        <div class="ml-9 mt-2 flex flex-wrap gap-1.5">
+                            <?php if ($bathroom['has_shower']): ?><span class="px-2 py-0.5 text-xs bg-blue-50 text-blue-700 rounded">Chuveiro</span><?php endif; ?>
+                            <?php if ($bathroom['has_bathtub']): ?><span class="px-2 py-0.5 text-xs bg-blue-50 text-blue-700 rounded">Banheira</span><?php endif; ?>
+                            <?php if ($bathroom['has_bidet']): ?><span class="px-2 py-0.5 text-xs bg-blue-50 text-blue-700 rounded">Bidé</span><?php endif; ?>
+                            <?php if ($bathroom['is_ensuite']): ?><span class="px-2 py-0.5 text-xs bg-purple-50 text-purple-700 rounded">Ensuite</span><?php endif; ?>
+                        </div>
                     </div>
-                    <?php endforeach; ?>
+                    <div class="flex items-center gap-1 ml-4">
+                        <button type="button" class="btn-edit-bathroom p-2 text-gray-400 hover:text-secondary-600 rounded-lg hover:bg-secondary-50"
+                                data-edit-bathroom="<?= e(json_encode([
+                                    'id' => $bathroom['id'],
+                                    'name_pt' => $bathroom['name_pt'] ?? '',
+                                    'name_en' => $bathroom['name_en'] ?? '',
+                                    'desc_pt' => $bathroom['desc_pt'] ?? '',
+                                    'desc_en' => $bathroom['desc_en'] ?? '',
+                                    'number' => $bathroom['bathroom_number'],
+                                    'has_shower' => (int)$bathroom['has_shower'],
+                                    'has_bathtub' => (int)$bathroom['has_bathtub'],
+                                    'has_bidet' => (int)$bathroom['has_bidet'],
+                                    'is_ensuite' => (int)$bathroom['is_ensuite']
+                                ])) ?>">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                        <button type="button" class="btn-delete-bathroom p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                                data-delete-bathroom-id="<?= $bathroom['id'] ?>"
+                                data-delete-bathroom-name="WC <?= $bathroom['bathroom_number'] ?>">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
+            <?php else: ?>
+            <p class="text-gray-500 text-sm">Nenhuma casa de banho definida.</p>
             <?php endif; ?>
         </div>
     </div>
@@ -1078,22 +1401,49 @@ include dirname(__DIR__) . '/includes/header.php';
     <!-- Tab: House Rules -->
     <div id="panel-rules" class="admin-tab-panel hidden">
         <div class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-lg font-medium text-gray-800 mb-4">Regras da Casa</h2>
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p class="text-sm text-blue-800">
-                    <strong>Nota:</strong> A gestão de regras da casa (adicionar/editar/eliminar com traduções PT/EN e flag de destaque) será implementada numa atualização futura.
-                </p>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-medium text-gray-800">Regras da Casa</h2>
+                <button type="button" id="btnAddRule" class="px-4 py-2 bg-secondary-600 text-white text-sm rounded-lg hover:bg-secondary-700 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Adicionar Regra
+                </button>
             </div>
 
             <?php if (!empty($houseRules)): ?>
-            <div class="space-y-2">
+            <div class="space-y-3">
                 <?php foreach ($houseRules as $rule): ?>
-                <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg flex items-start justify-between">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-start justify-between">
                     <div class="flex-1">
-                        <p class="text-sm text-gray-700"><?= e($rule['rule_pt'] ?? $rule['rule_en'] ?? 'Sem texto') ?></p>
-                        <?php if ($rule['is_highlighted']): ?>
-                        <span class="inline-block mt-1 px-2 py-0.5 text-xs bg-accent-100 text-accent-700 rounded">Destacada</span>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-xs font-bold"><?= $rule['sort_order'] ?></span>
+                            <p class="text-sm text-gray-800 font-medium"><?= e($rule['rule_pt'] ?? $rule['rule_en'] ?? 'Sem texto') ?></p>
+                        </div>
+                        <?php if ($rule['rule_en']): ?>
+                        <p class="text-sm text-gray-500 ml-8"><?= e($rule['rule_en']) ?></p>
                         <?php endif; ?>
+                        <div class="ml-8 mt-1.5">
+                            <?php if ($rule['is_highlighted']): ?>
+                            <span class="inline-block px-2 py-0.5 text-xs bg-accent-100 text-accent-700 rounded">Destacada</span>
+                            <?php else: ?>
+                            <span class="inline-block px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded">Normal</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1 ml-4">
+                        <button type="button" class="btn-edit-rule p-2 text-gray-400 hover:text-secondary-600 rounded-lg hover:bg-secondary-50"
+                                data-edit-rule="<?= e(json_encode([
+                                    'id' => $rule['id'],
+                                    'rule_pt' => $rule['rule_pt'] ?? '',
+                                    'rule_en' => $rule['rule_en'] ?? '',
+                                    'is_highlighted' => (int)$rule['is_highlighted']
+                                ])) ?>">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                        <button type="button" class="btn-delete-rule p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                                data-delete-rule-id="<?= $rule['id'] ?>"
+                                data-delete-rule-name="Regra #<?= $rule['sort_order'] ?>">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -1235,6 +1585,169 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </div>
 
+<!-- Bedroom Modal (Add/Edit) -->
+<div id="bedroomModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+            <h3 id="bedroomModalTitle" class="text-lg font-medium text-gray-800">Adicionar Quarto</h3>
+            <button type="button" class="modal-close text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form id="bedroomForm" action="" method="post" class="p-6">
+            <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
+            <input type="hidden" name="add_bedroom" id="bedroomFormAction" value="1">
+            <input type="hidden" name="bedroom_id" id="bedroomFormId" value="">
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome (PT)</label>
+                        <input type="text" name="bedroom_name_pt" id="bedroomNamePt" placeholder="Ex: Suite Principal"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome (EN)</label>
+                        <input type="text" name="bedroom_name_en" id="bedroomNameEn" placeholder="Ex: Master Suite"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Camas (PT)</label>
+                    <input type="text" name="bedroom_beds_pt" id="bedroomBedsPt" placeholder="Ex: 2 camas de solteiro" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Camas (EN)</label>
+                    <input type="text" name="bedroom_beds_en" id="bedroomBedsEn" placeholder="Ex: 2 single beds"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-medium">Guardar</button>
+                <button type="button" class="modal-close px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Bathroom Modal (Add/Edit) -->
+<div id="bathroomModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+            <h3 id="bathroomModalTitle" class="text-lg font-medium text-gray-800">Adicionar Casa de Banho</h3>
+            <button type="button" class="modal-close text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form id="bathroomForm" action="" method="post" class="p-6">
+            <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
+            <input type="hidden" name="add_bathroom" id="bathroomFormAction" value="1">
+            <input type="hidden" name="bathroom_id" id="bathroomFormId" value="">
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome (PT)</label>
+                        <input type="text" name="bathroom_name_pt" id="bathroomNamePt" placeholder="Ex: Casa de Banho Principal"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome (EN)</label>
+                        <input type="text" name="bathroom_name_en" id="bathroomNameEn" placeholder="Ex: Main Bathroom"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descrição (PT)</label>
+                    <input type="text" name="bathroom_desc_pt" id="bathroomDescPt" placeholder="Ex: Banheira, chuveiro, bidé" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descrição (EN)</label>
+                    <input type="text" name="bathroom_desc_en" id="bathroomDescEn" placeholder="Ex: Bathtub, shower, bidet"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <input type="checkbox" name="has_shower" id="bathroomShower" value="1" class="rounded border-gray-300 text-secondary-600 focus:ring-secondary-500">
+                        <span class="text-sm text-gray-700">Chuveiro</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <input type="checkbox" name="has_bathtub" id="bathroomBathtub" value="1" class="rounded border-gray-300 text-secondary-600 focus:ring-secondary-500">
+                        <span class="text-sm text-gray-700">Banheira</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <input type="checkbox" name="has_bidet" id="bathroomBidet" value="1" class="rounded border-gray-300 text-secondary-600 focus:ring-secondary-500">
+                        <span class="text-sm text-gray-700">Bidé</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <input type="checkbox" name="is_ensuite" id="bathroomEnsuite" value="1" class="rounded border-gray-300 text-secondary-600 focus:ring-secondary-500">
+                        <span class="text-sm text-gray-700">Ensuite</span>
+                    </label>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-medium">Guardar</button>
+                <button type="button" class="modal-close px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Rule Modal (Add/Edit) -->
+<div id="ruleModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+            <h3 id="ruleModalTitle" class="text-lg font-medium text-gray-800">Adicionar Regra</h3>
+            <button type="button" class="modal-close text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form id="ruleForm" action="" method="post" class="p-6">
+            <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
+            <input type="hidden" name="add_rule" id="ruleFormAction" value="1">
+            <input type="hidden" name="rule_id" id="ruleFormId" value="">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Regra (PT) *</label>
+                    <textarea name="rule_text_pt" id="ruleTextPt" rows="2" placeholder="Ex: Não são permitidas festas ou eventos." required
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Regra (EN)</label>
+                    <textarea name="rule_text_en" id="ruleTextEn" rows="2" placeholder="Ex: No parties or events allowed."
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"></textarea>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="rule_highlighted" id="ruleHighlighted" value="1" class="rounded border-gray-300 text-accent-600 focus:ring-accent-500">
+                    <span class="text-sm text-gray-700">Destacada <span class="text-gray-400">(aparece na página principal, não só no modal)</span></span>
+                </label>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 font-medium">Guardar</button>
+                <button type="button" class="modal-close px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal (shared for bedrooms, bathrooms, rules) -->
+<div id="deleteItemModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4" onclick="event.stopPropagation()">
+        <div class="p-6 text-center">
+            <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Eliminar</h3>
+            <p class="text-gray-600 mb-1">Tem a certeza que deseja eliminar:</p>
+            <p id="deleteItemName" class="font-medium text-gray-800 mb-6"></p>
+            <div class="flex gap-3 justify-center">
+                <button type="button" id="deleteItemConfirmBtn" class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors">Eliminar</button>
+                <button type="button" class="modal-close px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 (function() {
     'use strict';
@@ -1304,6 +1817,10 @@ include dirname(__DIR__) . '/includes/header.php';
                 if (panel) panel.classList.add('hidden');
             }
         });
+
+        // Track active tab for form redirects
+        const tabField = document.getElementById('activeTabField');
+        if (tabField) tabField.value = tabName;
     }
 
     document.getElementById('tab-btn-info')?.addEventListener('click', () => switchTabById('info'));
@@ -1460,7 +1977,112 @@ include dirname(__DIR__) . '/includes/header.php';
     document.getElementById('deleteAmenityCancelBtn')?.addEventListener('click', () => deleteAmenityModal.classList.add('hidden'));
     deleteAmenityModal?.addEventListener('click', e => { if (e.target === deleteAmenityModal) deleteAmenityModal.classList.add('hidden'); });
 
-    // Event Delegation
+
+    // --- Bedroom Modal ---
+    const bedroomModal = document.getElementById('bedroomModal');
+    function openBedroomModal(data) {
+        if (data) {
+            document.getElementById('bedroomModalTitle').textContent = 'Editar Quarto ' + data.number;
+            document.getElementById('bedroomFormAction').name = 'edit_bedroom';
+            document.getElementById('bedroomFormId').value = data.id;
+            document.getElementById('bedroomNamePt').value = data.name_pt || '';
+            document.getElementById('bedroomNameEn').value = data.name_en || '';
+            document.getElementById('bedroomBedsPt').value = data.beds_pt || '';
+            document.getElementById('bedroomBedsEn').value = data.beds_en || '';
+        } else {
+            document.getElementById('bedroomModalTitle').textContent = 'Adicionar Quarto';
+            document.getElementById('bedroomFormAction').name = 'add_bedroom';
+            document.getElementById('bedroomFormId').value = '';
+            document.getElementById('bedroomNamePt').value = '';
+            document.getElementById('bedroomNameEn').value = '';
+            document.getElementById('bedroomBedsPt').value = '';
+            document.getElementById('bedroomBedsEn').value = '';
+        }
+        bedroomModal.classList.remove('hidden');
+    }
+    document.getElementById('btnAddBedroom')?.addEventListener('click', () => openBedroomModal(null));
+
+    // --- Bathroom Modal ---
+    const bathroomModal = document.getElementById('bathroomModal');
+    function openBathroomModal(data) {
+        if (data) {
+            document.getElementById('bathroomModalTitle').textContent = 'Editar WC ' + data.number;
+            document.getElementById('bathroomFormAction').name = 'edit_bathroom';
+            document.getElementById('bathroomFormId').value = data.id;
+            document.getElementById('bathroomNamePt').value = data.name_pt || '';
+            document.getElementById('bathroomNameEn').value = data.name_en || '';
+            document.getElementById('bathroomDescPt').value = data.desc_pt || '';
+            document.getElementById('bathroomDescEn').value = data.desc_en || '';
+            document.getElementById('bathroomShower').checked = !!data.has_shower;
+            document.getElementById('bathroomBathtub').checked = !!data.has_bathtub;
+            document.getElementById('bathroomBidet').checked = !!data.has_bidet;
+            document.getElementById('bathroomEnsuite').checked = !!data.is_ensuite;
+        } else {
+            document.getElementById('bathroomModalTitle').textContent = 'Adicionar Casa de Banho';
+            document.getElementById('bathroomFormAction').name = 'add_bathroom';
+            document.getElementById('bathroomFormId').value = '';
+            document.getElementById('bathroomNamePt').value = '';
+            document.getElementById('bathroomNameEn').value = '';
+            document.getElementById('bathroomDescPt').value = '';
+            document.getElementById('bathroomDescEn').value = '';
+            document.getElementById('bathroomShower').checked = true;
+            document.getElementById('bathroomBathtub').checked = false;
+            document.getElementById('bathroomBidet').checked = false;
+            document.getElementById('bathroomEnsuite').checked = false;
+        }
+        bathroomModal.classList.remove('hidden');
+    }
+    document.getElementById('btnAddBathroom')?.addEventListener('click', () => openBathroomModal(null));
+
+    // --- Rule Modal ---
+    const ruleModal = document.getElementById('ruleModal');
+    function openRuleModal(data) {
+        if (data) {
+            document.getElementById('ruleModalTitle').textContent = 'Editar Regra';
+            document.getElementById('ruleFormAction').name = 'edit_rule';
+            document.getElementById('ruleFormId').value = data.id;
+            document.getElementById('ruleTextPt').value = data.rule_pt || '';
+            document.getElementById('ruleTextEn').value = data.rule_en || '';
+            document.getElementById('ruleHighlighted').checked = !!data.is_highlighted;
+        } else {
+            document.getElementById('ruleModalTitle').textContent = 'Adicionar Regra';
+            document.getElementById('ruleFormAction').name = 'add_rule';
+            document.getElementById('ruleFormId').value = '';
+            document.getElementById('ruleTextPt').value = '';
+            document.getElementById('ruleTextEn').value = '';
+            document.getElementById('ruleHighlighted').checked = false;
+        }
+        ruleModal.classList.remove('hidden');
+    }
+    document.getElementById('btnAddRule')?.addEventListener('click', () => openRuleModal(null));
+
+    // --- Delete Item Modal (shared) ---
+    const deleteItemModal = document.getElementById('deleteItemModal');
+    let pendingDeleteUrl = null;
+    document.getElementById('deleteItemConfirmBtn')?.addEventListener('click', () => {
+        if (pendingDeleteUrl) window.location.href = pendingDeleteUrl;
+    });
+    function openDeleteItemModal(name, url) {
+        document.getElementById('deleteItemName').textContent = name;
+        pendingDeleteUrl = url;
+        deleteItemModal.classList.remove('hidden');
+    }
+
+    // --- Close all modals via .modal-close buttons ---
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.fixed')?.classList.add('hidden');
+        });
+    });
+
+    // Close modals on backdrop click
+    [bedroomModal, bathroomModal, ruleModal, deleteItemModal].forEach(modal => {
+        modal?.addEventListener('click', e => {
+            if (e.target === modal) modal.classList.add('hidden');
+        });
+    });
+
+    // Extended event delegation for new buttons
     document.addEventListener('click', e => {
         const deleteImageBtn = e.target.closest('.btn-delete-image');
         if (deleteImageBtn) {
@@ -1472,9 +2094,7 @@ include dirname(__DIR__) . '/includes/header.php';
         const editAmenityBtn = e.target.closest('.btn-edit-amenity');
         if (editAmenityBtn) {
             e.preventDefault();
-            try {
-                openAmenityModal(JSON.parse(editAmenityBtn.dataset.editAmenity));
-            } catch (err) { console.error(err); }
+            try { openAmenityModal(JSON.parse(editAmenityBtn.dataset.editAmenity)); } catch (err) { console.error(err); }
             return;
         }
 
@@ -1484,16 +2104,77 @@ include dirname(__DIR__) . '/includes/header.php';
             openDeleteAmenityModal(deleteAmenityBtn.dataset.deleteAmenityId, deleteAmenityBtn.dataset.deleteAmenityName);
             return;
         }
+
+        const editBedroomBtn = e.target.closest('.btn-edit-bedroom');
+        if (editBedroomBtn) {
+            e.preventDefault();
+            try { openBedroomModal(JSON.parse(editBedroomBtn.dataset.editBedroom)); } catch (err) { console.error(err); }
+            return;
+        }
+
+        const deleteBedroomBtn = e.target.closest('.btn-delete-bedroom');
+        if (deleteBedroomBtn) {
+            e.preventDefault();
+            openDeleteItemModal(
+                deleteBedroomBtn.dataset.deleteBedroomName,
+                '?delete_bedroom=' + deleteBedroomBtn.dataset.deleteBedroomId + '&token=' + csrfToken + '&casa=' + currentCasa
+            );
+            return;
+        }
+
+        const editBathroomBtn = e.target.closest('.btn-edit-bathroom');
+        if (editBathroomBtn) {
+            e.preventDefault();
+            try { openBathroomModal(JSON.parse(editBathroomBtn.dataset.editBathroom)); } catch (err) { console.error(err); }
+            return;
+        }
+
+        const deleteBathroomBtn = e.target.closest('.btn-delete-bathroom');
+        if (deleteBathroomBtn) {
+            e.preventDefault();
+            openDeleteItemModal(
+                deleteBathroomBtn.dataset.deleteBathroomName,
+                '?delete_bathroom=' + deleteBathroomBtn.dataset.deleteBathroomId + '&token=' + csrfToken + '&casa=' + currentCasa
+            );
+            return;
+        }
+
+        const editRuleBtn = e.target.closest('.btn-edit-rule');
+        if (editRuleBtn) {
+            e.preventDefault();
+            try { openRuleModal(JSON.parse(editRuleBtn.dataset.editRule)); } catch (err) { console.error(err); }
+            return;
+        }
+
+        const deleteRuleBtn = e.target.closest('.btn-delete-rule');
+        if (deleteRuleBtn) {
+            e.preventDefault();
+            openDeleteItemModal(
+                deleteRuleBtn.dataset.deleteRuleName,
+                '?delete_rule=' + deleteRuleBtn.dataset.deleteRuleId + '&token=' + csrfToken + '&casa=' + currentCasa
+            );
+            return;
+        }
     });
 
-    // Keyboard
+    // Keyboard - close all modals on Escape
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             deleteImageModal?.classList.add('hidden');
             amenityModal?.classList.add('hidden');
             deleteAmenityModal?.classList.add('hidden');
+            bedroomModal?.classList.add('hidden');
+            bathroomModal?.classList.add('hidden');
+            ruleModal?.classList.add('hidden');
+            deleteItemModal?.classList.add('hidden');
         }
     });
+
+    // Auto-switch to tab from URL hash
+    const hash = window.location.hash.replace('#', '');
+    if (hash && ['info', 'content', 'spaces', 'gallery', 'amenities', 'rules', 'policies'].includes(hash)) {
+        switchTabById(hash);
+    }
 })();
 </script>
 

@@ -399,9 +399,9 @@ include dirname(__DIR__) . '/includes/header.php';
             <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
                 Cancelar
             </button>
-            <a href="#" id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            <button type="button" id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                 Eliminar
-            </a>
+            </button>
         </div>
     </div>
 </div>
@@ -429,9 +429,9 @@ include dirname(__DIR__) . '/includes/header.php';
             <button type="button" onclick="closeSpamModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
                 Cancelar
             </button>
-            <a href="#" id="confirmSpamBtn" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+            <button type="button" id="confirmSpamBtn" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
                 Marcar como Spam
-            </a>
+            </button>
         </div>
     </div>
 </div>
@@ -506,94 +506,95 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Delete Modal
-    function closeDeleteModal() {
-        const modal = document.getElementById('deleteModal');
+    var csrfToken = '<?= CSRF::getToken() ?>';
+    var currentFilter = '<?= e($filter) ?>';
+    var pendingDeleteUrl = null;
+    var pendingSpamUrl = null;
+
+    // Modal helpers
+    function openModal(id) {
+        var modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeModal(id) {
+        var modal = document.getElementById(id);
         if (modal) {
             modal.classList.remove('flex');
             modal.classList.add('hidden');
         }
     }
+
+    function closeDeleteModal() { closeModal('deleteModal'); }
+    function closeSpamModal() { closeModal('spamModal'); }
+    function closeMessageModal() { closeModal('messageModal'); }
+
     window.closeDeleteModal = closeDeleteModal;
-
-    // Spam Modal
-    function closeSpamModal() {
-        const modal = document.getElementById('spamModal');
-        if (modal) {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-    }
     window.closeSpamModal = closeSpamModal;
+    window.closeMessageModal = closeMessageModal;
 
-    // Event delegation for action buttons (delete, spam, links)
-    document.addEventListener('click', function(e) {
-        // Check if click is on any action button/link - stop propagation to prevent opening message modal
-        const actionContainer = e.target.closest('.ml-4.flex.items-center.gap-2');
-        if (actionContainer) {
-            // Stop propagation for any click in the action buttons area
-            if (!e.target.closest('.message-row')) {
-                e.stopPropagation();
-            }
+    // Confirm Delete - navigate via window.location
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (pendingDeleteUrl) {
+            window.location.href = pendingDeleteUrl;
         }
+    });
 
+    // Confirm Spam - navigate via window.location
+    document.getElementById('confirmSpamBtn').addEventListener('click', function() {
+        if (pendingSpamUrl) {
+            window.location.href = pendingSpamUrl;
+        }
+    });
+
+    // Event delegation for action buttons
+    document.addEventListener('click', function(e) {
         // Delete button
-        const deleteBtn = e.target.closest('.delete-message-btn');
+        var deleteBtn = e.target.closest('.delete-message-btn');
         if (deleteBtn) {
             e.preventDefault();
             e.stopPropagation();
 
-            const id = deleteBtn.dataset.id;
-            const name = deleteBtn.dataset.name;
-            const modal = document.getElementById('deleteModal');
-            const nameEl = document.getElementById('messageName');
-            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            var id = deleteBtn.dataset.id;
+            var name = deleteBtn.dataset.name;
 
-            if (modal && nameEl && confirmBtn) {
-                nameEl.textContent = name;
-                confirmBtn.href = '?delete=' + id + '&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>';
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-
-            return false;
+            pendingDeleteUrl = '?delete=' + id + '&filter=' + currentFilter + '&token=' + csrfToken;
+            document.getElementById('messageName').textContent = name;
+            openModal('deleteModal');
+            return;
         }
 
         // Spam button
-        const spamBtn = e.target.closest('.spam-message-btn');
+        var spamBtn = e.target.closest('.spam-message-btn');
         if (spamBtn) {
             e.preventDefault();
             e.stopPropagation();
 
-            const id = spamBtn.dataset.id;
-            const name = spamBtn.dataset.name;
-            const email = spamBtn.dataset.email;
-            const modal = document.getElementById('spamModal');
-            const nameEl = document.getElementById('spamName');
-            const emailEl = document.getElementById('spamEmail');
-            const confirmBtn = document.getElementById('confirmSpamBtn');
+            var id = spamBtn.dataset.id;
+            var name = spamBtn.dataset.name;
+            var email = spamBtn.dataset.email;
 
-            if (modal && nameEl && emailEl && confirmBtn) {
-                nameEl.textContent = name;
-                emailEl.textContent = email;
-                confirmBtn.href = '?spam=' + id + '&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>';
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-
-            return false;
+            pendingSpamUrl = '?spam=' + id + '&filter=' + currentFilter + '&token=' + csrfToken;
+            document.getElementById('spamName').textContent = name;
+            document.getElementById('spamEmail').textContent = email;
+            openModal('spamModal');
+            return;
         }
 
-        // Stop propagation for action links (read, unread, reply, ignore, unignore, unspam)
-        const actionLink = e.target.closest('.ml-4.flex.items-center.gap-2 a, .ml-4.flex.items-center.gap-2 button');
-        if (actionLink) {
+        // Stop propagation for any action button/link in the actions area
+        var actionEl = e.target.closest('.ml-4.flex.items-center.gap-2 a, .ml-4.flex.items-center.gap-2 button');
+        if (actionEl) {
             e.stopPropagation();
+            return;
         }
 
-        // Message row click - open details modal (only if not clicking on action buttons)
-        const messageRow = e.target.closest('.message-row');
-        if (messageRow && !e.target.closest('.delete-message-btn') && !e.target.closest('.spam-message-btn') && !actionLink) {
-            const id = messageRow.dataset.id;
+        // Message row click - open details modal
+        var messageRow = e.target.closest('.message-row');
+        if (messageRow) {
+            var id = messageRow.dataset.id;
             if (id) {
                 openMessageModal(id);
             }
@@ -602,13 +603,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Message Details Modal
     function openMessageModal(id) {
-        const dataEl = document.getElementById('message-data-' + id);
+        var dataEl = document.getElementById('message-data-' + id);
         if (!dataEl) return;
 
-        const data = JSON.parse(dataEl.textContent);
-        const modal = document.getElementById('messageModal');
+        var data = JSON.parse(dataEl.textContent);
 
-        // Populate modal
         document.getElementById('modal-name').textContent = data.name;
         document.getElementById('modal-email').textContent = data.email;
         document.getElementById('modal-email').href = 'mailto:' + data.email;
@@ -620,25 +619,21 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modal-language').textContent = data.language.toUpperCase();
         document.getElementById('modal-useragent').textContent = data.user_agent;
 
-        // Show modal
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        openModal('messageModal');
 
-        // Mark as read if not already
+        // Mark as read via background fetch (don't follow redirects)
         if (!data.is_read) {
-            fetch('?read=' + id + '&token=<?= CSRF::getToken() ?>');
+            var row = document.querySelector('.message-row[data-id="' + id + '"]');
+            if (row) {
+                row.classList.remove('bg-blue-50');
+                var badge = row.querySelector('.bg-blue-100');
+                if (badge) badge.remove();
+            }
+            data.is_read = 1;
+            fetch('?read=' + id + '&token=' + csrfToken, { redirect: 'manual' }).catch(function() {});
         }
     }
     window.openMessageModal = openMessageModal;
-
-    function closeMessageModal() {
-        const modal = document.getElementById('messageModal');
-        if (modal) {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-    }
-    window.closeMessageModal = closeMessageModal;
 
     // Close modals on ESC key
     document.addEventListener('keydown', function(e) {
@@ -650,26 +645,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Close modals on background click
-    const deleteModal = document.getElementById('deleteModal');
-    if (deleteModal) {
-        deleteModal.addEventListener('click', function(e) {
-            if (e.target === this) closeDeleteModal();
-        });
-    }
-
-    const spamModal = document.getElementById('spamModal');
-    if (spamModal) {
-        spamModal.addEventListener('click', function(e) {
-            if (e.target === this) closeSpamModal();
-        });
-    }
-
-    const messageModal = document.getElementById('messageModal');
-    if (messageModal) {
-        messageModal.addEventListener('click', function(e) {
-            if (e.target === this) closeMessageModal();
-        });
-    }
+    ['deleteModal', 'spamModal', 'messageModal'].forEach(function(id) {
+        var modal = document.getElementById(id);
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal(id);
+                }
+            });
+        }
+    });
 });
 </script>
 

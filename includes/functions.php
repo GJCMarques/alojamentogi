@@ -188,13 +188,14 @@ function request(string $key, mixed $default = null): mixed
 
 /**
  * Sanitize string input
+ * Note: Only trims whitespace. Output encoding is handled by e() at display time.
  */
 function sanitize(?string $input): string
 {
     if ($input === null) {
         return '';
     }
-    return trim(htmlspecialchars($input, ENT_QUOTES, 'UTF-8'));
+    return trim($input);
 }
 
 /**

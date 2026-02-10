@@ -68,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($formData['customer_name'])) $errors['customer_name'] = $isEnglish ? 'Name is required' : 'Nome e obrigatorio';
     if (!isValidEmail($formData['customer_email'])) $errors['customer_email'] = $isEnglish ? 'Valid email is required' : 'Email valido e obrigatorio';
     if (empty($formData['customer_phone'])) $errors['customer_phone'] = $isEnglish ? 'Phone is required' : 'Telefone e obrigatorio';
+    if (empty($formData['shipping_address'])) $errors['shipping_address'] = $isEnglish ? 'Address is required' : 'Morada e obrigatoria';
+    if (empty($formData['shipping_city'])) $errors['shipping_city'] = $isEnglish ? 'City is required' : 'Cidade e obrigatoria';
+    if (empty($formData['shipping_postal_code'])) $errors['shipping_postal_code'] = $isEnglish ? 'Postal code is required' : 'Codigo postal e obrigatorio';
 
     if (empty($errors)) {
         // Build items snapshot
@@ -318,36 +321,39 @@ include INCLUDES_PATH . '/header.php';
                         <h2 class="font-serif text-xl text-granite-800">
                             <?= $isEnglish ? 'Shipping Address' : 'Morada de Envio' ?>
                         </h2>
-                        <span class="text-xs text-granite-400 bg-cream-100 px-3 py-1 rounded-full">
-                            <?= $isEnglish ? 'Optional' : 'Opcional' ?>
-                        </span>
                     </div>
-                    <p class="text-sm text-granite-500 mb-6">
-                        <?= $isEnglish ? 'You can provide your address later by phone.' : 'Pode fornecer a morada mais tarde por telefone.' ?>
-                    </p>
 
                     <div class="space-y-6">
                         <div>
                             <label for="shipping_address" class="block text-sm font-medium text-granite-700 mb-2">
-                                <?= $isEnglish ? 'Address' : 'Morada' ?>
+                                <?= $isEnglish ? 'Address' : 'Morada' ?> <span class="text-terracotta-500">*</span>
                             </label>
-                            <input type="text" id="shipping_address" name="shipping_address" value="<?= e($formData['shipping_address']) ?>"
-                                   class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
+                            <input type="text" id="shipping_address" name="shipping_address" value="<?= e($formData['shipping_address']) ?>" required
+                                   class="w-full px-4 py-3 border <?= isset($errors['shipping_address']) ? 'border-terracotta-400' : 'border-granite-200' ?> rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
+                            <?php if (isset($errors['shipping_address'])): ?>
+                            <p class="mt-1 text-sm text-terracotta-500"><?= e($errors['shipping_address']) ?></p>
+                            <?php endif; ?>
                         </div>
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label for="shipping_city" class="block text-sm font-medium text-granite-700 mb-2">
-                                    <?= $isEnglish ? 'City' : 'Cidade' ?>
+                                    <?= $isEnglish ? 'City' : 'Cidade' ?> <span class="text-terracotta-500">*</span>
                                 </label>
-                                <input type="text" id="shipping_city" name="shipping_city" value="<?= e($formData['shipping_city']) ?>"
-                                       class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
+                                <input type="text" id="shipping_city" name="shipping_city" value="<?= e($formData['shipping_city']) ?>" required
+                                       class="w-full px-4 py-3 border <?= isset($errors['shipping_city']) ? 'border-terracotta-400' : 'border-granite-200' ?> rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
+                                <?php if (isset($errors['shipping_city'])): ?>
+                                <p class="mt-1 text-sm text-terracotta-500"><?= e($errors['shipping_city']) ?></p>
+                                <?php endif; ?>
                             </div>
                             <div>
                                 <label for="shipping_postal_code" class="block text-sm font-medium text-granite-700 mb-2">
-                                    <?= $isEnglish ? 'Postal Code' : 'Codigo Postal' ?>
+                                    <?= $isEnglish ? 'Postal Code' : 'Codigo Postal' ?> <span class="text-terracotta-500">*</span>
                                 </label>
-                                <input type="text" id="shipping_postal_code" name="shipping_postal_code" value="<?= e($formData['shipping_postal_code']) ?>" placeholder="XXXX-XXX"
-                                       class="w-full px-4 py-3 border border-granite-200 rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
+                                <input type="text" id="shipping_postal_code" name="shipping_postal_code" value="<?= e($formData['shipping_postal_code']) ?>" required placeholder="XXXX-XXX"
+                                       class="w-full px-4 py-3 border <?= isset($errors['shipping_postal_code']) ? 'border-terracotta-400' : 'border-granite-200' ?> rounded focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none">
+                                <?php if (isset($errors['shipping_postal_code'])): ?>
+                                <p class="mt-1 text-sm text-terracotta-500"><?= e($errors['shipping_postal_code']) ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div>

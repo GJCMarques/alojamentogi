@@ -740,6 +740,23 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                         </p>
                     </div>
 
+                    <?php if (!empty($accTranslation['refund_policy'])): ?>
+                    <div class="h-px bg-cream-200 w-full"></div>
+
+                    <!-- Refund Policy -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            </div>
+                            <h4 class="font-bold text-primary">Refund</h4>
+                        </div>
+                        <p class="text-charcoal/70 text-sm leading-relaxed pl-11">
+                            <?= e($accTranslation['refund_policy']) ?>
+                        </p>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="h-px bg-cream-200 w-full"></div>
 
                     <!-- House Rules Summary -->

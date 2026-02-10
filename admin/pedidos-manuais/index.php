@@ -28,11 +28,72 @@ if (isset($_GET['mark_contacted']) && isset($_GET['token'])) {
 if (isset($_GET['mark_converted']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['mark_converted'];
-        $db->update('manual_orders', [
-            'status' => 'converted',
-            'updated_at' => date('Y-m-d H:i:s')
-        ], 'id = ?', [$id]);
-        Session::flash('success', 'Pedido marcado como convertido.');
+        $manualOrder = $db->fetch("SELECT * FROM manual_orders WHERE id = ?", [$id]);
+
+        if ($manualOrder && $manualOrder['status'] !== 'converted') {
+            try {
+                $db->beginTransaction();
+
+                // Create real order
+                $orderNumber = generateOrderNumber();
+                $db->insert('orders', [
+                    'order_number' => $orderNumber,
+                    'customer_name' => $manualOrder['customer_name'],
+                    'customer_email' => $manualOrder['customer_email'],
+                    'customer_phone' => $manualOrder['customer_phone'],
+                    'billing_address' => $manualOrder['shipping_address'] ?? '',
+                    'billing_postal_code' => $manualOrder['shipping_postal_code'] ?? '',
+                    'billing_city' => $manualOrder['shipping_city'] ?? '',
+                    'shipping_same_as_billing' => 1,
+                    'shipping_address' => $manualOrder['shipping_address'],
+                    'shipping_postal_code' => $manualOrder['shipping_postal_code'],
+                    'shipping_city' => $manualOrder['shipping_city'],
+                    'subtotal' => $manualOrder['subtotal'],
+                    'shipping_fee' => $manualOrder['shipping_fee'],
+                    'total' => $manualOrder['total'],
+                    'payment_method' => 'transfer',
+                    'payment_status' => 'paid',
+                    'paid_at' => date('Y-m-d H:i:s'),
+                    'status' => 'confirmed',
+                    'notes' => $manualOrder['notes'],
+                    'admin_notes' => 'Convertido do pedido manual #' . $manualOrder['id'] . ($manualOrder['admin_notes'] ? "\n" . $manualOrder['admin_notes'] : ''),
+                    'ip_address' => $manualOrder['ip_address'],
+                    'user_agent' => $manualOrder['user_agent'],
+                ]);
+
+                $orderId = $db->lastInsertId();
+
+                // Create order items from JSON
+                $items = json_decode($manualOrder['items_json'], true) ?? [];
+                foreach ($items as $item) {
+                    $db->insert('order_items', [
+                        'order_id' => $orderId,
+                        'product_id' => $item['product_id'] ?? null,
+                        'product_name' => $item['product_name'] ?? 'Produto',
+                        'product_sku' => $item['product_sku'] ?? null,
+                        'quantity' => (int)($item['quantity'] ?? 1),
+                        'unit_price' => (float)($item['unit_price'] ?? 0),
+                        'total_price' => (float)($item['subtotal'] ?? 0),
+                    ]);
+                }
+
+                // Link manual order to real order
+                $db->update('manual_orders', [
+                    'status' => 'converted',
+                    'converted_order_id' => $orderId,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ], 'id = ?', [$id]);
+
+                $db->commit();
+                Session::flash('success', 'Pedido convertido em encomenda #' . $orderNumber . '.');
+            } catch (\Exception $e) {
+                $db->rollback();
+                logMessage("Error converting manual order #{$id}: " . $e->getMessage(), 'error');
+                Session::flash('error', 'Erro ao converter pedido: ' . $e->getMessage());
+            }
+        } else {
+            Session::flash('error', 'Pedido não encontrado ou já convertido.');
+        }
     } else {
         Session::flash('error', 'Token CSRF inválido.');
     }
@@ -271,10 +332,10 @@ include dirname(__DIR__) . '/includes/header.php';
                                 <?php foreach ($items as $item): ?>
                                     <div class="flex justify-between items-start text-sm">
                                         <div class="flex-1">
-                                            <p class="text-gray-900"><?php echo e($item['name'] ?? 'Produto'); ?></p>
+                                            <p class="text-gray-900"><?php echo e($item['product_name'] ?? 'Produto'); ?></p>
                                             <p class="text-gray-500">Quantidade: <?php echo e($item['quantity'] ?? 1); ?></p>
                                         </div>
-                                        <p class="text-gray-900 font-medium"><?php echo formatPrice($item['price'] ?? 0); ?></p>
+                                        <p class="text-gray-900 font-medium"><?php echo formatPrice($item['unit_price'] ?? 0); ?></p>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -327,6 +388,17 @@ include dirname(__DIR__) . '/includes/header.php';
                             <p>Data de Criação: <?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></p>
                             <?php if ($order['contacted_at']): ?>
                                 <p>Contactado: <?php echo date('d/m/Y H:i', strtotime($order['contacted_at'])); ?></p>
+                            <?php endif; ?>
+                            <?php if ($order['converted_order_id']): ?>
+                                <?php $linkedOrder = $db->fetch("SELECT order_number FROM orders WHERE id = ?", [$order['converted_order_id']]); ?>
+                                <?php if ($linkedOrder): ?>
+                                <p class="text-green-600 font-medium">
+                                    Encomenda:
+                                    <a href="<?php echo e($base); ?>/admin/encomendas/ver.php?id=<?php echo e($order['converted_order_id']); ?>" class="underline hover:text-green-800">
+                                        #<?php echo e($linkedOrder['order_number']); ?>
+                                    </a>
+                                </p>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <?php if ($order['ip_address']): ?>
                                 <p>IP: <?php echo e($order['ip_address']); ?></p>

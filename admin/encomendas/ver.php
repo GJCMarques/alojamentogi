@@ -11,11 +11,12 @@ use Core\Session;
 use Core\CSRF;
 
 $db = Database::getInstance();
+$base = basePath();
 
 $orderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$orderId) {
-    redirect('/admin/encomendas/');
+    redirect($base . '/admin/encomendas/');
 }
 
 // Get order
@@ -23,7 +24,7 @@ $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
 
 if (!$order) {
     Session::flash('error', 'Encomenda não encontrada.');
-    redirect('/admin/encomendas/');
+    redirect($base . '/admin/encomendas/');
 }
 
 // Handle status change
@@ -121,7 +122,7 @@ include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="mb-6">
-    <a href="/admin/encomendas/" class="text-secondary-600 hover:text-secondary-700 text-sm">&larr; Voltar às Encomendas</a>
+    <a href="<?= e($base) ?>/admin/encomendas/" class="text-secondary-600 hover:text-secondary-700 text-sm">&larr; Voltar às Encomendas</a>
 </div>
 
 <div class="flex justify-between items-start mb-6">
