@@ -76,7 +76,9 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <div id="hero-content">
-                Trás-os-Montes, Portugal
+            <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
+                Tras-os-Montes, Portugal
+            </span>
             <h1 class="hero-animate-up hero-delay-2 font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl">
                 A Casa do Gi
             </h1>
@@ -259,7 +261,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
             
             <!-- Left: Text Content -->
-            <div class="order-2 md:order-1 animate-on-scroll">
+            <div class="md:order-1 animate-on-scroll">
                 <span class="text-accent text-xs font-bold tracking-[0.3em] uppercase block mb-6">
                     <?= $content['home_about_label'] ?? 'A Nossa História' ?>
                 </span>
@@ -286,7 +288,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Right: Image Composition -->
-            <div class="relative order-1 md:order-2 animate-on-scroll" data-delay="200">
+            <div class="relative md:order-2 animate-on-scroll" data-delay="200">
                 <!-- Main Image -->
                 <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                     <div class="absolute inset-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>

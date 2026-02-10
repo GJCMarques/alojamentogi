@@ -10,5 +10,5 @@ use Core\Session;
 
 Auth::logout();
 
-Session::flash('success', 'Sessão terminada com sucesso.');
+// Session::flash('success', 'Sessão terminada com sucesso.');
 redirect('/admin/login.php');

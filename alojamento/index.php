@@ -680,7 +680,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
 </section>
 
 <!-- Location & Policy Combined Section -->
-<section class="relative py-20 bg-white">
+<section class="relative py-20 bg-white overflow-hidden">
     <!-- Top Wave Divider -->
     <div class="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[60px] text-cream-50 fill-current">

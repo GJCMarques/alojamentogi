@@ -4,7 +4,7 @@
             <footer class="border-t border-accent/20 bg-white px-6 py-4">
                 <div class="flex items-center justify-between text-sm text-charcoal-500">
                     <p>&copy; <?= date('Y') ?> A Casa do Gi. Painel de Administracao.</p>
-                    <p>v1.0.0</p>
+                    <p>v2.5.0</p>
                 </div>
             </footer>
         </div>

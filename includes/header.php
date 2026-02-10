@@ -44,7 +44,7 @@ $navItems = $isEnglish ? [
 $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 ?>
 <!DOCTYPE html>
-<html lang="<?= $currentLang ?>" class="scroll-smooth">
+<html lang="<?= $currentLang ?>" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -314,19 +314,18 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         /* Mobile menu animation */
         .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Handled by Tailwind classes for opacity and pointer-events */
         }
 
         .mobile-menu.open {
-            transform: translateX(0);
+            opacity: 1;
         }
 
         /* Mobile menu backdrop */
         .mobile-backdrop {
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.35s ease, visibility 0.35s ease;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
         .mobile-backdrop.open {
@@ -411,7 +410,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 <body class="bg-cream text-charcoal antialiased <?= e($bodyClass) ?>">
     <?php if (!$hideNav): ?>
     <!-- Header Navigation -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 bg-transparent text-cream">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-[100] bg-transparent text-cream">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="header-inner flex items-center justify-between">
                 <!-- Logo / Brand -->
@@ -494,8 +493,8 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button type="button" id="mobile-menu-btn" class="lg:hidden p-2 text-cream hover:text-accent transition-colors" aria-label="Menu">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="button" id="mobile-menu-btn" class="lg:hidden p-4 -mr-2 text-cream hover:text-accent transition-colors relative z-50 cursor-pointer select-none" aria-label="Menu">
+                    <svg class="w-8 h-8 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
@@ -503,72 +502,70 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         </nav>
 
         <!-- Mobile Menu Backdrop -->
-        <div id="mobile-backdrop" class="mobile-backdrop fixed inset-0 bg-black/60 lg:hidden z-40"></div>
+        <div id="mobile-backdrop" class="mobile-backdrop fixed inset-0 bg-primary/90 backdrop-blur-md lg:hidden z-[9990]"></div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-full max-w-sm bg-primary shadow-2xl lg:hidden border-l border-accent/20 z-50">
-            <div class="flex flex-col h-full">
-                <div class="flex items-center justify-between p-6 border-b border-accent/20 bg-primary-700">
-                    <span class="font-cursive text-3xl text-cream">Menu</span>
-                    <button type="button" id="mobile-menu-close" class="p-2 text-cream hover:text-accent transition-colors">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
-                <nav class="flex-1 px-6 py-8 overflow-y-auto bg-primary">
-                    <?php foreach ($navItems as $item):
-                        // Active logic
-                        $homeUrlPT = $base . '/'; $homeUrlEN = $base . '/en/';
-                        $isActive = ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN)
-                             ? ($currentPath === $item['url'])
-                             : (strpos($currentPath, rtrim($item['url'], '/')) === 0);
-                    ?>
-                    <a href="<?= $item['url'] ?>"
-                       class="mobile-nav-link block py-4 text-xl font-sans border-b border-white/5 <?= $isActive ? 'text-accent font-semibold' : 'text-cream/90' ?> hover:text-accent hover:pl-2 transition-all">
-                        <?= e($item['label']) ?>
+        <div id="mobile-menu" class="mobile-menu fixed inset-0 w-full h-full lg:hidden z-[9999] flex flex-col justify-center items-center pointer-events-none opacity-0 transition-opacity duration-200">
+            <!-- Close Button (Absolute Top Right) -->
+            <button type="button" id="mobile-menu-close" class="absolute top-6 right-6 p-2 text-cream hover:text-accent transition-colors pointer-events-auto">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <nav class="flex flex-col items-center space-y-8 pointer-events-auto">
+                <?php foreach ($navItems as $item):
+                    // Active logic
+                    $homeUrlPT = $base . '/'; $homeUrlEN = $base . '/en/';
+                    $isActive = ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN)
+                            ? ($currentPath === $item['url'])
+                            : (strpos($currentPath, rtrim($item['url'], '/')) === 0);
+                ?>
+                <a href="<?= $item['url'] ?>"
+                   class="mobile-nav-link text-3xl md:text-4xl font-serif font-light tracking-wide <?= $isActive ? 'text-accent' : 'text-cream' ?> hover:text-accent transition-colors transform hover:scale-105 duration-300">
+                    <?= e($item['label']) ?>
+                </a>
+                <?php endforeach; ?>
+
+                <div class="h-px w-24 bg-cream/20 my-8"></div>
+
+                <div class="flex items-center gap-8">
+                     <!-- Language Switcher Mobile -->
+                    <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
+                       class="flex items-center gap-3 text-cream/80 hover:text-accent transition-colors group">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border border-cream/20 group-hover:border-accent transition-colors">
+                             <?php if ($isEnglish): ?>
+                                <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                    <path fill="#214524" d="M0 0h220v480H0z"/>
+                                    <path fill="#cf1020" d="M220 0h420v480H220z"/>
+                                    <path fill="#ffc400" d="M220 240m-60 0a60 60 0 1 0 120 0 60 60 0 1 0-120 0"/>
+                                </svg>
+                            <?php else: ?>
+                                <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
+                                    <path fill="#012169" d="M0 0h640v480H0z"/>
+                                    <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z"/>
+                                    <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
+                                    <path fill="#FFF" d="M241 0v480h160V0H241zM0 160v160h640V160H0z"/>
+                                    <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z"/>
+                                </svg>
+                            <?php endif; ?>
+                        </div>
+                        <span class="text-sm font-medium uppercase tracking-widest"><?= $isEnglish ? 'Português' : 'English' ?></span>
                     </a>
-                    <?php endforeach; ?>
 
-                    <div class="mt-8 pt-8 border-t border-accent/20">
-                        <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
-                           class="mobile-nav-link flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
-                            <div class="w-8 h-8 rounded-full overflow-hidden border border-cream/20">
-                                <?php if ($isEnglish): ?>
-                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
-                                        <path fill="#214524" d="M0 0h220v480H0z"/>
-                                        <path fill="#cf1020" d="M220 0h420v480H220z"/>
-                                        <path fill="#ffc400" d="M220 240m-60 0a60 60 0 1 0 120 0 60 60 0 1 0-120 0"/>
-                                    </svg>
-                                <?php else: ?>
-                                    <svg viewBox="0 0 640 480" class="w-full h-full object-cover">
-                                        <path fill="#012169" d="M0 0h640v480H0z"/>
-                                        <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z"/>
-                                        <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
-                                        <path fill="#FFF" d="M241 0v480h160V0H241zM0 160v160h640V160H0z"/>
-                                        <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z"/>
-                                    </svg>
-                                <?php endif; ?>
-                            </div>
-                            <span class="text-lg"><?= $isEnglish ? 'Português' : 'English' ?></span>
-                        </a>
-                    </div>
-
-                    <!-- Cart in Mobile Menu -->
+                    <!-- Cart Mobile -->
                     <?php if (isShopEnabled()): ?>
-                    <div class="mt-6 pt-6 border-t border-accent/20">
-                        <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
-                           class="mobile-nav-link flex items-center space-x-3 py-3 text-cream/90 hover:text-accent">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                            </svg>
-                            <span class="text-lg"><?= $isEnglish ? 'Cart' : 'Carrinho' ?></span>
-                            <span id="mobile-cart-count" class="ml-auto w-6 h-6 bg-accent text-primary text-xs font-bold rounded-full flex items-center justify-center hidden">0</span>
-                        </a>
-                    </div>
+                    <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
+                       class="relative flex items-center gap-3 text-cream/80 hover:text-accent transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                         <span class="text-sm font-medium uppercase tracking-widest"><?= $isEnglish ? 'Cart' : 'Carrinho' ?></span>
+                         <span id="mobile-cart-count" class="absolute -top-2 -right-2 w-5 h-5 bg-accent text-primary text-[10px] font-bold rounded-full flex items-center justify-center hidden shadow-sm">0</span>
+                    </a>
                     <?php endif; ?>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
     </header>
 

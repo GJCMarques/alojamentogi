@@ -341,6 +341,8 @@ class Language
                 '/atividades' => '/en/activities',
                 '/contactos' => '/en/contact',
                 '/sobre-nos' => '/en/about-us',
+                '/politica-privacidade' => '/en/privacy-policy',
+                '/termos-condicoes' => '/en/terms-and-conditions',
             ];
 
             // Check mappings
@@ -375,6 +377,8 @@ class Language
                 '/en/activities' => '/atividades',
                 '/en/contact' => '/contactos',
                 '/en/about-us' => '/sobre-nos',
+                '/en/privacy-policy' => '/politica-privacidade',
+                '/en/terms-and-conditions' => '/termos-condicoes',
                 '/en/' => '/',
                 '/en' => '/',
             ];

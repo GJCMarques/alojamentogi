@@ -1,13 +1,15 @@
 <?php
 /**
- * A Casa do Gi - Terms and Conditions
+ * A Casa do Gi - Terms and Conditions (English)
  */
 
-require_once dirname(__DIR__) . '/includes/init.php';
+require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 
 use Core\Language;
 use Core\Database;
 
+// Force English language
+Language::getInstance()->setLanguage('en');
 $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
@@ -28,7 +30,7 @@ $sections = $db->fetchAll(
      LEFT JOIN legal_section_translations st ON s.id = st.section_id AND st.language_id = ?
      WHERE s.page = 'terms' AND s.is_active = 1
      ORDER BY s.sort_order ASC",
-    [$lang->current()]
+    [LANG_EN]
 );
 
 $pageTitle = content('terms_hero_title');
@@ -74,7 +76,6 @@ include INCLUDES_PATH . '/header.php';
 
         <!-- Structured Sections -->
         <div class="space-y-16">
-
             <?php foreach ($sections as $index => $section): ?>
             <div class="animate-on-scroll" data-animation="fade-up" data-delay="<?= ($index % 3) * 100 ?>">
                 <h2 class="text-3xl font-serif text-primary mb-3 relative inline-block">

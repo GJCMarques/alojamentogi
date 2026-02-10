@@ -159,7 +159,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Gestão de Imagens</h1>
+        <h1 class="text-2xl font-bold text-primary">Gestão de Imagens</h1>
         <p class="text-gray-600">Alterar imagens do corpo das páginas</p>
     </div>
 </div>

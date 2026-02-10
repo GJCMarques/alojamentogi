@@ -21,6 +21,16 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 // Build hero URL
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
+// Get legal sections
+$sections = $db->fetchAll(
+    "SELECT s.*, st.title, st.content 
+     FROM legal_sections s 
+     LEFT JOIN legal_section_translations st ON s.id = st.section_id AND st.language_id = ?
+     WHERE s.page = 'privacy' AND s.is_active = 1
+     ORDER BY s.sort_order ASC",
+    [$lang->current()]
+);
+
 $pageTitle = content('privacy_hero_title');
 $pageDescription = content('privacy_hero_subtitle');
 
@@ -62,9 +72,20 @@ include INCLUDES_PATH . '/header.php';
             </span>
         </div>
 
-        <!-- WYSIWYG Content -->
-        <div class="prose prose-lg prose-charcoal max-w-none animate-on-scroll" data-animation="fade-up" data-delay="100">
-            <?= content('privacy_content') ?>
+        <!-- Structured Sections -->
+        <div class="space-y-16">
+
+            <?php foreach ($sections as $index => $section): ?>
+            <div class="animate-on-scroll" data-animation="fade-up" data-delay="<?= ($index % 3) * 100 ?>">
+                <h2 class="text-3xl font-serif text-primary mb-3 relative inline-block">
+                    <?= e($section['title']) ?>
+                    <span class="absolute -bottom-2 left-0 w-1/2 h-1 bg-accent rounded-full"></span>
+                </h2>
+                <div class="prose prose-lg prose-charcoal max-w-none mt-8">
+                    <?= $section['content'] ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

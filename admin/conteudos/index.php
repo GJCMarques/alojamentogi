@@ -128,7 +128,6 @@ $blockDefinitions = [
             'privacy_hero_title' => ['label' => 'Hero - Título', 'type' => 'text'],
             'privacy_hero_subtitle' => ['label' => 'Hero - Subtítulo', 'type' => 'textarea'],
             'privacy_date' => ['label' => 'Data de Atualização', 'type' => 'text'],
-            'privacy_content' => ['label' => 'Conteúdo Principal', 'type' => 'wysiwyg'],
         ]
     ],
     'terms_conditions' => [
@@ -138,7 +137,6 @@ $blockDefinitions = [
             'terms_hero_title' => ['label' => 'Hero - Título', 'type' => 'text'],
             'terms_hero_subtitle' => ['label' => 'Hero - Subtítulo', 'type' => 'textarea'],
             'terms_date' => ['label' => 'Data de Atualização', 'type' => 'text'],
-            'terms_content' => ['label' => 'Conteúdo Principal', 'type' => 'wysiwyg'],
         ]
     ],
     'footer' => [

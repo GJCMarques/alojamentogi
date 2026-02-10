@@ -30,7 +30,7 @@ if (!isset($_SESSION['_admin_last_activity'])) {
 } elseif (time() - $_SESSION['_admin_last_activity'] > $adminSessionLifetime) {
     // Session expired - force logout
     Auth::logout();
-    \Core\Session::flash('error', 'Sessao expirada. Por favor, faca login novamente.');
+    \Core\Session::flash('error', 'Sessão expirada. Por favor, faça login novamente.');
     redirect('/admin/login.php');
 }
 // Update last activity timestamp on each page load

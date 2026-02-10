@@ -246,7 +246,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
             
             <!-- Left: Text Content -->
-            <div class="order-2 md:order-1 animate-on-scroll">
+            <div class="md:order-1 animate-on-scroll">
                 <span class="text-accent text-xs font-bold tracking-[0.3em] uppercase block mb-6">
                     <?= $content['home_about_label'] ?? 'Our Story' ?>
                 </span>
@@ -273,7 +273,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Right: Image Composition -->
-            <div class="relative order-1 md:order-2 animate-on-scroll" data-delay="200">
+            <div class="relative md:order-2 animate-on-scroll" data-delay="200">
                 <!-- Main Image -->
                 <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                     <div class="absolute inset-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>

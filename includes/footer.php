@@ -201,10 +201,10 @@ $instagramUrl = setting('instagram_url', '');
                         &copy; <?= date('Y') ?> <?= e($siteName) ?>. <?= content('footer_rights_text') ?>
                     </p>
                     <div class="flex items-center space-x-6 text-sm">
-                        <a href="<?= $base ?>/politica-privacidade/" class="text-cream-300 hover:text-accent transition-colors">
+                        <a href="<?= $isEnglish ? $base . '/en/privacy-policy/' : $base . '/politica-privacidade/' ?>" class="text-cream-300 hover:text-accent transition-colors">
                             <?= $isEnglish ? 'Privacy Policy' : 'Política de Privacidade' ?>
                         </a>
-                        <a href="<?= $base ?>/termos-condicoes/" class="text-cream-300 hover:text-accent transition-colors">
+                        <a href="<?= $isEnglish ? $base . '/en/terms-and-conditions/' : $base . '/termos-condicoes/' ?>" class="text-cream-300 hover:text-accent transition-colors">
                             <?= $isEnglish ? 'Terms & Conditions' : 'Termos e Condições' ?>
                         </a>
                     </div>
@@ -594,7 +594,7 @@ $instagramUrl = setting('instagram_url', '');
                             </ul>
                             <p class="leading-relaxed pt-2">
                                 <?= $isEnglish
-                                    ? 'For more information, please read our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">privacy policy</a>.'
+                                    ? 'For more information, please read our <a href="' . $base . '/en/terms-and-conditions/" class="text-secondary hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-secondary hover:underline font-medium">privacy policy</a>.'
                                     : 'Para mais informações, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">Termos e Condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">Política de Privacidade</a>.' ?>
                             </p>
                         </div>
