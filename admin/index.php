@@ -81,8 +81,8 @@ include __DIR__ . '/includes/header.php';
         </p>
         <p class="text-xs <?= $shopMode === 'closed' ? 'text-red-600' : 'text-yellow-600' ?> mt-0.5">
             <?= $shopMode === 'closed'
-                ? 'A loja esta fechada ao publico. Nenhuma encomenda pode ser feita.'
-                : 'Os clientes podem enviar pedidos mas o pagamento e tratado manualmente.' ?>
+                ? 'A loja está fechada ao público. Nenhuma encomenda pode ser feita.'
+                : 'Os clientes podem enviar pedidos mas o pagamento é tratado manualmente.' ?>
         </p>
     </div>
     <a href="<?= $base ?>/admin/loja/" class="px-3 py-1.5 text-xs font-medium rounded-lg
@@ -98,7 +98,7 @@ include __DIR__ . '/includes/header.php';
     <div class="bg-white rounded-lg shadow-sm p-6 border border-granite-200">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-granite-500">Receita (Este Mes)</p>
+                <p class="text-sm font-medium text-granite-500">Receita (Este Mês)</p>
                 <p class="text-2xl font-bold text-granite-800 mt-1"><?= formatPrice($monthRevenue) ?></p>
             </div>
             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -245,7 +245,7 @@ include __DIR__ . '/includes/header.php';
                 <svg class="w-12 h-12 mx-auto text-granite-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
-                <p>Ainda nao ha encomendas</p>
+                <p>Ainda não há encomendas</p>
             </div>
             <?php else: ?>
                 <?php foreach ($recentOrders as $order): ?>
@@ -291,7 +291,7 @@ include __DIR__ . '/includes/header.php';
                 <svg class="w-12 h-12 mx-auto text-granite-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
-                <p>Ainda nao ha mensagens</p>
+                <p>Ainda não há mensagens</p>
             </div>
             <?php else: ?>
                 <?php foreach ($recentMessages as $msg): ?>
@@ -358,7 +358,7 @@ include __DIR__ . '/includes/header.php';
 
 <!-- Quick Actions -->
 <div class="bg-white rounded-lg shadow-sm border border-granite-200 p-6">
-    <h2 class="font-semibold text-granite-800 mb-4">Acoes Rapidas</h2>
+    <h2 class="font-semibold text-granite-800 mb-4">Ações Rápidas</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <a href="<?= $base ?>/admin/loja/" class="flex flex-col items-center p-4 bg-granite-50 rounded-lg hover:bg-granite-100 transition-colors text-center">
             <div class="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center mb-2">
@@ -402,7 +402,7 @@ include __DIR__ . '/includes/header.php';
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
             </div>
-            <span class="text-xs font-medium text-granite-700">Conteudos</span>
+            <span class="text-xs font-medium text-granite-700">Conteúdos</span>
         </a>
 
         <a href="<?= $base ?>/admin/media/" class="flex flex-col items-center p-4 bg-granite-50 rounded-lg hover:bg-granite-100 transition-colors text-center">

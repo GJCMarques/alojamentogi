@@ -84,10 +84,15 @@ include INCLUDES_PATH . '/header.php';
                 </div>
             </div>
 
+// Data
+$langId = 2;
+
+// ... (in body)
+
             <div class="relative animate-on-scroll" data-animation="fade-left">
                 <!-- Image Composition -->
                 <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-700">
-                    <img src="<?= asset('images/FotoGi.png') ?>" alt="A Casa do Gi in the Past" class="w-full h-auto object-cover">
+                    <img src="<?= resolveContentImage(content('about_image_intro', 'images/FotoGi.png')) ?>" alt="A Casa do Gi in the Past" class="w-full h-auto object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
                     <div class="absolute bottom-6 left-6 text-white text-sm font-medium tracking-wide">
                         <?= $content['about_origin_caption'] ?? '1980 • The Beginning' ?>
@@ -96,83 +101,15 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Decorative Border -->
                 <div class="absolute inset-0 border-2 border-accent rounded-2xl transform -rotate-2 scale-105 z-0 opacity-40"></div>
             </div>
-        </div>
-    </div>
-</section>
 
-<!-- Essence Section - Sophisticated Grid -->
-<section class="py-24 bg-cream relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-
-            <!-- Sticky Title Area -->
-            <div class="lg:col-span-4 lg:sticky lg:top-32 animate-on-scroll" data-animation="fade-right">
-                <span class="text-accent text-sm font-bold tracking-widest uppercase mb-4 block"><?= $content['about_values_label'] ?? 'Values' ?></span>
-                <h2 class="font-serif text-4xl lg:text-5xl text-primary mb-6 leading-tight">
-                    <?= $content['about_values_title'] ?? 'The art of welcoming,<br>the old-fashioned way.' ?>
-                </h2>
-                <div class="w-16 h-1 bg-secondary mb-8"></div>
-                <p class="text-charcoal-600 font-light text-lg leading-relaxed">
-                    <?= $content['about_values_intro'] ?? 'We are not a hotel. We are a family home that decided to open its doors to the world. Here, hospitality is not a service, it\'s our nature.' ?>
-                </p>
-            </div>
-
-            <!-- Cards Grid -->
-            <div class="lg:col-span-8 grid md:grid-cols-2 gap-6">
-                <!-- Card 1: Welcoming -->
-                <div class="bg-white p-10 rounded-2xl border-l-4 border-accent shadow-lg hover:shadow-xl transition-all duration-500 group animate-on-scroll" data-delay="100">
-                    <div class="mb-6 text-primary group-hover:text-accent transition-colors duration-300">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    </div>
-                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:translate-x-1 transition-transform duration-300"><?= $content['about_value1_title'] ?? 'Genuine Hospitality' ?></h3>
-                    <p class="text-charcoal-500 font-light leading-relaxed">
-                        <?= $content['about_value1_text'] ?? 'We welcome each guest as an old friend. Without rigid formalities, with the warmth of a hug and the sincerity of a Transmontano smile.' ?>
-                    </p>
-                </div>
-
-                <!-- Card 2: Silence -->
-                <div class="bg-white p-10 rounded-2xl border-l-4 border-secondary shadow-lg hover:shadow-xl transition-all duration-500 group animate-on-scroll md:mt-12" data-delay="200">
-                    <div class="mb-6 text-secondary group-hover:text-primary transition-colors duration-300">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    </div>
-                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:translate-x-1 transition-transform duration-300"><?= $content['about_value2_title'] ?? 'Absolute Peace' ?></h3>
-                    <p class="text-charcoal-500 font-light leading-relaxed">
-                        <?= $content['about_value2_text'] ?? 'The luxury of silence. Far from the hustle, where the only sound is the wind in the trees and the singing of birds. The perfect refuge to recharge energies.' ?>
-                    </p>
-                </div>
-
-                <!-- Card 3: Sharing -->
-                <div class="bg-white p-10 rounded-2xl border-l-4 border-primary shadow-lg hover:shadow-xl transition-all duration-500 group animate-on-scroll" data-delay="300">
-                    <div class="mb-6 text-primary group-hover:text-accent transition-colors duration-300">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    </div>
-                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:translate-x-1 transition-transform duration-300"><?= $content['about_value3_title'] ?? 'Spirit of Sharing' ?></h3>
-                    <p class="text-charcoal-500 font-light leading-relaxed">
-                        <?= $content['about_value3_text'] ?? 'We believe the best memories are built at the table. We share stories, flavors and experiences that last forever.' ?>
-                    </p>
-                </div>
-
-               <!-- Card 4: Detail -->
-                <div class="bg-white p-10 rounded-2xl border-l-4 border-cream-400 shadow-lg hover:shadow-xl transition-all duration-500 group animate-on-scroll md:mt-12" data-delay="400">
-                    <div class="mb-6 text-accent group-hover:text-secondary transition-colors duration-300">
-                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                    </div>
-                    <h3 class="font-serif text-2xl text-primary mb-3 group-hover:translate-x-1 transition-transform duration-300"><?= $content['about_value4_title'] ?? 'Attention to Detail' ?></h3>
-                    <p class="text-charcoal-500 font-light leading-relaxed">
-                        <?= $content['about_value4_text'] ?? 'Nothing is left to chance. From homemade breakfast to thoughtful decoration, everything is designed for your comfort and wellbeing.' ?>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+// ... (lower down)
 
 <!-- Region Section - Full Bleed Immersive -->
 <section class="relative h-screen min-h-[700px] flex items-center overflow-hidden">
     <!-- Parallax Background -->
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-black/40 z-10"></div> <!-- Overlay -->
-        <img src="<?= asset('images/Castelo.jpg') ?>" class="w-full h-full object-cover attachment-fixed transform scale-110" style="object-position: center;" alt="Mogadouro Castle">
+        <img src="<?= resolveContentImage(content('about_image_region', 'images/Castelo.jpg')) ?>" class="w-full h-full object-cover attachment-fixed transform scale-110" style="object-position: center;" alt="Mogadouro Castle">
     </div>
 
     <div class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">

@@ -34,7 +34,7 @@ $customerEmail = $pendingOrder['email'] ?? '';
 // Get full order from DB
 $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
 if (!$order) {
-    Session::flash('error', $isEnglish ? 'Order not found.' : 'Encomenda nao encontrada.');
+    Session::flash('error', $isEnglish ? 'Order not found.' : 'Encomenda não encontrada.');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
@@ -96,7 +96,7 @@ try {
             break;
 
         default:
-            $paymentError = $isEnglish ? 'Invalid payment method.' : 'Metodo de pagamento invalido.';
+            $paymentError = $isEnglish ? 'Invalid payment method.' : 'Método de pagamento inválido.';
     }
 } catch (\Exception $e) {
     logMessage("Payment page error: " . $e->getMessage(), 'error');
@@ -113,7 +113,7 @@ include INCLUDES_PATH . '/header.php';
 <nav class="bg-cream-200 py-3 border-b border-cream-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ol class="flex items-center text-sm text-charcoal/60">
-            <li><a href="<?= $base ?>/" class="hover:text-secondary"><?= $isEnglish ? 'Home' : 'Inicio' ?></a></li>
+            <li><a href="<?= $base ?>/" class="hover:text-secondary"><?= $isEnglish ? 'Home' : 'Início' ?></a></li>
             <li><span class="mx-2">/</span></li>
             <li><a href="<?= $base ?>/loja/" class="hover:text-secondary"><?= $isEnglish ? 'Shop' : 'Loja' ?></a></li>
             <li><span class="mx-2">/</span></li>
@@ -169,7 +169,7 @@ include INCLUDES_PATH . '/header.php';
                             </div>
                             <div>
                                 <h2 class="font-serif text-xl text-primary">MB WAY</h2>
-                                <p class="text-sm text-charcoal/60"><?= $isEnglish ? 'Confirm on your phone' : 'Confirme no telemovel' ?></p>
+                                <p class="text-sm text-charcoal/60"><?= $isEnglish ? 'Confirm on your phone' : 'Confirme no telemóvel' ?></p>
                             </div>
                         </div>
                     </div>
@@ -183,7 +183,7 @@ include INCLUDES_PATH . '/header.php';
 
                         <div class="flex items-center justify-center gap-3 mb-6" id="mbway-status">
                             <div class="animate-spin w-5 h-5 border-2 border-secondary border-t-transparent rounded-full"></div>
-                            <span class="text-charcoal/60"><?= $isEnglish ? 'Waiting for confirmation...' : 'A aguardar confirmacao...' ?></span>
+                            <span class="text-charcoal/60"><?= $isEnglish ? 'Waiting for confirmation...' : 'A aguardar confirmação...' ?></span>
                         </div>
 
                         <div class="space-y-3 text-sm text-charcoal/60">
@@ -193,7 +193,7 @@ include INCLUDES_PATH . '/header.php';
                             </div>
                             <div class="flex items-start gap-3">
                                 <svg class="w-4 h-4 mt-0.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                <span><?= $isEnglish ? 'You will receive a confirmation email after payment' : 'Recebera um email de confirmacao apos o pagamento' ?></span>
+                                <span><?= $isEnglish ? 'You will receive a confirmation email after payment' : 'Receberá um email de confirmação após o pagamento' ?></span>
                             </div>
                         </div>
                     </div>
@@ -221,7 +221,7 @@ include INCLUDES_PATH . '/header.php';
                                 <span class="text-xl font-bold text-primary tracking-wider"><?= e($paymentData['entity']) ?></span>
                             </div>
                             <div class="flex justify-between items-center pb-3 border-b border-cream-200">
-                                <span class="text-charcoal/60 text-sm uppercase tracking-wider"><?= $isEnglish ? 'Reference' : 'Referencia' ?></span>
+                                <span class="text-charcoal/60 text-sm uppercase tracking-wider"><?= $isEnglish ? 'Reference' : 'Referência' ?></span>
                                 <span class="text-xl font-bold text-primary tracking-wider"><?= e($paymentData['reference']) ?></span>
                             </div>
                             <div class="flex justify-between items-center">
@@ -235,7 +235,7 @@ include INCLUDES_PATH . '/header.php';
                                 <strong><?= $isEnglish ? 'Important:' : 'Importante:' ?></strong>
                                 <?= $isEnglish
                                     ? 'Your order will only be processed after payment confirmation.'
-                                    : 'A sua encomenda so sera processada apos a confirmacao do pagamento.' ?>
+                                    : 'A sua encomenda só será processada após a confirmação do pagamento.' ?>
                             </p>
                         </div>
 
@@ -246,11 +246,11 @@ include INCLUDES_PATH . '/header.php';
                             </div>
                             <div class="flex items-start gap-3">
                                 <svg class="w-4 h-4 mt-0.5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span><?= $isEnglish ? 'Reference valid for 3 days' : 'Referencia valida por 3 dias' ?></span>
+                                <span><?= $isEnglish ? 'Reference valid for 3 days' : 'Referência válida por 3 dias' ?></span>
                             </div>
                             <div class="flex items-start gap-3">
                                 <svg class="w-4 h-4 mt-0.5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span><?= $isEnglish ? 'Confirmation email sent after payment' : 'Email de confirmacao enviado apos pagamento' ?></span>
+                                <span><?= $isEnglish ? 'Confirmation email sent after payment' : 'Email de confirmação enviado após pagamento' ?></span>
                             </div>
                         </div>
                     </div>
@@ -265,7 +265,7 @@ include INCLUDES_PATH . '/header.php';
                                 </svg>
                             </div>
                             <div>
-                                <h2 class="font-serif text-xl text-primary"><?= $isEnglish ? 'Card Payment' : 'Pagamento por Cartao' ?></h2>
+                                <h2 class="font-serif text-xl text-primary"><?= $isEnglish ? 'Card Payment' : 'Pagamento por Cartão' ?></h2>
                                 <p class="text-sm text-charcoal/60">Visa / Mastercard</p>
                             </div>
                         </div>
@@ -275,7 +275,7 @@ include INCLUDES_PATH . '/header.php';
                         <p class="text-charcoal/60 mb-6">
                             <?= $isEnglish
                                 ? 'You will be redirected to the secure payment page.'
-                                : 'Sera redirecionado para a pagina de pagamento seguro.' ?>
+                                : 'Será redirecionado para a página de pagamento seguro.' ?>
                         </p>
                         <p class="text-2xl font-bold text-accent mb-6"><?= formatPrice($totalAmount) ?></p>
 
@@ -314,7 +314,7 @@ include INCLUDES_PATH . '/header.php';
                             <span class="text-charcoal/60"><?= $isEnglish ? 'Shipping' : 'Envio' ?></span>
                             <span class="text-primary">
                                 <?php $shippingFee = (float)($order['shipping_fee'] ?? $order['shipping'] ?? 0); ?>
-                                <?= $shippingFee > 0 ? formatPrice($shippingFee) : '<span class="text-secondary">' . ($isEnglish ? 'Free' : 'Gratis') . '</span>' ?>
+                                <?= $shippingFee > 0 ? formatPrice($shippingFee) : '<span class="text-secondary">' . ($isEnglish ? 'Free' : 'Grátis') . '</span>' ?>
                             </span>
                         </div>
                         <div class="flex justify-between text-lg font-bold border-t border-cream-100 pt-2">
@@ -333,7 +333,7 @@ include INCLUDES_PATH . '/header.php';
 
                     <div class="mt-6">
                         <a href="<?= $base ?>/" class="block text-center text-sm text-secondary hover:text-secondary-700 transition-colors">
-                            <?= $isEnglish ? 'Back to Home' : 'Voltar ao Inicio' ?>
+                            <?= $isEnglish ? 'Back to Home' : 'Voltar ao Início' ?>
                         </a>
                     </div>
                 </div>

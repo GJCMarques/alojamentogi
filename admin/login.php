@@ -25,7 +25,7 @@ $failureCount = $rateLimiter->getFailureCount('admin_login', 900);
 if ($failureCount >= 20) {
     // Severe brute force: block completely for 15 min
     http_response_code(429);
-    $error = 'Demasiadas tentativas de login. A sua conta foi temporariamente bloqueada por seguranca. Tente novamente em 15 minutos.';
+    $error = 'Demasiadas tentativas de login. A sua conta foi temporariamente bloqueada por segurança. Tente novamente em 15 minutos.';
 }
 
 // Handle form submission
@@ -36,7 +36,7 @@ if (isPost() && $failureCount < 20) {
     }
     // Verify CSRF
     elseif (!CSRF::isValid()) {
-        $error = 'Sessao expirada. Por favor, tente novamente.';
+        $error = 'Sessão expirada. Por favor, tente novamente.';
     } else {
         $username = sanitize(post('username', ''));
         $password = post('password', '');
@@ -136,11 +136,11 @@ if (isPost() && $failureCount < 20) {
             <div class="relative h-full flex flex-col justify-between p-12 text-white z-10">
                 <div>
                     <h1 class="text-5xl font-cursive text-cream tracking-wide drop-shadow-md pb-1">A Casa do Gi</h1>
-                    <p class="mt-2 text-cream-200 text-lg font-light">Painel de Administracao</p>
+                    <p class="mt-2 text-cream-200 text-lg font-light">Painel de Administração</p>
                 </div>
                 <div>
                     <blockquote class="text-xl text-cream-200 italic font-light leading-relaxed">
-                        "Simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor!"
+                        "Simplicidade, acolhimento, momentos de convívio marcantes, calor da família, alegria, diversão, gargalhadas e muito amor!"
                     </blockquote>
                 </div>
             </div>
@@ -152,13 +152,13 @@ if (isPost() && $failureCount < 20) {
                 <!-- Mobile Logo -->
                 <div class="lg:hidden text-center mb-8">
                     <h1 class="text-4xl font-cursive text-primary drop-shadow-sm pb-1">A Casa do Gi</h1>
-                    <p class="text-charcoal-500">Painel de Administracao</p>
+                    <p class="text-charcoal-500">Painel de Administração</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-lg p-8 border border-accent/20">
                     <div class="text-center mb-8">
                         <h2 class="text-2xl font-bold text-primary">Bem-vindo</h2>
-                        <p class="text-charcoal-500 mt-2">Inicie sessao para continuar</p>
+                        <p class="text-charcoal-500 mt-2">Inicie sessão para continuar</p>
                     </div>
 
                     <?php if (isset($_GET['expired'])): ?>
@@ -167,7 +167,7 @@ if (isPost() && $failureCount < 20) {
                             <svg class="w-5 h-5 mr-2 flex-shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            A sua sessao expirou por seguranca. Por favor, inicie sessao novamente.
+                            A sua sessão expirou por segurança. Por favor, inicie sessão novamente.
                         </div>
                     </div>
                     <?php endif; ?>

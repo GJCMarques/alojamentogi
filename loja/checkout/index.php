@@ -25,7 +25,7 @@ if ($shopMode === 'closed') {
     // Shop is completely closed - show toast notification and redirect back
     Session::flash('success', $isEnglish
         ? 'Our shop is temporarily closed. For more information, please contact us.'
-        : 'A nossa loja esta temporariamente fechada. Para mais informacoes, contacte-nos.');
+        : 'A nossa loja está temporariamente fechada. Para mais informações, contacte-nos.');
     $referer = $_SERVER['HTTP_REFERER'] ?? ($base . ($isEnglish ? '/en/shop/' : '/loja/'));
     redirect($referer);
 }
@@ -37,7 +37,7 @@ if ($shopMode === 'manual') {
 
 // Redirect if cart is empty
 if ($cart->isEmpty()) {
-    Session::flash('warning', $isEnglish ? 'Your cart is empty' : 'O seu carrinho esta vazio');
+    Session::flash('warning', $isEnglish ? 'Your cart is empty' : 'O seu carrinho está vazio');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
@@ -80,7 +80,7 @@ if (isPost()) {
     if (!$rateLimiter->check('checkout_submit', 5, 600)) {
         $errors['general'] = $isEnglish
             ? 'Too many checkout attempts. Please wait a few minutes and try again.'
-            : 'Demasiadas tentativas. Por favor aguarde alguns minutos e tente novamente.';
+            : 'Demasiadas tentativas. Por favor, aguarde alguns minutos e tente novamente.';
     }
 
     // Payment nonce - prevent double-submit
@@ -89,7 +89,7 @@ if (isPost()) {
     if (!$paymentNonce || !$sessionNonce || !hash_equals($sessionNonce, $paymentNonce)) {
         $errors['general'] = $isEnglish
             ? 'Form expired. Please refresh the page and try again.'
-            : 'Formulario expirado. Atualize a pagina e tente novamente.';
+            : 'Formulário expirado. Atualize a página e tente novamente.';
     }
     // Invalidate nonce after use (prevent replay)
     Session::remove('checkout_nonce');
@@ -107,24 +107,24 @@ if (isPost()) {
 
     // Validation
     $validator = new Validator();
-    $validator->required($formData['customer_name'], 'customer_name', $isEnglish ? 'Name is required' : 'Nome e obrigatorio');
-    $validator->email($formData['customer_email'], 'customer_email', $isEnglish ? 'Valid email is required' : 'Email valido e obrigatorio');
-    $validator->required($formData['customer_phone'], 'customer_phone', $isEnglish ? 'Phone is required' : 'Telefone e obrigatorio');
-    $validator->required($formData['shipping_address'], 'shipping_address', $isEnglish ? 'Address is required' : 'Morada e obrigatoria');
-    $validator->required($formData['shipping_city'], 'shipping_city', $isEnglish ? 'City is required' : 'Cidade e obrigatoria');
-    $validator->required($formData['shipping_postal_code'], 'shipping_postal_code', $isEnglish ? 'Postal code is required' : 'Codigo postal e obrigatorio');
+    $validator->required($formData['customer_name'], 'customer_name', $isEnglish ? 'Name is required' : 'Nome é obrigatório');
+    $validator->email($formData['customer_email'], 'customer_email', $isEnglish ? 'Valid email is required' : 'Email válido é obrigatório');
+    $validator->required($formData['customer_phone'], 'customer_phone', $isEnglish ? 'Phone is required' : 'Telefone é obrigatório');
+    $validator->required($formData['shipping_address'], 'shipping_address', $isEnglish ? 'Address is required' : 'Morada é obrigatória');
+    $validator->required($formData['shipping_city'], 'shipping_city', $isEnglish ? 'City is required' : 'Cidade é obrigatória');
+    $validator->required($formData['shipping_postal_code'], 'shipping_postal_code', $isEnglish ? 'Postal code is required' : 'Código postal é obrigatório');
 
     // Validate payment method
     $validMethods = ['mbway', 'multibanco', 'card'];
     if (!in_array($formData['payment_method'], $validMethods)) {
-        $errors['payment_method'] = $isEnglish ? 'Please select a valid payment method' : 'Selecione um metodo de pagamento valido';
+        $errors['payment_method'] = $isEnglish ? 'Please select a valid payment method' : 'Selecione um método de pagamento válido';
     }
 
     // Validate phone for MBWay
     if ($formData['payment_method'] === 'mbway') {
         $phone = preg_replace('/\D/', '', $formData['customer_phone']);
         if (strlen($phone) !== 9 || !preg_match('/^9[1236]\d{7}$/', $phone)) {
-            $errors['customer_phone'] = $isEnglish ? 'Please enter a valid Portuguese mobile number for MBWay' : 'Introduza um numero de telemovel portugues valido para MBWay';
+            $errors['customer_phone'] = $isEnglish ? 'Please enter a valid Portuguese mobile number for MBWay' : 'Introduza um número de telemóvel português válido para MBWay';
         }
     }
 
@@ -296,7 +296,7 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Customer Info -->
                 <div class="bg-white rounded-lg shadow-sm p-6 animate-on-scroll" data-animation="fade-up">
                     <h2 class="font-serif text-xl text-granite-800 mb-6">
-                        <?= $isEnglish ? 'Contact Information' : 'Informacoes de Contacto' ?>
+                        <?= $isEnglish ? 'Contact Information' : 'Informações de Contacto' ?>
                     </h2>
 
                     <div class="grid md:grid-cols-2 gap-6">
@@ -373,7 +373,7 @@ include INCLUDES_PATH . '/header.php';
 
                             <div>
                                 <label for="shipping_postal_code" class="block text-sm font-medium text-granite-700 mb-2">
-                                    <?= $isEnglish ? 'Postal Code' : 'Codigo Postal' ?> <span class="text-terracotta-500">*</span>
+                                    <?= $isEnglish ? 'Postal Code' : 'Código Postal' ?> <span class="text-terracotta-500">*</span>
                                 </label>
                                 <input type="text" id="shipping_postal_code" name="shipping_postal_code"
                                        value="<?= e($formData['shipping_postal_code']) ?>" required
@@ -398,7 +398,7 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Payment Method -->
                 <div class="bg-white rounded-lg shadow-sm p-6 animate-on-scroll" data-animation="fade-up" data-delay="200">
                     <h2 class="font-serif text-xl text-granite-800 mb-6">
-                        <?= $isEnglish ? 'Payment Method' : 'Metodo de Pagamento' ?>
+                        <?= $isEnglish ? 'Payment Method' : 'Método de Pagamento' ?>
                     </h2>
 
                     <div class="space-y-4">
@@ -413,7 +413,7 @@ include INCLUDES_PATH . '/header.php';
                             <div class="flex-1">
                                 <span class="font-semibold text-granite-800 text-base">MB WAY</span>
                                 <p class="text-sm text-granite-500 mt-0.5">
-                                    <?= $isEnglish ? 'Pay instantly with your phone' : 'Pague instantaneamente com o telemovel' ?>
+                                    <?= $isEnglish ? 'Pay instantly with your phone' : 'Pague instantaneamente com o telemóvel' ?>
                                 </p>
                             </div>
                             <div class="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center ml-3 payment-indicator <?= $formData['payment_method'] === 'mbway' ? 'border-olive-500 bg-olive-500' : 'border-granite-300' ?>">
@@ -456,7 +456,7 @@ include INCLUDES_PATH . '/header.php';
                                 </div>
                             </div>
                             <div class="flex-1">
-                                <span class="font-semibold text-granite-800 text-base"><?= $isEnglish ? 'Credit/Debit Card' : 'Cartao de Credito/Debito' ?></span>
+                                <span class="font-semibold text-granite-800 text-base"><?= $isEnglish ? 'Credit/Debit Card' : 'Cartão de Crédito/Débito' ?></span>
                                 <p class="text-sm text-granite-500 mt-0.5">
                                     <?= $isEnglish ? 'Secure payment with Visa or Mastercard' : 'Pagamento seguro com Visa ou Mastercard' ?>
                                 </p>
@@ -510,7 +510,7 @@ include INCLUDES_PATH . '/header.php';
                             <span class="text-granite-600"><?= $isEnglish ? 'Shipping' : 'Envio' ?></span>
                             <span class="text-granite-800">
                                 <?php if ($shipping === 0): ?>
-                                <span class="text-olive-600"><?= $isEnglish ? 'Free' : 'Gratis' ?></span>
+                                <span class="text-olive-600"><?= $isEnglish ? 'Free' : 'Grátis' ?></span>
                                 <?php else: ?>
                                 <?= formatPrice($shipping) ?>
                                 <?php endif; ?>
@@ -534,7 +534,7 @@ include INCLUDES_PATH . '/header.php';
                     <p class="text-xs text-granite-500 text-center mt-4">
                         <?= $isEnglish
                             ? 'By placing your order, you agree to our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'
-                            : 'Ao efetuar a encomenda, concorda com os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">politica de privacidade</a>.' ?>
+                            : 'Ao efetuar a encomenda, concorda com os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline">termos e condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline">política de privacidade</a>.' ?>
                     </p>
                 </div>
             </div>

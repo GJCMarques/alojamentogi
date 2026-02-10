@@ -193,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        Session::flash('success', 'Conteudos guardados com sucesso.');
+        Session::flash('success', 'Conteúdos guardados com sucesso.');
         redirect('/admin/conteudos/?section=' . $currentSection);
     }
 }
@@ -213,14 +213,14 @@ if (!empty($blockKeys)) {
     }
 }
 
-$pageTitle = 'Conteudos';
+$pageTitle = 'Conteúdos';
 $currentPage = 'conteudos';
 include dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Gestao de Conteudos</h1>
+        <h1 class="text-2xl font-bold text-gray-800">Gestão de Conteúdos</h1>
         <p class="text-gray-600">Editar textos do website</p>
     </div>
 </div>
@@ -292,7 +292,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                 <textarea name="<?= $blockKey ?>_<?= $lang['id'] ?>"
                                           rows="8"
                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"><?= e($value) ?></textarea>
-                                <p class="text-xs text-gray-500 mt-1">Pode usar HTML basico: &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;br&gt;</p>
+                                <p class="text-xs text-gray-500 mt-1">Pode usar HTML básico: &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;br&gt;</p>
                                 <?php break; endswitch; ?>
                             </div>
                             <?php endforeach; ?>
@@ -303,7 +303,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
                 <div class="mt-6 pt-6 border-t border-gray-200">
                     <button type="submit" class="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
-                        Guardar Alteracoes
+                        Guardar Alterações
                     </button>
                 </div>
             </form>

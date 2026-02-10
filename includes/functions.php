@@ -591,3 +591,23 @@ function content(string $key, string $default = ''): string
 
     return $blocks[$key] ?? $default;
 }
+
+/**
+ * Resolve Content Image URL
+ */
+function resolveContentImage(?string $path): string
+{
+     if (empty($path)) {
+        return '';
+     }
+     
+     if (str_starts_with($path, 'http')) {
+        return $path;
+     }
+
+     if ($path[0] === '/') {
+        return basePath() . $path;
+     }
+
+     return asset($path);
+}

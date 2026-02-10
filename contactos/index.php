@@ -520,6 +520,6 @@ footer {
 }
 </style>
 
-</style>
+
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>

@@ -24,7 +24,7 @@ if (!$invoiceId) {
 $invoice = $db->fetch("SELECT * FROM invoices WHERE id = ?", [$invoiceId]);
 
 if (!$invoice) {
-    Session::flash('error', 'Fatura nao encontrada.');
+    Session::flash('error', 'Fatura não encontrada.');
     redirect(basePath() . '/admin/faturas/');
 }
 
@@ -88,7 +88,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
-        Voltar as Faturas
+        Voltar às Faturas
     </a>
 </div>
 
@@ -109,7 +109,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
             </svg>
-            Integra
+            Íntegra
         </span>
         <?php else: ?>
         <span class="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-full bg-red-100 text-red-800">
@@ -134,7 +134,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <div class="p-6">
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Codigo de Barras</p>
+                        <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Código de Barras</p>
                         <p class="text-3xl font-bold text-primary tracking-wider"><?= e($barcodeFormatted) ?></p>
                     </div>
                     <div>
@@ -159,7 +159,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <?php endif; ?>
                     </div>
                     <div>
-                        <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Data de Emissao</p>
+                        <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Data de Emissão</p>
                         <p class="font-medium text-charcoal-800"><?= formatDateTime($invoice['issued_at']) ?></p>
                     </div>
                 </div>
@@ -176,7 +176,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-charcoal-600 uppercase">Produto</th>
                         <th class="px-6 py-3 text-center text-xs font-semibold text-charcoal-600 uppercase">Qtd</th>
-                        <th class="px-6 py-3 text-right text-xs font-semibold text-charcoal-600 uppercase">Preco Unit.</th>
+                        <th class="px-6 py-3 text-right text-xs font-semibold text-charcoal-600 uppercase">Preço Unit.</th>
                         <th class="px-6 py-3 text-right text-xs font-semibold text-charcoal-600 uppercase">Total</th>
                     </tr>
                 </thead>
@@ -236,14 +236,14 @@ include dirname(__DIR__) . '/includes/header.php';
                     <?php endif; ?>
                 </div>
                 <div>
-                    <h3 class="text-xs text-charcoal-500 uppercase tracking-wide mb-2">Morada de Faturacao</h3>
+                    <h3 class="text-xs text-charcoal-500 uppercase tracking-wide mb-2">Morada de Faturação</h3>
                     <?php if ($invoice['billing_address']): ?>
                     <p class="text-charcoal-600"><?= nl2br(e($invoice['billing_address'])) ?></p>
                     <?php if ($invoice['billing_postal_code'] || $invoice['billing_city']): ?>
                     <p class="text-charcoal-600"><?= e($invoice['billing_postal_code']) ?> <?= e($invoice['billing_city']) ?></p>
                     <?php endif; ?>
                     <?php else: ?>
-                    <p class="text-charcoal-400 italic">Nao disponivel</p>
+                    <p class="text-charcoal-400 italic">Não disponível</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -273,7 +273,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </div>
                 <?php if ($invoice['payment_method']): ?>
                 <div class="flex justify-between">
-                    <span class="text-charcoal-600 text-sm">Metodo</span>
+                    <span class="text-charcoal-600 text-sm">Método</span>
                     <span class="font-medium text-sm"><?= strtoupper(e($invoice['payment_method'])) ?></span>
                 </div>
                 <?php endif; ?>
@@ -294,7 +294,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
         <!-- Actions -->
         <div class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-lg font-medium text-charcoal-800 mb-4">Acoes</h2>
+            <h2 class="text-lg font-medium text-charcoal-800 mb-4">Ações</h2>
             <div class="space-y-3">
                 <!-- Resend Email -->
                 <form action="" method="post">
@@ -333,7 +333,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <input type="hidden" name="action" value="mark_refunded">
                     <button type="submit"
                             class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-charcoal-600 text-white rounded-lg hover:bg-charcoal-700 font-medium transition-colors"
-                            onclick="return confirm('Marcar esta fatura como reembolsada? Esta acao nao pode ser desfeita.')">
+                            onclick="return confirm('Marcar esta fatura como reembolsada? Esta ação não pode ser desfeita.')">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
                         </svg>
@@ -375,7 +375,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     </svg>
                     <span class="font-medium text-green-800">Verificada</span>
                 </div>
-                <p class="text-sm text-green-700">A hash de integridade HMAC-SHA256 corresponde aos dados. Esta fatura nao foi adulterada.</p>
+                <p class="text-sm text-green-700">A hash de integridade HMAC-SHA256 corresponde aos dados. Esta fatura não foi adulterada.</p>
             </div>
             <?php else: ?>
             <div class="bg-red-50 border border-red-200 rounded-lg p-4">

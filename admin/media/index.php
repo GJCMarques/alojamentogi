@@ -45,21 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                 // Validate extension from original filename
                 $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                 if (!in_array($ext, $allowedExtensions)) {
-                    $errors[] = "Extensao nao permitida: {$fileName}";
+                    $errors[] = "Extensão não permitida: {$fileName}";
                     continue;
                 }
 
                 // Validate REAL MIME type using file contents (not client-supplied header)
                 $realMimeType = mime_content_type($tmpName);
                 if (!in_array($realMimeType, $allowedMimeTypes)) {
-                    $errors[] = "Tipo de ficheiro invalido: {$fileName} ({$realMimeType})";
+                    $errors[] = "Tipo de ficheiro inválido: {$fileName} ({$realMimeType})";
                     continue;
                 }
 
                 // Double-check with getimagesize (ensures it's actually an image)
                 $imageInfo = @getimagesize($tmpName);
                 if ($imageInfo === false) {
-                    $errors[] = "Ficheiro nao e uma imagem valida: {$fileName}";
+                    $errors[] = "Ficheiro não é uma imagem válida: {$fileName}";
                     continue;
                 }
 
@@ -247,7 +247,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
         <h3 class="text-lg font-medium text-gray-700 mb-2">Sem ficheiros</h3>
-        <p class="text-gray-500 mb-4">Carregue imagens para comecar.</p>
+        <p class="text-gray-500 mb-4">Carregue imagens para começar.</p>
         <button onclick="document.getElementById('uploadModal').classList.remove('hidden')"
                 class="px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700">
             Carregar Ficheiros
@@ -315,7 +315,7 @@ include dirname(__DIR__) . '/includes/header.php';
     <?php if ($totalPages > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <div class="text-sm text-gray-500">
-            Pagina <?= $page ?> de <?= $totalPages ?>
+            Página <?= $page ?> de <?= $totalPages ?>
         </div>
         <div class="flex gap-2">
             <?php if ($page > 1): ?>
@@ -363,7 +363,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
                     <p class="text-gray-700 mb-2">Arraste imagens aqui ou clique para selecionar</p>
-                    <p class="text-sm text-gray-400">JPEG, PNG, GIF, WebP - Maximo 5MB por ficheiro</p>
+                    <p class="text-sm text-gray-400">JPEG, PNG, GIF, WebP - Máximo 5MB por ficheiro</p>
                     <input type="file" id="fileInputUpload" name="files[]" multiple accept="image/jpeg,image/png,image/gif,image/webp" required class="hidden">
                 </div>
 
@@ -418,7 +418,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Texto alternativo (PT)</label>
                     <input type="text" name="alt_text_pt" id="editAltPt"
-                           placeholder="Descricao da imagem em portugues..."
+                           placeholder="Descrição da imagem em português..."
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
                 </div>
 
@@ -437,7 +437,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <option value="gallery">Galeria (Alojamento)</option>
                         <option value="products">Produtos</option>
                         <option value="activities">Atividades</option>
-                        <option value="content">Conteudo</option>
+                        <option value="content">Conteúdo</option>
                     </select>
                 </div>
             </div>

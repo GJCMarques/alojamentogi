@@ -85,7 +85,7 @@ include INCLUDES_PATH . '/header.php';
             <div class="relative animate-on-scroll" data-animation="fade-left">
                 <!-- Image Composition -->
                 <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-700">
-                    <img src="<?= asset('images/FotoGi.png') ?>" alt="A Casa do Gi Antigamente" class="w-full h-auto object-cover">
+                    <img src="<?= resolveContentImage(content('about_image_intro', 'images/FotoGi.png')) ?>" alt="A Casa do Gi Antigamente" class="w-full h-auto object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
                     <div class="absolute bottom-6 left-6 text-white text-sm font-medium tracking-wide">
                         <?= $content['about_origin_caption'] ?? '1980 • O Início' ?>
@@ -170,7 +170,7 @@ include INCLUDES_PATH . '/header.php';
     <!-- Parallax Background -->
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-black/40 z-10"></div> <!-- Overlay -->
-        <img src="<?= asset('images/Castelo.jpg') ?>" class="w-full h-full object-cover attachment-fixed transform scale-110" style="object-position: center;" alt="Castelo de Mogadouro">
+        <img src="<?= resolveContentImage(content('about_image_region', 'images/Castelo.jpg')) ?>" class="w-full h-full object-cover attachment-fixed transform scale-110" style="object-position: center;" alt="Castelo de Mogadouro">
     </div>
 
     <div class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">

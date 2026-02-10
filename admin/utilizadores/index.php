@@ -15,7 +15,7 @@ use Core\Auth;
 
 // Check permissions - only admins can manage users
 if (!Auth::canManageUsers()) {
-    Session::flash('error', 'Sem permissoes para aceder a esta pagina.');
+    Session::flash('error', 'Sem permissões para aceder a esta página.');
     redirect('/admin/');
 }
 
@@ -25,7 +25,7 @@ $rateLimiter = \Core\RateLimiter::getInstance();
 // Rate limit user management actions: 20 per 5 minutes
 if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['delete']) || isset($_GET['toggle'])) {
     if (!$rateLimiter->check('admin_user_mgmt', 20, 300)) {
-        Session::flash('error', 'Demasiadas acoes. Aguarde alguns minutos.');
+        Session::flash('error', 'Demasiadas ações. Aguarde alguns minutos.');
         redirect('/admin/utilizadores/');
     }
 }
@@ -39,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         // Cannot delete yourself
         if ($id === (int)$currentAdmin->id) {
-            Session::flash('error', 'Nao pode eliminar a sua propria conta.');
+            Session::flash('error', 'Não pode eliminar a sua própria conta.');
         }
         // Verify admin password
         elseif (!password_verify($adminPassword, $currentAdmin->password_hash)) {
-            Session::flash('error', 'Password de confirmacao incorreta.');
+            Session::flash('error', 'Password de confirmação incorreta.');
             $rateLimiter->recordFailure('admin_user_mgmt_auth');
             logMessage("Failed admin password verification for user delete by admin ID {$currentAdmin->id}", 'warning');
         } else {
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $currentAdmin = Auth::user();
 
         if ($id === (int)$currentAdmin->id) {
-            Session::flash('error', 'Nao pode desativar a sua propria conta.');
+            Session::flash('error', 'Não pode desativar a sua própria conta.');
         } else {
             $db->query("UPDATE admins SET is_active = NOT is_active WHERE id = ?", [$id]);
             Session::flash('success', 'Estado atualizado.');
@@ -94,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
         $needsPasswordConfirm = !$editId || !empty($password);
         if ($needsPasswordConfirm) {
             if (empty($adminPassword)) {
-                $errors[] = 'Insira a sua password para confirmar esta acao.';
+                $errors[] = 'Insira a sua password para confirmar esta ação.';
             } elseif (!password_verify($adminPassword, $currentAdmin->password_hash)) {
-                $errors[] = 'Password de confirmacao incorreta.';
+                $errors[] = 'Password de confirmação incorreta.';
                 $rateLimiter->recordFailure('admin_user_mgmt_auth');
                 logMessage("Failed admin password verification for user save by admin ID {$currentAdmin->id}", 'warning');
             }
@@ -104,27 +104,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
 
         // Validation
         if (empty($username)) {
-            $errors[] = 'O nome de utilizador e obrigatorio.';
+            $errors[] = 'O nome de utilizador é obrigatório.';
         } elseif (strlen($username) < 3) {
             $errors[] = 'O nome de utilizador deve ter pelo menos 3 caracteres.';
         }
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Email invalido.';
+            $errors[] = 'Email inválido.';
         }
         if (!$editId && empty($password)) {
-            $errors[] = 'A password e obrigatoria para novos utilizadores.';
+            $errors[] = 'A password é obrigatória para novos utilizadores.';
         }
         if ($password && strlen($password) < 8) {
             $errors[] = 'A password deve ter pelo menos 8 caracteres.';
         }
         if ($password && !preg_match('/[A-Z]/', $password)) {
-            $errors[] = 'A password deve conter pelo menos uma letra maiuscula.';
+            $errors[] = 'A password deve conter pelo menos uma letra maiúscula.';
         }
         if ($password && !preg_match('/[0-9]/', $password)) {
-            $errors[] = 'A password deve conter pelo menos um numero.';
+            $errors[] = 'A password deve conter pelo menos um número.';
         }
         if (!in_array($role, ['admin', 'editor'])) {
-            $errors[] = 'Role invalido.';
+            $errors[] = 'Role inválido.';
         }
 
         // Check for duplicates
@@ -132,13 +132,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
         $checkParams = $editId ? [$username, $editId] : [$username];
         $existingUsername = $db->fetch("SELECT id FROM admins WHERE username = ? {$checkWhere}", $checkParams);
         if ($existingUsername) {
-            $errors[] = 'Este nome de utilizador ja existe.';
+            $errors[] = 'Este nome de utilizador já existe.';
         }
 
         $checkParams = $editId ? [$email, $editId] : [$email];
         $existingEmail = $db->fetch("SELECT id FROM admins WHERE email = ? {$checkWhere}", $checkParams);
         if ($existingEmail) {
-            $errors[] = 'Este email ja esta registado.';
+            $errors[] = 'Este email já está registado.';
         }
 
         if (empty($errors)) {
@@ -208,7 +208,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
         </svg>
-        Acoes protegidas por password
+        Ações protegidas por password
     </div>
 </div>
 
@@ -218,7 +218,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
         </svg>
-        Demasiadas tentativas de confirmacao falhadas. Acoes de utilizador bloqueadas temporariamente (5 min).
+        Demasiadas tentativas de confirmação falhadas. Ações de utilizador bloqueadas temporariamente (5 min).
     </div>
 </div>
 <?php endif; ?>
@@ -233,8 +233,8 @@ include dirname(__DIR__) . '/includes/header.php';
                         <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Utilizador</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Role</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-granite-500 uppercase">Estado</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Ultimo Login</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-granite-500 uppercase">Acoes</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Último Login</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-granite-500 uppercase">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-granite-200">
@@ -249,7 +249,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     <div class="text-sm font-medium text-granite-800">
                                         <?= e($user['full_name'] ?: $user['username']) ?>
                                         <?php if ($user['id'] === ($_SESSION['admin_id'] ?? 0)): ?>
-                                        <span class="text-xs text-secondary-600 ml-1">(voce)</span>
+                                        <span class="text-xs text-secondary-600 ml-1">(você)</span>
                                         <?php endif; ?>
                                     </div>
                                     <div class="text-xs text-granite-500"><?= e($user['email']) ?></div>
@@ -348,7 +348,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                minlength="8"
                                placeholder="<?= $editUser ? 'Deixe vazio para manter' : '' ?>"
                                class="w-full px-3 py-2 border border-granite-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none">
-                        <p class="text-xs text-granite-400 mt-1">Min. 8 caracteres, 1 maiuscula, 1 numero</p>
+                        <p class="text-xs text-granite-400 mt-1">Min. 8 caracteres, 1 maiúscula, 1 número</p>
                     </div>
 
                     <?php if (!$editUser || $editUser['id'] !== ($_SESSION['admin_id'] ?? 0)): ?>
@@ -392,7 +392,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                placeholder="Confirme com a sua password"
                                class="w-full px-3 py-2 border border-granite-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none bg-accent-50/30"
                                <?= $authLocked ? 'disabled' : '' ?>>
-                        <p class="text-xs text-granite-400 mt-1">Necessaria para confirmar alteracoes de utilizadores</p>
+                        <p class="text-xs text-granite-400 mt-1">Necessária para confirmar alterações de utilizadores</p>
                     </div>
                 </div>
 
@@ -413,15 +413,15 @@ include dirname(__DIR__) . '/includes/header.php';
 
         <!-- Roles Info -->
         <div class="bg-granite-50 rounded-lg p-4 mt-4 border border-granite-200">
-            <h3 class="text-sm font-semibold text-granite-700 mb-2">Permissoes por Role</h3>
+            <h3 class="text-sm font-semibold text-granite-700 mb-2">Permissões por Role</h3>
             <ul class="text-xs text-granite-600 space-y-1.5">
                 <li class="flex items-start gap-2">
                     <span class="inline-flex px-1.5 py-0.5 bg-purple-100 text-purple-800 rounded text-[10px] font-bold mt-0.5">ADM</span>
-                    <span>Acesso total incluindo gestao de utilizadores e configuracoes</span>
+                    <span>Acesso total incluindo gestão de utilizadores e configurações</span>
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="inline-flex px-1.5 py-0.5 bg-granite-200 text-granite-700 rounded text-[10px] font-bold mt-0.5">EDT</span>
-                    <span>Gerir conteudos, produtos, encomendas, media e faturas</span>
+                    <span>Gerir conteúdos, produtos, encomendas, media e faturas</span>
                 </li>
             </ul>
         </div>
@@ -432,13 +432,13 @@ include dirname(__DIR__) . '/includes/header.php';
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                 </svg>
-                Seguranca
+                Segurança
             </h3>
             <ul class="text-xs text-blue-700 space-y-1">
                 <li>Criar/editar utilizadores requer a sua password</li>
-                <li>Eliminar utilizadores requer confirmacao por password</li>
-                <li>5 tentativas falhadas bloqueiam acoes por 5 minutos</li>
-                <li>Todas as acoes sao registadas em log</li>
+                <li>Eliminar utilizadores requer confirmação por password</li>
+                <li>5 tentativas falhadas bloqueiam ações por 5 minutos</li>
+                <li>Todas as ações são registadas em log</li>
             </ul>
         </div>
     </div>
@@ -466,7 +466,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div class="px-6 py-4">
                     <p class="text-granite-600 mb-4">
                         Tem a certeza que deseja eliminar <strong id="deleteUserName"></strong>?
-                        Esta acao e irreversivel.
+                        Esta ação é irreversível.
                     </p>
                     <div>
                         <label class="block text-sm font-medium text-granite-700 mb-1">

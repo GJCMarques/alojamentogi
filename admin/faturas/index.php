@@ -73,7 +73,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-charcoal-800">Gestao de Faturas</h1>
+        <h1 class="text-2xl font-bold text-charcoal-800">Gestão de Faturas</h1>
         <p class="text-charcoal-600"><?= $totalInvoices ?> fatura(s)</p>
     </div>
 </div>
@@ -85,9 +85,9 @@ include dirname(__DIR__) . '/includes/header.php';
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
             </svg>
-            Ferramenta de Verificacao de Autenticidade
+            Ferramenta de Verificação de Autenticidade
         </h2>
-        <p class="text-cream-100 text-sm mt-1">Verifique a autenticidade de uma fatura usando o codigo de barras ou UUID</p>
+        <p class="text-cream-100 text-sm mt-1">Verifique a autenticidade de uma fatura usando o código de barras ou UUID</p>
     </div>
     <div class="p-6">
         <form action="" method="get" class="flex items-center gap-4">
@@ -96,7 +96,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <input type="text"
                        name="code"
                        value="<?= isset($_GET['code']) ? e($_GET['code']) : '' ?>"
-                       placeholder="Digite o codigo de barras (123 456 789) ou UUID (a1b2c3d4-e5f6-4789-abcd-ef0123456789)"
+                       placeholder="Digite o código de barras (123 456 789) ou UUID (a1b2c3d4-e5f6-4789-abcd-ef0123456789)"
                        class="w-full px-4 py-3 border-2 border-charcoal-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-lg"
                        required>
             </div>
@@ -125,13 +125,13 @@ include dirname(__DIR__) . '/includes/header.php';
                     </div>
                     <div class="flex-1">
                         <h3 class="text-xl font-bold text-green-800 mb-2"><?= e($verifyResult['message']) ?></h3>
-                        <p class="text-green-700 text-sm mb-4">Esta fatura e autentica e nao foi adulterada. Todos os dados de integridade estao corretos.</p>
+                        <p class="text-green-700 text-sm mb-4">Esta fatura é autêntica e não foi adulterada. Todos os dados de integridade estão corretos.</p>
 
                         <?php $invoice = $verifyResult['invoice']; ?>
                         <div class="bg-white rounded-lg p-4 border border-green-200">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Codigo de Barras</p>
+                                    <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Código de Barras</p>
                                     <p class="text-xl font-bold text-primary"><?= e(substr($invoice['barcode'], 0, 3) . ' ' . substr($invoice['barcode'], 3, 3) . ' ' . substr($invoice['barcode'], 6, 3)) ?></p>
                                 </div>
                                 <div>
@@ -154,7 +154,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     </span>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Data de Emissao</p>
+                                    <p class="text-xs text-charcoal-500 uppercase tracking-wide mb-1">Data de Emissão</p>
                                     <p class="font-medium text-charcoal-800"><?= formatDateTime($invoice['issued_at']) ?></p>
                                 </div>
                             </div>
@@ -199,17 +199,17 @@ include dirname(__DIR__) . '/includes/header.php';
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-red-800 mb-2">ALERTA: Possivel Adulteracao Detectada</h3>
+                        <h3 class="text-xl font-bold text-red-800 mb-2">ALERTA: Possível Adulteração Detectada</h3>
                         <p class="text-red-700 mb-4"><?= e($verifyResult['message']) ?></p>
                         <div class="bg-white rounded-lg p-4 border border-red-200">
-                            <p class="text-sm text-red-900 font-medium mb-2">A hash de integridade desta fatura nao corresponde aos dados armazenados. Isto pode indicar:</p>
+                            <p class="text-sm text-red-900 font-medium mb-2">A hash de integridade desta fatura não corresponde aos dados armazenados. Isto pode indicar:</p>
                             <ul class="list-disc list-inside text-sm text-red-800 space-y-1 ml-2">
-                                <li>Alteracao nos valores da fatura</li>
-                                <li>Modificacao dos itens ou quantidades</li>
-                                <li>Alteracao de dados do cliente</li>
-                                <li>Manipulacao do codigo de barras ou UUID</li>
+                                <li>Alteração nos valores da fatura</li>
+                                <li>Modificação dos itens ou quantidades</li>
+                                <li>Alteração de dados do cliente</li>
+                                <li>Manipulação do código de barras ou UUID</li>
                             </ul>
-                            <p class="text-sm text-red-900 font-medium mt-4">Recomenda-se investigacao imediata e contacto com o cliente.</p>
+                            <p class="text-sm text-red-900 font-medium mt-4">Recomenda-se investigação imediata e contacto com o cliente.</p>
                         </div>
                     </div>
                 </div>
@@ -225,9 +225,9 @@ include dirname(__DIR__) . '/includes/header.php';
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-charcoal-800 mb-2">Fatura Nao Encontrada</h3>
+                        <h3 class="text-xl font-bold text-charcoal-800 mb-2">Fatura Não Encontrada</h3>
                         <p class="text-charcoal-700"><?= e($verifyResult['message']) ?></p>
-                        <p class="text-sm text-charcoal-600 mt-2">Verifique se o codigo foi digitado corretamente. O codigo pode ser um barcode de 9 digitos ou um UUID.</p>
+                        <p class="text-sm text-charcoal-600 mt-2">Verifique se o código foi digitado corretamente. O código pode ser um barcode de 9 dígitos ou um UUID.</p>
                     </div>
                 </div>
             </div>
@@ -247,7 +247,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <input type="text"
                            name="search"
                            value="<?= e($search) ?>"
-                           placeholder="Codigo de barras, UUID, nome ou email..."
+                           placeholder="Código de barras, UUID, nome ou email..."
                            class="w-full px-3 py-2 border border-charcoal-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 </div>
                 <div>
@@ -301,9 +301,9 @@ include dirname(__DIR__) . '/includes/header.php';
         <h3 class="text-lg font-medium text-charcoal-900 mb-2">Nenhuma fatura encontrada</h3>
         <p class="text-charcoal-600">
             <?php if ($search || $statusFilter || $dateFrom || $dateTo): ?>
-                Nao foram encontradas faturas com os filtros aplicados.
+                Não foram encontradas faturas com os filtros aplicados.
             <?php else: ?>
-                As faturas sao geradas automaticamente quando as encomendas sao processadas.
+                As faturas são geradas automaticamente quando as encomendas são processadas.
             <?php endif; ?>
         </p>
     </div>
@@ -313,7 +313,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <thead>
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-charcoal-600 uppercase tracking-wider">
-                        Codigo de Barras
+                        Código de Barras
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-charcoal-600 uppercase tracking-wider">
                         Cliente
@@ -325,10 +325,10 @@ include dirname(__DIR__) . '/includes/header.php';
                         Pagamento
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-charcoal-600 uppercase tracking-wider">
-                        Data de Emissao
+                        Data de Emissão
                     </th>
                     <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-charcoal-600 uppercase tracking-wider">
-                        Acoes
+                        Ações
                     </th>
                 </tr>
             </thead>
@@ -403,7 +403,7 @@ include dirname(__DIR__) . '/includes/header.php';
     <div class="bg-cream-50 px-6 py-4 border-t border-charcoal-200">
         <div class="flex items-center justify-between">
             <div class="text-sm text-charcoal-600">
-                Pagina <?= $page ?> de <?= $totalPages ?> (<?= $totalInvoices ?> fatura(s) no total)
+                Página <?= $page ?> de <?= $totalPages ?> (<?= $totalInvoices ?> fatura(s) no total)
             </div>
             <div class="flex gap-2">
                 <?php if ($page > 1): ?>
@@ -428,7 +428,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <?php if ($page < $totalPages): ?>
                 <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>"
                    class="px-4 py-2 bg-white border border-charcoal-300 rounded-lg text-charcoal-700 hover:bg-charcoal-50 font-medium transition-colors">
-                    Proximo
+                    Próximo
                 </a>
                 <?php endif; ?>
             </div>

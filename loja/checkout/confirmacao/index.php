@@ -59,7 +59,7 @@ if (!$orderId) {
 // Get order
 $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
 if (!$order) {
-    Session::flash('error', $isEnglish ? 'Order not found.' : 'Encomenda nao encontrada.');
+    Session::flash('error', $isEnglish ? 'Order not found.' : 'Encomenda não encontrada.');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
@@ -119,11 +119,11 @@ include INCLUDES_PATH . '/header.php';
 <nav class="bg-cream-200 py-3 border-b border-cream-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ol class="flex items-center text-sm text-charcoal/60">
-            <li><a href="<?= $base ?>/" class="hover:text-secondary"><?= $isEnglish ? 'Home' : 'Inicio' ?></a></li>
+            <li><a href="<?= $base ?>/" class="hover:text-secondary"><?= $isEnglish ? 'Home' : 'Início' ?></a></li>
             <li><span class="mx-2">/</span></li>
             <li><a href="<?= $base ?>/loja/" class="hover:text-secondary"><?= $isEnglish ? 'Shop' : 'Loja' ?></a></li>
             <li><span class="mx-2">/</span></li>
-            <li class="text-primary font-medium"><?= $isEnglish ? 'Confirmation' : 'Confirmacao' ?></li>
+            <li class="text-primary font-medium"><?= $isEnglish ? 'Confirmation' : 'Confirmação' ?></li>
         </ol>
     </div>
 </nav>
@@ -148,7 +148,7 @@ include INCLUDES_PATH . '/header.php';
                 </svg>
             </div>
             <h1 class="font-serif text-3xl md:text-4xl text-primary mb-2"><?= $isEnglish ? 'Order Registered' : 'Encomenda Registada' ?></h1>
-            <p class="text-charcoal/60"><?= $isEnglish ? 'Awaiting payment confirmation' : 'A aguardar confirmacao de pagamento' ?></p>
+            <p class="text-charcoal/60"><?= $isEnglish ? 'Awaiting payment confirmation' : 'A aguardar confirmação de pagamento' ?></p>
             <?php endif; ?>
         </div>
 
@@ -173,7 +173,7 @@ include INCLUDES_PATH . '/header.php';
                 <div class="bg-cream-50 rounded-2xl p-5 mb-8 border border-cream-200">
                     <div class="flex flex-col sm:flex-row justify-between gap-4">
                         <div>
-                            <p class="text-xs text-charcoal/40 uppercase tracking-wider mb-1"><?= $isEnglish ? 'Invoice Barcode' : 'Codigo de Barras da Fatura' ?></p>
+                            <p class="text-xs text-charcoal/40 uppercase tracking-wider mb-1"><?= $isEnglish ? 'Invoice Barcode' : 'Código de Barras da Fatura' ?></p>
                             <p class="text-2xl font-bold text-primary font-mono tracking-widest">
                                 <?= substr($invoice['barcode'], 0, 3) ?> <?= substr($invoice['barcode'], 3, 3) ?> <?= substr($invoice['barcode'], 6, 3) ?>
                             </p>
@@ -209,7 +209,7 @@ include INCLUDES_PATH . '/header.php';
                     <?php $shippingFee = (float)($order['shipping_fee'] ?? $order['shipping'] ?? 0); ?>
                     <div class="flex justify-between text-sm text-charcoal/60">
                         <span><?= $isEnglish ? 'Shipping' : 'Envio' ?></span>
-                        <span><?= $shippingFee > 0 ? formatPrice($shippingFee) : '<span class="text-secondary">' . ($isEnglish ? 'Free' : 'Gratis') . '</span>' ?></span>
+                        <span><?= $shippingFee > 0 ? formatPrice($shippingFee) : '<span class="text-secondary">' . ($isEnglish ? 'Free' : 'Grátis') . '</span>' ?></span>
                     </div>
                     <div class="flex justify-between text-lg font-bold text-primary border-t border-cream-200 pt-2">
                         <span>Total</span>
@@ -234,7 +234,7 @@ include INCLUDES_PATH . '/header.php';
 
                 <!-- Payment Method -->
                 <div class="border-t border-cream-100 pt-4 mt-4">
-                    <p class="text-xs text-charcoal/40 uppercase tracking-wider mb-1"><?= $isEnglish ? 'Payment Method' : 'Metodo de Pagamento' ?></p>
+                    <p class="text-xs text-charcoal/40 uppercase tracking-wider mb-1"><?= $isEnglish ? 'Payment Method' : 'Método de Pagamento' ?></p>
                     <p class="text-sm text-charcoal/70"><?= $paymentLabels[$order['payment_method']] ?? ucfirst($order['payment_method']) ?></p>
                 </div>
             </div>
@@ -242,20 +242,20 @@ include INCLUDES_PATH . '/header.php';
 
         <!-- Next Steps -->
         <div class="bg-secondary/5 rounded-3xl border border-secondary/10 p-6 mb-8">
-            <h3 class="font-serif text-lg text-primary mb-4"><?= $isEnglish ? 'Next Steps' : 'Proximos Passos' ?></h3>
+            <h3 class="font-serif text-lg text-primary mb-4"><?= $isEnglish ? 'Next Steps' : 'Próximos Passos' ?></h3>
             <ul class="space-y-3 text-sm text-charcoal/70">
                 <?php if ($isPaid): ?>
                 <li class="flex items-start gap-3">
                     <svg class="w-4 h-4 mt-0.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <?= $isEnglish ? 'Your order will be processed soon' : 'A sua encomenda sera processada em breve' ?>
+                    <?= $isEnglish ? 'Your order will be processed soon' : 'A sua encomenda será processada em breve' ?>
                 </li>
                 <li class="flex items-start gap-3">
                     <svg class="w-4 h-4 mt-0.5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    <?= $isEnglish ? 'You will receive an email when shipped' : 'Recebera um email quando a encomenda for enviada' ?>
+                    <?= $isEnglish ? 'You will receive an email when shipped' : 'Receberá um email quando a encomenda for enviada' ?>
                 </li>
                 <li class="flex items-start gap-3">
                     <svg class="w-4 h-4 mt-0.5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <?= $isEnglish ? 'Estimated delivery: 3-5 business days' : 'Entrega estimada: 3-5 dias uteis' ?>
+                    <?= $isEnglish ? 'Estimated delivery: 3-5 business days' : 'Entrega estimada: 3-5 dias úteis' ?>
                 </li>
                 <?php if ($invoice): ?>
                 <li class="flex items-start gap-3">
@@ -266,11 +266,11 @@ include INCLUDES_PATH . '/header.php';
                 <?php else: ?>
                 <li class="flex items-start gap-3">
                     <svg class="w-4 h-4 mt-0.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <?= $isEnglish ? 'Awaiting payment confirmation' : 'A aguardar confirmacao de pagamento' ?>
+                    <?= $isEnglish ? 'Awaiting payment confirmation' : 'A aguardar confirmação de pagamento' ?>
                 </li>
                 <li class="flex items-start gap-3">
                     <svg class="w-4 h-4 mt-0.5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                    <?= $isEnglish ? 'Confirmation email will be sent after payment' : 'Email de confirmacao sera enviado apos pagamento' ?>
+                    <?= $isEnglish ? 'Confirmation email will be sent after payment' : 'Email de confirmação será enviado após pagamento' ?>
                 </li>
                 <?php endif; ?>
             </ul>
@@ -279,7 +279,7 @@ include INCLUDES_PATH . '/header.php';
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="<?= $base ?>/" class="inline-flex items-center justify-center px-8 py-3 bg-primary text-white font-medium rounded-full hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                <?= $isEnglish ? 'Back to Home' : 'Voltar ao Inicio' ?>
+                <?= $isEnglish ? 'Back to Home' : 'Voltar ao Início' ?>
             </a>
             <a href="<?= $base ?>/loja/" class="inline-flex items-center justify-center px-8 py-3 bg-white text-primary font-medium rounded-full border border-cream-200 hover:bg-cream-50 transition-all">
                 <?= $isEnglish ? 'Continue Shopping' : 'Continuar a Comprar' ?>

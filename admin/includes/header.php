@@ -166,11 +166,11 @@ $base = basePath();
                                     O Meu Perfil
                                 </a>
                                 <a href="<?= $base ?>/admin/configuracoes/" class="block px-4 py-2 text-sm text-charcoal-700 hover:bg-secondary-50">
-                                    Configuracoes
+                                    Configurações
                                 </a>
                                 <hr class="my-1 border-accent/20">
                                 <a href="<?= $base ?>/admin/logout.php" class="block px-4 py-2 text-sm text-secondary font-medium hover:bg-secondary-50">
-                                    Terminar Sessao
+                                    Terminar Sessão
                                 </a>
                             </div>
                         </div>

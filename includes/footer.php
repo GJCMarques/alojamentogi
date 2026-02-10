@@ -205,7 +205,7 @@ $instagramUrl = setting('instagram_url', '');
                             <?= $isEnglish ? 'Privacy Policy' : 'Política de Privacidade' ?>
                         </a>
                         <a href="<?= $base ?>/termos-condicoes/" class="text-cream-300 hover:text-accent transition-colors">
-                            <?= $isEnglish ? 'Terms & Conditions' : 'Termos e Condicoes' ?>
+                            <?= $isEnglish ? 'Terms & Conditions' : 'Termos e Condições' ?>
                         </a>
                     </div>
                 </div>
@@ -589,13 +589,13 @@ $instagramUrl = setting('instagram_url', '');
                                     : 'Utilizamos os seguintes tipos de cookies:' ?>
                             </p>
                             <ul class="list-disc list-inside space-y-1 ml-2">
-                                <li><?= $isEnglish ? '<strong class="text-cream">Essential cookies:</strong> Required for the website to function properly (shopping cart, session management)' : '<strong class="text-cream">Cookies essenciais:</strong> Necessarios para o funcionamento do website (carrinho de compras, gestao de sessao)' ?></li>
-                                <li><?= $isEnglish ? '<strong class="text-cream">Preference cookies:</strong> Remember your preferences (language, consent choices)' : '<strong class="text-cream">Cookies de preferencias:</strong> Guardam as suas preferencias (idioma, escolhas de consentimento)' ?></li>
+                                <li><?= $isEnglish ? '<strong class="text-cream">Essential cookies:</strong> Required for the website to function properly (shopping cart, session management)' : '<strong class="text-cream">Cookies essenciais:</strong> Necessários para o funcionamento do website (carrinho de compras, gestão de sessão)' ?></li>
+                                <li><?= $isEnglish ? '<strong class="text-cream">Preference cookies:</strong> Remember your preferences (language, consent choices)' : '<strong class="text-cream">Cookies de preferências:</strong> Guardam as suas preferências (idioma, escolhas de consentimento)' ?></li>
                             </ul>
                             <p class="leading-relaxed pt-2">
                                 <?= $isEnglish
                                     ? 'For more information, please read our <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">privacy policy</a>.'
-                                    : 'Para mais informacoes, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">termos e condicoes</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">politica de privacidade</a>.' ?>
+                                    : 'Para mais informações, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">Termos e Condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">Política de Privacidade</a>.' ?>
                             </p>
                         </div>
                     </div>

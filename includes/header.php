@@ -32,10 +32,10 @@ $navItems = $isEnglish ? [
     ['url' => $base . '/en/contact/', 'label' => 'Contact'],
     ['url' => $base . '/en/shop/', 'label' => 'Shop'],
 ] : [
-    ['url' => $base . '/', 'label' => 'Inicio'],
+    ['url' => $base . '/', 'label' => 'Início'],
     ['url' => $base . '/alojamento/', 'label' => 'Alojamento'],
     ['url' => $base . '/atividades/', 'label' => 'Atividades'],
-    ['url' => $base . '/sobre-nos/', 'label' => 'Sobre Nos'],
+    ['url' => $base . '/sobre-nos/', 'label' => 'Sobre Nós'],
     ['url' => $base . '/contactos/', 'label' => 'Contactos'],
     ['url' => $base . '/loja/', 'label' => 'Loja'],
 ];
@@ -454,7 +454,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         <?php $switchLang = $isEnglish ? LANG_PT : LANG_EN; ?>
                         <a href="<?= $lang->getSwitchUrl($switchLang) ?>"
                            class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-cream/50 hover:bg-white/10 hover:border-accent transition-all duration-300 group"
-                           title="<?= $isEnglish ? 'Mudar para Portugues' : 'Switch to English' ?>">
+                           title="<?= $isEnglish ? 'Mudar para Português' : 'Switch to English' ?>">
                             <div class="w-5 h-5 rounded-full overflow-hidden relative flex-shrink-0">
                                 <?php if ($isEnglish): ?>
                                     <!-- Portuguese Flag (SVG) -->
@@ -550,7 +550,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                                     </svg>
                                 <?php endif; ?>
                             </div>
-                            <span class="text-lg"><?= $isEnglish ? 'Portugues' : 'English' ?></span>
+                            <span class="text-lg"><?= $isEnglish ? 'Português' : 'English' ?></span>
                         </a>
                     </div>
 

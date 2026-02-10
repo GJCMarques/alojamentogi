@@ -23,8 +23,46 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 // Data
 $langId = $isEnglish ? 2 : 1;
 
+// Get Menu Images from Page Heroes
+$menuImages = [
+    'accommodation' => 'images/MogadouroAlojamento.jpg',
+    'activities' => 'images/MogadouroAtividades.jpg',
+    'shop' => 'images/MogadouroContacto.jpg',
+    'contact' => 'images/FotoGi.png'
+];
 
-$pageTitle = 'Inicio';
+$pageKeys = [
+    'accommodation' => 'accommodation', // DB key might be different? usually 'alojamento' or 'accommodation'
+    'activities' => 'activities',
+    'shop' => 'shop', 
+    'contact' => 'contact'
+];
+
+// Check DB keys for pages. `page_heroes` usually uses keys like 'shop', 'contact'.
+// I'll assume standard English keys based on previous files.
+
+foreach ($pageKeys as $menuKey => $dbKey) {
+    if ($menuKey === 'accommodation') {
+        // Accommodation might be 'accommodation' or 'alojamento' depending on seed. 
+        // Logic: Check 'accommodation', then 'alojamento'
+        $hero = $db->fetch("SELECT id FROM page_heroes WHERE page_key = 'accommodation' AND is_active = 1");
+        if (!$hero) $hero = $db->fetch("SELECT id FROM page_heroes WHERE page_key = 'alojamento' AND is_active = 1");
+    } else {
+        $hero = $db->fetch("SELECT id FROM page_heroes WHERE page_key = ? AND is_active = 1", [$dbKey]);
+    }
+
+    if ($hero) {
+        $media = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$hero['id']]);
+        if ($media && !empty($media['file_path'])) {
+            $menuImages[$menuKey] = $media['file_path'];
+        }
+    }
+}
+
+
+
+
+$pageTitle = 'Início';
 $pageDescription = 'A Casa do Gi - Alojamento Local e Produtos Regionais em Mogadouro.';
 $bodyClass = 'homepage-new';
 
@@ -38,9 +76,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <div id="hero-content">
-            <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
-                Tras-os-Montes, Portugal
-            </span>
+                Trás-os-Montes, Portugal
             <h1 class="hero-animate-up hero-delay-2 font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl">
                 A Casa do Gi
             </h1>
@@ -54,7 +90,7 @@ include INCLUDES_PATH . '/header.php';
 <!-- SPLIT HERO -->
 <div class="relative h-screen w-full flex flex-col md:flex-row overflow-hidden" id="split-hero">
     <div class="split-hero-left split-panel split-left relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
-        <img src="<?= asset('images/IgrejaMatriz.jpg') ?>" alt="Igreja Matriz de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
+        <img src="<?= resolveContentImage(content('home_image_split_left', 'images/IgrejaMatriz.jpg')) ?>" alt="Igreja Matriz de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/10 transition-colors duration-700"></div>
         <div class="split-content-left split-content absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
             <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-accent">
@@ -86,7 +122,7 @@ include INCLUDES_PATH . '/header.php';
         </div>
     </div>
     <div class="split-hero-right split-panel split-right relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
-        <img src="<?= asset('images/Castelo.jpg') ?>" alt="Castelo de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
+        <img src="<?= resolveContentImage(content('home_image_split_right', 'images/Castelo.jpg')) ?>" alt="Castelo de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <div class="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700"></div>
         <div class="split-content-right split-content absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
             <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-accent">
@@ -128,7 +164,7 @@ include INCLUDES_PATH . '/header.php';
             <!-- CARD 1: ALOJAMENTO -->
             <a href="<?= $base ?>/alojamento/" class="animate-on-scroll relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-                     style="background-image: url('<?= asset('images/MogadouroAlojamento.jpg') ?>');"></div>
+                     style="background-image: url('<?= resolveContentImage($menuImages['accommodation']) ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
                 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
@@ -150,7 +186,7 @@ include INCLUDES_PATH . '/header.php';
             <!-- CARD 2: ATIVIDADES -->
             <a href="<?= $base ?>/atividades/" class="animate-on-scroll delay-100 relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-                     style="background-image: url('<?= asset('images/MogadouroAtividades.jpg') ?>');"></div>
+                     style="background-image: url('<?= resolveContentImage($menuImages['activities']) ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
                 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
@@ -172,7 +208,7 @@ include INCLUDES_PATH . '/header.php';
             <!-- CARD 3: LOJA -->
             <a href="<?= $base ?>/loja/" class="animate-on-scroll delay-200 relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-                     style="background-image: url('<?= asset('images/MogadouroContacto.jpg') ?>');"></div>
+                     style="background-image: url('<?= resolveContentImage($menuImages['shop']) ?>');"></div>
                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
                 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
@@ -194,7 +230,7 @@ include INCLUDES_PATH . '/header.php';
             <!-- CARD 4: SOBRE / CONTACTOS -->
             <a href="<?= $base ?>/contactos/" class="animate-on-scroll delay-300 relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-                     style="background-image: url('<?= asset('images/FotoGi.png') ?>');"></div>
+                     style="background-image: url('<?= resolveContentImage($menuImages['contact']) ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
                 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
@@ -254,7 +290,7 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Main Image -->
                 <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                     <div class="absolute inset-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>
-                    <img src="<?= asset('images/MogadouroSobre.png') ?>" 
+                    <img src="<?= resolveContentImage(content('home_image_about', 'images/MogadouroSobre.png')) ?>" 
                          alt="A Casa do Gi" 
                          class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)]">
                 </div>

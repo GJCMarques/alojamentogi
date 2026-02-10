@@ -19,7 +19,7 @@ use Core\Encryption;
 
 // Only admins can access settings
 if (!Auth::canManageUsers()) {
-    Session::flash('error', 'Sem permissoes para aceder as configuracoes.');
+    Session::flash('error', 'Sem permissões para aceder às configurações.');
     redirect('/admin/');
 }
 
@@ -29,31 +29,31 @@ $db = Database::getInstance();
 $settingsGroups = [
     'general' => [
         'label' => 'Geral',
-        'description' => 'Informacoes basicas do website',
+        'description' => 'Informações básicas do website',
         'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
         'settings' => [
             ['key' => 'site_name', 'label' => 'Nome do Site', 'type' => 'text', 'default' => 'A Casa do Gi'],
             ['key' => 'site_tagline_pt', 'label' => 'Slogan (PT)', 'type' => 'text', 'default' => ''],
             ['key' => 'site_tagline_en', 'label' => 'Slogan (EN)', 'type' => 'text', 'default' => ''],
-            ['key' => 'site_description', 'label' => 'Descricao (SEO)', 'type' => 'textarea', 'default' => ''],
-            ['key' => 'maintenance_mode', 'label' => 'Modo Manutencao', 'type' => 'boolean', 'default' => '0', 'hint' => 'Ativa uma pagina de manutencao para visitantes'],
+            ['key' => 'site_description', 'label' => 'Descrição (SEO)', 'type' => 'textarea', 'default' => ''],
+            ['key' => 'maintenance_mode', 'label' => 'Modo Manutenção', 'type' => 'boolean', 'default' => '0', 'hint' => 'Ativa uma página de manutenção para visitantes'],
         ]
     ],
     'contact' => [
         'label' => 'Contacto',
-        'description' => 'Informacoes de contacto exibidas no website',
+        'description' => 'Informações de contacto exibidas no website',
         'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
         'settings' => [
             ['key' => 'contact_email', 'label' => 'Email', 'type' => 'email', 'default' => ''],
             ['key' => 'contact_phone', 'label' => 'Telefone', 'type' => 'text', 'default' => ''],
             ['key' => 'contact_address', 'label' => 'Morada', 'type' => 'textarea', 'default' => ''],
             ['key' => 'google_maps_url', 'label' => 'Google Maps URL', 'type' => 'url', 'default' => '', 'hint' => 'Link do Google Maps para o mapa de contactos'],
-            ['key' => 'contact_form_enabled', 'label' => 'Formulario de Contacto', 'type' => 'boolean', 'default' => '1', 'hint' => 'Permite que visitantes enviem mensagens pelo formulario'],
+            ['key' => 'contact_form_enabled', 'label' => 'Formulário de Contacto', 'type' => 'boolean', 'default' => '1', 'hint' => 'Permite que visitantes enviem mensagens pelo formulário'],
         ]
     ],
     'social' => [
         'label' => 'Redes Sociais',
-        'description' => 'Links das redes sociais no footer e pagina de contactos',
+        'description' => 'Links das redes sociais no footer e página de contactos',
         'icon' => 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z',
         'settings' => [
             ['key' => 'facebook_url', 'label' => 'Facebook URL', 'type' => 'url', 'default' => ''],
@@ -63,35 +63,35 @@ $settingsGroups = [
     ],
     'shop' => [
         'label' => 'Loja',
-        'description' => 'Configuracoes de envio e portes da loja online',
+        'description' => 'Configurações de envio e portes da loja online',
         'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
         'settings' => [
             ['key' => 'shipping_cost', 'label' => 'Custo de Envio (EUR)', 'type' => 'number', 'default' => '5', 'hint' => 'Valor dos portes de envio por encomenda'],
-            ['key' => 'free_shipping_threshold', 'label' => 'Portes Gratis a partir de (EUR)', 'type' => 'number', 'default' => '50', 'hint' => 'Valor minimo de encomenda para portes gratis (0 = sem portes gratis)'],
+            ['key' => 'free_shipping_threshold', 'label' => 'Portes Grátis a partir de (EUR)', 'type' => 'number', 'default' => '50', 'hint' => 'Valor mínimo de encomenda para portes grátis (0 = sem portes grátis)'],
         ]
     ],
     'payment' => [
         'label' => 'Pagamentos',
-        'description' => 'Configuracao da integracao IfthenPay',
+        'description' => 'Configuração da integração IfthenPay',
         'icon' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
         'settings' => [
-            ['key' => 'ifthenpay_enabled', 'label' => 'IfthenPay Ativo', 'type' => 'boolean', 'default' => '0', 'hint' => 'Ativa pagamentos automaticos via IfthenPay'],
-            ['key' => 'ifthenpay_entity', 'label' => 'Entidade Multibanco', 'type' => 'text', 'default' => '', 'hint' => 'Codigo de 5 digitos'],
-            ['key' => 'ifthenpay_subentity', 'label' => 'Subentidade', 'type' => 'text', 'default' => '', 'hint' => 'Codigo de 3 digitos'],
+            ['key' => 'ifthenpay_enabled', 'label' => 'IfthenPay Ativo', 'type' => 'boolean', 'default' => '0', 'hint' => 'Ativa pagamentos automáticos via IfthenPay'],
+            ['key' => 'ifthenpay_entity', 'label' => 'Entidade Multibanco', 'type' => 'text', 'default' => '', 'hint' => 'Código de 5 dígitos'],
+            ['key' => 'ifthenpay_subentity', 'label' => 'Subentidade', 'type' => 'text', 'default' => '', 'hint' => 'Código de 3 dígitos'],
             ['key' => 'ifthenpay_mbway_key', 'label' => 'MBWay Key', 'type' => 'text', 'default' => ''],
-            ['key' => 'ifthenpay_card_key', 'label' => 'CCard Key', 'type' => 'text', 'default' => '', 'hint' => 'Chave para pagamentos por cartao'],
-            ['key' => 'ifthenpay_anti_phishing_key', 'label' => 'Anti-Phishing Key', 'type' => 'password', 'default' => '', 'hint' => 'Chave de seguranca para validar callbacks'],
+            ['key' => 'ifthenpay_card_key', 'label' => 'CCard Key', 'type' => 'text', 'default' => '', 'hint' => 'Chave para pagamentos por cartão'],
+            ['key' => 'ifthenpay_anti_phishing_key', 'label' => 'Anti-Phishing Key', 'type' => 'password', 'default' => '', 'hint' => 'Chave de segurança para validar callbacks'],
             ['key' => 'ifthenpay_callback_url', 'label' => 'Callback URL', 'type' => 'readonly', 'default' => '', 'hint' => 'URL a configurar no backoffice IfthenPay'],
         ]
     ],
     'email' => [
         'label' => 'Email (SMTP)',
-        'description' => 'Configuracao de envio de emails',
+        'description' => 'Configuração de envio de emails',
         'icon' => 'M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207',
         'settings' => [
             ['key' => 'smtp_host', 'label' => 'SMTP Host', 'type' => 'text', 'default' => '', 'hint' => 'Ex: smtp.gmail.com'],
             ['key' => 'smtp_port', 'label' => 'SMTP Port', 'type' => 'number', 'default' => '587'],
-            ['key' => 'smtp_user', 'label' => 'SMTP Usuario', 'type' => 'text', 'default' => ''],
+            ['key' => 'smtp_user', 'label' => 'SMTP Usuário', 'type' => 'text', 'default' => ''],
             ['key' => 'smtp_pass', 'label' => 'SMTP Password', 'type' => 'password', 'default' => ''],
             ['key' => 'smtp_from_email', 'label' => 'Email Remetente', 'type' => 'email', 'default' => '', 'hint' => 'O email que aparece como remetente'],
             ['key' => 'smtp_from_name', 'label' => 'Nome Remetente', 'type' => 'text', 'default' => 'A Casa do Gi'],
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $admin = Auth::user();
         logMessage("Admin {$admin->username} updated settings group: {$currentGroup}", 'info');
-        Session::flash('success', 'Configuracoes guardadas com sucesso.');
+        Session::flash('success', 'Configurações guardadas com sucesso.');
         redirect('/admin/configuracoes/?group=' . $currentGroup);
     }
 }
@@ -175,8 +175,8 @@ include dirname(__DIR__) . '/includes/header.php';
 
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-granite-800">Configuracoes</h1>
-        <p class="text-granite-500 text-sm">Configuracoes gerais do website</p>
+        <h1 class="text-2xl font-bold text-granite-800">Configurações</h1>
+        <p class="text-granite-500 text-sm">Configurações gerais do website</p>
     </div>
 </div>
 
@@ -202,9 +202,9 @@ include dirname(__DIR__) . '/includes/header.php';
         <!-- Info note -->
         <div class="bg-blue-50 rounded-lg p-4 mt-4 border border-blue-200">
             <p class="text-xs text-blue-700 leading-relaxed">
-                <strong>Nota:</strong> Os links de reserva (Booking, Airbnb, etc.) sao agora geridos na pagina
+                <strong>Nota:</strong> Os links de reserva (Booking, Airbnb, etc.) são agora geridos na página
                 <a href="<?= basePath() ?>/admin/alojamento/" class="underline hover:text-blue-900">Alojamento</a>.
-                O modo da loja (ativa/manual/fechada) e gerido na pagina
+                O modo da loja (ativa/manual/fechada) é gerido na página
                 <a href="<?= basePath() ?>/admin/loja/" class="underline hover:text-blue-900">Loja</a>.
             </p>
         </div>
@@ -285,7 +285,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
                 <div class="mt-6 pt-6 border-t border-granite-200">
                     <button type="submit" class="px-6 py-2.5 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 transition-colors font-medium">
-                        Guardar Alteracoes
+                        Guardar Alterações
                     </button>
                 </div>
             </form>
