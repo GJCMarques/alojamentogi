@@ -38,9 +38,9 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative h-[60vh] min-h-[500px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen md:h-[60vh] min-h-[500px] flex items-center bg-black overflow-hidden">
     <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed parallax-bg"
              style="background-image: url('<?= $heroUrl ?>');">
         </div>
         <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>

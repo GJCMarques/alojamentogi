@@ -22,6 +22,22 @@ $instagram = setting('instagram_url', '');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manutenção - A Casa do Gi</title>
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
+    
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="A Casa do Gi - Em Breve / Coming Soon">
+    <meta property="og:description" content="Estamos a preparar algo especial. Alojamento Local em Mogadouro. We are crafting something special. Local accommodation in Mogadouro.">
+    <meta property="og:url" content="<?= setting('app_url', 'https://acasadogi.pt') ?>">
+    <meta property="og:site_name" content="A Casa do Gi">
+    <meta property="og:image" content="<?= asset('images/MogadouroAtividades.jpg') ?>">
+    <meta property="og:locale" content="pt_PT">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="A Casa do Gi - Em Breve">
+    <meta name="twitter:description" content="Estamos a preparar algo especial em Mogadouro.">
+    <meta name="twitter:image" content="<?= asset('images/MogadouroAtividades.jpg') ?>">
+
     <!-- Use Tailwind via CDN for simplicity and isolation -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fonts -->
