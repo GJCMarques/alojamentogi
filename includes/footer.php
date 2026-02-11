@@ -431,6 +431,7 @@ $instagramUrl = setting('instagram_url', '');
                     container.classList.remove('scale-95', 'opacity-0');
                 });
                 document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
 
                 return new Promise((resolve) => {
                     this._resolve = resolve;
@@ -449,6 +450,7 @@ $instagramUrl = setting('instagram_url', '');
                 setTimeout(() => {
                     overlay.classList.add('hidden');
                     document.body.style.overflow = '';
+                    document.documentElement.style.overflow = '';
                 }, 300);
 
                 if (this._resolve) {
@@ -540,6 +542,7 @@ $instagramUrl = setting('instagram_url', '');
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
             }
         }
 
@@ -549,6 +552,7 @@ $instagramUrl = setting('instagram_url', '');
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
                 document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
             }
         }
 

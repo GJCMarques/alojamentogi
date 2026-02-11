@@ -516,46 +516,89 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Lightbox for Gallery -->
 <?php if (!empty($activityImages) && count($activityImages) > 1): ?>
-<div id="activity-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center">
-    <button onclick="closeActivityLightbox()" class="absolute top-4 right-4 text-white/60 hover:text-white p-2 hover:bg-white/10 rounded-full transition-colors">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-    </button>
+<!-- Lightbox Modal -->
+<div id="activity-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex flex-col">
+    <!-- Top Bar -->
+    <div class="flex items-center justify-between px-4 md:px-8 py-4 bg-gradient-to-b from-black/50 to-transparent">
+        <div class="text-white/80 text-sm font-medium">
+            <span id="activity-lightbox-counter">1</span> / <span id="activity-lightbox-total"><?= count($activityImages) ?></span>
+        </div>
+        
+        <button onclick="closeActivityLightbox()" class="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
 
-    <button onclick="prevActivityImage()" class="absolute left-4 text-white/50 hover:text-white p-2 hover:bg-white/10 rounded-full transition-colors">
-        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
-        </svg>
-    </button>
+    <!-- Main Content -->
+    <div class="flex-1 flex items-center justify-center relative px-4 md:px-20">
+        <button onclick="prevActivityImage()" class="absolute left-2 md:left-6 text-white/50 hover:text-white transition-all z-[101] p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
 
-    <img id="activity-lightbox-img" src="" alt="" class="max-w-[90vw] max-h-[90vh] object-contain">
+        <div class="relative max-w-full max-h-[60vh] md:max-h-[70vh]">
+            <img id="activity-lightbox-img" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
+            <div id="activity-lightbox-loader" class="absolute inset-0 flex items-center justify-center hidden">
+                <div class="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            </div>
+        </div>
 
-    <button onclick="nextActivityImage()" class="absolute right-4 text-white/50 hover:text-white p-2 hover:bg-white/10 rounded-full transition-colors">
-        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
-        </svg>
-    </button>
+        <button onclick="nextActivityImage()" class="absolute right-2 md:right-6 text-white/50 hover:text-white transition-all z-[101] p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+    </div>
 
-    <div class="absolute bottom-4 text-white/60 text-sm">
-        <span id="activity-lightbox-counter"></span>
+    <!-- Thumbnail Carousel -->
+    <div class="bg-gradient-to-t from-black/70 to-transparent py-4 md:py-6">
+        <div class="max-w-4xl mx-auto px-4">
+            <div id="thumbnail-carousel" class="flex items-center justify-center gap-2 md:gap-3 overflow-x-auto py-4 scrollbar-hide">
+                <?php foreach ($activityImages as $index => $img): ?>
+                <button onclick="goToActivityImage(<?= $index ?>)"
+                        class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 relative <?= $index === 0 ? 'border-accent opacity-100 scale-110 z-20 shadow-lg' : 'border-transparent opacity-50 z-0 hover:opacity-80' ?>"
+                        data-index="<?= $index ?>">
+                    <img src="<?= $base . $img['file_path'] ?>" alt="" class="w-full h-full object-cover">
+                </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
     </div>
 </div>
 
+<style>
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.thumbnail-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.thumbnail-item:hover { transform: scale(1.05); }
+.thumbnail-item.scale-110 { transform: scale(1.1); z-index: 10; }
+#activity-lightbox-img { transition: opacity 0.3s ease-in-out; }
+</style>
+
 <script>
-const activityImages = <?= json_encode(array_map(function($img) use ($base) {
-    $path = $base . $img['file_path'];
-    return ['url' => $path, 'alt' => $img['alt_text_pt'] ?? ''];
+const activityImages = <?= json_encode(array_map(function($img) use ($base, $activity, $lang) {
+    return [
+        'url' => $base . $img['file_path'],
+        'alt' => $lang->getCurrentLang() === 'pt' ? ($img['alt_text_pt'] ?? $activity['title']) : ($img['alt_text_en'] ?? $activity['title'])
+    ];
 }, $activityImages)) ?>;
+
 let currentActivityImage = 0;
+const totalActivityImages = activityImages.length;
 
 function openActivityLightbox(index) {
     currentActivityImage = index;
     updateActivityLightbox();
+    updateActivityThumbnails();
+    updateActivityCounter();
     const modal = document.getElementById('activity-lightbox');
     modal.classList.remove('hidden');
     setTimeout(() => modal.classList.remove('opacity-0'), 10);
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 }
 
 function closeActivityLightbox() {
@@ -563,21 +606,64 @@ function closeActivityLightbox() {
     modal.classList.add('opacity-0');
     setTimeout(() => modal.classList.add('hidden'), 300);
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
 }
 
 function updateActivityLightbox() {
-    document.getElementById('activity-lightbox-img').src = activityImages[currentActivityImage].url;
-    document.getElementById('activity-lightbox-counter').textContent = (currentActivityImage + 1) + ' / ' + activityImages.length;
+    const img = document.getElementById('activity-lightbox-img');
+    const loader = document.getElementById('activity-lightbox-loader');
+    
+    loader.classList.remove('hidden');
+    img.style.opacity = '0';
+
+    const currentImg = activityImages[currentActivityImage];
+    const newImg = new Image();
+    
+    newImg.onload = function() {
+        img.src = currentImg.url;
+        loader.classList.add('hidden');
+        img.style.opacity = '1';
+    };
+    newImg.src = currentImg.url;
+}
+
+function updateActivityThumbnails() {
+    document.querySelectorAll('.thumbnail-item').forEach((thumb, index) => {
+        if (index === currentActivityImage) {
+            thumb.classList.add('border-accent', 'opacity-100', 'scale-110');
+            thumb.classList.remove('border-transparent', 'opacity-50');
+            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+            thumb.classList.remove('border-accent', 'opacity-100', 'scale-110');
+            thumb.classList.add('border-transparent', 'opacity-50');
+        }
+    });
+}
+
+function updateActivityCounter() {
+    const counter = document.getElementById('activity-lightbox-counter');
+    if (counter) counter.textContent = currentActivityImage + 1;
+}
+
+function goToActivityImage(index) {
+    currentActivityImage = index;
+    updateActivityLightbox();
+    updateActivityThumbnails();
+    updateActivityCounter();
 }
 
 function nextActivityImage() {
-    currentActivityImage = (currentActivityImage + 1) % activityImages.length;
+    currentActivityImage = (currentActivityImage + 1) % totalActivityImages;
     updateActivityLightbox();
+    updateActivityThumbnails();
+    updateActivityCounter();
 }
 
 function prevActivityImage() {
-    currentActivityImage = (currentActivityImage - 1 + activityImages.length) % activityImages.length;
+    currentActivityImage = (currentActivityImage - 1 + totalActivityImages) % totalActivityImages;
     updateActivityLightbox();
+    updateActivityThumbnails();
+    updateActivityCounter();
 }
 
 document.addEventListener('keydown', function(e) {
@@ -588,6 +674,17 @@ document.addEventListener('keydown', function(e) {
         if (e.key === 'ArrowLeft') prevActivityImage();
     }
 });
+
+// Touch support
+let actTouchStartX = 0;
+const actLightboxModal = document.getElementById('activity-lightbox');
+if (actLightboxModal) {
+    actLightboxModal.addEventListener('touchstart', e => actTouchStartX = e.changedTouches[0].screenX, { passive: true });
+    actLightboxModal.addEventListener('touchend', e => {
+        const diff = actTouchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) diff > 0 ? nextActivityImage() : prevActivityImage();
+    }, { passive: true });
+}
 </script>
 <?php endif; ?>
 

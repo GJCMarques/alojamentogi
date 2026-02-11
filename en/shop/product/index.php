@@ -148,7 +148,7 @@ include INCLUDES_PATH . '/header.php';
             <!-- Product Images -->
             <div class="mb-8 lg:mb-0 animate-on-scroll" data-animation="fade-up">
                 <!-- Main Image with Navigation -->
-                <div class="relative aspect-square bg-white rounded-2xl overflow-hidden shadow-lg mb-4 group" id="main-image-container">
+                <div class="relative h-[400px] md:h-[500px] w-full bg-white rounded-2xl overflow-hidden shadow-lg mb-4 group" id="main-image-container">
                     <?php if ($product->getPrimaryImage()): ?>
                     <img src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
                          alt="<?= e($product->name) ?>"
@@ -446,132 +446,230 @@ include INCLUDES_PATH . '/header.php';
 <?php endif; ?>
 
 <!-- Lightbox Modal -->
-<div id="lightbox" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4">
-    <button type="button"
-            class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors z-10"
-            id="close-lightbox">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-    </button>
+<div id="lightbox-modal" class="fixed inset-0 z-[100] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex flex-col">
+    <div class="flex items-center justify-between px-4 md:px-8 py-4 bg-gradient-to-b from-black/50 to-transparent">
+        <div class="text-white/80 text-sm font-medium">
+            <span id="lightbox-counter">1</span> / <span id="lightbox-total"><?= count($product->images) ?></span>
+        </div>
+        
+        <button onclick="closeLightbox()" class="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
 
-    <button type="button"
-            class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors"
-            id="lightbox-prev">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-    </button>
+    <div class="flex-1 flex items-center justify-center relative px-4 md:px-20">
+        <button onclick="prevImage()" class="absolute left-2 md:left-6 text-white/50 hover:text-white transition-all z-[101] p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
 
-    <img src="" alt="<?= e($product->name) ?>" class="max-w-full max-h-full object-contain" id="lightbox-image">
+        <div class="relative max-w-full max-h-[60vh] md:max-h-[70vh]">
+            <img id="lightbox-image" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
+            <div id="lightbox-loader" class="absolute inset-0 flex items-center justify-center hidden">
+                <div class="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            </div>
+        </div>
 
-    <button type="button"
-            class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors"
-            id="lightbox-next">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-    </button>
+        <button onclick="nextImage()" class="absolute right-2 md:right-6 text-white/50 hover:text-white transition-all z-[101] p-2 hover:bg-white/10 rounded-full">
+            <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="bg-gradient-to-t from-black/70 to-transparent py-4 md:py-6">
+        <div class="max-w-4xl mx-auto px-4">
+            <div id="thumbnail-carousel" class="flex items-center justify-center gap-2 md:gap-3 overflow-x-auto py-4 scrollbar-hide">
+                <?php foreach ($product->images as $index => $image): ?>
+                <button onclick="goToImage(<?= $index ?>)"
+                        class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 relative <?= $index === 0 ? 'border-accent opacity-100 scale-110 z-20 shadow-lg' : 'border-transparent opacity-50 z-0 hover:opacity-80' ?>"
+                        data-index="<?= $index ?>">
+                    <img src="<?= e(basePath() . $image['image_path']) ?>" alt="" class="w-full h-full object-cover">
+                </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.thumbnail-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.thumbnail-item:hover { transform: scale(1.05); }
+.thumbnail-item.scale-110 { transform: scale(1.1); z-index: 10; }
+#lightbox-image { transition: opacity 0.3s ease-in-out; }
+</style>
 
 <!-- Scripts -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Image gallery data
-    const images = <?php
-        $productImages = array_values($product->images);
-        $jsImages = [];
-        foreach ($productImages as $index => $image) {
-            $jsImages[] = [
-                'src' => basePath() . $image['image_path'],
-                'alt' => $product->name . ' - Image ' . ($index + 1)
-            ];
+// Gallery Data
+const galleryImages = <?= json_encode(array_map(function($img) use ($product) {
+    return [
+        'url' => basePath() . $img['image_path'],
+        'alt' => $product->name . ' - ' . ($img['sort_order'] ?? 'Image')
+    ];
+}, array_values($product->images))) ?>;
+
+let currentImageIndex = 0;
+const totalImages = galleryImages.length;
+
+// Lightbox Functions
+function openLightbox(index) {
+    currentImageIndex = index;
+    updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
+    const modal = document.getElementById('lightbox-modal');
+    modal.classList.remove('hidden');
+    setTimeout(() => modal.classList.remove('opacity-0'), 10);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    const modal = document.getElementById('lightbox-modal');
+    modal.classList.add('opacity-0');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+}
+
+function updateLightboxImage() {
+    const img = document.getElementById('lightbox-image');
+    const loader = document.getElementById('lightbox-loader');
+
+    loader.classList.remove('hidden');
+    img.style.opacity = '0';
+
+    const currentImg = galleryImages[currentImageIndex];
+
+    const newImg = new Image();
+    newImg.onload = function() {
+        img.src = currentImg.url;
+        loader.classList.add('hidden');
+        img.style.opacity = '1';
+    };
+    newImg.src = currentImg.url;
+}
+
+function updateThumbnails() {
+    document.querySelectorAll('.thumbnail-item').forEach((thumb, index) => {
+        if (index === currentImageIndex) {
+            thumb.classList.add('border-accent', 'opacity-100', 'scale-110');
+            thumb.classList.remove('border-transparent', 'opacity-50');
+            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+            thumb.classList.remove('border-accent', 'opacity-100', 'scale-110');
+            thumb.classList.add('border-transparent', 'opacity-50');
         }
-        echo json_encode($jsImages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
-    ?>;
+    });
+}
 
-    let currentImageIndex = 0;
+function updateCounter() {
+    const counter = document.getElementById('lightbox-counter');
+    if (counter) counter.textContent = currentImageIndex + 1;
+}
 
-    // Main image and thumbnails
+function goToImage(index) {
+    currentImageIndex = index;
+    updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
+}
+
+function nextImage() {
+    currentImageIndex = (currentImageIndex + 1) % totalImages;
+    updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
+}
+
+function prevImage() {
+    currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+    updateLightboxImage();
+    updateThumbnails();
+    updateCounter();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    const lightbox = document.getElementById('lightbox-modal');
+    if (e.key === 'Escape') {
+        if (!lightbox.classList.contains('hidden')) closeLightbox();
+    }
+    if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+    }
+});
+
+// Touch support for swipe
+let touchStartX = 0;
+const lightboxModal = document.getElementById('lightbox-modal');
+if (lightboxModal) {
+    lightboxModal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, { passive: true });
+    lightboxModal.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) diff > 0 ? nextImage() : prevImage();
+    }, { passive: true });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Main image and thumbnails (Product Page Interaction)
     const mainImage = document.getElementById('main-image');
     const thumbnails = document.querySelectorAll('.thumbnail-btn');
+    
+    // JS representation for main page logic
+    const images = galleryImages.map((img, i) => ({ src: img.url, alt: img.alt }));
 
-    // Update active thumbnail
-    function updateActiveThumbnail(index) {
-        thumbnails.forEach((thumb, i) => {
-            if (i === index) {
-                thumb.classList.remove('border-cream-200');
-                thumb.classList.add('border-primary', 'ring-2', 'ring-primary/20');
-            } else {
-                thumb.classList.add('border-cream-200');
-                thumb.classList.remove('border-primary', 'ring-2', 'ring-primary/20');
-            }
-        });
-    }
-
-    // Change main image
-    function changeImage(index) {
-        if (images[index] && mainImage) {
-            currentImageIndex = index;
+    // Change main image logic
+    function changeMainImage(index) {
+         if (images[index] && mainImage) {
             mainImage.src = images[index].src;
             mainImage.dataset.index = index;
-            updateActiveThumbnail(index);
+            
+            // Update thumbnails classes
+            thumbnails.forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.remove('border-cream-200');
+                    thumb.classList.add('border-primary', 'ring-2', 'ring-primary/20');
+                } else {
+                    thumb.classList.add('border-cream-200');
+                    thumb.classList.remove('border-primary', 'ring-2', 'ring-primary/20');
+                }
+            });
         }
     }
 
-    // Thumbnail clicks
+    // Thumbnail clicks for main page
     thumbnails.forEach((btn, index) => {
         btn.addEventListener('click', function() {
-            changeImage(index);
+            changeMainImage(index);
         });
     });
 
-    // Previous/Next buttons
+    // Previous/Next buttons for main image
     const prevBtn = document.getElementById('prev-image');
     const nextBtn = document.getElementById('next-image');
 
     if (prevBtn) {
         prevBtn.addEventListener('click', function() {
-            const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
-            changeImage(newIndex);
+            let idx = parseInt(mainImage.dataset.index) || 0;
+            const newIndex = idx > 0 ? idx - 1 : images.length - 1;
+            changeMainImage(newIndex);
         });
     }
 
     if (nextBtn) {
         nextBtn.addEventListener('click', function() {
-            const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
-            changeImage(newIndex);
+            let idx = parseInt(mainImage.dataset.index) || 0;
+            const newIndex = idx < images.length - 1 ? idx + 1 : 0;
+            changeMainImage(newIndex);
         });
-    }
-
-    // Lightbox functionality
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightbox-image');
-    const closeLightbox = document.getElementById('close-lightbox');
-    const lightboxPrev = document.getElementById('lightbox-prev');
-    const lightboxNext = document.getElementById('lightbox-next');
-
-    function openLightbox(index) {
-        if (images[index]) {
-            lightbox.classList.remove('hidden');
-            lightboxImage.src = images[index].src;
-            lightboxImage.alt = images[index].alt;
-            currentImageIndex = index;
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeLightboxModal() {
-        lightbox.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-
-    function showLightboxImage(index) {
-        if (images[index]) {
-            currentImageIndex = index;
-            lightboxImage.src = images[index].src;
-            lightboxImage.alt = images[index].alt;
-        }
     }
 
     // Main image click opens lightbox
@@ -581,48 +679,6 @@ document.addEventListener('DOMContentLoaded', function() {
             openLightbox(index);
         });
     }
-
-    // Lightbox controls
-    if (closeLightbox) {
-        closeLightbox.addEventListener('click', closeLightboxModal);
-    }
-
-    if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', function() {
-            const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
-            showLightboxImage(newIndex);
-        });
-    }
-
-    if (lightboxNext) {
-        lightboxNext.addEventListener('click', function() {
-            const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
-            showLightboxImage(newIndex);
-        });
-    }
-
-    // Click outside image to close
-    lightbox.addEventListener('click', function(e) {
-        if (e.target === lightbox) {
-            closeLightboxModal();
-        }
-    });
-
-    // Escape key to close
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-            closeLightboxModal();
-        }
-        if (!lightbox.classList.contains('hidden')) {
-            if (e.key === 'ArrowLeft') {
-                const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
-                showLightboxImage(newIndex);
-            } else if (e.key === 'ArrowRight') {
-                const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
-                showLightboxImage(newIndex);
-            }
-        }
-    });
 
     // Quantity buttons
     const quantityInput = document.getElementById('quantity');
