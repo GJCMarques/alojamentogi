@@ -32,6 +32,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 // Page configuration
 $pageTitle = 'Carrinho de Compras';
 $pageDescription = 'Reveja os produtos no seu carrinho de compras da Casa do Gi.';
+$headerLayer = 2;
 
 include INCLUDES_PATH . '/header.php';
 ?>

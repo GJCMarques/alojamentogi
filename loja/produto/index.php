@@ -69,6 +69,7 @@ $relatedProducts = array_slice($relatedProducts, 0, 4);
 // Page configuration
 $pageTitle = $product->name;
 $pageDescription = $product->short_description ?? substr(strip_tags($product->description ?? ''), 0, 160);
+$headerLayer = 2;
 
 include INCLUDES_PATH . '/header.php';
 ?>
@@ -672,10 +673,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     // Update cart count in header
-                    const cartCount = document.querySelector('.cart-count');
-                    if (cartCount) {
-                        cartCount.textContent = data.cart.total_quantity;
-                        cartCount.classList.remove('hidden');
+                    if (window.updateCartCount) {
+                        window.updateCartCount(data.cart.total_quantity);
+                    } else {
+                        // Fallback if global function is missing
+                        const cartCount = document.querySelector('.cart-count');
+                        if (cartCount) {
+                            cartCount.textContent = data.cart.total_quantity;
+                            cartCount.classList.remove('hidden');
+                        }
                     }
 
                     // Success feedback

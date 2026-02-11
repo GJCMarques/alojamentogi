@@ -37,6 +37,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 // Page configuration
 $pageTitle = 'Shopping Cart';
 $pageDescription = 'Review the products in your shopping cart at Casa do Gi.';
+$headerLayer = 2;
 
 include INCLUDES_PATH . '/header.php';
 ?>

@@ -152,6 +152,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $pageTitle = $isEnglish ? 'Order Request' : 'Pedido de Encomenda';
 $pageDescription = $isEnglish ? 'Submit your order request' : 'Envie o seu pedido de encomenda';
+$headerLayer = 2;
 
 include INCLUDES_PATH . '/header.php';
 ?>

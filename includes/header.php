@@ -600,13 +600,16 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         // Scroll Effect with debouncing using requestAnimationFrame
         let ticking = false;
+        const headerLayer = <?= isset($headerLayer) ? (int)$headerLayer : 1 ?>;
         let lastScrollY = 0;
 
         function handleScroll() {
             // Adjust mobile menu background opacity
             const mobileBgSolid = document.getElementById('mobile-menu-bg-solid');
             if (mobileBgSolid) {
-                if (window.scrollY > 50) {
+                // If Layer 2, keep mobile menu solid (bg visible) when open (or always)
+                // Otherwise normal scroll check
+                if (window.scrollY > 50 || headerLayer === 2) {
                      mobileBgSolid.classList.remove('opacity-0');
                      mobileBgSolid.classList.add('opacity-100');
                 } else {
@@ -624,7 +627,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     header.classList.remove('scrolled');
                 }
             } else {
-                // Normal behavior for other pages
+                // Normal behavior for other pages - Transparency on Top
                 if (lastScrollY > 50) {
                     header.classList.add('scrolled');
                 } else {

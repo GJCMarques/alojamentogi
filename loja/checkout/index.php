@@ -219,6 +219,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 // Page configuration
 $pageTitle = $isEnglish ? 'Checkout' : 'Finalizar Compra';
 $pageDescription = $isEnglish ? 'Complete your order' : 'Complete a sua encomenda';
+$headerLayer = 2;
 
 include INCLUDES_PATH . '/header.php';
 ?>

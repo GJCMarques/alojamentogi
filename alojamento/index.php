@@ -174,7 +174,7 @@ $mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.jpg'
 $mainHeroUrl = $mainHeroImage[0] === '/' ? basePath() . $mainHeroImage : asset($mainHeroImage);
 $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 ?>
-<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $mainHeroUrl ?>');">
@@ -294,7 +294,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 $casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.jpg';
 $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.jpg'));
 ?>
-<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $casaHeroUrl ?>');">

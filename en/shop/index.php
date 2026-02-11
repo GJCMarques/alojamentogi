@@ -42,7 +42,7 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
          <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $heroUrl ?>');">
@@ -490,12 +490,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     // Update cart count in header
-                    const cartCount = document.querySelector('.cart-count');
-                    if (cartCount) {
-                        cartCount.textContent = data.cart.total_quantity;
-                        cartCount.classList.remove('hidden');
-                        cartCount.classList.add('animate-bounce');
-                        setTimeout(() => cartCount.classList.remove('animate-bounce'), 1000);
+                    if (window.updateCartCount) {
+                        window.updateCartCount(data.cart.total_quantity);
+                    } else {
+                        // Fallback
+                        const cartCount = document.querySelector('.cart-count');
+                        if (cartCount) {
+                            cartCount.textContent = data.cart.total_quantity;
+                            cartCount.classList.remove('hidden');
+                            cartCount.classList.add('animate-bounce');
+                            setTimeout(() => cartCount.classList.remove('animate-bounce'), 1000);
+                        }
                     }
 
                     // Visual feedback

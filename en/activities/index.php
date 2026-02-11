@@ -128,8 +128,9 @@ if ($viewingActivity) {
         $relatedActivities = array_merge($relatedActivities, $fillActivities);
     }
 
-    $pageTitle = $activity['title'] . ' - O Que Fazer em Mogadouro';
-    $pageDescription = $activity['short_description'] ?? 'Descubra ' . $activity['title'] . ' em Mogadouro.';
+    $pageTitle = $activity['title'] . ' - What to Do in Mogadouro';
+    $pageDescription = $activity['short_description'] ?? 'Discover ' . $activity['title'] . ' in Mogadouro.';
+    $headerLayer = 2;
 
 } else {
     // Main activities page
@@ -603,7 +604,7 @@ footer {
 <!-- ================================================== -->
 
 <!-- Hero Section -->
-<section class="relative h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $heroUrl ?>');">
