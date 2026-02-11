@@ -204,3 +204,32 @@ function upload(string $path): string
 {
     return url('uploads/' . ltrim($path, '/'));
 }
+
+/**
+ * Maintenance Mode Check
+ * Redirects all non-admin traffic to maintenance.php if enabled.
+ */
+if (!defined('MAINTENANCE_PAGE')) {
+    if (isMaintenanceMode()) {
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        
+        // Exclude Admin area and Login
+        // Note: Assets are served directly by Apache, so no check needed for them unless routed trough PHP
+        $isExempt = false;
+        
+        if (strpos($requestUri, '/admin') !== false) {
+            $isExempt = true;
+        }
+        if (strpos($scriptName, 'login.php') !== false) {
+            $isExempt = true;
+        }
+        if (strpos($scriptName, 'logout.php') !== false) {
+            $isExempt = true; // Allow logout
+        }
+
+        if (!$isExempt) {
+            redirect('/manutencao/');
+        }
+    }
+}
