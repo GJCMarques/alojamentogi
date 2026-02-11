@@ -1160,4 +1160,46 @@ document.addEventListener('DOMContentLoaded', function() {
 footer { margin-top: 0 !important; }
 </style>
 
+<script>
+    // Simple, Robust Scroll Lock (Matching Header Logic)
+    document.addEventListener('DOMContentLoaded', () => {
+        const modalIds = ['lightbox-modal', 'amenities-modal', 'policies-modal', 'bookingModal'];
+        
+        const observer = new MutationObserver(() => {
+            let isLocked = false;
+            
+            // Check visibility of any tracked modal
+            modalIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.classList.contains('hidden')) {
+                    isLocked = true;
+                }
+            });
+
+            if (isLocked) {
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+            } else {
+                 // Only unlock if mobile menu is closed
+                 const mobileMenu = document.getElementById('mobile-menu');
+                 if (!mobileMenu || !mobileMenu.classList.contains('open')) {
+                    document.body.style.overflow = '';
+                    document.documentElement.style.overflow = '';
+                 }
+            }
+        });
+
+        // Loop to attach observers
+        modalIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                observer.observe(el, { 
+                    attributes: true, 
+                    attributeFilter: ['class', 'style', 'hidden'] 
+                });
+            }
+        });
+    });
+</script>
+
 <?php include INCLUDES_PATH . '/footer.php'; ?>

@@ -159,7 +159,7 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Main Content -->
-<section class="py-16 lg:py-24 bg-cream-100">
+<section class="py-16 lg:py-24 bg-cream-100 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-3 gap-12">
             <!-- Contact Information -->
@@ -379,7 +379,7 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Map Section -->
-<section class="relative pt-12 bg-white" style="padding-bottom: 3rem;">
+<section class="relative pt-12 bg-white overflow-hidden" style="padding-bottom: 3rem;">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-12 animate-on-scroll">

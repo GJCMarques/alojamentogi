@@ -803,7 +803,7 @@ footer {
 <!-- External Links Section -->
 <?php if (!empty($externalLinks)): ?>
 <section class="pt-20 lg:pt-24 pb-0 bg-white overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 lg:pb-24">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-20 lg:pb-24" style="padding-left: 2rem !important; padding-right: 2rem !important;">
         <div class="text-center mb-12 animate-on-scroll" data-animation="fade-up">
             <span class="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3 inline-block">
                 <?= $lang->getCurrentLang() === 'pt' ? 'Mais Informações' : 'More Information' ?>
@@ -818,14 +818,14 @@ footer {
             </p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-md mx-auto md:max-w-none md:w-full">
             <?php foreach ($externalLinks as $linkIdx => $link):
                 $linkDelay = min($linkIdx * 100, 400);
             ?>
             <a href="<?= e($link['url']) ?>"
                target="_blank"
                rel="noopener noreferrer"
-               class="group flex items-start gap-4 p-6 bg-cream-50 rounded-2xl hover:bg-white hover:shadow-lg border border-cream-100 hover:border-secondary/30 transition-all duration-300 animate-on-scroll"
+               class="group flex flex-col sm:flex-row items-start gap-4 p-5 sm:p-6 bg-cream-50 rounded-2xl hover:bg-white hover:shadow-lg border border-cream-100 hover:border-secondary/30 transition-all duration-300 animate-on-scroll"
                data-animation="fade-up"
                data-delay="<?= $linkDelay ?>"
                onclick="trackLinkClick(<?= $link['id'] ?>)">
@@ -865,7 +865,7 @@ footer {
                     <?php endif; ?>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h3 class="font-serif text-lg text-primary group-hover:text-secondary transition-colors mb-1 truncate">
+                    <h3 class="font-serif text-lg text-primary group-hover:text-secondary transition-colors mb-1 line-clamp-2 break-words">
                         <?= e($link['title']) ?>
                     </h3>
                     <?php if (!empty($link['description'])): ?>

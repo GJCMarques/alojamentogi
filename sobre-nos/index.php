@@ -99,7 +99,7 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Essence Section - Sophisticated Grid -->
-<section class="py-24 bg-cream relative">
+<section class="py-24 bg-cream relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             
