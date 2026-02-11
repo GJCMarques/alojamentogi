@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08-Fev-2026 às 19:40
+-- Tempo de geração: 11-Fev-2026 às 04:11
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -68,8 +68,8 @@ CREATE TABLE `accommodation` (
 --
 
 INSERT INTO `accommodation` (`id`, `slug`, `max_guests`, `bedrooms`, `bathrooms`, `area_sqm`, `floor_number`, `has_elevator`, `check_in_time`, `check_out_time`, `latitude`, `longitude`, `license_number`, `created_at`, `updated_at`, `is_active`, `rating`, `reviews_count`, `city`, `region`, `country`, `host_type`, `checkin_type`, `checkin_instructions`, `towels_linens_included`, `min_nights`, `instant_booking`, `accommodation_number`, `guestready_url`, `booking_url`, `airbnb_url`, `hero_image`, `cover_image`) VALUES
-(1, 'casa-do-gi-1', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-19 12:51:19', '2026-02-07 01:17:44', 1, 4.8, 127, 'Mogadouro', 'Trás-os-Montes', 'Portugal', 'superhost', 'self_checkin', NULL, 1, 2, 1, 1, 'https://book.guestready.com/pt/properties/mogadouro/fuga-ecletica-em-mogadouro/72622?adults=1&amp;amp;children=0&amp;amp;infants=0&amp;amp;checkin=&amp;amp;checkout=', '', '', 'images/MogadouroAlojamento.jpg', 'images/IgrejaMatriz.jpg'),
-(2, 'casa-do-gi-2', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-30 02:22:49', '2026-02-03 02:13:54', 1, 4.8, 127, 'Mogadouro', 'Trás-os-Montes', 'Portugal', 'superhost', 'self_checkin', NULL, 1, 2, 1, 2, '', '', '', 'uploads/accommodation/hero_casa2_1770084834.jpeg', 'images/Castelo.jpg');
+(1, 'casa-do-gi-1', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-19 12:51:19', '2026-02-10 18:18:43', 1, NULL, 0, 'Mogadouro', 'Tras-os-Montes', 'Portugal', 'standard', 'self_checkin', NULL, 1, 1, 0, 1, '', '', '', 'images/MogadouroAlojamento.jpg', 'images/IgrejaMatriz.jpg'),
+(2, 'casa-do-gi-2', 6, 3, 2, 100.00, 1, 0, '16:00:00', '11:00:00', 41.34217000, -6.71347000, '146729/AL', '2026-01-30 02:22:49', '2026-02-10 18:18:43', 1, NULL, 0, 'Mogadouro', 'Tras-os-Montes', 'Portugal', 'standard', 'self_checkin', NULL, 1, 1, 0, 2, '', '', '', 'uploads/accommodation/hero_casa2_1770084834.jpeg', 'images/Castelo.jpg');
 
 -- --------------------------------------------------------
 
@@ -89,86 +89,24 @@ CREATE TABLE `accommodation_amenities` (
 --
 
 INSERT INTO `accommodation_amenities` (`accommodation_id`, `amenity_id`, `is_highlighted`, `sort_order`) VALUES
-(1, 1, 1, 1),
-(1, 2, 1, 2),
-(1, 3, 1, 3),
-(1, 4, 1, 4),
-(1, 5, 1, 23),
-(1, 6, 1, 24),
-(1, 7, 1, 25),
-(1, 8, 1, 26),
-(1, 9, 0, 5),
-(1, 10, 0, 7),
-(1, 11, 0, 19),
-(1, 12, 0, 6),
-(1, 13, 0, 8),
-(1, 14, 0, 9),
-(1, 15, 0, 10),
-(1, 16, 0, 11),
-(1, 17, 0, 12),
-(1, 18, 0, 13),
-(1, 19, 0, 14),
-(1, 20, 0, 15),
-(1, 21, 0, 16),
-(1, 22, 0, 17),
-(1, 23, 0, 18),
-(1, 24, 0, 20),
-(1, 25, 0, 21),
-(1, 26, 0, 22),
-(1, 27, 0, 31),
-(1, 28, 0, 32),
-(1, 29, 0, 33),
-(1, 30, 0, 34),
-(1, 31, 0, 35),
-(1, 32, 0, 36),
-(1, 33, 0, 37),
-(1, 34, 0, 38),
-(1, 35, 0, 27),
-(1, 36, 0, 28),
-(1, 37, 0, 29),
-(1, 38, 0, 30),
-(1, 39, 0, 39),
-(1, 40, 0, 40),
-(2, 1, 1, 1),
-(2, 2, 1, 2),
-(2, 3, 1, 3),
-(2, 4, 1, 4),
-(2, 5, 1, 23),
-(2, 6, 1, 24),
-(2, 7, 1, 25),
-(2, 8, 1, 26),
-(2, 9, 0, 5),
-(2, 10, 0, 7),
-(2, 11, 0, 19),
-(2, 12, 0, 6),
-(2, 13, 0, 8),
-(2, 14, 0, 9),
-(2, 15, 0, 10),
-(2, 16, 0, 11),
-(2, 17, 0, 12),
-(2, 18, 0, 13),
-(2, 19, 0, 14),
-(2, 20, 0, 15),
-(2, 21, 0, 16),
-(2, 22, 0, 17),
-(2, 23, 0, 18),
-(2, 24, 0, 20),
-(2, 25, 0, 21),
-(2, 26, 0, 22),
-(2, 27, 0, 31),
-(2, 28, 0, 32),
-(2, 29, 0, 33),
-(2, 30, 0, 34),
-(2, 31, 0, 35),
-(2, 32, 0, 36),
-(2, 33, 0, 37),
-(2, 34, 0, 38),
-(2, 35, 0, 27),
-(2, 36, 0, 28),
-(2, 37, 0, 29),
-(2, 38, 0, 30),
-(2, 39, 0, 39),
-(2, 40, 0, 40);
+(1, 1, 0, 1),
+(1, 2, 0, 2),
+(1, 3, 0, 3),
+(1, 4, 0, 4),
+(1, 10, 0, 6),
+(1, 11, 0, 9),
+(1, 12, 0, 5),
+(1, 13, 0, 7),
+(1, 23, 0, 8),
+(1, 26, 0, 10),
+(1, 27, 0, 15),
+(1, 28, 0, 16),
+(1, 29, 0, 17),
+(1, 30, 0, 18),
+(1, 35, 0, 11),
+(1, 36, 0, 12),
+(1, 37, 0, 13),
+(1, 38, 0, 14);
 
 -- --------------------------------------------------------
 
@@ -201,10 +139,10 @@ CREATE TABLE `accommodation_translations` (
 --
 
 INSERT INTO `accommodation_translations` (`id`, `accommodation_id`, `language_id`, `title`, `short_description`, `full_description`, `house_rules`, `name`, `tagline`, `description`, `location_description`, `refund_policy`, `checkin_description`, `host_description`, `cancellation_policy`, `activity_section_title`, `activity_section_description`) VALUES
-(1, 1, 1, 'A Casa do Gi', 'Casa de ferias de 100m2, andar nr 1, sem elevador', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', NULL, 'A Casa do Gi 1', '', '', 'Localizado no coração de Mogadouro, a poucos passos do centro histórico. A zona é tranquila e segura, ideal para famílias. Perto de restaurantes, supermercados e dos principais pontos turísticos da região de Trás-os-Montes.', 'Cancelamento gratuito até 7 dias antes do check-in. Após essa data, será cobrado o valor da primeira noite. Não comparência resulta em cobrança total.', 'Self check-in com cofre de chaves. Instruções enviadas 24h antes da chegada.', 'Somos uma família local apaixonada por Mogadouro e Trás-os-Montes. Adoramos partilhar a nossa terra com visitantes de todo o mundo.', 'Cancelamento gratuito até 30 dias antes do check-in. Cancelamentos após este período sujeitos a taxas de acordo com a plataforma de reserva.', 'Mogadouro &amp;amp; Envolvência', 'Mogadouro é uma vila histórica no coração do Planalto Mirandês, onde a tradição se funde com a natureza. A partir da Casa do Gi, poderá explorar o Castelo de Mogadouro, percorrer trilhos no Parque Natural do Douro Internacional e saborear a gastronomia local única.'),
-(2, 1, 2, 'A Casa do Gi', 'Holiday home of 100m2, 1st floor, no elevator', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', NULL, '', 'Um espaço pensado para proporcionar momentos de tranquilidade e bem-estar no coração de Trás-os-Montes.', '', 'Located in the heart of Mogadouro, just steps from the historic center. The area is quiet and safe, ideal for families. Close to restaurants, supermarkets and the main tourist attractions of the Trás-os-Montes region.', 'Free cancellation up to 7 days before check-in. After that date, the first night will be charged. No-show results in full charge.', 'Self check-in with lockbox. Instructions sent 24h before arrival.', 'We are a local family passionate about Mogadouro and Trás-os-Montes. We love sharing our land with visitors from all over the world.', 'Free cancellation up to 30 days before check-in. Cancellations after this period subject to fees according to the booking platform.', 'Mogadouro &amp;amp; Surroundings', 'Mogadouro is a historic town in the heart of the Mirandês Plateau, where tradition merges with nature. From Casa do Gi, you can explore Mogadouro Castle, walk trails in the Douro International Natural Park and savor the unique local gastronomy.'),
-(3, 2, 1, '', NULL, NULL, NULL, 'A Casa do Gi 2', '', '', 'Localizado no coração de Mogadouro, a poucos passos do centro histórico. A zona é tranquila e segura, ideal para famílias. Perto de restaurantes, supermercados e dos principais pontos turísticos da região de Trás-os-Montes.', 'Cancelamento gratuito até 7 dias antes do check-in. Após essa data, será cobrado o valor da primeira noite. Não comparência resulta em cobrança total.', 'Self check-in com cofre de chaves. Instruções enviadas 24h antes da chegada.', 'Somos uma família local apaixonada por Mogadouro e Trás-os-Montes. Adoramos partilhar a nossa terra com visitantes de todo o mundo.', 'Cancelamento gratuito até 30 dias antes do check-in. Cancelamentos após este período sujeitos a taxas de acordo com a plataforma de reserva.', 'Mogadouro &amp; Envolvência', 'Mogadouro é uma vila histórica no coração do Planalto Mirandês, onde a tradição se funde com a natureza. A partir da Casa do Gi, poderá explorar o Castelo de Mogadouro, percorrer trilhos no Parque Natural do Douro Internacional e saborear a gastronomia local única.'),
-(4, 2, 2, '', NULL, NULL, NULL, '2', 'Um espaço pensado para proporcionar momentos de tranquilidade e bem-estar no coração de Trás-os-Montes.', '', 'Located in the heart of Mogadouro, just steps from the historic center. The area is quiet and safe, ideal for families. Close to restaurants, supermarkets and the main tourist attractions of the Trás-os-Montes region.', 'Free cancellation up to 7 days before check-in. After that date, the first night will be charged. No-show results in full charge.', 'Self check-in with lockbox. Instructions sent 24h before arrival.', 'We are a local family passionate about Mogadouro and Trás-os-Montes. We love sharing our land with visitors from all over the world.', 'Free cancellation up to 30 days before check-in. Cancellations after this period subject to fees according to the booking platform.', 'Mogadouro &amp; Surroundings', 'Mogadouro is a historic town in the heart of the Mirandês Plateau, where tradition merges with nature. From Casa do Gi, you can explore Mogadouro Castle, walk trails in the Douro International Natural Park and savor the unique local gastronomy.');
+(1, 1, 1, 'A Casa do Gi', 'Casa de ferias de 100m2, andar nr 1, sem elevador', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', NULL, 'A Casa do Gi', 'Simplicidade, acolhimento e muito amor', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', '', 'wewewee', '', '', 'wewew', 'Mogadouro & Envolvência', ''),
+(2, 1, 2, 'A Casa do Gi', 'Holiday home of 100m2, 1st floor, no elevator', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', NULL, 'A Casa do Gi', 'Simplicity, warmth and love', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', '', 'wewewe', '', '', '2wwewe', '', ''),
+(3, 2, 1, '', NULL, NULL, NULL, 'A Casa do Gi 2', 'Simplicidade, acolhimento e muito amor', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', '', '', '', '', '', '', ''),
+(4, 2, 2, '', NULL, NULL, NULL, 'A Casa do Gi 2', 'Simplicity, warmth and love', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -243,8 +181,8 @@ CREATE TABLE `activities` (
 --
 
 INSERT INTO `activities` (`id`, `category_id`, `slug`, `category`, `external_url`, `address`, `phone`, `website`, `email`, `opening_hours`, `price_range`, `google_maps_embed`, `meta_title`, `meta_description`, `latitude`, `longitude`, `distance_km`, `is_featured`, `is_active`, `sort_order`, `views_count`, `created_at`, `updated_at`) VALUES
-(1, 8, 'castelo-mogadouro', 'culture', '', 'Largo do Castelo, 5200-251 Mogadouro', '', '', '', NULL, 'free', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.1234567890123!2d-6.7134700!3d41.3421700!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDIwJzMxLjgiTiA2wrA0MicxMC4yIlc!5e0!3m2!1spt-PT!2spt!4v1234567890123!5m2!1spt-PT!2spt\" width=\"100%\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"></iframe>', NULL, NULL, 41.34217000, -6.71347000, 0.50, 1, 1, 1, 25, '2026-01-19 12:51:20', '2026-02-07 22:47:49'),
-(2, 7, 'miradouro-serpente-medal', 'nature', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 15.00, 1, 1, 2, 2, '2026-01-19 12:51:20', '2026-02-07 01:23:20'),
+(1, 8, 'castelo-mogadouro', 'culture', '', 'Largo do Castelo, 5200-251 Mogadouro', '', '', '', NULL, 'free', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.1234567890123!2d-6.7134700!3d41.3421700!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDIwJzMxLjgiTiA2wrA0MicxMC4yIlc!5e0!3m2!1spt-PT!2spt!4v1234567890123!5m2!1spt-PT!2spt\" width=\"100%\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"></iframe>', NULL, NULL, 41.34217000, -6.71347000, 0.50, 1, 1, 1, 45, '2026-01-19 12:51:20', '2026-02-11 02:31:41'),
+(2, 7, 'miradouro-serpente-medal', 'nature', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 15.00, 1, 1, 2, 3, '2026-01-19 12:51:20', '2026-02-09 13:59:44'),
 (4, 8, 'museu-mogadouro', 'culture', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.30, 0, 1, 4, 0, '2026-01-19 12:51:20', '2026-02-06 22:04:33'),
 (5, 8, 'igreja-matriz', 'culture', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.20, 0, 1, 5, 0, '2026-01-19 12:51:20', '2026-02-06 22:04:33'),
 (6, 10, 'restaurante-a-lareira', 'restaurants', '', 'Av. Nossa Senhora do Caminho, 5200-207 Mogadouro', '', '', '', NULL, 'moderate', '', NULL, NULL, NULL, NULL, 0.10, 0, 1, 10, 3, '2026-02-06 14:42:31', '2026-02-07 01:29:09'),
@@ -326,7 +264,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `email`, `password_hash`, `full_name`, `role`, `avatar`, `is_active`, `last_login`, `login_attempts`, `locked_until`, `password_reset_token`, `password_reset_expires`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin@acasadogi.pt', '$2y$12$95JaIzBEov7tZz0SfnUwPOIecK1ujIWqumI74Ndw.e2RHwm/FpVqy', 'Administrador', 'super_admin', NULL, 1, '2026-02-07 17:03:54', 0, NULL, NULL, NULL, '2026-01-19 12:51:19', '2026-02-07 17:03:54');
+(1, 'admin', 'admin@acasadogi.pt', '$2y$12$95JaIzBEov7tZz0SfnUwPOIecK1ujIWqumI74Ndw.e2RHwm/FpVqy', 'Administrador', 'super_admin', NULL, 1, '2026-02-11 02:57:46', 0, NULL, NULL, NULL, '2026-01-19 12:51:19', '2026-02-11 02:57:46');
 
 -- --------------------------------------------------------
 
@@ -536,7 +474,138 @@ INSERT INTO `audit_log` (`id`, `admin_id`, `action`, `entity_type`, `entity_id`,
 (22, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-02 21:17:58'),
 (23, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-06 15:14:01'),
 (24, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-06 18:29:25'),
-(25, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-07 17:03:54');
+(25, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-07 17:03:54'),
+(26, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-08 20:51:43'),
+(27, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 15:54:22'),
+(28, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 15:55:27'),
+(29, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 15:56:10'),
+(30, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 16:01:55'),
+(31, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:03:53'),
+(32, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:03:53'),
+(33, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:03:59'),
+(34, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:03:59'),
+(35, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:04:05'),
+(36, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:04:06'),
+(37, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:04:13'),
+(38, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:04:13'),
+(39, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:05:19'),
+(40, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:05:19'),
+(41, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:05:32'),
+(42, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:05:32'),
+(43, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:13:05'),
+(44, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:14:39'),
+(45, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:33:41'),
+(46, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:35:44'),
+(47, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:50:02'),
+(48, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:50:46'),
+(49, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:50:53'),
+(50, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:56:21'),
+(51, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 19:59:45'),
+(52, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:04:20'),
+(53, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:29:02'),
+(54, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:30:24'),
+(55, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:34:12'),
+(56, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:38:10'),
+(57, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:45:38'),
+(58, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 20:46:55'),
+(59, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:36:42'),
+(60, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:39:40'),
+(61, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:45:05'),
+(62, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:47:47'),
+(63, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:51:51'),
+(64, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:53:04'),
+(65, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:54:44'),
+(66, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:56:29'),
+(67, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:56:48'),
+(68, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 21:58:49'),
+(69, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 22:00:20'),
+(70, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 22:01:42'),
+(71, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 23:41:57'),
+(72, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-09 23:43:05'),
+(73, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 00:08:21'),
+(74, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 00:15:47'),
+(75, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 01:09:36'),
+(76, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 01:25:47'),
+(77, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 01:27:26'),
+(78, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 01:28:35'),
+(79, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 02:03:40'),
+(80, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 02:20:50'),
+(81, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 02:21:22'),
+(82, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 15:32:52'),
+(83, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 15:34:26'),
+(84, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:11:15'),
+(85, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:15:39'),
+(86, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:17:18'),
+(87, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:18:26'),
+(88, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:18:26'),
+(89, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:24:31'),
+(90, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:27:55'),
+(91, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:32:50'),
+(92, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:37:51'),
+(93, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:46:45'),
+(94, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:49:35'),
+(95, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:52:03'),
+(96, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:54:59'),
+(97, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 16:56:33'),
+(98, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:00:07'),
+(99, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:00:33'),
+(100, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:04:29'),
+(101, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:06:15'),
+(102, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:07:29'),
+(103, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:07:46'),
+(104, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:11:38'),
+(105, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:12:47'),
+(106, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:14:08'),
+(107, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:32:30'),
+(108, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:38:07'),
+(109, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:38:26'),
+(110, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:39:55'),
+(111, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:47:17'),
+(112, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:51:53'),
+(113, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:55:06'),
+(114, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 17:58:25'),
+(115, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:05:42'),
+(116, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:07:49'),
+(117, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:10:43'),
+(118, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:13:18'),
+(119, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:13:50'),
+(120, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:15:06'),
+(121, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:23:35'),
+(122, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:28:15'),
+(123, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:30:38'),
+(124, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:32:30'),
+(125, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 18:56:59'),
+(126, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:00:26'),
+(127, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:00:57'),
+(128, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:11:52'),
+(129, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:29:07'),
+(130, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:31:03'),
+(131, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:31:15'),
+(132, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:32:56'),
+(133, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:36:25'),
+(134, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 19:39:22'),
+(135, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 20:58:07'),
+(136, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 20:59:21'),
+(137, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:01:49'),
+(138, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:03:50'),
+(139, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:09:23'),
+(140, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:09:26'),
+(141, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:11:20'),
+(142, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:12:22'),
+(143, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:27:24'),
+(144, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:30:27'),
+(145, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:35:24'),
+(146, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:36:47'),
+(147, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:38:09'),
+(148, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-10 21:42:29'),
+(149, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Linux; Android 13; SM-G981B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Mobile Safari/537.36', '2026-02-11 00:46:22'),
+(150, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 00:47:52'),
+(151, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 02:38:29'),
+(152, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 02:40:19'),
+(153, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 02:44:35'),
+(154, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 02:45:44'),
+(155, 1, 'login', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 02:57:46'),
+(156, 1, 'logout', 'admin', 1, NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-11 02:59:04');
 
 -- --------------------------------------------------------
 
@@ -583,10 +652,10 @@ CREATE TABLE `bathrooms` (
 --
 
 INSERT INTO `bathrooms` (`id`, `accommodation_id`, `bathroom_number`, `is_ensuite`, `has_shower`, `has_bathtub`, `has_bidet`, `created_at`, `image`) VALUES
-(1, 1, 1, 0, 1, 1, 1, '2026-01-26 22:31:24', NULL),
-(2, 1, 2, 0, 1, 0, 0, '2026-01-26 22:31:24', NULL),
-(3, 2, 1, 0, 1, 1, 1, '2026-01-30 02:22:50', NULL),
-(4, 2, 2, 0, 1, 0, 0, '2026-01-30 02:22:50', NULL);
+(9, 1, 1, 0, 1, 1, 1, '2026-02-10 18:23:27', NULL),
+(10, 1, 2, 0, 1, 0, 0, '2026-02-10 18:23:27', NULL),
+(11, 2, 1, 0, 1, 1, 1, '2026-02-10 18:23:27', NULL),
+(12, 2, 2, 0, 1, 0, 0, '2026-02-10 18:23:27', NULL);
 
 -- --------------------------------------------------------
 
@@ -608,14 +677,14 @@ CREATE TABLE `bathroom_translations` (
 --
 
 INSERT INTO `bathroom_translations` (`id`, `bathroom_id`, `language_id`, `name`, `description`, `title`) VALUES
-(1, 1, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bidé, secador de cabelo', 'Higiene'),
-(2, 1, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer', 'Bathrooms'),
-(3, 2, 1, 'Casa de Banho Secundária', 'Chuveiro, lavatório', 'Higiene'),
-(4, 2, 2, 'Secondary Bathroom', 'Shower, sink', 'Bathrooms'),
-(5, 3, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bidé, secador de cabelo', 'Higiene'),
-(6, 3, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer', 'Bathrooms'),
-(7, 4, 1, 'Casa de Banho Secundária', 'Chuveiro, lavatório', 'Higiene'),
-(8, 4, 2, 'Secondary Bathroom', 'Shower, sink', 'Bathrooms');
+(17, 9, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bide, secador de cabelo', NULL),
+(18, 9, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer', NULL),
+(19, 10, 1, 'Casa de Banho Secundaria', 'Chuveiro, lavatorio', NULL),
+(20, 10, 2, 'Secondary Bathroom', 'Shower, sink', NULL),
+(21, 11, 1, 'Casa de Banho Principal', 'Banheira, chuveiro, bide, secador de cabelo', NULL),
+(22, 11, 2, 'Main Bathroom', 'Bathtub, shower, bidet, hair dryer', NULL),
+(23, 12, 1, 'Casa de Banho Secundaria', 'Chuveiro, lavatorio', NULL),
+(24, 12, 2, 'Secondary Bathroom', 'Shower, sink', NULL);
 
 -- --------------------------------------------------------
 
@@ -636,12 +705,12 @@ CREATE TABLE `bedrooms` (
 --
 
 INSERT INTO `bedrooms` (`id`, `accommodation_id`, `bedroom_number`, `created_at`, `image`) VALUES
-(1, 1, 1, '2026-01-19 12:51:19', NULL),
-(2, 1, 2, '2026-01-19 12:51:19', NULL),
-(3, 1, 3, '2026-01-19 12:51:19', NULL),
-(4, 2, 1, '2026-01-30 02:22:50', NULL),
-(5, 2, 2, '2026-01-30 02:22:50', NULL),
-(6, 2, 3, '2026-01-30 02:22:50', NULL);
+(13, 1, 1, '2026-02-10 18:23:26', NULL),
+(14, 1, 2, '2026-02-10 18:23:26', NULL),
+(15, 1, 3, '2026-02-10 18:23:26', NULL),
+(16, 2, 1, '2026-02-10 18:23:27', NULL),
+(17, 2, 2, '2026-02-10 18:23:27', NULL),
+(18, 2, 3, '2026-02-10 18:23:27', NULL);
 
 -- --------------------------------------------------------
 
@@ -663,18 +732,18 @@ CREATE TABLE `bedroom_translations` (
 --
 
 INSERT INTO `bedroom_translations` (`id`, `bedroom_id`, `language_id`, `beds_description`, `name`, `title`) VALUES
-(1, 1, 1, '2 camas de solteiro', 'Quarto Principal', 'Dormidas'),
-(2, 1, 2, '2 single beds', 'Master Bedroom', 'Sleeping Arrangements'),
-(3, 2, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo', 'Dormidas'),
-(4, 2, 2, 'Single sofa bed, Double bed', 'Twin Room', 'Sleeping Arrangements'),
-(5, 3, 1, 'Cama de casal', 'Quarto de Hóspedes', 'Dormidas'),
-(6, 3, 2, 'Double bed', 'Guest Room', 'Sleeping Arrangements'),
-(7, 4, 1, '2 camas de solteiro', 'Quarto Principal', 'Dormidas'),
-(8, 4, 2, '2 single beds', 'Master Bedroom', 'Sleeping Arrangements'),
-(9, 5, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo', 'Dormidas'),
-(10, 5, 2, 'Single sofa bed, Double bed', 'Twin Room', 'Sleeping Arrangements'),
-(11, 6, 1, 'Cama de casal', 'Quarto de Hóspedes', 'Dormidas'),
-(12, 6, 2, 'Double bed', 'Guest Room', 'Sleeping Arrangements');
+(25, 13, 1, '2 camas de solteiro', 'Quarto Principal', NULL),
+(26, 13, 2, '2 single beds', 'Master Bedroom', NULL),
+(27, 14, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo', NULL),
+(28, 14, 2, 'Single sofa bed, Double bed', 'Twin Room', NULL),
+(29, 15, 1, 'Cama de casal', 'Quarto de Hospedes', NULL),
+(30, 15, 2, 'Double bed', 'Guest Room', NULL),
+(31, 16, 1, '2 camas de solteiro', 'Quarto Principal', NULL),
+(32, 16, 2, '2 single beds', 'Master Bedroom', NULL),
+(33, 17, 1, 'Sofa-cama de solteiro, Cama de casal', 'Quarto Duplo', NULL),
+(34, 17, 2, 'Single sofa bed, Double bed', 'Twin Room', NULL),
+(35, 18, 1, 'Cama de casal', 'Quarto de Hospedes', NULL),
+(36, 18, 2, 'Double bed', 'Guest Room', NULL);
 
 -- --------------------------------------------------------
 
@@ -821,32 +890,200 @@ CREATE TABLE `content_blocks` (
 --
 
 INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, `content`, `page`, `section`, `created_at`, `updated_at`) VALUES
-(1, 'hero_title', 1, 'text', 'A Casa do Gi', 'home', 'hero', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(2, 'hero_subtitle', 1, 'textarea', 'Simplicidade, acolhimento e muito amor em Mogadouro', 'home', 'hero', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(3, 'hero_cta', 1, 'text', 'Descobrir', 'home', 'hero', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(4, 'about_title', 1, 'text', 'A Nossa Historia', 'home', 'about', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(5, 'about_text', 1, 'html', '<p>Construida nos anos 80, altura em que os \"artistas da construcao\" e os \"materiais\" eram escassos por Terras de Mogadouro, este edificio foi mandado construir desde terras de Santa Cruz, por carta, e com os recursos de quem saiu da terra em busca de uma melhor oportunidade!</p><p>A Casa do Gi... e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor!</p>', 'home', 'about', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (6, 'accommodation_title', 1, 'text', 'O Alojamento', 'accommodation', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(7, 'accommodation_intro', 1, 'textarea', 'Fuga ecletica em Mogadouro - Casa de ferias de 100m2, perfeita para 6 hospedes', 'accommodation', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
+(7, 'accommodation_intro', 1, 'textarea', 'Ambas as casas oferecem o mesmo conforto e hospitalidade transmontana. Escolha a que melhor se adapta a sua estadia.', 'accommodation', 'main', '2026-01-19 12:51:19', '2026-02-09 20:00:28'),
 (8, 'shop_title', 1, 'text', 'Produtos Regionais', 'shop', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(9, 'shop_intro', 1, 'textarea', 'Descubra os sabores autenticos de Mogadouro e Tras-os-Montes', 'shop', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
+(9, 'shop_intro', 1, 'textarea', 'Sabores autenticos de Tras-os-Montes, selecionados com carinho para a sua mesa.', 'shop', 'main', '2026-01-19 12:51:19', '2026-02-09 19:52:45'),
 (10, 'activities_title', 1, 'text', 'O Que Fazer', 'activities', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (11, 'activities_intro', 1, 'textarea', 'Descubra as maravilhas de Mogadouro e arredores', 'activities', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (12, 'contact_title', 1, 'text', 'Contacte-nos', 'contact', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (13, 'contact_intro', 1, 'textarea', 'Tem alguma questao? Entre em contacto connosco', 'contact', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(14, 'hero_title', 2, 'text', 'A Casa do Gi', 'home', 'hero', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(15, 'hero_subtitle', 2, 'textarea', 'Simplicity, warmth and love in Mogadouro', 'home', 'hero', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(16, 'hero_cta', 2, 'text', 'Discover', 'home', 'hero', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(17, 'about_title', 2, 'text', 'Our Story', 'home', 'about', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(18, 'about_text', 2, 'html', '<p>Built in the 80s, when \"construction artists\" and \"materials\" were scarce in the lands of Mogadouro, this building was commissioned from the lands of Santa Cruz, by letter, and with the resources of those who left the land in search of a better opportunity!</p><p>A Casa do Gi... is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love!</p>', 'home', 'about', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (19, 'accommodation_title', 2, 'text', 'The Accommodation', 'accommodation', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(20, 'accommodation_intro', 2, 'textarea', 'Eclectic getaway in Mogadouro - 100m2 holiday home, perfect for 6 guests', 'accommodation', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
+(20, 'accommodation_intro', 2, 'textarea', 'Both houses offer the same comfort and Transmontana hospitality. Choose the one that best suits your stay.', 'accommodation', 'main', '2026-01-19 12:51:19', '2026-02-09 20:00:28'),
 (21, 'shop_title', 2, 'text', 'Regional Products', 'shop', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(22, 'shop_intro', 2, 'textarea', 'Discover the authentic flavors of Mogadouro and Tras-os-Montes', 'shop', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
+(22, 'shop_intro', 2, 'textarea', 'Authentic flavors from Tras-os-Montes, selected with care for your table.', 'shop', 'main', '2026-01-19 12:51:19', '2026-02-09 19:52:45'),
 (23, 'activities_title', 2, 'text', 'Things To Do', 'activities', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (24, 'activities_intro', 2, 'textarea', 'Discover the wonders of Mogadouro and surroundings', 'activities', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (25, 'contact_title', 2, 'text', 'Contact Us', 'contact', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(26, 'contact_intro', 2, 'textarea', 'Have a question? Get in touch with us', 'contact', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19');
+(26, 'contact_intro', 2, 'textarea', 'Do you have any questions? Get in touch with us', 'contact', 'main', '2026-01-19 12:51:19', '2026-02-09 19:27:19'),
+(27, 'home_hero_subtitle', 1, 'text', 'Onde a tradi├º├úo transmontana encontra o conforto moderno', 'home', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(28, 'home_hero_subtitle', 2, 'text', 'Where Transmontana tradition meets modern comfort', 'home', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(29, 'home_split_left_label', 1, 'text', 'Bem-vindo ao', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(30, 'home_split_left_label', 2, 'text', 'Welcome to the', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(31, 'home_split_left_title', 1, 'text', 'Ref├║gio', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(32, 'home_split_left_title', 2, 'text', 'Refuge', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(33, 'home_split_right_label', 1, 'text', 'Descubra a', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(34, 'home_split_right_label', 2, 'text', 'Discover the', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(35, 'home_split_right_title', 1, 'text', 'Tradi├º├úo', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(36, 'home_split_right_title', 2, 'text', 'Tradition', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(37, 'home_explore_title', 1, 'text', 'Explore o Nosso Mundo', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(38, 'home_explore_title', 2, 'text', 'Explore Our World', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(39, 'home_card1_label', 1, 'text', 'Dormir', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(40, 'home_card1_label', 2, 'text', 'Sleep', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(41, 'home_card1_title', 1, 'text', 'Alojamento', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(42, 'home_card1_title', 2, 'text', 'Accommodation', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(43, 'home_card1_text', 1, 'text', 'Sinta o conforto das nossas casas r├║sticas.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(44, 'home_card1_text', 2, 'text', 'Experience the comfort of our rustic houses.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(45, 'home_card1_cta', 1, 'text', 'Ver Casas', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(46, 'home_card1_cta', 2, 'text', 'View Rooms', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(47, 'home_card2_label', 1, 'text', 'Experienciar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(48, 'home_card2_label', 2, 'text', 'Experience', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(49, 'home_card2_title', 1, 'text', 'Atividades', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(50, 'home_card2_title', 2, 'text', 'Activities', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(51, 'home_card2_text', 1, 'text', 'Descubra a natureza e hist├│ria de Mogadouro.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(52, 'home_card2_text', 2, 'text', 'Discover the nature and history of Mogadouro.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(53, 'home_card2_cta', 1, 'text', 'Explorar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(54, 'home_card2_cta', 2, 'text', 'Explore', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(55, 'home_card3_label', 1, 'text', 'Saborear', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(56, 'home_card3_label', 2, 'text', 'Taste', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(57, 'home_card3_title', 1, 'text', 'Loja Regional', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(58, 'home_card3_title', 2, 'text', 'Regional Shop', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(59, 'home_card3_text', 1, 'text', 'Sabores aut├¬nticos de Tr├ís-os-Montes.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(60, 'home_card3_text', 2, 'text', 'Authentic flavors from Tras-os-Montes.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(61, 'home_card3_cta', 1, 'text', 'Comprar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(62, 'home_card3_cta', 2, 'text', 'Shop Now', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(63, 'home_card4_label', 1, 'text', 'Conectar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(64, 'home_card4_label', 2, 'text', 'Connect', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(65, 'home_card4_title', 1, 'text', 'Contactos', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(66, 'home_card4_title', 2, 'text', 'Contact Us', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(67, 'home_card4_text', 1, 'text', 'Fale connosco e planeie a sua visita.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(68, 'home_card4_text', 2, 'text', 'Get in touch and plan your visit.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(69, 'home_card4_cta', 1, 'text', 'Contactar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(70, 'home_card4_cta', 2, 'text', 'Get in Touch', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(71, 'home_about_label', 1, 'text', 'A Nossa Hist├│ria', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(72, 'home_about_label', 2, 'text', 'Our Story', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(73, 'home_about_title', 1, 'html', 'Mais que uma casa,<br>um <span class=\"italic text-accent\">legado</span>.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(74, 'home_about_title', 2, 'html', 'More than a house,<br>a <span class=\"italic text-accent\">legacy</span>.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(75, 'home_about_text1', 1, 'textarea', 'A Casa do Gi nasceu da vontade de preservar as ra├¡zes transmontanas. O que outrora foi uma casa de fam├¡lia, ├® hoje um ref├║gio para quem procura a autenticidade do campo.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(76, 'home_about_text1', 2, 'textarea', 'A Casa do Gi was born from the will to preserve the roots of Tras-os-Montes. What was once a family home is now a refuge for those seeking the authenticity of the countryside.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(77, 'home_about_text2', 1, 'textarea', 'Aqui, o tempo abranda. Convidamo-lo a descobrir as tradi├º├Áes, os sabores e as gentes que fazem de Mogadouro um lugar ├║nico no mundo.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(78, 'home_about_text2', 2, 'textarea', 'Here, time slows down. We invite you to discover the traditions, the flavors, and the people that make Mogadouro a unique place in the world.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(79, 'home_about_cta', 1, 'text', 'Ler Hist├│ria Completa', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(80, 'home_about_cta', 2, 'text', 'Read Full Story', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(81, 'about_hero_label', 1, 'text', 'A Nossa Hist├│ria', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(82, 'about_hero_label', 2, 'text', 'Our Story', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(83, 'about_hero_subtitle', 1, 'textarea', 'Simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor!', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 20:08:48'),
+(84, 'about_hero_subtitle', 2, 'textarea', 'Simplicity, warmth, remarkable moments of conviviality, family warmth, joy, fun, laughter and lots of love!', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 20:08:48'),
+(85, 'about_origin_label', 1, 'text', 'A Nossa Origem', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(86, 'about_origin_label', 2, 'text', 'Our Origins', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(87, 'about_origin_title', 1, 'html', 'Uma casa constru├¡da com <span class=\"italic text-secondary\">amor</span> e <span class=\"italic text-secondary\">saudade</span>.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(88, 'about_origin_title', 2, 'html', 'A house built with <span class=\"italic text-secondary\">love</span> and <span class=\"italic text-secondary\">longing</span>.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(89, 'about_origin_text1', 1, 'textarea', 'Erguida nos anos 80, a <strong>Casa do Gi</strong> conta a hist├│ria intemporal de quem partiu para longe mas nunca esqueceu as suas ra├¡zes. Constru├¡da tijolo a tijolo, representa o sonho concretizado de regressar a casa.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(90, 'about_origin_text1', 2, 'textarea', 'Built in the 80s, <strong>Casa do Gi</strong> tells the timeless story of those who left for distant lands but never forgot their roots. Constructed brick by brick, it represents the fulfilled dream of returning home.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(91, 'about_origin_text2', 1, 'textarea', 'O que come├ºou como um projeto de vida familiar transformou-se num ref├║gio para quem procura a paz do interior. Aqui, o tempo abranda e os dias s├úo medidos pela luz do sol e pelas conversas ├á beira da lareira.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(92, 'about_origin_text2', 2, 'textarea', 'What began as a family life project transformed into a refuge for those seeking the peace of the countryside. Here, time slows down and days are measured by sunlight and conversations by the fireplace.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(93, 'about_origin_caption', 1, 'text', '1980 ÔÇó O In├¡cio', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(94, 'about_origin_caption', 2, 'text', '1980 ÔÇó The Beginning', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(95, 'about_origin_signature', 1, 'text', 'Fam├¡lia Gi', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(96, 'about_origin_signature', 2, 'text', 'Gi Family', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(97, 'about_values_label', 1, 'text', 'Valores', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(98, 'about_values_label', 2, 'text', 'Values', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(99, 'about_values_title', 1, 'html', 'A arte de bem receber,<br>├á moda antiga.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(100, 'about_values_title', 2, 'html', 'The art of welcoming,<br>the old-fashioned way.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(101, 'about_values_intro', 1, 'textarea', 'N├úo somos um hotel. Somos uma casa de fam├¡lia que decidiu abrir as portas ao mundo. Aqui, a hospitalidade n├úo ├® um servi├ºo, ├® a nossa natureza.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(102, 'about_values_intro', 2, 'textarea', 'We are not a hotel. We are a family home that decided to open its doors to the world. Here, hospitality is not a service, it\'s our nature.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(103, 'about_value1_title', 1, 'text', 'Acolhimento Genu├¡no', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(104, 'about_value1_title', 2, 'text', 'Genuine Hospitality', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(105, 'about_value1_text', 1, 'textarea', 'Recebemos cada h├│spede como um velho amigo. Sem formalismos r├¡gidos, com o calor de um abra├ºo e a sinceridade de um sorriso transmontano.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(106, 'about_value1_text', 2, 'textarea', 'We welcome each guest as an old friend. Without rigid formalities, with the warmth of a hug and the sincerity of a Transmontano smile.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(107, 'about_value2_title', 1, 'text', 'Paz Absoluta', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(108, 'about_value2_title', 2, 'text', 'Absolute Peace', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(109, 'about_value2_text', 1, 'textarea', 'O luxo do sil├¬ncio. Longe da confus├úo, onde o ├║nico ru├¡do ├® o vento nas ├írvores e o cantar dos p├íssaros. O ref├║gio perfeito para recarregar energias.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(110, 'about_value2_text', 2, 'textarea', 'The luxury of silence. Far from the hustle, where the only sound is the wind in the trees and the singing of birds. The perfect refuge to recharge energies.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(111, 'about_value3_title', 1, 'text', 'Esp├¡rito de Partilha', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(112, 'about_value3_title', 2, 'text', 'Spirit of Sharing', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(113, 'about_value3_text', 1, 'textarea', 'Acreditamos que as melhores mem├│rias s├úo constru├¡das ├á mesa. Partilhamos hist├│rias, sabores e experi├¬ncias que ficam para sempre.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(114, 'about_value3_text', 2, 'textarea', 'We believe the best memories are built at the table. We share stories, flavors and experiences that last forever.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(115, 'about_value4_title', 1, 'text', 'Aten├º├úo ao Detalhe', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(116, 'about_value4_title', 2, 'text', 'Attention to Detail', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(117, 'about_value4_text', 1, 'textarea', 'Nada ├® deixado ao acaso. Do pequeno-almo├ºo caseiro ├á decora├º├úo cuidada, tudo ├® pensado para o seu conforto e bem-estar.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(118, 'about_value4_text', 2, 'textarea', 'Nothing is left to chance. From homemade breakfast to thoughtful decoration, everything is designed for your comfort and wellbeing.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(119, 'about_region_label', 1, 'text', 'O Nosso Ber├ºo', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(120, 'about_region_label', 2, 'text', 'Our Home', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(121, 'about_region_text', 1, 'textarea', 'Onde o tempo p├íra e a alma respira. Uma terra de horizontes infinitos, guardi├ú de tradi├º├Áes milenares e de uma beleza natural bruta e intocada.', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(122, 'about_region_text', 2, 'textarea', 'Where time stops and the soul breathes. A land of infinite horizons, guardian of ancient traditions and raw, untouched natural beauty.', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(123, 'about_region_cta1', 1, 'text', 'Planear Visita', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(124, 'about_region_cta1', 2, 'text', 'Plan Visit', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(125, 'about_region_cta2', 1, 'text', 'O que fazer', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(126, 'about_region_cta2', 2, 'text', 'Things to do', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(333, 'shop_empty_message', 1, 'text', 'Esta categoria ainda nao tem produtos disponiveis.', 'shop', 'main', '2026-02-09 19:27:19', '2026-02-09 19:52:45'),
+(334, 'shop_empty_message', 2, 'text', 'This category does not have products available yet.', 'shop', 'main', '2026-02-09 19:27:19', '2026-02-09 19:52:45'),
+(335, 'contact_success_message', 1, 'textarea', 'Obrigado pelo seu contacto. Iremos responder o mais brevemente possivel.', 'contact', 'main', '2026-02-09 19:27:19', '2026-02-09 19:47:40'),
+(336, 'contact_success_message', 2, 'textarea', 'Thank you for your contact. We will reply as soon as possible.', 'contact', 'main', '2026-02-09 19:27:19', '2026-02-09 19:47:40'),
+(343, 'footer_tagline', 1, 'text', 'Simplicidade, acolhimento e muito amor em Mogadouro', 'footer', 'main', '2026-02-09 19:47:40', '2026-02-09 19:50:59'),
+(344, 'footer_tagline', 2, 'text', 'Simplicity, warmth and love in Mogadouro', 'footer', 'main', '2026-02-09 19:47:40', '2026-02-09 19:50:59'),
+(361, 'accommodation_hero_tagline', 1, 'text', 'Alojamento Local', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(362, 'accommodation_hero_tagline', 2, 'text', 'Local Accommodation', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(363, 'accommodation_hero_title', 1, 'text', 'A Casa do Gi', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(364, 'accommodation_hero_title', 2, 'text', 'A Casa do Gi', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(365, 'accommodation_hero_subtitle', 1, 'text', 'Acolhimento transmontano, momentos em familia e memorias para sempre.', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(366, 'accommodation_hero_subtitle', 2, 'text', 'Transmontano hospitality, family moments and memories forever.', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(367, 'accommodation_section_subtitle', 1, 'text', 'Duas Casas, Uma Experiencia', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(368, 'accommodation_section_subtitle', 2, 'text', 'Two Houses, One Experience', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(369, 'accommodation_section_title', 1, 'text', 'Escolha o Seu Refugio', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(370, 'accommodation_section_title', 2, 'text', 'Choose Your Refuge', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(371, 'accommodation_features_title', 1, 'text', 'O Que Ambas as Casas Oferecem', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(372, 'accommodation_features_title', 2, 'text', 'What Both Houses Offer', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(373, 'accommodation_feature_1', 1, 'text', 'Wi-Fi Gratis', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(374, 'accommodation_feature_1', 2, 'text', 'Free Wi-Fi', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(375, 'accommodation_feature_2', 1, 'text', 'Check-in Autonomo', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(376, 'accommodation_feature_2', 2, 'text', 'Self Check-in', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(377, 'accommodation_feature_3', 1, 'text', 'Roupa de Cama', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(378, 'accommodation_feature_3', 2, 'text', 'Bed Linen', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(379, 'accommodation_feature_4', 1, 'text', 'Localizacao Central', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(380, 'accommodation_feature_4', 2, 'text', 'Central Location', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:00:28'),
+(381, 'activities_hero_tagline', 1, 'text', 'Descubra Mogadouro', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:01:29'),
+(382, 'activities_hero_tagline', 2, 'text', 'Discover Mogadouro', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:01:29'),
+(383, 'activities_hero_title', 1, 'text', 'O Que Fazer', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:01:29'),
+(384, 'activities_hero_title', 2, 'text', 'What to Do', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:01:29'),
+(385, 'activities_hero_subtitle', 1, 'text', 'De paisagens deslumbrantes a sabores unicos, o nordeste transmontano tem muito para oferecer.', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:01:29'),
+(386, 'activities_hero_subtitle', 2, 'text', 'From stunning landscapes to unique flavors, the northeast of Tras-os-Montes has much to offer.', NULL, NULL, '2026-02-09 19:57:15', '2026-02-09 20:01:29'),
+(387, 'contact_hero_tagline', 1, 'text', 'Fale Connosco', NULL, NULL, '2026-02-09 20:08:12', '2026-02-09 20:08:12'),
+(388, 'contact_hero_tagline', 2, 'text', 'Talk to Us', NULL, NULL, '2026-02-09 20:08:12', '2026-02-09 20:08:12'),
+(389, 'contact_hero_title', 1, 'text', 'Contacte-nos', NULL, NULL, '2026-02-09 20:08:12', '2026-02-09 20:08:12'),
+(390, 'contact_hero_title', 2, 'text', 'Contact Us', NULL, NULL, '2026-02-09 20:08:12', '2026-02-09 20:08:12'),
+(391, 'contact_hero_subtitle', 1, 'text', 'Tem alguma questao? Entre em contacto connosco', NULL, NULL, '2026-02-09 20:08:12', '2026-02-09 20:08:12'),
+(392, 'contact_hero_subtitle', 2, 'text', 'Have any questions? Get in touch with us', NULL, NULL, '2026-02-09 20:08:12', '2026-02-09 20:08:12'),
+(399, 'about_hero_tagline', 1, 'text', 'A Nossa Historia', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(400, 'about_hero_tagline', 2, 'text', 'Our Story', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(401, 'about_hero_title', 1, 'text', 'A Casa do Gi', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(402, 'about_hero_title', 2, 'text', 'A Casa do Gi', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(403, 'privacy_hero_tagline', 1, 'text', 'Informacao Legal', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(404, 'privacy_hero_tagline', 2, 'text', 'Legal Information', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(405, 'privacy_hero_title', 1, 'text', 'Politica de Privacidade', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(406, 'privacy_hero_title', 2, 'text', 'Privacy Policy', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(407, 'privacy_hero_subtitle', 1, 'textarea', 'A sua privacidade e importante para nos. Saiba como tratamos os seus dados.', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(408, 'privacy_hero_subtitle', 2, 'textarea', 'Your privacy is important to us. Learn how we handle your data.', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(409, 'privacy_date', 1, 'text', 'Atualizado em: 09 de Fevereiro de 2025', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(410, 'privacy_date', 2, 'text', 'Updated on: February 9, 2025', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(413, 'terms_hero_tagline', 1, 'text', 'Informacao Legal', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(414, 'terms_hero_tagline', 2, 'text', 'Legal Information', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(415, 'terms_hero_title', 1, 'text', 'Termos e Condicoes', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(416, 'terms_hero_title', 2, 'text', 'Terms and Conditions', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(417, 'terms_hero_subtitle', 1, 'textarea', 'Por favor, leia atentamente os termos e condicoes de utilizacao do nosso servico.', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(418, 'terms_hero_subtitle', 2, 'textarea', 'Please read carefully the terms and conditions of use of our service.', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(419, 'terms_date', 1, 'text', 'Atualizado em: 09 de Fevereiro de 2025', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(420, 'terms_date', 2, 'text', 'Updated on: February 9, 2025', NULL, NULL, '2026-02-09 20:08:48', '2026-02-09 20:08:48'),
+(431, 'footer_description', 1, 'textarea', 'Simplicidade, acolhimento e muito amor em Mogadouro, Portugal.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(432, 'footer_description', 2, 'textarea', 'Simplicity, warmth and love in Mogadouro, Portugal.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(433, 'footer_quicklinks_title', 1, 'text', 'Links R??', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(434, 'footer_quicklinks_title', 2, 'text', 'Quick Links', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(435, 'footer_contact_title', 1, 'text', 'Contacto', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(436, 'footer_contact_title', 2, 'text', 'Contact', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(437, 'footer_address', 1, 'text', '52 Avenida Nossa Senhora do Caminho, Mogadouro', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(438, 'footer_address', 2, 'text', '52 Avenida Nossa Senhora do Caminho, Mogadouro', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(439, 'footer_book_title', 1, 'text', 'Reserve J??', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(440, 'footer_book_title', 2, 'text', 'Book Now', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(441, 'footer_rights_text', 1, 'text', 'Todos os direitos reservados.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(442, 'footer_rights_text', 2, 'text', 'All rights reserved.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(443, 'cookie_banner_text', 1, '', 'Utilizamos cookies para melhorar a sua experi??ncia no nosso website. Ao continuar a navegar, concorda com a utiliza????o de cookies. Saiba mais nos nossos <a href=\"/alojamentogi/termos-condicoes/\" class=\"text-secondary hover:underline\">termos e condi????es</a> e <a href=\"/alojamentogi/politica-privacidade/\" class=\"text-secondary hover:underline\">pol??tica de privacidade</a>.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(444, 'cookie_banner_text', 2, '', 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href=\"/alojamentogi/en/termos-condicoes/\" class=\"text-secondary hover:underline\">terms and conditions</a> and <a href=\"/alojamentogi/en/politica-privacidade/\" class=\"text-secondary hover:underline\">privacy policy</a>.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(445, 'cookie_banner_accept', 1, 'text', 'Aceitar', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(446, 'cookie_banner_accept', 2, 'text', 'Accept', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(447, 'cookie_banner_details', 1, 'text', 'Ver Detalhes', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(448, 'cookie_banner_details', 2, 'text', 'Details', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(467, 'home_image_split_left', 1, 'text', '/uploads/content/home_image_split_left_1770690443.jpg', NULL, NULL, '2026-02-10 02:19:22', '2026-02-10 02:27:23'),
+(468, 'home_image_split_left', 2, 'text', '/uploads/content/home_image_split_left_1770690443.jpg', NULL, NULL, '2026-02-10 02:19:22', '2026-02-10 02:27:23');
 
 -- --------------------------------------------------------
 
@@ -928,16 +1165,16 @@ CREATE TABLE `house_rules` (
 --
 
 INSERT INTO `house_rules` (`id`, `accommodation_id`, `is_highlighted`, `sort_order`, `created_at`) VALUES
-(1, 1, 1, 1, '2026-01-30 02:22:49'),
-(2, 1, 1, 2, '2026-01-30 02:22:49'),
-(3, 1, 1, 3, '2026-01-30 02:22:49'),
-(4, 1, 0, 4, '2026-01-30 02:22:49'),
-(5, 1, 0, 5, '2026-01-30 02:22:49'),
-(6, 2, 1, 1, '2026-01-30 02:22:50'),
-(7, 2, 1, 2, '2026-01-30 02:22:50'),
-(8, 2, 1, 3, '2026-01-30 02:22:50'),
-(9, 2, 0, 4, '2026-01-30 02:22:50'),
-(10, 2, 0, 5, '2026-01-30 02:22:50');
+(21, 1, 1, 1, '2026-02-10 18:23:27'),
+(22, 1, 1, 2, '2026-02-10 18:23:27'),
+(23, 1, 1, 3, '2026-02-10 18:23:27'),
+(24, 1, 0, 4, '2026-02-10 18:23:27'),
+(25, 1, 0, 5, '2026-02-10 18:23:27'),
+(26, 2, 1, 1, '2026-02-10 18:23:27'),
+(27, 2, 1, 2, '2026-02-10 18:23:27'),
+(28, 2, 1, 3, '2026-02-10 18:23:27'),
+(29, 2, 0, 4, '2026-02-10 18:23:27'),
+(30, 2, 0, 5, '2026-02-10 18:23:27');
 
 -- --------------------------------------------------------
 
@@ -957,26 +1194,26 @@ CREATE TABLE `house_rule_translations` (
 --
 
 INSERT INTO `house_rule_translations` (`id`, `rule_id`, `language_id`, `rule_text`) VALUES
-(1, 1, 1, 'Não são permitidas festas ou eventos.'),
-(2, 1, 2, 'No parties or events allowed.'),
-(3, 2, 1, 'Horário de silêncio: 22h00 - 08h00.'),
-(4, 2, 2, 'Quiet hours: 22:00 - 08:00.'),
-(5, 3, 1, 'Proibido fumar no interior.'),
-(6, 3, 2, 'No smoking inside.'),
-(7, 4, 1, 'Animais de estimação não são permitidos.'),
-(8, 4, 2, 'Pets are not allowed.'),
-(9, 5, 1, 'Respeite os vizinhos e a propriedade.'),
-(10, 5, 2, 'Respect neighbors and property.'),
-(11, 6, 1, 'Não são permitidas festas ou eventos.'),
-(12, 6, 2, 'No parties or events allowed.'),
-(13, 7, 1, 'Horário de silêncio: 22h00 - 08h00.'),
-(14, 7, 2, 'Quiet hours: 22:00 - 08:00.'),
-(15, 8, 1, 'Proibido fumar no interior.'),
-(16, 8, 2, 'No smoking inside.'),
-(17, 9, 1, 'Animais de estimação não são permitidos.'),
-(18, 9, 2, 'Pets are not allowed.'),
-(19, 10, 1, 'Respeite os vizinhos e a propriedade.'),
-(20, 10, 2, 'Respect neighbors and property.');
+(41, 21, 1, 'Nao sao permitidas festas ou eventos.wewew'),
+(42, 21, 2, 'No parties or events allowed.'),
+(43, 22, 1, 'Horario de silencio: 22h00 - 08h00.'),
+(44, 22, 2, 'Quiet hours: 22:00 - 08:00.'),
+(45, 23, 1, 'Proibido fumar no interior.'),
+(46, 23, 2, 'No smoking inside.'),
+(47, 24, 1, 'Animais de estimacao nao sao permitidos.'),
+(48, 24, 2, 'Pets are not allowed.'),
+(49, 25, 1, 'Respeite os vizinhos e a propriedade.'),
+(50, 25, 2, 'Respect neighbors and property.'),
+(51, 26, 1, 'Nao sao permitidas festas ou eventos.'),
+(52, 26, 2, 'No parties or events allowed.'),
+(53, 27, 1, 'Horario de silencio: 22h00 - 08h00.'),
+(54, 27, 2, 'Quiet hours: 22:00 - 08:00.'),
+(55, 28, 1, 'Proibido fumar no interior.'),
+(56, 28, 2, 'No smoking inside.'),
+(57, 29, 1, 'Animais de estimacao nao sao permitidos.'),
+(58, 29, 2, 'Pets are not allowed.'),
+(59, 30, 1, 'Respeite os vizinhos e a propriedade.'),
+(60, 30, 2, 'Respect neighbors and property.');
 
 -- --------------------------------------------------------
 
@@ -1039,6 +1276,35 @@ INSERT INTO `languages` (`id`, `code`, `name`, `locale`, `flag_icon`, `is_defaul
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `legal_sections`
+--
+
+CREATE TABLE `legal_sections` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `page` enum('terms','privacy') NOT NULL,
+  `sort_order` int(10) UNSIGNED DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `legal_section_translations`
+--
+
+CREATE TABLE `legal_section_translations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `section_id` int(10) UNSIGNED NOT NULL,
+  `language_id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `manual_orders`
 --
 
@@ -1064,6 +1330,14 @@ CREATE TABLE `manual_orders` (
   `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `contacted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `manual_orders`
+--
+
+INSERT INTO `manual_orders` (`id`, `customer_name`, `customer_email`, `customer_phone`, `shipping_address`, `shipping_postal_code`, `shipping_city`, `items_json`, `subtotal`, `shipping_fee`, `total`, `status`, `admin_notes`, `converted_order_id`, `ip_address`, `user_agent`, `notes`, `created_at`, `updated_at`, `contacted_at`) VALUES
+(1, 'Guilherme Jose Costa Marques', 'guilherme.jcmarques@gmail.com', '965079823', 'R. Pádua Correia 166', '4430-999', 'Vila Nova de Gaia', '[{\"product_id\":2,\"product_name\":\"Banana das Américas Pack 5kg\",\"product_sku\":\"969\",\"quantity\":1,\"unit_price\":8,\"subtotal\":8}]', 8.00, 5.00, 13.00, 'converted', NULL, 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'Nada.', '2026-02-09 00:13:43', '2026-02-10 17:33:14', NULL),
+(2, 'James', 'james@test.com', '998323447', NULL, NULL, NULL, '[{\"product_id\":2,\"product_name\":\"American Bananas\",\"product_sku\":\"969\",\"quantity\":1,\"unit_price\":8,\"subtotal\":8}]', 8.00, 5.00, 13.00, 'converted', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', NULL, '2026-02-09 23:08:20', '2026-02-10 17:08:04', '2026-02-10 16:52:30');
 
 -- --------------------------------------------------------
 
@@ -1133,8 +1407,10 @@ INSERT INTO `media` (`id`, `filename`, `original_name`, `file_path`, `file_type`
 (51, 'activity_gallery_13_698633d9dda8c.jpeg', 'MogadouroNeve.jpeg', '/uploads/activities/activity_gallery_13_698633d9dda8c.jpeg', 'image/jpeg', 263714, NULL, NULL, NULL, NULL, 'activities', 'activity', 13, 0, 6, 1, '2026-02-06 18:32:57', NULL),
 (52, 'activity_gallery_13_698633d9deee7.jpeg', 'MogadouroNeve2.jpeg', '/uploads/activities/activity_gallery_13_698633d9deee7.jpeg', 'image/jpeg', 147542, NULL, NULL, NULL, NULL, 'activities', 'activity', 13, 0, 7, 1, '2026-02-06 18:32:57', NULL),
 (53, 'activity_gallery_13_698633d9dfdfc.png', 'MogadouroSobre.png', '/uploads/activities/activity_gallery_13_698633d9dfdfc.png', 'image/png', 206730, NULL, NULL, NULL, NULL, 'activities', 'activity', 13, 0, 8, 1, '2026-02-06 18:32:57', NULL),
-(54, 'banana-americas-6987cc4c52fff.jpg', 'banan2.jpg', '/uploads/products/banana-americas-6987cc4c52fff.jpg', 'image/jpeg', 248844, NULL, NULL, NULL, NULL, 'products', 'standalone', NULL, 0, 0, NULL, '2026-02-07 23:35:40', NULL),
-(55, 'banana-americas-6987cc4c566d0.jpg', 'bananacapa.jpg', '/uploads/products/banana-americas-6987cc4c566d0.jpg', 'image/jpeg', 524349, NULL, NULL, NULL, NULL, 'products', 'standalone', NULL, 0, 0, NULL, '2026-02-07 23:35:40', NULL);
+(54, 'banana-americas-6987cc4c52fff.jpg', 'banan2.jpg', '/uploads/products/banana-americas-6987cc4c52fff.jpg', 'image/jpeg', 248844, '', '', NULL, NULL, 'products', 'standalone', NULL, 0, 0, NULL, '2026-02-07 23:35:40', NULL),
+(55, 'banana-americas-6987cc4c566d0.jpg', 'bananacapa.jpg', '/uploads/products/banana-americas-6987cc4c566d0.jpg', 'image/jpeg', 524349, NULL, NULL, NULL, NULL, 'products', 'standalone', NULL, 0, 0, NULL, '2026-02-07 23:35:40', NULL),
+(57, 'home_image_split_left_1770689962.png', 'Atelier Logo.png', '/uploads/content/home_image_split_left_1770689962.png', 'image/png', 1084608, NULL, NULL, NULL, NULL, 'content', 'standalone', NULL, 0, 0, 1, '2026-02-10 02:19:22', NULL),
+(58, 'home_image_split_left_1770690443.jpg', 'ExpoLiveCapa.jpg', '/uploads/content/home_image_split_left_1770690443.jpg', 'image/jpeg', 237277, NULL, NULL, NULL, NULL, 'content', 'standalone', NULL, 0, 0, 1, '2026-02-10 02:27:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -1182,6 +1458,13 @@ CREATE TABLE `orders` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Extraindo dados da tabela `orders`
+--
+
+INSERT INTO `orders` (`id`, `invoice_id`, `order_number`, `customer_name`, `customer_email`, `customer_phone`, `customer_nif`, `billing_address`, `billing_postal_code`, `billing_city`, `billing_country`, `shipping_same_as_billing`, `shipping_address`, `shipping_postal_code`, `shipping_city`, `shipping_country`, `subtotal`, `shipping_fee`, `discount_amount`, `total`, `payment_method`, `payment_status`, `payment_reference`, `payment_entity`, `payment_transaction_id`, `paid_at`, `status`, `tracking_code`, `shipped_at`, `delivered_at`, `notes`, `admin_notes`, `ip_address`, `user_agent`, `language`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'GI-2026-13AEC8', 'Guilherme Jose Costa Marques', 'guilherme.jcmarques@gmail.com', '965079823', NULL, 'R. Pádua Correia 166', '4430-999', 'Vila Nova de Gaia', 'PT', 1, 'R. Pádua Correia 166', '4430-999', 'Vila Nova de Gaia', 'PT', 8.00, 5.00, 0.00, 13.00, 'transfer', 'paid', NULL, NULL, NULL, '2026-02-10 17:33:14', 'delivered', NULL, NULL, '2026-02-10 17:35:46', 'Nada.', 'Convertido do pedido manual #1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'pt', '2026-02-10 17:33:14', '2026-02-10 17:35:46');
+
 -- --------------------------------------------------------
 
 --
@@ -1199,6 +1482,13 @@ CREATE TABLE `order_items` (
   `total_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Extraindo dados da tabela `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `product_sku`, `quantity`, `unit_price`, `total_price`) VALUES
+(1, 1, 2, 'Banana das Américas Pack 5kg', '969', 1, 8.00, 8.00);
+
 -- --------------------------------------------------------
 
 --
@@ -1213,6 +1503,14 @@ CREATE TABLE `order_status_history` (
   `changed_by` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `order_status_history`
+--
+
+INSERT INTO `order_status_history` (`id`, `order_id`, `status`, `notes`, `changed_by`, `created_at`) VALUES
+(1, 1, 'confirmed', '', 1, '2026-02-10 17:35:23'),
+(2, 1, 'delivered', '', 1, '2026-02-10 17:35:46');
 
 -- --------------------------------------------------------
 
@@ -1242,7 +1540,12 @@ INSERT INTO `page_heroes` (`id`, `page_key`, `page_name_pt`, `page_name_en`, `he
 (3, 'activities', 'Atividades', 'Activities', 0.40, 1, 3, '2026-02-03 00:18:35', '2026-02-03 00:18:35'),
 (4, 'about', 'Sobre Nós', 'About Us', 0.40, 1, 4, '2026-02-03 00:18:35', '2026-02-03 02:10:03'),
 (5, 'contact', 'Contactos', 'Contact', 0.40, 1, 5, '2026-02-03 00:18:35', '2026-02-03 02:14:25'),
-(6, 'shop', 'Loja', 'Shop', 0.40, 1, 6, '2026-02-03 00:18:35', '2026-02-03 00:18:35');
+(6, 'shop', 'Loja', 'Shop', 0.40, 1, 6, '2026-02-03 00:18:35', '2026-02-03 00:18:35'),
+(8, 'product_detail', 'Produto (Detalhe)', 'Product (Detail)', 0.40, 1, 7, '2026-02-08 18:45:41', '2026-02-08 18:45:41'),
+(9, 'cart', 'Carrinho de Compras', 'Shopping Cart', 0.40, 1, 8, '2026-02-08 18:45:42', '2026-02-08 18:45:42'),
+(10, 'checkout', 'Finalizar Compra', 'Checkout', 0.40, 1, 9, '2026-02-08 18:45:42', '2026-02-08 18:45:42'),
+(11, 'privacy_policy', 'Política de Privacidade', 'Privacy Policy', 0.40, 1, 10, '2026-02-09 20:08:12', '2026-02-10 21:37:27'),
+(12, 'terms_conditions', 'Termos e Condições', 'Terms and Conditions', 0.40, 1, 11, '2026-02-09 20:08:12', '2026-02-10 21:38:00');
 
 -- --------------------------------------------------------
 
@@ -1273,7 +1576,7 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `sku`, `slug`, `category_id`, `price`, `sale_price`, `stock_quantity`, `track_inventory`, `weight`, `weight_grams`, `is_featured`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
-(2, '969', 'banana-americas', 6, 8.00, NULL, 10, 1, 5.000, NULL, 1, 1, 0, '2026-02-07 23:35:40', '2026-02-07 23:35:40');
+(2, '969', 'banana-americas', 6, 8.00, NULL, 10, 1, 5.000, NULL, 1, 1, 0, '2026-02-07 23:35:40', '2026-02-10 16:59:02');
 
 -- --------------------------------------------------------
 
@@ -1378,7 +1681,8 @@ CREATE TABLE `product_translations` (
 --
 
 INSERT INTO `product_translations` (`id`, `product_id`, `language_id`, `name`, `short_description`, `description`, `full_description`) VALUES
-(1, 2, 1, 'Banana das Américas Pack 5kg', 'Boa qualidade da Quinta do Zé', 'Apanhadas por crianças de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL);
+(1, 2, 1, 'Banana das Américas Pack 5kg', 'Boa qualidade da Quinta do Zé', 'Apanhadas por crianças de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL),
+(2, 2, 2, 'American Bananas', 'Boa qualidade da Quinta do Zé', 'Apanhadas por crianças de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL);
 
 -- --------------------------------------------------------
 
@@ -1418,10 +1722,11 @@ INSERT INTO `settings` (`id`, `setting_key`, `setting_value`, `setting_type`, `s
 (13, 'shop_enabled', '1', 'boolean', 'shop', 'Loja ativa', 0, '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (14, 'shop_shipping_fee', '5.00', 'number', 'shop', 'Taxa de envio', 0, '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (15, 'shop_free_shipping_above', '50.00', 'number', 'shop', 'Portes gratis acima de', 0, '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
-(16, 'maintenance_mode', '0', 'boolean', 'general', 'Modo manutencao', 0, '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
+(16, 'maintenance_mode', '0', 'boolean', 'general', 'Modo manutencao', 0, '2026-01-19 12:51:19', '2026-02-11 02:57:51'),
 (17, 'free_shipping_threshold', '50', 'number', 'shop', NULL, 0, '2026-01-20 16:22:55', '2026-01-20 16:22:55'),
 (18, 'shipping_cost', '5', 'number', 'shop', NULL, 0, '2026-01-20 16:22:55', '2026-01-20 16:22:55'),
-(82, 'shop_mode', 'active', 'text', 'shop', 'Modo da loja: active, manual, closed', 0, '2026-02-07 20:01:43', '2026-02-07 20:01:43');
+(82, 'shop_mode', 'manual', 'text', 'shop', 'Modo da loja: active, manual, closed', 0, '2026-02-07 20:01:43', '2026-02-09 00:34:35'),
+(83, 'site_description', '', 'text', 'general', 'Descrição (SEO)', 0, '2026-02-11 02:38:34', '2026-02-11 02:38:34');
 
 -- --------------------------------------------------------
 
@@ -1756,6 +2061,22 @@ ALTER TABLE `languages`
   ADD KEY `idx_active` (`is_active`);
 
 --
+-- Índices para tabela `legal_sections`
+--
+ALTER TABLE `legal_sections`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_page` (`page`),
+  ADD KEY `idx_active` (`is_active`);
+
+--
+-- Índices para tabela `legal_section_translations`
+--
+ALTER TABLE `legal_section_translations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_legal_lang` (`section_id`,`language_id`),
+  ADD KEY `language_id` (`language_id`);
+
+--
 -- Índices para tabela `manual_orders`
 --
 ALTER TABLE `manual_orders`
@@ -1913,19 +2234,19 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT de tabela `amenities`
 --
 ALTER TABLE `amenities`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de tabela `amenity_translations`
 --
 ALTER TABLE `amenity_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT de tabela `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
 
 --
 -- AUTO_INCREMENT de tabela `barcode_batches`
@@ -1937,25 +2258,25 @@ ALTER TABLE `barcode_batches`
 -- AUTO_INCREMENT de tabela `bathrooms`
 --
 ALTER TABLE `bathrooms`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `bathroom_translations`
 --
 ALTER TABLE `bathroom_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de tabela `bedrooms`
 --
 ALTER TABLE `bedrooms`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `bedroom_translations`
 --
 ALTER TABLE `bedroom_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de tabela `categories`
@@ -1973,13 +2294,13 @@ ALTER TABLE `category_translations`
 -- AUTO_INCREMENT de tabela `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `content_blocks`
 --
 ALTER TABLE `content_blocks`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=469;
 
 --
 -- AUTO_INCREMENT de tabela `external_links`
@@ -1997,13 +2318,13 @@ ALTER TABLE `external_link_translations`
 -- AUTO_INCREMENT de tabela `house_rules`
 --
 ALTER TABLE `house_rules`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de tabela `house_rule_translations`
 --
 ALTER TABLE `house_rule_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de tabela `invoices`
@@ -2018,40 +2339,52 @@ ALTER TABLE `languages`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
+-- AUTO_INCREMENT de tabela `legal_sections`
+--
+ALTER TABLE `legal_sections`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `legal_section_translations`
+--
+ALTER TABLE `legal_section_translations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `manual_orders`
 --
 ALTER TABLE `manual_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de tabela `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `order_status_history`
 --
 ALTER TABLE `order_status_history`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `page_heroes`
 --
 ALTER TABLE `page_heroes`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de tabela `products`
@@ -2081,13 +2414,13 @@ ALTER TABLE `product_images`
 -- AUTO_INCREMENT de tabela `product_translations`
 --
 ALTER TABLE `product_translations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT de tabela `spam_emails`
@@ -2197,6 +2530,13 @@ ALTER TABLE `house_rule_translations`
 --
 ALTER TABLE `invoices`
   ADD CONSTRAINT `fk_invoice_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+
+--
+-- Limitadores para a tabela `legal_section_translations`
+--
+ALTER TABLE `legal_section_translations`
+  ADD CONSTRAINT `legal_section_translations_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `legal_sections` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `legal_section_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE;
 
 --
 -- Limitadores para a tabela `media`
