@@ -9,7 +9,6 @@ use Core\CSRF;
 $db = Database::getInstance();
 $base = basePath();
 
-// Action Handlers with CSRF protection
 if (isset($_GET['mark_contacted']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['mark_contacted'];
@@ -34,7 +33,6 @@ if (isset($_GET['mark_converted']) && isset($_GET['token'])) {
             try {
                 $db->beginTransaction();
 
-                // Create real order
                 $orderNumber = generateOrderNumber();
                 $db->insert('orders', [
                     'order_number' => $orderNumber,
@@ -63,7 +61,6 @@ if (isset($_GET['mark_converted']) && isset($_GET['token'])) {
 
                 $orderId = $db->lastInsertId();
 
-                // Create order items from JSON
                 $items = json_decode($manualOrder['items_json'], true) ?? [];
                 foreach ($items as $item) {
                     $db->insert('order_items', [
@@ -77,7 +74,6 @@ if (isset($_GET['mark_converted']) && isset($_GET['token'])) {
                     ]);
                 }
 
-                // Link manual order to real order
                 $db->update('manual_orders', [
                     'status' => 'converted',
                     'converted_order_id' => $orderId,
@@ -125,7 +121,6 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
     redirect($base . '/admin/pedidos-manuais/');
 }
 
-// Admin Notes Update Handler
 if (isset($_POST['update_notes'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $id = (int)$_POST['order_id'];
@@ -144,7 +139,6 @@ if (isset($_POST['update_notes'])) {
 $pageTitle = 'Pedidos Manuais';
 $currentPage = 'pedidos-manuais';
 
-// Status filter
 $statusFilter = isset($_GET['status']) ? sanitize($_GET['status']) : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
@@ -161,7 +155,6 @@ if ($search) {
     $params = array_merge($params, ["%{$search}%", "%{$search}%", "%{$search}%"]);
 }
 
-// Counts for tabs
 $counts = ['all' => 0, 'new' => 0, 'contacted' => 0, 'converted' => 0, 'cancelled' => 0];
 $statusCounts = $db->fetchAll("SELECT status, COUNT(*) as c FROM manual_orders GROUP BY status");
 foreach ($statusCounts as $sc) {
@@ -169,7 +162,6 @@ foreach ($statusCounts as $sc) {
     $counts['all'] += (int)$sc['c'];
 }
 
-// Fetch orders
 $orders = $db->fetchAll("SELECT * FROM manual_orders {$where} ORDER BY created_at DESC", $params);
 
 include dirname(__DIR__) . '/includes/header.php';
@@ -267,7 +259,6 @@ include dirname(__DIR__) . '/includes/header.php';
                 <?php foreach ($orders as $order):
                     $items = json_decode($order['items_json'], true) ?? [];
 
-                    // Status badge colors
                     $statusColors = [
                         'new' => 'bg-blue-100 text-blue-800',
                         'contacted' => 'bg-yellow-100 text-yellow-800',
@@ -438,7 +429,6 @@ include dirname(__DIR__) . '/includes/header.php';
         <?php endif; ?>
     </div>
 </div>
-
 
 <!-- Delete Confirmation Modal -->
 <div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">

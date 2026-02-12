@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Create Activity
- * Complete form with image preview and all fields
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 require_once dirname(dirname(__DIR__)) . '/includes/auth-check.php';
@@ -13,10 +9,8 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Get activity categories from database
 $categories = $db->fetchAll(
     "SELECT c.id, ct.name
      FROM categories c
@@ -33,12 +27,10 @@ $priceRanges = [
     'expensive' => 'Premium',
 ];
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $errors = [];
 
-        // Validate required fields
         $titlePt = trim($_POST['title_1'] ?? '');
         if (empty($titlePt)) {
             $errors[] = 'O título (PT) é obrigatório.';
@@ -50,20 +42,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            // Generate slug
+
             $slug = $_POST['slug'] ?? '';
             if (empty($slug)) {
                 $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $titlePt));
                 $slug = trim($slug, '-');
             }
 
-            // Ensure slug is unique
             $existingSlug = $db->fetch("SELECT id FROM activities WHERE slug = ?", [$slug]);
             if ($existingSlug) {
                 $slug .= '-' . time();
             }
 
-            // Insert activity
             $db->insert('activities', [
                 'slug' => $slug,
                 'category_id' => $categoryId,
@@ -84,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $activityId = $db->lastInsertId();
 
-            // Handle cover image upload - USE MEDIA TABLE
             if (!empty($_FILES['cover_image']['name']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = ROOT_PATH . '/uploads/activities/';
                 if (!is_dir($uploadDir)) {
@@ -117,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Insert translations
             foreach ($languages as $lang) {
                 $db->insert('activity_translations', [
                     'activity_id' => $activityId,
@@ -129,7 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
 
-            // Handle gallery images upload - USE MEDIA TABLE
             if (!empty($_FILES['gallery']['name'][0])) {
                 $uploadDir = ROOT_PATH . '/uploads/activities/';
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];

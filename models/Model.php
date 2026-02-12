@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Base Model Class (Active Record Pattern)
- */
 
 namespace Models;
 
@@ -27,15 +24,11 @@ abstract class Model
         $this->original = $this->attributes;
     }
 
-    /**
-     * Fill model with attributes
-     */
     public function fill(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
 
-            // Also set typed public properties if they exist
             if (property_exists($this, $key)) {
                 try {
                     $rp = new \ReflectionProperty($this, $key);
@@ -47,64 +40,43 @@ abstract class Model
                         $this->$key = $value;
                     }
                 } catch (\ReflectionException $e) {
-                    // Skip if reflection fails
+
                 }
             }
         }
         return $this;
     }
 
-    /**
-     * Set attribute value
-     */
     public function setAttribute(string $key, mixed $value): void
     {
         $this->attributes[$key] = $value;
     }
 
-    /**
-     * Get attribute value
-     */
     public function getAttribute(string $key): mixed
     {
         return $this->attributes[$key] ?? null;
     }
 
-    /**
-     * Magic getter
-     */
     public function __get(string $key): mixed
     {
         return $this->getAttribute($key);
     }
 
-    /**
-     * Magic setter
-     */
     public function __set(string $key, mixed $value): void
     {
         $this->setAttribute($key, $value);
     }
 
-    /**
-     * Magic isset
-     */
     public function __isset(string $key): bool
     {
         return isset($this->attributes[$key]);
     }
 
-    /**
-     * Get all attributes
-     */
     public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * Get attributes as array (excluding hidden)
-     */
     public function toArray(): array
     {
         $array = $this->attributes;
@@ -114,25 +86,16 @@ abstract class Model
         return $array;
     }
 
-    /**
-     * Check if model exists in database
-     */
     public function exists(): bool
     {
         return $this->exists;
     }
 
-    /**
-     * Get primary key value
-     */
     public function getKey(): mixed
     {
         return $this->getAttribute(static::$primaryKey);
     }
 
-    /**
-     * Find record by ID
-     */
     public static function find(int $id): ?static
     {
         $db = Database::getInstance();
@@ -152,9 +115,6 @@ abstract class Model
         return $model;
     }
 
-    /**
-     * Find record by ID or throw exception
-     */
     public static function findOrFail(int $id): static
     {
         $model = static::find($id);
@@ -166,9 +126,6 @@ abstract class Model
         return $model;
     }
 
-    /**
-     * Get all records
-     */
     public static function all(string $orderBy = ''): array
     {
         $db = Database::getInstance();
@@ -189,17 +146,11 @@ abstract class Model
         }, $rows);
     }
 
-    /**
-     * Find first record matching conditions
-     */
     public static function where(string $column, mixed $value, string $operator = '='): QueryBuilder
     {
         return (new QueryBuilder(static::class))->where($column, $value, $operator);
     }
 
-    /**
-     * Find by column value
-     */
     public static function findBy(string $column, mixed $value): ?static
     {
         $db = Database::getInstance();
@@ -218,9 +169,6 @@ abstract class Model
         return $model;
     }
 
-    /**
-     * Create new record
-     */
     public static function create(array $attributes): static
     {
         $model = new static($attributes);
@@ -228,9 +176,6 @@ abstract class Model
         return $model;
     }
 
-    /**
-     * Save model (insert or update)
-     */
     public function save(): bool
     {
         if ($this->exists) {
@@ -240,9 +185,6 @@ abstract class Model
         return $this->insert();
     }
 
-    /**
-     * Insert new record
-     */
     protected function insert(): bool
     {
         $data = $this->getInsertData();
@@ -259,15 +201,12 @@ abstract class Model
         return true;
     }
 
-    /**
-     * Update existing record
-     */
     protected function update(): bool
     {
         $data = $this->getDirtyData();
 
         if (empty($data)) {
-            return true; // Nothing to update
+            return true;
         }
 
         $pk = static::$primaryKey;
@@ -279,9 +218,6 @@ abstract class Model
         return $affected > 0;
     }
 
-    /**
-     * Delete record
-     */
     public function delete(): bool
     {
         if (!$this->exists) {
@@ -301,9 +237,6 @@ abstract class Model
         return false;
     }
 
-    /**
-     * Get data for insert (fillable attributes only)
-     */
     protected function getInsertData(): array
     {
         if (empty(static::$fillable)) {
@@ -313,9 +246,6 @@ abstract class Model
         return array_intersect_key($this->attributes, array_flip(static::$fillable));
     }
 
-    /**
-     * Get changed data
-     */
     protected function getDirtyData(): array
     {
         $dirty = [];
@@ -331,9 +261,6 @@ abstract class Model
         return $dirty;
     }
 
-    /**
-     * Check if attribute has changed
-     */
     public function isDirty(string $key = null): bool
     {
         if ($key) {
@@ -343,9 +270,6 @@ abstract class Model
         return !empty($this->getDirtyData());
     }
 
-    /**
-     * Refresh model from database
-     */
     public function refresh(): self
     {
         if (!$this->exists) {
@@ -362,26 +286,17 @@ abstract class Model
         return $this;
     }
 
-    /**
-     * Count records
-     */
     public static function count(string $where = '1=1', array $params = []): int
     {
         return Database::getInstance()->count(static::$table, $where, $params);
     }
 
-    /**
-     * Check if record exists
-     */
     public static function existsWhere(string $where, array $params = []): bool
     {
         return Database::getInstance()->exists(static::$table, $where, $params);
     }
 }
 
-/**
- * Simple Query Builder for Model
- */
 class QueryBuilder
 {
     private string $modelClass;

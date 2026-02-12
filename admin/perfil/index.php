@@ -1,9 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Profile
- *
- * Security: Rate limited password changes, requires current password
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -22,9 +17,8 @@ $errors = [];
 $profileErrors = [];
 $passwordErrors = [];
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Rate limit: 15 profile actions per 5 min
+
     if (!$rateLimiter->check('admin_profile_update', 15, 300)) {
         Session::flash('error', 'Demasiadas alterações. Aguarde alguns minutos.');
         redirect('/admin/perfil/');
@@ -54,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $validator->addError('username', 'O nome de utilizador deve ter pelo menos 3 caracteres.');
         }
 
-        // Check uniqueness if changed
         if ($data['email'] !== $admin->email) {
             $exists = $db->fetch("SELECT id FROM admins WHERE email = ? AND id != ?", [$data['email'], $admin->id]);
             if ($exists) $validator->addError('email', 'Este email já está em uso.');
@@ -74,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } elseif ($action === 'change_password') {
-        // Rate limit password changes specifically: 5 per 15 min
+
         if (!$rateLimiter->check('admin_password_change', 5, 900)) {
             Session::flash('error', 'Demasiadas tentativas de alteração de password. Aguarde 15 minutos.');
             redirect('/admin/perfil/');
@@ -104,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Verify current password
         if (!password_verify($currentPassword, $admin->password_hash)) {
             $validator->addError('current_password', 'A password atual está incorreta.');
             $rateLimiter->recordFailure('admin_password_verify');
@@ -123,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Refresh admin data
 $admin = Auth::user();
 
 $pageTitle = 'O Meu Perfil';

@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Input Validation Class
- */
 
 namespace Core;
 
@@ -11,17 +8,11 @@ class Validator
     private array $data = [];
     private array $rules = [];
 
-    /**
-     * Create new validator instance
-     */
     public function __construct(array $data = [])
     {
         $this->data = $data;
     }
 
-    /**
-     * Static factory method
-     */
     public static function make(array $data, array $rules): self
     {
         $validator = new self($data);
@@ -30,9 +21,6 @@ class Validator
         return $validator;
     }
 
-    /**
-     * Validate data against rules
-     */
     public function validate(): bool
     {
         $this->errors = [];
@@ -49,12 +37,9 @@ class Validator
         return empty($this->errors);
     }
 
-    /**
-     * Apply a single rule to a field
-     */
     private function applyRule(string $field, mixed $value, string $rule): void
     {
-        // Parse rule with parameters (e.g., "min:3" or "between:1,10")
+
         $params = [];
         if (strpos($rule, ':') !== false) {
             [$rule, $paramStr] = explode(':', $rule, 2);
@@ -70,9 +55,6 @@ class Validator
         }
     }
 
-    /**
-     * Add error message from validation rule
-     */
     private function addRuleError(string $field, string $rule, array $params = []): void
     {
         $messages = [
@@ -98,7 +80,6 @@ class Validator
 
         $message = $messages[$rule] ?? "O campo :field é inválido.";
 
-        // Replace placeholders
         $message = str_replace(':field', $this->getFieldLabel($field), $message);
         foreach ($params as $i => $param) {
             $message = str_replace(":param{$i}", $param, $message);
@@ -110,9 +91,6 @@ class Validator
         $this->errors[$field][] = $message;
     }
 
-    /**
-     * Get human-readable field label
-     */
     private function getFieldLabel(string $field): string
     {
         $labels = [
@@ -148,7 +126,7 @@ class Validator
 
     protected function validateEmail(string $field, mixed $value, array $params): bool
     {
-        if (empty($value)) return true; // Let 'required' handle empty
+        if (empty($value)) return true;
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
 
@@ -193,7 +171,7 @@ class Validator
     protected function validatePhone(string $field, mixed $value, array $params): bool
     {
         if (empty($value)) return true;
-        // Portuguese phone format or international
+
         $cleaned = preg_replace('/[\s\-\(\)]+/', '', $value);
         return preg_match('/^(\+?351)?[0-9]{9,15}$/', $cleaned);
     }
@@ -244,9 +222,6 @@ class Validator
 
     // ==================== Fluent Convenience Methods ====================
 
-    /**
-     * Validate a value is not empty (fluent API)
-     */
     public function required(mixed $value, string $field, string $message = ''): self
     {
         $isEmpty = is_null($value) || (is_string($value) && trim($value) === '') || (is_array($value) && count($value) === 0);
@@ -259,9 +234,6 @@ class Validator
         return $this;
     }
 
-    /**
-     * Validate a value is a valid email (fluent API)
-     */
     public function email(mixed $value, string $field, string $message = ''): self
     {
         if (!empty($value) && filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
@@ -273,9 +245,6 @@ class Validator
         return $this;
     }
 
-    /**
-     * Add a custom error (public, used by controllers)
-     */
     public function addError(string $field, string $message): self
     {
         if (!isset($this->errors[$field])) {
@@ -285,9 +254,6 @@ class Validator
         return $this;
     }
 
-    /**
-     * Get errors as flat associative array (first error per field)
-     */
     public function getErrors(): array
     {
         $flat = [];
@@ -299,41 +265,26 @@ class Validator
 
     // ==================== Result Methods ====================
 
-    /**
-     * Check if validation passed
-     */
     public function passes(): bool
     {
         return empty($this->errors);
     }
 
-    /**
-     * Check if validation failed
-     */
     public function fails(): bool
     {
         return !$this->passes();
     }
 
-    /**
-     * Get all errors
-     */
     public function errors(): array
     {
         return $this->errors;
     }
 
-    /**
-     * Get first error for a field
-     */
     public function error(string $field): ?string
     {
         return $this->errors[$field][0] ?? null;
     }
 
-    /**
-     * Get all errors as flat array
-     */
     public function allErrors(): array
     {
         $all = [];
@@ -343,9 +294,6 @@ class Validator
         return $all;
     }
 
-    /**
-     * Get first error message
-     */
     public function firstError(): ?string
     {
         foreach ($this->errors as $fieldErrors) {
@@ -356,17 +304,11 @@ class Validator
         return null;
     }
 
-    /**
-     * Get validated data (only fields that were in rules)
-     */
     public function validated(): array
     {
         return array_intersect_key($this->data, $this->rules);
     }
 
-    /**
-     * Check if field has error
-     */
     public function hasError(string $field): bool
     {
         return isset($this->errors[$field]) && !empty($this->errors[$field]);

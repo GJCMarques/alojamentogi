@@ -1,19 +1,12 @@
 <?php
-/**
- * A Casa do Gi - 404 Page Not Found
- */
 
-// Define flag for Language detection to know we shouldn't force default language
 define('IS_404', true);
 require_once __DIR__ . '/includes/init.php';
 
-// Set 404 HTTP response code
 http_response_code(404);
 
 $lang = \Core\Language::getInstance();
 
-// FORCE ENGLISH if the URL contains /en/ segment
-// This fixes 404 pages not detecting language correctly because of base path issues
 $reqUri = $_SERVER['REQUEST_URI'] ?? '';
 if (strpos($reqUri, '/en/') !== false || substr($reqUri, -3) === '/en') {
     $lang->setLanguage('en');
@@ -22,7 +15,6 @@ if (strpos($reqUri, '/en/') !== false || substr($reqUri, -3) === '/en') {
 $isEnglish = $lang->isEnglish();
 $base = basePath();
 
-// Define translations hardcoded in file (No Database)
 $t = $isEnglish ? [
     'title' => 'Page Not Found',
     'description' => 'The page you are looking for does not exist or has been moved.',
@@ -43,7 +35,6 @@ $t = $isEnglish ? [
     'home_link' => $base . '/'
 ];
 
-// Page meta
 $pageTitle = $t['title'];
 $pageDescription = $t['description'];
 

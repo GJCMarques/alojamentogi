@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Save External Link (AJAX Handler)
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -21,7 +18,6 @@ if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
 
 $db = Database::getInstance();
 
-// Get form data
 $linkId = (int)($_POST['link_id'] ?? 0);
 $url = sanitize($_POST['url'] ?? '');
 $titlePt = sanitize($_POST['title_pt'] ?? '');
@@ -32,13 +28,11 @@ $category = $_POST['category'] ?? 'tourism';
 $icon = $_POST['icon'] ?? 'map';
 $sortOrder = (int)($_POST['sort_order'] ?? 0);
 
-// Validate
 if (empty($url) || empty($titlePt)) {
     Session::flash('error', 'URL e Título (PT) são obrigatórios.');
     redirect('/admin/atividades/?section=links');
 }
 
-// Validate URL format
 if (!filter_var($url, FILTER_VALIDATE_URL)) {
     Session::flash('error', 'URL inválido.');
     redirect('/admin/atividades/?section=links');
@@ -46,7 +40,7 @@ if (!filter_var($url, FILTER_VALIDATE_URL)) {
 
 try {
     if ($linkId > 0) {
-        // Update existing link
+
         $db->update('external_links', [
             'url' => $url,
             'category' => $category,
@@ -54,7 +48,6 @@ try {
             'sort_order' => $sortOrder,
         ], 'id = ?', [$linkId]);
 
-        // Update Portuguese translation
         $existsPt = $db->fetch(
             "SELECT id FROM external_link_translations WHERE link_id = ? AND language_id = 1",
             [$linkId]
@@ -74,7 +67,6 @@ try {
             ]);
         }
 
-        // Update English translation
         $existsEn = $db->fetch(
             "SELECT id FROM external_link_translations WHERE link_id = ? AND language_id = 2",
             [$linkId]
@@ -97,7 +89,7 @@ try {
         Session::flash('success', 'Link atualizado com sucesso.');
 
     } else {
-        // Create new link
+
         $db->insert('external_links', [
             'url' => $url,
             'category' => $category,
@@ -109,7 +101,6 @@ try {
 
         $newLinkId = $db->lastInsertId();
 
-        // Insert Portuguese translation
         $db->insert('external_link_translations', [
             'link_id' => $newLinkId,
             'language_id' => 1,
@@ -117,7 +108,6 @@ try {
             'description' => $descPt,
         ]);
 
-        // Insert English translation
         $db->insert('external_link_translations', [
             'link_id' => $newLinkId,
             'language_id' => 2,

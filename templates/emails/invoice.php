@@ -1,8 +1,4 @@
 <?php
-/**
- * Invoice Email Template - A Casa do Gi
- * Variables available: $invoice, $items, $siteName, $contactEmail, $contactPhone
- */
 
 $issuedAt = date('d/m/Y H:i', strtotime($invoice['issued_at']));
 $paymentLabel = match($invoice['payment_method'] ?? '') {

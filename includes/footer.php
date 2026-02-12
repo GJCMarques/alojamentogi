@@ -1,14 +1,10 @@
 <?php
-/**
- * A Casa do Gi - Footer Template
- */
 
 $lang = \Core\Language::getInstance();
 $currentLang = $lang->getCurrentLang();
 $isEnglish = $lang->isEnglish();
 $base = basePath();
 
-// Get accommodation booking URLs
 $db = \Core\Database::getInstance();
 $casa1 = $db->fetch(
     "SELECT a.*, at.name
@@ -25,7 +21,6 @@ $casa2 = $db->fetch(
     [$lang->getCurrentLangId()]
 );
 
-// Quick links
 $quickLinks = $isEnglish ? [
     ['url' => $base . '/en/accommodation/', 'label' => 'Accommodation'],
     ['url' => $base . '/en/shop/', 'label' => 'Regional Products'],
@@ -38,7 +33,6 @@ $quickLinks = $isEnglish ? [
     ['url' => $base . '/contactos/', 'label' => 'Contactos'],
 ];
 
-// Get settings
 $siteName = setting('site_name', 'A Casa do Gi');
 $contactEmail = setting('contact_email', '');
 $contactPhone = setting('contact_phone', '');

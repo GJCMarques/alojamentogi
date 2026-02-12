@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Checkout Page (English)
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 
@@ -19,11 +16,10 @@ $lang->setLanguage(LANG_EN);
 $base = basePath();
 $isEnglish = $lang->isEnglish();
 
-// Check shop mode (active, manual, closed)
 $shopMode = setting('shop_mode', 'active');
 
 if ($shopMode === 'closed') {
-    // Shop is completely closed - show toast notification and redirect back
+
     Session::flash('success', $isEnglish
         ? 'Our shop is temporarily closed. For more information, please contact us.'
         : 'A nossa loja esta temporariamente fechada. Para mais informacoes, contacte-nos.');
@@ -32,17 +28,15 @@ if ($shopMode === 'closed') {
 }
 
 if ($shopMode === 'manual') {
-    // Manual mode - redirect to manual order page
+
     redirect($base . '/en/shop/checkout/manual/');
 }
 
-// Redirect if cart is empty
 if ($cart->isEmpty()) {
     Session::flash('warning', $isEnglish ? 'Your cart is empty' : 'O seu carrinho esta vazio');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
-// Validate cart (check stock, etc.)
 $cartErrors = $cart->validate();
 if (!empty($cartErrors)) {
     foreach ($cartErrors as $error) {
@@ -51,7 +45,6 @@ if (!empty($cartErrors)) {
     redirect($base . ($isEnglish ? '/en/shop/cart/' : '/loja/carrinho/'));
 }
 
-// Get cart data
 $cartItems = $cart->getItems();
 $cartSubtotal = $cart->getSubtotal();
 $shippingCost = (float) setting('shipping_cost', 5);
@@ -59,7 +52,6 @@ $freeShippingThreshold = (float) setting('free_shipping_threshold', 50);
 $shipping = $cartSubtotal >= $freeShippingThreshold ? 0 : $shippingCost;
 $cartTotal = $cartSubtotal + $shipping;
 
-// Form data
 $errors = [];
 $formData = [
     'customer_name' => '',
@@ -72,11 +64,9 @@ $formData = [
     'payment_method' => 'mbway'
 ];
 
-// Handle form submission
 if (isPost()) {
     CSRF::check();
 
-    // Rate limit checkout submissions: max 5 per 10 minutes per IP
     $rateLimiter = \Core\RateLimiter::getInstance();
     if (!$rateLimiter->check('checkout_submit', 5, 600)) {
         $errors['general'] = $isEnglish
@@ -84,7 +74,6 @@ if (isPost()) {
             : 'Demasiadas tentativas. Por favor aguarde alguns minutos e tente novamente.';
     }
 
-    // Payment nonce - prevent double-submit
     $paymentNonce = post('payment_nonce', '');
     $sessionNonce = Session::get('checkout_nonce');
     if (!$paymentNonce || !$sessionNonce || !hash_equals($sessionNonce, $paymentNonce)) {
@@ -92,7 +81,7 @@ if (isPost()) {
             ? 'Form expired. Please refresh the page and try again.'
             : 'Formulario expirado. Atualize a pagina e tente novamente.';
     }
-    // Invalidate nonce after use (prevent replay)
+
     Session::remove('checkout_nonce');
 
     $formData = [
@@ -106,7 +95,6 @@ if (isPost()) {
         'payment_method' => sanitize(post('payment_method', 'mbway'))
     ];
 
-    // Validation
     $validator = new Validator();
     $validator->required($formData['customer_name'], 'customer_name', $isEnglish ? 'Name is required' : 'Nome e obrigatorio');
     $validator->email($formData['customer_email'], 'customer_email', $isEnglish ? 'Valid email is required' : 'Email valido e obrigatorio');
@@ -115,13 +103,11 @@ if (isPost()) {
     $validator->required($formData['shipping_city'], 'shipping_city', $isEnglish ? 'City is required' : 'Cidade e obrigatoria');
     $validator->required($formData['shipping_postal_code'], 'shipping_postal_code', $isEnglish ? 'Postal code is required' : 'Codigo postal e obrigatorio');
 
-    // Validate payment method
     $validMethods = ['mbway', 'multibanco', 'card'];
     if (!in_array($formData['payment_method'], $validMethods)) {
         $errors['payment_method'] = $isEnglish ? 'Please select a valid payment method' : 'Selecione um metodo de pagamento valido';
     }
 
-    // Validate phone for MBWay
     if ($formData['payment_method'] === 'mbway') {
         $phone = preg_replace('/\D/', '', $formData['customer_phone']);
         if (strlen($phone) !== 9 || !preg_match('/^9[1236]\d{7}$/', $phone)) {
@@ -135,7 +121,6 @@ if (isPost()) {
         try {
             $db->beginTransaction();
 
-            // Create order
             $orderNumber = generateOrderNumber();
             $orderId = $db->insert('orders', [
                 'order_number' => $orderNumber,
@@ -156,7 +141,6 @@ if (isPost()) {
                 'user_agent' => substr(getUserAgent(), 0, 500)
             ]);
 
-            // Add order items
             foreach ($cartItems as $item) {
                 $db->insert('order_items', [
                     'order_id' => $orderId,
@@ -168,7 +152,6 @@ if (isPost()) {
                     'subtotal' => $item['subtotal']
                 ]);
 
-                // Update stock
                 if ($item['product']->track_inventory) {
                     $db->query(
                         "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?",
@@ -179,10 +162,8 @@ if (isPost()) {
 
             $db->commit();
 
-            // Clear cart
             $cart->clear();
 
-            // Store order info in session for payment page
             Session::set('pending_order', [
                 'id' => $orderId,
                 'number' => $orderNumber,
@@ -192,7 +173,6 @@ if (isPost()) {
                 'email' => $formData['customer_email']
             ]);
 
-            // Redirect to payment page
             redirect($base . '/en/shop/checkout/payment/');
 
         } catch (\Exception $e) {
@@ -203,11 +183,9 @@ if (isPost()) {
     }
 }
 
-// Generate checkout nonce for double-submit protection
 $checkoutNonce = bin2hex(random_bytes(32));
 Session::set('checkout_nonce', $checkoutNonce);
 
-// Get hero image from database (checkout page hero, fallback to shop)
 $checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'checkout' AND is_active = 1");
 if (!$checkoutHero) {
     $checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
@@ -217,7 +195,6 @@ $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
 $heroOverlay = $checkoutHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Page configuration
 $pageTitle = $isEnglish ? 'Checkout' : 'Finalizar Compra';
 $pageDescription = $isEnglish ? 'Complete your order' : 'Complete a sua encomenda';
 $headerLayer = 2;

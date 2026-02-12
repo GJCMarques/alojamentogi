@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Authentication Handler
- */
 
 namespace Core;
 
@@ -11,12 +8,9 @@ class Auth
 {
     private static ?Admin $currentAdmin = null;
 
-    /**
-     * Attempt to authenticate admin
-     */
     public static function attempt(string $username, string $password): array
     {
-        // Find admin by username or email
+
         $admin = Admin::findByUsername($username);
 
         if (!$admin) {
@@ -30,7 +24,6 @@ class Auth
             ];
         }
 
-        // Check if account is locked
         if ($admin->isLocked()) {
             $lockedUntil = strtotime($admin->locked_until);
             $remainingMinutes = ceil(($lockedUntil - time()) / 60);
@@ -41,7 +34,6 @@ class Auth
             ];
         }
 
-        // Check if account is active
         if (!$admin->isActive()) {
             return [
                 'success' => false,
@@ -49,7 +41,6 @@ class Auth
             ];
         }
 
-        // Verify password
         if (!$admin->verifyPassword($password)) {
             $admin->incrementLoginAttempts();
 
@@ -70,15 +61,12 @@ class Auth
             ];
         }
 
-        // Success - reset attempts and update last login
         $admin->resetLoginAttempts();
         $admin->updateLastLogin();
 
-        // Set session
         Session::setAdmin($admin->id);
         Session::set('_admin_last_activity', time());
 
-        // Log the action
         self::logAction($admin->id, 'login', 'admin', $admin->id);
 
         return [
@@ -88,9 +76,6 @@ class Auth
         ];
     }
 
-    /**
-     * Logout current admin
-     */
     public static function logout(): void
     {
         $adminId = Session::getAdminId();
@@ -103,17 +88,11 @@ class Auth
         self::$currentAdmin = null;
     }
 
-    /**
-     * Check if user is authenticated
-     */
     public static function check(): bool
     {
         return Session::isLoggedIn();
     }
 
-    /**
-     * Get current authenticated admin
-     */
     public static function user(): ?Admin
     {
         if (!self::check()) {
@@ -124,7 +103,6 @@ class Auth
             $adminId = Session::getAdminId();
             self::$currentAdmin = Admin::find($adminId);
 
-            // Verify admin is still valid
             if (!self::$currentAdmin || !self::$currentAdmin->isActive()) {
                 self::logout();
                 return null;
@@ -134,17 +112,11 @@ class Auth
         return self::$currentAdmin;
     }
 
-    /**
-     * Get current admin ID
-     */
     public static function id(): ?int
     {
         return Session::getAdminId();
     }
 
-    /**
-     * Require authentication (redirect if not logged in)
-     */
     public static function requireAuth(string $redirectTo = '/admin/login.php'): void
     {
         if (!self::check()) {
@@ -152,7 +124,6 @@ class Auth
             redirect($redirectTo);
         }
 
-        // Verify session IP matches
         $sessionIp = Session::get(SESSION_USER_IP);
         $currentIp = $_SERVER['REMOTE_ADDR'] ?? '';
 
@@ -162,16 +133,12 @@ class Auth
             redirect($redirectTo);
         }
 
-        // Verify admin still exists and is active
         if (!self::user()) {
             Session::flash('error', 'Sessao invalida');
             redirect($redirectTo);
         }
     }
 
-    /**
-     * Require specific role
-     */
     public static function requireRole(string|array $roles, string $redirectTo = '/admin/'): void
     {
         self::requireAuth();
@@ -185,52 +152,34 @@ class Auth
         }
     }
 
-    /**
-     * Require super admin role
-     */
     public static function requireSuperAdmin(string $redirectTo = '/admin/'): void
     {
         self::requireRole(ROLE_SUPER_ADMIN, $redirectTo);
     }
 
-    /**
-     * Check if current user has role
-     */
     public static function hasRole(string $role): bool
     {
         $admin = self::user();
         return $admin && $admin->hasRole($role);
     }
 
-    /**
-     * Check if current user is super admin
-     */
     public static function isSuperAdmin(): bool
     {
         return self::hasRole(ROLE_SUPER_ADMIN);
     }
 
-    /**
-     * Check if current user can manage users
-     */
     public static function canManageUsers(): bool
     {
         $admin = self::user();
         return $admin && $admin->canManageUsers();
     }
 
-    /**
-     * Check if current user can edit content
-     */
     public static function canEditContent(): bool
     {
         $admin = self::user();
         return $admin && $admin->canEditContent();
     }
 
-    /**
-     * Log admin action to audit log
-     */
     public static function logAction(
         ?int $adminId,
         string $action,
@@ -253,9 +202,6 @@ class Auth
         ]);
     }
 
-    /**
-     * Generate password reset token
-     */
     public static function generatePasswordResetToken(Admin $admin): string
     {
         $token = bin2hex(random_bytes(32));
@@ -268,9 +214,6 @@ class Auth
         return $token;
     }
 
-    /**
-     * Verify password reset token
-     */
     public static function verifyPasswordResetToken(string $token): ?Admin
     {
         $hashedToken = hash('sha256', $token);
@@ -294,9 +237,6 @@ class Auth
         return $admin;
     }
 
-    /**
-     * Clear password reset token
-     */
     public static function clearPasswordResetToken(Admin $admin): void
     {
         $admin->password_reset_token = null;

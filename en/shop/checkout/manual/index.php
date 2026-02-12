@@ -1,9 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Manual Order Page (English)
- * When shop is in "manual" mode, customers submit their cart
- * and payment is handled manually by phone.
- */
 
 require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/includes/init.php';
 
@@ -20,13 +15,11 @@ $lang->setLanguage(LANG_EN);
 $base = basePath();
 $isEnglish = $lang->isEnglish();
 
-// If shop is not in manual mode, redirect to normal checkout
 $shopMode = setting('shop_mode', 'active');
 if ($shopMode !== 'manual') {
     redirect($base . '/en/shop/checkout/');
 }
 
-// Redirect if cart is empty
 if ($cart->isEmpty()) {
     Session::flash('warning', $isEnglish ? 'Your cart is empty' : 'O seu carrinho esta vazio');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
@@ -51,7 +44,6 @@ $formData = [
 ];
 $success = false;
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CSRF::check();
 
@@ -65,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'notes' => sanitize(post('notes', '')),
     ];
 
-    // Validation
     if (empty($formData['customer_name'])) $errors['customer_name'] = $isEnglish ? 'Name is required' : 'Nome e obrigatorio';
     if (!isValidEmail($formData['customer_email'])) $errors['customer_email'] = $isEnglish ? 'Valid email is required' : 'Email valido e obrigatorio';
     if (empty($formData['customer_phone'])) $errors['customer_phone'] = $isEnglish ? 'Phone is required' : 'Telefone e obrigatorio';
@@ -74,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($formData['shipping_postal_code'])) $errors['shipping_postal_code'] = $isEnglish ? 'Postal code is required' : 'Codigo postal e obrigatorio';
 
     if (empty($errors)) {
-        // Build items snapshot
+
         $itemsSnapshot = array_map(function ($item) {
             return [
                 'product_id' => $item['product']->id,
@@ -104,11 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'user_agent' => substr(getUserAgent(), 0, 500),
             ]);
 
-            // Clear cart
             $cart->clear();
             $success = true;
 
-            // Send notification to admin
             try {
                 $mailer = new \Core\Mailer();
                 $adminEmail = setting('contact_email', '');
@@ -140,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get hero image from database (checkout hero, fallback to shop)
 $checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'checkout' AND is_active = 1");
 if (!$checkoutHero) {
     $checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");

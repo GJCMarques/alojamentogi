@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Contact Messages
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -12,7 +9,6 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Handle mark as read
 if (isset($_GET['read']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['read'];
@@ -22,7 +18,6 @@ if (isset($_GET['read']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle mark as unread
 if (isset($_GET['unread']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['unread'];
@@ -32,7 +27,6 @@ if (isset($_GET['unread']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle mark as ignored
 if (isset($_GET['ignore']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['ignore'];
@@ -42,7 +36,6 @@ if (isset($_GET['ignore']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle unignore
 if (isset($_GET['unignore']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['unignore'];
@@ -52,29 +45,25 @@ if (isset($_GET['unignore']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle mark as spam (and add email to spam list)
 if (isset($_GET['spam']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['spam'];
 
-        // Get the message to extract email
         $message = $db->fetch("SELECT email FROM contact_submissions WHERE id = ?", [$id]);
 
         if ($message) {
-            // Mark message as spam
+
             $db->update('contact_submissions', ['is_spam' => 1], 'id = ?', [$id]);
 
-            // Add email to spam list (ignore if already exists)
             try {
                 $db->insert('spam_emails', [
                     'email' => $message['email'],
                     'reason' => 'Marcado como spam manualmente pelo administrador'
                 ]);
             } catch (Exception $e) {
-                // Email already in spam list, that's ok
+
             }
 
-            // Mark all other messages from this email as spam
             $db->query(
                 "UPDATE contact_submissions SET is_spam = 1 WHERE email = ? AND id != ?",
                 [$message['email'], $id]
@@ -86,19 +75,16 @@ if (isset($_GET['spam']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle unspam
 if (isset($_GET['unspam']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['unspam'];
 
-        // Get the message to extract email
         $message = $db->fetch("SELECT email FROM contact_submissions WHERE id = ?", [$id]);
 
         if ($message) {
-            // Unmark message as spam
+
             $db->update('contact_submissions', ['is_spam' => 0], 'id = ?', [$id]);
 
-            // Remove email from spam list
             $db->delete('spam_emails', 'email = ?', [$message['email']]);
 
             Session::flash('success', 'Mensagem removida do spam.');
@@ -107,7 +93,6 @@ if (isset($_GET['unspam']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Handle delete
 if (isset($_GET['delete']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['delete'];
@@ -117,13 +102,11 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-// Filters
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 20;
 $offset = ($page - 1) * $perPage;
 
-// Build query
 $where = "WHERE 1=1";
 $params = [];
 
@@ -144,7 +127,6 @@ switch ($filter) {
         $where .= " AND is_spam = 0 AND is_ignored = 0";
 }
 
-// Get counts
 $counts = [
     'all' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 0 AND is_ignored = 0")['c'],
     'unread' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 0 AND is_spam = 0 AND is_ignored = 0")['c'],
@@ -153,11 +135,9 @@ $counts = [
     'spam' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 1")['c'],
 ];
 
-// Get total
 $total = $db->fetch("SELECT COUNT(*) as c FROM contact_submissions {$where}", $params)['c'];
 $totalPages = ceil($total / $perPage);
 
-// Get messages
 $messages = $db->fetchAll(
     "SELECT * FROM contact_submissions {$where} ORDER BY created_at DESC LIMIT {$perPage} OFFSET {$offset}",
     $params

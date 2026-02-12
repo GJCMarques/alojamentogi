@@ -1,11 +1,7 @@
 <?php
-/**
- * A Casa do Gi - Homepage (English)
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
-// Force English language
 \Core\Language::getInstance()->setLanguage(LANG_EN);
 
 use Core\Database;
@@ -16,18 +12,16 @@ $base = basePath();
 $isEnglish = true;
 $content = $lang->getPageContents('home');
 
-// Hero image
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'home' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
 $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.jpg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.30;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Fetch Heroes for Menu Cards
 $heroes = $db->fetchAll(
-    "SELECT ph.page_key, m.file_path 
-     FROM page_heroes ph 
-     LEFT JOIN media m ON m.entity_type = 'hero' AND m.entity_id = ph.id AND m.is_cover = 1 
+    "SELECT ph.page_key, m.file_path
+     FROM page_heroes ph
+     LEFT JOIN media m ON m.entity_type = 'hero' AND m.entity_id = ph.id AND m.is_cover = 1
      WHERE ph.is_active = 1"
 );
 $heroImages = [];
@@ -35,16 +29,13 @@ foreach ($heroes as $h) {
     $heroImages[$h['page_key']] = $h['file_path'];
 }
 
-// Function to resolve card image
 function getCardImage($key, $default) {
     global $heroImages;
     $path = $heroImages[$key] ?? $default;
     return resolveContentImage($path);
 }
 
-// Data
 $langId = 2;
-
 
 $pageTitle = 'Home';
 $pageDescription = 'A Casa do Gi - Local Accommodation and Regional Products in Mogadouro.';
@@ -129,15 +120,13 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </div>
 
-
-
 <!-- ====== PAGE BODY ====== -->
 
 <!-- BENTO GRID - 3 Experiences -->
 <!-- EXPLORE MENU - DYNAMIC ACCORDION -->
 <section class="py-20 bg-white min-h-[80vh] flex flex-col justify-center">
     <div class="max-w-[1800px] w-full mx-auto px-4 sm:px-6">
-        
+
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">
                 <?= $content['home_explore_title'] ?? 'Explore Our World' ?>
@@ -147,13 +136,13 @@ include INCLUDES_PATH . '/header.php';
 
         <!-- Dynamic Flex Accordion -->
         <div class="flex flex-col md:flex-row h-[800px] gap-2 md:gap-4">
-            
+
             <!-- CARD 1: ALOJAMENTO -->
             <a href="<?= $base ?>/en/accommodation/" class="animate-on-scroll relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('accommodation', 'images/MogadouroAlojamento.jpg') ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
-                
+
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
                     <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-2 opacity-80"><?= $content['home_card1_label'] ?? 'Sleep' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
@@ -172,10 +161,10 @@ include INCLUDES_PATH . '/header.php';
 
             <!-- CARD 2: ATIVIDADES -->
             <a href="<?= $base ?>/en/activities/" class="animate-on-scroll delay-100 relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('activities', 'images/MogadouroAtividades.jpg') ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
-                
+
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
                     <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-2 opacity-80"><?= $content['home_card2_label'] ?? 'Experience' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
@@ -194,10 +183,10 @@ include INCLUDES_PATH . '/header.php';
 
             <!-- CARD 3: LOJA -->
             <a href="<?= $base ?>/en/shop/" class="animate-on-scroll delay-200 relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('shop', 'images/MogadouroContacto.jpg') ?>');"></div>
                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
-                
+
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
                     <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-2 opacity-80"><?= $content['home_card3_label'] ?? 'Taste' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
@@ -216,10 +205,10 @@ include INCLUDES_PATH . '/header.php';
 
             <!-- CARD 4: SOBRE / CONTACTOS -->
             <a href="<?= $base ?>/en/contact/" class="animate-on-scroll delay-300 relative flex-1 group hover:grow-[1.5] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('contact', 'images/FotoGi.png') ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
-                
+
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
                     <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-2 opacity-80"><?= $content['home_card4_label'] ?? 'Connect' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
@@ -244,7 +233,7 @@ include INCLUDES_PATH . '/header.php';
 <section class="relative py-24 md:py-32 bg-white overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 md:px-12">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
-            
+
             <!-- Left: Text Content -->
             <div class="md:order-1 animate-on-scroll">
                 <span class="text-accent text-xs font-bold tracking-[0.3em] uppercase block mb-6">
@@ -277,15 +266,15 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Main Image -->
                 <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                     <div class="absolute inset-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>
-                    <img src="<?= resolveContentImage(content('home_image_about', 'images/MogadouroSobre.png')) ?>" 
-                         alt="A Casa do Gi" 
+                    <img src="<?= resolveContentImage(content('home_image_about', 'images/MogadouroSobre.png')) ?>"
+                         alt="A Casa do Gi"
                          class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)]">
                 </div>
-                
+
                 <!-- Decorative Elements -->
                 <div class="absolute -top-12 -right-12 w-48 h-48 bg-cream-100 rounded-full z-0 opacity-60 blur-3xl"></div>
                 <div class="absolute -bottom-12 -left-12 w-72 h-72 bg-accent/10 rounded-full z-0 blur-3xl"></div>
-                
+
                 <!-- Floating Badge -->
                 <div class="absolute -bottom-8 -left-8 z-20 bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-2xl max-w-[200px] hidden md:block border border-gray-100">
                     <span class="block font-cursive text-4xl text-accent mb-0 leading-[0.8] relative top-1">100%</span>
@@ -354,7 +343,7 @@ include INCLUDES_PATH . '/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
+
     // 1. SPLIT HERO INTERSECTION OBSERVER
     const splitHero = document.getElementById('split-hero');
     if (splitHero) {
@@ -363,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (entry.isIntersecting) {
                     splitHero.classList.add('split-active');
                     // Optional: Stop observing once activated
-                    // observer.unobserve(entry.target); 
+                    // observer.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.15 }); // Trigger when 15% visible
@@ -390,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 3. PARALLAX EFFECTS (Hero + General)
     const mountainHero = document.getElementById('mountain-hero');
     const heroContent = document.getElementById('hero-content');
-    
+
     if (mountainHero && heroContent) {
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;

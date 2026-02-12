@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Shop Main Page
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
@@ -16,23 +13,18 @@ $cart = Cart::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
 $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Build hero URL (file_path from media already has leading slash)
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Get ALL products (Client-side filtering)
 $products = Product::getAllActive();
 $totalProducts = count($products);
 
-// Get all categories for filter
 $categories = ProductCategory::getAllActive();
 
-// Page configuration
 $pageTitle = 'Loja';
 $pageDescription = 'Descubra os melhores produtos regionais de Trás-os-Montes. Azeite, mel, enchidos, amêndoas e muito mais da Casa do Gi.';
 
@@ -53,7 +45,7 @@ include INCLUDES_PATH . '/header.php';
         <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             Produtos Regionais
         </span>
-        
+
         <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
             A Nossa Loja
         </h1>
@@ -109,7 +101,7 @@ include INCLUDES_PATH . '/header.php';
                         <span class="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-4 block">Categorias</span>
                         <ul class="space-y-2">
                             <li>
-                                <button type="button" 
+                                <button type="button"
                                    class="shop-filter w-full flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-300 group active bg-primary text-white shadow-md"
                                    data-filter="all">
                                     <span class="font-medium">Todas as Categorias</span>
@@ -140,7 +132,7 @@ include INCLUDES_PATH . '/header.php';
                             Limpar filtros
                         </button>
                     </div>
-                    
+
                     <!-- Need Help? -->
                     <div class="mt-12 p-6 bg-cream-50 rounded-2xl border border-cream-100 text-center">
                         <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm text-secondary">
@@ -165,13 +157,13 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Products Grid -->
                 <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <?php $pidx = 0; foreach ($products as $product): ?>
-                    <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 border border-cream-100 animate-on-scroll" 
-                             data-animation="fade-up" 
+                    <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 border border-cream-100 animate-on-scroll"
+                             data-animation="fade-up"
                              data-delay="<?= min($pidx * 50, 300) ?>"
                              data-category="<?= e($product->category_slug ?? '') ?>"
                              data-title="<?= strtolower(e($product->name)) ?>"
                              data-description="<?= strtolower(e($product->short_description ?? '')) ?>">
-                         
+
                         <!-- Image Container -->
                         <a href="<?= $base ?>/loja/produto/?slug=<?= e($product->slug) ?>" class="block aspect-[4/3] relative overflow-hidden bg-cream-50">
                             <?php if ($product->getPrimaryImage()): ?>
@@ -186,7 +178,7 @@ include INCLUDES_PATH . '/header.php';
                                 </svg>
                             </div>
                             <?php endif; ?>
-                            
+
                             <!-- Overlay Gradient -->
                             <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -204,7 +196,7 @@ include INCLUDES_PATH . '/header.php';
                                 </span>
                                 <?php endif; ?>
                             </div>
-                            
+
                              <?php if (!$product->isInStock()): ?>
                                 <div class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
                                     <span class="bg-primary text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">Esgotado</span>
@@ -218,7 +210,7 @@ include INCLUDES_PATH . '/header.php';
                              <?php if ($product->category_name): ?>
                                 <span class="text-xs font-medium text-accent uppercase tracking-wider block mb-2"><?= e($product->category_name) ?></span>
                             <?php endif; ?>
-                            
+
                             <a href="<?= $base ?>/loja/produto/?slug=<?= e($product->slug) ?>" class="block mb-3">
                                 <h3 class="font-serif text-xl text-primary group-hover:text-secondary transition-colors line-clamp-2 min-h-[3.5rem]">
                                     <?= e($product->name) ?>
@@ -325,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filterSidebar.classList.toggle('hidden');
         });
     }
-    
+
     // Filtering Logic
     const filterButtons = document.querySelectorAll('.shop-filter');
     const productCards = document.querySelectorAll('.product-card');
@@ -341,17 +333,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function filterProducts() {
         let count = 0;
-        
+
         productCards.forEach(card => {
             const category = card.dataset.category;
             const title = card.dataset.title || '';
             const description = card.dataset.description || '';
-            
+
             const matchesFilter = currentFilter === 'all' || category === currentFilter;
-            const matchesSearch = !searchTerm || 
-                                title.includes(searchTerm) || 
+            const matchesSearch = !searchTerm ||
+                                title.includes(searchTerm) ||
                                 description.includes(searchTerm);
-                                
+
             if (matchesFilter && matchesSearch) {
                 card.style.display = 'block';
                 // Trigger reflow/animation if needed, or just let CSS handle it
@@ -361,9 +353,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.display = 'none';
             }
         });
-        
+
         visibleCount.textContent = count;
-        
+
         if (count === 0) {
             noResults.classList.remove('hidden');
             grid.classList.add('hidden');
@@ -371,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
             noResults.classList.add('hidden');
             grid.classList.remove('hidden');
         }
-        
+
         // Show "Clear Filters" if filtering is active
         if (currentFilter !== 'all' || searchTerm !== '') {
             activeFiltersMsg.classList.remove('hidden');
@@ -379,35 +371,35 @@ document.addEventListener('DOMContentLoaded', function() {
             activeFiltersMsg.classList.add('hidden');
         }
     }
-    
+
     // Filter Buttons Click
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             currentFilter = this.dataset.filter;
-            
+
             // Update active state
             filterButtons.forEach(btn => {
                 btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-md');
                 btn.classList.add('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
-                
+
                 // Reset pills styling
                 const pill = btn.querySelector('span:last-child');
                 pill.classList.remove('bg-white/20', 'text-white');
                 pill.classList.add('bg-cream-100', 'text-charcoal/60');
             });
-            
+
             // Activate current
             this.classList.remove('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
             this.classList.add('active', 'bg-primary', 'text-white', 'shadow-md');
-            
+
             const pill = this.querySelector('span:last-child');
             pill.classList.remove('bg-cream-100', 'text-charcoal/60');
             pill.classList.add('bg-white/20', 'text-white');
-            
+
             filterProducts();
         });
     });
-    
+
     // Search Input
     if (searchInput) {
         searchInput.addEventListener('input', function() {
@@ -418,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filterProducts();
         });
     }
-    
+
     if (clearSearch) {
         clearSearch.addEventListener('click', function() {
             searchInput.value = '';
@@ -427,24 +419,24 @@ document.addEventListener('DOMContentLoaded', function() {
             filterProducts();
         });
     }
-    
+
     // Global Reset
     window.resetFilters = function() {
         currentFilter = 'all';
         searchTerm = '';
         if (searchInput) searchInput.value = '';
         if (clearSearch) clearSearch.classList.add('hidden');
-        
+
         // Reset buttons visual state
         filterButtons.forEach(btn => {
             btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-md');
             btn.classList.add('text-charcoal', 'hover:bg-cream-50', 'hover:pl-4', 'border', 'border-transparent', 'hover:border-cream-100');
-            
+
             const pill = btn.querySelector('span:last-child');
             pill.classList.remove('bg-white/20', 'text-white');
             pill.classList.add('bg-cream-100', 'text-charcoal/60');
         });
-        
+
         // Activate "All" (assuming first button)
         if (filterButtons.length > 0) {
             const first = filterButtons[0];
@@ -454,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pill.classList.remove('bg-cream-100', 'text-charcoal/60');
             pill.classList.add('bg-white/20', 'text-white');
         }
-        
+
         filterProducts();
     };
 

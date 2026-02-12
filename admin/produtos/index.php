@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Products List
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -11,7 +8,6 @@ use Core\Session;
 
 $db = Database::getInstance();
 
-// Handle delete
 if (isset($_GET['delete']) && isset($_GET['token'])) {
     if (\Core\CSRF::validate($_GET['token'])) {
         $productId = (int)$_GET['delete'];
@@ -21,7 +17,6 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
     redirect('/admin/produtos/');
 }
 
-// Handle toggle active
 if (isset($_GET['toggle']) && isset($_GET['token'])) {
     if (\Core\CSRF::validate($_GET['token'])) {
         $productId = (int)$_GET['toggle'];
@@ -35,18 +30,15 @@ if (isset($_GET['toggle']) && isset($_GET['token'])) {
     redirect('/admin/produtos/');
 }
 
-// Pagination
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 20;
 $offset = ($page - 1) * $perPage;
 
-// Search
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryFilter = isset($_GET['category']) ? (int)$_GET['category'] : 0;
 
-// Build query
 $where = "WHERE 1=1";
-$params = [1]; // Portuguese language
+$params = [1];
 
 if ($search) {
     $where .= " AND (pt.name LIKE ? OR p.sku LIKE ?)";
@@ -59,7 +51,6 @@ if ($categoryFilter) {
     $params[] = $categoryFilter;
 }
 
-// Get total count
 $countSql = "SELECT COUNT(DISTINCT p.id) as total
              FROM products p
              LEFT JOIN product_translations pt ON p.id = pt.product_id AND pt.language_id = ?
@@ -67,7 +58,6 @@ $countSql = "SELECT COUNT(DISTINCT p.id) as total
 $total = $db->fetch($countSql, $params)['total'];
 $totalPages = ceil($total / $perPage);
 
-// Get products
 $sql = "SELECT p.*, pt.name as name,
                pc.slug as category_slug,
                pct.name as category_name,
@@ -80,10 +70,9 @@ $sql = "SELECT p.*, pt.name as name,
         ORDER BY p.created_at DESC
         LIMIT {$perPage} OFFSET {$offset}";
 
-$params[] = 1; // Add Portuguese language for category translation
+$params[] = 1;
 $products = $db->fetchAll($sql, $params);
 
-// Get categories for filter
 $categories = $db->fetchAll(
     "SELECT c.id, ct.name
      FROM product_categories c

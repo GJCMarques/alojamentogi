@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Product Category Model
- */
 
 namespace Models;
 
@@ -21,27 +18,23 @@ class ProductCategory extends Model
     public string $created_at;
     public string $updated_at;
 
-    // Translation fields (loaded dynamically)
     public ?string $name = null;
     public ?string $description = null;
 
-    /**
-     * Get category with translation for current language
-     */
     public static function findWithTranslation(int $id): ?self
     {
         $db = Database::getInstance();
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT c.*, 
-                       COALESCE(ct.name, ct_def.name) as name, 
+        $sql = "SELECT c.*,
+                       COALESCE(ct.name, ct_def.name) as name,
                        COALESCE(ct.description, ct_def.description) as description
                 FROM product_categories c
                 LEFT JOIN product_category_translations ct
                     ON c.id = ct.category_id AND ct.language_id = ?
                 LEFT JOIN languages l_def ON l_def.is_default = 1
-                LEFT JOIN product_category_translations ct_def 
+                LEFT JOIN product_category_translations ct_def
                     ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 WHERE c.id = ?";
 
@@ -56,23 +49,20 @@ class ProductCategory extends Model
         return $category;
     }
 
-    /**
-     * Get all active categories with translations
-     */
     public static function getAllActive(): array
     {
         $db = Database::getInstance();
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT c.*, 
-                       COALESCE(ct.name, ct_def.name) as name, 
+        $sql = "SELECT c.*,
+                       COALESCE(ct.name, ct_def.name) as name,
                        COALESCE(ct.description, ct_def.description) as description
                 FROM product_categories c
                 LEFT JOIN product_category_translations ct
                     ON c.id = ct.category_id AND ct.language_id = ?
                 LEFT JOIN languages l_def ON l_def.is_default = 1
-                LEFT JOIN product_category_translations ct_def 
+                LEFT JOIN product_category_translations ct_def
                     ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 WHERE c.is_active = 1
                 ORDER BY c.sort_order ASC, name ASC";
@@ -89,23 +79,20 @@ class ProductCategory extends Model
         return $categories;
     }
 
-    /**
-     * Get category by slug with translation
-     */
     public static function findBySlug(string $slug): ?self
     {
         $db = Database::getInstance();
         $lang = Language::getInstance();
         $langId = $lang->getCurrentLangId();
 
-        $sql = "SELECT c.*, 
-                       COALESCE(ct.name, ct_def.name) as name, 
+        $sql = "SELECT c.*,
+                       COALESCE(ct.name, ct_def.name) as name,
                        COALESCE(ct.description, ct_def.description) as description
                 FROM product_categories c
                 LEFT JOIN product_category_translations ct
                     ON c.id = ct.category_id AND ct.language_id = ?
                 LEFT JOIN languages l_def ON l_def.is_default = 1
-                LEFT JOIN product_category_translations ct_def 
+                LEFT JOIN product_category_translations ct_def
                     ON c.id = ct_def.category_id AND ct_def.language_id = l_def.id
                 WHERE c.slug = ? AND c.is_active = 1";
 
@@ -120,9 +107,6 @@ class ProductCategory extends Model
         return $category;
     }
 
-    /**
-     * Get product count for this category
-     */
     public function getProductCount(): int
     {
         $db = Database::getInstance();
@@ -136,14 +120,10 @@ class ProductCategory extends Model
         return (int)($row['count'] ?? 0);
     }
 
-    /**
-     * Save translation for a specific language
-     */
     public function saveTranslation(int $languageId, string $name, ?string $description = null): bool
     {
         $db = Database::getInstance();
 
-        // Check if translation exists
         $existing = $db->fetch(
             "SELECT id FROM product_category_translations WHERE category_id = ? AND language_id = ?",
             [$this->id, $languageId]

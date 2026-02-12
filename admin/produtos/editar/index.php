@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Edit Product
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 require_once dirname(dirname(__DIR__)) . '/includes/auth-check.php';
@@ -13,14 +10,12 @@ use Core\Validator;
 
 $db = Database::getInstance();
 
-// Get product ID
 $productId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$productId) {
     redirect('/admin/produtos/');
 }
 
-// Get product
 $product = $db->fetch("SELECT * FROM products WHERE id = ?", [$productId]);
 
 if (!$product) {
@@ -28,7 +23,6 @@ if (!$product) {
     redirect('/admin/produtos/');
 }
 
-// Get categories
 $categories = $db->fetchAll(
     "SELECT c.id, ct.name
      FROM product_categories c
@@ -37,10 +31,8 @@ $categories = $db->fetchAll(
      ORDER BY ct.name"
 );
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Get existing translations
 $existingTranslations = $db->fetchAll(
     "SELECT * FROM product_translations WHERE product_id = ?",
     [$productId]
@@ -50,35 +42,31 @@ foreach ($existingTranslations as $trans) {
     $translations[$trans['language_id']] = $trans;
 }
 
-// Get existing images
 $images = $db->fetchAll(
-    "SELECT pi.*, m.file_path FROM product_images pi 
-     JOIN media m ON pi.media_id = m.id 
-     WHERE pi.product_id = ? 
+    "SELECT pi.*, m.file_path FROM product_images pi
+     JOIN media m ON pi.media_id = m.id
+     WHERE pi.product_id = ?
      ORDER BY pi.is_primary DESC, pi.sort_order ASC",
     [$productId]
 );
 
 $errors = [];
 
-// Handle image delete
 if (isset($_GET['delete_image']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $imageId = (int)$_GET['delete_image'];
         $image = $db->fetch("SELECT pi.*, m.file_path, m.id as media_id FROM product_images pi JOIN media m ON pi.media_id = m.id WHERE pi.id = ? AND pi.product_id = ?", [$imageId, $productId]);
 
         if ($image) {
-            // Delete file
+
             $filePath = ROOT_PATH . $image['file_path'];
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
 
-            // Delete records
             $db->delete('product_images', 'id = ?', [$imageId]);
             $db->delete('media', 'id = ?', [$image['media_id']]);
 
-            // If was primary, make first remaining image primary
             if ($image['is_primary']) {
                 $firstImage = $db->fetch(
                     "SELECT id FROM product_images WHERE product_id = ? ORDER BY sort_order LIMIT 1",
@@ -95,15 +83,12 @@ if (isset($_GET['delete_image']) && isset($_GET['token'])) {
     redirect('/admin/produtos/editar/?id=' . $productId);
 }
 
-// Handle set primary image
 if (isset($_GET['set_primary']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $imageId = (int)$_GET['set_primary'];
 
-        // Unset all primaries
         $db->update('product_images', ['is_primary' => 0], 'product_id = ?', [$productId]);
 
-        // Set new primary
         $db->update('product_images', ['is_primary' => 1], 'id = ? AND product_id = ?', [$imageId, $productId]);
 
         Session::flash('success', 'Imagem principal atualizada.');
@@ -111,13 +96,12 @@ if (isset($_GET['set_primary']) && isset($_GET['token'])) {
     redirect('/admin/produtos/editar/?id=' . $productId);
 }
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF
+
     if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
         $errors[] = 'Token de segurança inválido. Por favor, tente novamente.';
     } else {
-        // Get form data
+
         $productData = [
             'category_id' => (int)($_POST['category_id'] ?? 0),
             'slug' => sanitize($_POST['slug'] ?? ''),
@@ -132,19 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $translations = $_POST['translations'] ?? [];
 
-        // Validation
         $validator = new Validator();
         $validator->required($productData['category_id'], 'category_id', 'Categoria');
         $validator->required($productData['sku'], 'sku', 'SKU');
         $validator->required($productData['price'], 'price', 'Preço');
 
-        // Check SKU uniqueness (excluding current product)
         $existingSku = $db->fetch("SELECT id FROM products WHERE sku = ? AND id != ?", [$productData['sku'], $productId]);
         if ($existingSku) {
             $validator->addError('sku', 'Este SKU já existe.');
         }
 
-        // Check slug uniqueness
         if (!empty($productData['slug'])) {
             $existingSlug = $db->fetch("SELECT id FROM products WHERE slug = ? AND id != ?", [$productData['slug'], $productId]);
             if ($existingSlug) {
@@ -152,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Check for translation names
         $hasName = false;
         foreach ($translations as $langId => $trans) {
             if (!empty($trans['name'])) {
@@ -170,10 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->beginTransaction();
 
             try {
-                // Update product
+
                 $db->update('products', $productData, 'id = ?', [$productId]);
 
-                // Update translations
                 foreach ($translations as $langId => $trans) {
                     $existing = $db->fetch(
                         "SELECT id FROM product_translations WHERE product_id = ? AND language_id = ?",
@@ -195,7 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                // Handle new image uploads
                 if (!empty($_FILES['images']['name'][0])) {
                     $uploadDir = UPLOADS_PATH . '/products/';
 
@@ -203,7 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         mkdir($uploadDir, 0755, true);
                     }
 
-                    // Check if we have any images already
                     $hasImages = !empty($images);
                     $sortOrder = count($images);
 
@@ -212,13 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $originalName = $_FILES['images']['name'][$key];
                             $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
-                            // Validate extension
                             $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
                             if (!in_array($extension, $allowedExtensions)) {
                                 continue;
                             }
 
-                            // Validate MIME type
                             $finfo = finfo_open(FILEINFO_MIME_TYPE);
                             $mimeType = finfo_file($finfo, $tmpName);
                             finfo_close($finfo);
@@ -228,7 +203,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 continue;
                             }
 
-                            // Generate unique filename
                             $newFilename = $productData['slug'] . '-' . uniqid() . '.' . $extension;
                             $targetPath = $uploadDir . $newFilename;
 
@@ -236,7 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $fileSize = $_FILES['images']['size'][$key];
                                 $fileType = $_FILES['images']['type'][$key];
 
-                                // Insert into media
                                 $mediaId = $db->insert('media', [
                                     'filename' => $newFilename,
                                     'original_name' => $originalName,
@@ -246,7 +219,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     'category' => 'products'
                                 ]);
 
-                                // Link in product_images
                                 $db->insert('product_images', [
                                     'product_id' => $productId,
                                     'media_id' => $mediaId,
@@ -262,12 +234,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $db->commit();
 
-                // Refresh product and images
                 $product = $db->fetch("SELECT * FROM products WHERE id = ?", [$productId]);
                 $images = $db->fetchAll(
-                    "SELECT pi.*, m.file_path FROM product_images pi 
-                     JOIN media m ON pi.media_id = m.id 
-                     WHERE pi.product_id = ? 
+                    "SELECT pi.*, m.file_path FROM product_images pi
+                     JOIN media m ON pi.media_id = m.id
+                     WHERE pi.product_id = ?
                      ORDER BY pi.is_primary DESC, pi.sort_order ASC",
                     [$productId]
                 );
@@ -280,7 +251,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Update product array for form display
         $product = array_merge($product, $productData);
     }
 }
@@ -593,24 +563,24 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
 document.addEventListener('DOMContentLoaded', function() {
     // Language tabs
     const tabs = document.querySelectorAll('.lang-tab');
-    
+
     tabs.forEach(tab => {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
             const langId = this.getAttribute('data-lang');
-            
+
             // Update tabs styling
             tabs.forEach(t => {
                 t.classList.remove('border-secondary-600', 'text-secondary-600');
                 t.classList.add('border-transparent', 'text-gray-500');
             });
-            
+
             this.classList.remove('border-transparent', 'text-gray-500');
             this.classList.add('border-secondary-600', 'text-secondary-600');
-            
+
             // Show/Hide content
             const contents = document.querySelectorAll('.lang-content');
-            
+
             contents.forEach(c => {
                 const contentLang = c.getAttribute('data-lang');
                 if (contentLang == langId) {

@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Single Product Page (Portuguese)
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 
@@ -16,14 +13,12 @@ $cart = Cart::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Get product slug
 $slug = isset($_GET['slug']) ? sanitize($_GET['slug']) : null;
 
 if (!$slug) {
     redirect($base . '/loja/');
 }
 
-// Get product by slug, fallback to SKU
 $product = Product::findBySlug($slug);
 if (!$product) {
     $product = Product::findBySku($slug);
@@ -51,7 +46,6 @@ if (!$product) {
     exit;
 }
 
-// Get hero image from database (product detail page hero, fallback to shop)
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'product_detail' AND is_active = 1");
 if (!$pageHero) {
     $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
@@ -61,12 +55,10 @@ $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Get related products (same category)
 $relatedProducts = Product::getAllActive($product->category_id, 4);
 $relatedProducts = array_filter($relatedProducts, fn($p) => $p->id !== $product->id);
 $relatedProducts = array_slice($relatedProducts, 0, 4);
 
-// Page configuration
 $pageTitle = $product->name;
 $pageDescription = $product->short_description ?? substr(strip_tags($product->description ?? ''), 0, 160);
 $headerLayer = 2;
@@ -448,7 +440,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="text-white/80 text-sm font-medium">
             <span id="lightbox-counter">1</span> / <span id="lightbox-total"><?= count($product->images) ?></span>
         </div>
-        
+
         <button onclick="closeLightbox()" class="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
@@ -615,12 +607,11 @@ if (lightboxModal) {
     }, { passive: true });
 }
 
-
 document.addEventListener('DOMContentLoaded', function() {
     // Main image and thumbnails (Product Page Interaction)
     const mainImage = document.getElementById('main-image');
     const thumbnails = document.querySelectorAll('.thumbnail-btn');
-    
+
     // JS representation for main page logic
     const images = galleryImages.map((img, i) => ({ src: img.url, alt: img.alt }));
 
@@ -629,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
          if (images[index] && mainImage) {
             mainImage.src = images[index].src;
             mainImage.dataset.index = index;
-            
+
             // Update thumbnails classes
             thumbnails.forEach((thumb, i) => {
                 if (i === index) {

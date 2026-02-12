@@ -1,9 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Users Management
- *
- * Security: Requires admin role + current password for sensitive actions
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -13,7 +8,6 @@ use Core\Session;
 use Core\CSRF;
 use Core\Auth;
 
-// Check permissions - only admins can manage users
 if (!Auth::canManageUsers()) {
     Session::flash('error', 'Sem permissões para aceder a esta página.');
     redirect('/admin/');
@@ -22,7 +16,6 @@ if (!Auth::canManageUsers()) {
 $db = Database::getInstance();
 $rateLimiter = \Core\RateLimiter::getInstance();
 
-// Rate limit user management actions: 20 per 5 minutes
 if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['delete']) || isset($_GET['toggle'])) {
     if (!$rateLimiter->check('admin_user_mgmt', 20, 300)) {
         Session::flash('error', 'Demasiadas ações. Aguarde alguns minutos.');
@@ -30,18 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['delete']) || isset($_G
     }
 }
 
-// Handle delete (POST only for security)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_user') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $id = (int)($_POST['user_id'] ?? 0);
         $adminPassword = $_POST['admin_password'] ?? '';
         $currentAdmin = Auth::user();
 
-        // Cannot delete yourself
         if ($id === (int)$currentAdmin->id) {
             Session::flash('error', 'Não pode eliminar a sua própria conta.');
         }
-        // Verify admin password
+
         elseif (!password_verify($adminPassword, $currentAdmin->password_hash)) {
             Session::flash('error', 'Password de confirmação incorreta.');
             $rateLimiter->recordFailure('admin_user_mgmt_auth');
@@ -58,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     redirect('/admin/utilizadores/');
 }
 
-// Handle toggle active (POST only)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_user') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $id = (int)($_POST['user_id'] ?? 0);
@@ -75,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     redirect('/admin/utilizadores/');
 }
 
-// Handle form submission (create/edit)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST['action'] === 'save_user')) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $errors = [];
@@ -90,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
         $isActive = isset($_POST['is_active']) ? 1 : 0;
         $adminPassword = $_POST['admin_password'] ?? '';
 
-        // Require admin password for creating users or changing passwords
         $needsPasswordConfirm = !$editId || !empty($password);
         if ($needsPasswordConfirm) {
             if (empty($adminPassword)) {
@@ -102,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
             }
         }
 
-        // Validation
         if (empty($username)) {
             $errors[] = 'O nome de utilizador é obrigatório.';
         } elseif (strlen($username) < 3) {
@@ -127,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
             $errors[] = 'Role inválido.';
         }
 
-        // Check for duplicates
         $checkWhere = $editId ? "AND id != ?" : "";
         $checkParams = $editId ? [$username, $editId] : [$username];
         $existingUsername = $db->fetch("SELECT id FROM admins WHERE username = ? {$checkWhere}", $checkParams);
@@ -155,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
             }
 
             if ($editId) {
-                // Cannot change your own role or active status
+
                 if ($editId === (int)$currentAdmin->id) {
                     unset($data['role']);
                     unset($data['is_active']);
@@ -175,22 +161,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
     }
 }
 
-// Get editing user
 $editUser = null;
 if (isset($_GET['edit'])) {
     $editUser = $db->fetch("SELECT * FROM admins WHERE id = ?", [(int)$_GET['edit']]);
 }
 
-// Get all users
 $users = $db->fetchAll("SELECT * FROM admins ORDER BY role, full_name");
 
-// Roles
 $roles = [
     'admin' => 'Administrador',
     'editor' => 'Editor'
 ];
 
-// Check for brute force on password confirmation
 $authFailures = $rateLimiter->getFailureCount('admin_user_mgmt_auth', 300);
 $authLocked = $authFailures >= 5;
 

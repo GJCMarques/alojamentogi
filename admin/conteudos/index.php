@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Content Blocks
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -12,10 +9,8 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Content block definitions
 $blockDefinitions = [
     'homepage' => [
         'label' => 'Página Inicial',
@@ -55,7 +50,7 @@ $blockDefinitions = [
             'accommodation_hero_tagline' => ['label' => 'Hero - Tagline', 'type' => 'text'],
             'accommodation_hero_title' => ['label' => 'Hero - Título', 'type' => 'text'],
             'accommodation_hero_subtitle' => ['label' => 'Hero - Subtítulo', 'type' => 'textarea'],
-            
+
             'accommodation_section_subtitle' => ['label' => 'Secção Escolha - Subtítulo', 'type' => 'text'],
             'accommodation_section_title' => ['label' => 'Secção Escolha - Título', 'type' => 'text'],
             'accommodation_intro' => ['label' => 'Secção Escolha - Texto', 'type' => 'textarea'],
@@ -155,12 +150,10 @@ $blockDefinitions = [
     ],
 ];
 
-// Get current section
 $currentSection = isset($_GET['section']) && isset($blockDefinitions[$_GET['section']])
     ? $_GET['section']
     : 'homepage';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $section = $blockDefinitions[$currentSection];
@@ -170,7 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $fieldName = $blockKey . '_' . $lang['id'];
                 $content = $_POST[$fieldName] ?? '';
 
-                // Check if block exists
                 $existing = $db->fetch(
                     "SELECT id FROM content_blocks WHERE block_key = ? AND language_id = ?",
                     [$blockKey, $lang['id']]
@@ -196,7 +188,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get all content blocks for current section
 $blockKeys = array_keys($blockDefinitions[$currentSection]['blocks']);
 $placeholders = implode(',', array_fill(0, count($blockKeys), '?'));
 $contentBlocks = [];

@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Invoice Detail
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -20,7 +17,6 @@ if (!$invoiceId) {
     redirect(basePath() . '/admin/faturas/');
 }
 
-// Get invoice
 $invoice = $db->fetch("SELECT * FROM invoices WHERE id = ?", [$invoiceId]);
 
 if (!$invoice) {
@@ -28,7 +24,6 @@ if (!$invoice) {
     redirect(basePath() . '/admin/faturas/');
 }
 
-// Handle actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && CSRF::validate($_POST['csrf_token'] ?? '')) {
     $action = $_POST['action'] ?? '';
 
@@ -53,22 +48,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && CSRF::validate($_POST['csrf_token']
     }
 }
 
-// Refresh invoice after possible changes
 $invoice = $db->fetch("SELECT * FROM invoices WHERE id = ?", [$invoiceId]);
 
-// Get related order
 $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$invoice['order_id']]);
 
-// Decode items
 $items = json_decode($invoice['items_json'], true) ?: [];
 
-// Verify integrity
 $verifyResult = $invoiceSystem->verify($invoice['barcode']);
 
-// Format barcode
 $barcodeFormatted = substr($invoice['barcode'], 0, 3) . ' ' . substr($invoice['barcode'], 3, 3) . ' ' . substr($invoice['barcode'], 6, 3);
 
-// Payment status labels
 $paymentLabels = [
     'paid' => ['label' => 'Pago', 'class' => 'bg-green-100 text-green-800', 'icon' => 'check-circle'],
     'pending' => ['label' => 'Pendente', 'class' => 'bg-yellow-100 text-yellow-800', 'icon' => 'clock'],

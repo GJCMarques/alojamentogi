@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Invoices Management
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -14,14 +11,12 @@ use Core\Invoice;
 $db = Database::getInstance();
 $invoiceSystem = Invoice::getInstance();
 
-// Handle verification via GET
 $verifyResult = null;
 if (isset($_GET['verify']) && !empty($_GET['code'])) {
     $code = sanitize($_GET['code']);
     $verifyResult = $invoiceSystem->verify($code);
 }
 
-// Handle resend email
 if (isset($_GET['resend']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $invoiceId = (int)$_GET['resend'];
@@ -31,7 +26,6 @@ if (isset($_GET['resend']) && isset($_GET['token'])) {
     redirect(basePath() . '/admin/faturas/');
 }
 
-// Pagination and filtering
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 20;
 $offset = ($page - 1) * $perPage;
@@ -50,7 +44,6 @@ $invoices = $invoiceSystem->getAll($filters, $perPage, $offset);
 $totalInvoices = $invoiceSystem->count($filters);
 $totalPages = ceil($totalInvoices / $perPage);
 
-// Status counts
 $statusCounts = $db->fetchAll("SELECT payment_status, COUNT(*) as count FROM invoices GROUP BY payment_status");
 $counts = ['all' => 0];
 foreach ($statusCounts as $sc) {
@@ -58,7 +51,6 @@ foreach ($statusCounts as $sc) {
     $counts['all'] += $sc['count'];
 }
 
-// Payment status labels
 $paymentLabels = [
     'paid' => ['label' => 'Pago', 'class' => 'bg-green-100 text-green-800'],
     'pending' => ['label' => 'Pendente', 'class' => 'bg-yellow-100 text-yellow-800'],

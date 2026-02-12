@@ -1,17 +1,10 @@
 <?php
-/**
- * IfthenPay Payment Callback Handler
- * Receives payment confirmations from IfthenPay (MBWay, Multibanco, Card)
- *
- * Security: Anti-phishing key verification, amount validation, replay protection
- */
 
 require_once __DIR__ . '/../includes/init.php';
 
 use Core\Payment\IfthenPay;
 use Core\RateLimiter;
 
-// Rate limit: max 30 callback requests per minute per IP
 $rateLimiter = RateLimiter::getInstance();
 if (!$rateLimiter->check('payment_callback', 30, 60)) {
     logMessage("Rate limit exceeded on payment callback from " . getClientIp(), 'warning');
@@ -20,7 +13,6 @@ if (!$rateLimiter->check('payment_callback', 30, 60)) {
     exit('Too many requests');
 }
 
-// Log all incoming requests for audit trail
 $logDir = ROOT_PATH . '/logs';
 if (!is_dir($logDir)) {
     mkdir($logDir, 0755, true);
@@ -41,13 +33,11 @@ file_put_contents(
     FILE_APPEND | LOCK_EX
 );
 
-// Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
     exit('Method not allowed');
 }
 
-// Get callback data from POST body or GET params (IfthenPay uses both)
 $data = $_POST;
 if (empty($data)) {
     $rawInput = file_get_contents('php://input');
@@ -62,7 +52,6 @@ if (empty($data)) {
     exit('No callback data');
 }
 
-// Process callback through IfthenPay class
 try {
     $gateway = IfthenPay::getInstance();
     $result = $gateway->handleCallback($data);

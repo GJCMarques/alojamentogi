@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Accommodation
- * Dual accommodation support: Casa 1 and Casa 2
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -13,17 +9,14 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get selected accommodation (from URL or session, default to Casa 1)
 $selectedAccommodationNumber = (int)($_GET['casa'] ?? Session::get('admin_selected_accommodation') ?? 1);
 if (!in_array($selectedAccommodationNumber, [1, 2])) {
     $selectedAccommodationNumber = 1;
 }
 Session::set('admin_selected_accommodation', $selectedAccommodationNumber);
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Get current accommodation
 $accommodation = $db->fetch(
     "SELECT * FROM accommodation WHERE accommodation_number = ?",
     [$selectedAccommodationNumber]
@@ -34,7 +27,6 @@ if (!$accommodation) {
     redirect('/admin/');
 }
 
-// Ensure all languages have translations
 foreach ($languages as $lang) {
     $exists = $db->fetch(
         "SELECT id FROM accommodation_translations WHERE accommodation_id = ? AND language_id = ?",
@@ -52,7 +44,6 @@ foreach ($languages as $lang) {
     }
 }
 
-// Get translations
 $translations = [];
 $translationRows = $db->fetchAll(
     "SELECT * FROM accommodation_translations WHERE accommodation_id = ?",
@@ -62,7 +53,6 @@ foreach ($translationRows as $row) {
     $translations[$row['language_id']] = $row;
 }
 
-// Get amenities with translations, grouped by category
 $amenities = $db->fetchAll(
     "SELECT a.*,
             (SELECT name FROM amenity_translations WHERE amenity_id = a.id AND language_id = (SELECT id FROM languages WHERE code = 'pt' LIMIT 1)) as name_pt,
@@ -71,7 +61,6 @@ $amenities = $db->fetchAll(
      ORDER BY a.category, a.sort_order, a.id"
 );
 
-// Group amenities by category
 $amenitiesByCategory = [];
 foreach ($amenities as &$amenity) {
     $amenity['translated_name'] = $amenity['name_pt'] ?: $amenity['name_en'] ?: $amenity['icon'];
@@ -83,7 +72,6 @@ foreach ($amenities as &$amenity) {
 }
 unset($amenity);
 
-// Category labels
 $categoryLabels = [
     'general' => 'Geral',
     'kitchen' => 'Cozinha',
@@ -97,7 +85,6 @@ $categoryLabels = [
     'services' => 'Serviços'
 ];
 
-// Get accommodation amenities with highlighted status
 $accommodationAmenitiesRows = $db->fetchAll(
     "SELECT amenity_id, is_highlighted, sort_order FROM accommodation_amenities WHERE accommodation_id = ?",
     [$accommodation['id']]
@@ -110,13 +97,11 @@ foreach ($accommodationAmenitiesRows as $row) {
     }
 }
 
-// Get gallery images for this accommodation
 $galleryImages = $db->fetchAll(
     "SELECT * FROM media WHERE category = 'gallery' AND accommodation_id = ? ORDER BY sort_order",
     [$accommodation['id']]
 );
 
-// Get bedrooms
 $bedrooms = $db->fetchAll(
     "SELECT b.*,
             (SELECT beds_description FROM bedroom_translations WHERE bedroom_id = b.id AND language_id = (SELECT id FROM languages WHERE code = 'pt' LIMIT 1)) as beds_pt,
@@ -129,7 +114,6 @@ $bedrooms = $db->fetchAll(
     [$accommodation['id']]
 );
 
-// Get bathrooms
 $bathrooms = $db->fetchAll(
     "SELECT b.*,
             (SELECT description FROM bathroom_translations WHERE bathroom_id = b.id AND language_id = (SELECT id FROM languages WHERE code = 'pt' LIMIT 1)) as desc_pt,
@@ -142,7 +126,6 @@ $bathrooms = $db->fetchAll(
     [$accommodation['id']]
 );
 
-// Get house rules
 $houseRules = $db->fetchAll(
     "SELECT hr.*,
             (SELECT rule_text FROM house_rule_translations WHERE rule_id = hr.id AND language_id = (SELECT id FROM languages WHERE code = 'pt' LIMIT 1)) as rule_pt,
@@ -153,7 +136,6 @@ $houseRules = $db->fetchAll(
     [$accommodation['id']]
 );
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && !isset($_POST['add_amenity']) && !isset($_POST['edit_amenity'])
     && !isset($_POST['add_bedroom']) && !isset($_POST['edit_bedroom'])
@@ -161,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && !isset($_POST['add_rule']) && !isset($_POST['edit_rule'])
 ) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
-        // Update accommodation basic info
+
         $db->update('accommodation', [
             'max_guests' => (int)$_POST['max_guests'],
             'bedrooms' => (int)$_POST['bedrooms'],
@@ -190,7 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             'is_active' => isset($_POST['is_active']) ? 1 : 0
         ], 'id = ?', [$accommodation['id']]);
 
-        // Update translations
         foreach ($languages as $lang) {
             $db->update('accommodation_translations', [
                 'name' => trim($_POST['name_' . $lang['id']] ?? ''),
@@ -206,7 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             ], 'accommodation_id = ? AND language_id = ?', [$accommodation['id'], $lang['id']]);
         }
 
-        // Update amenities with highlighted status
         $db->delete('accommodation_amenities', 'accommodation_id = ?', [$accommodation['id']]);
         if (!empty($_POST['amenities'])) {
             $sortOrder = 1;
@@ -221,7 +201,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             }
         }
 
-        // Handle hero image upload
         if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = ROOT_PATH . '/uploads/accommodation/';
             if (!is_dir($uploadDir)) {
@@ -234,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 $newName = 'hero_casa' . $selectedAccommodationNumber . '_' . time() . '.' . $ext;
 
                 if (move_uploaded_file($_FILES['hero_image']['tmp_name'], $uploadDir . $newName)) {
-                    // Delete old hero image if exists
+
                     if ($accommodation['hero_image'] && strpos($accommodation['hero_image'], 'uploads/') === 0) {
                         $oldPath = ROOT_PATH . '/' . $accommodation['hero_image'];
                         if (file_exists($oldPath)) {
@@ -246,7 +225,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             }
         }
 
-        // Handle cover image upload
         if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = ROOT_PATH . '/uploads/accommodation/';
             if (!is_dir($uploadDir)) {
@@ -259,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 $newName = 'cover_casa' . $selectedAccommodationNumber . '_' . time() . '.' . $ext;
 
                 if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $uploadDir . $newName)) {
-                    // Delete old cover image if exists
+
                     if ($accommodation['cover_image'] && strpos($accommodation['cover_image'], 'uploads/') === 0) {
                         $oldPath = ROOT_PATH . '/' . $accommodation['cover_image'];
                         if (file_exists($oldPath)) {
@@ -271,7 +249,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             }
         }
 
-        // Handle gallery image upload
         if (!empty($_FILES['gallery']['name'][0])) {
             $uploadDir = ROOT_PATH . '/uploads/accommodation/';
             if (!is_dir($uploadDir)) {
@@ -311,7 +288,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             }
         }
 
-        // Update existing gallery images metadata
         if (isset($_POST['gallery_alt_pt']) && is_array($_POST['gallery_alt_pt'])) {
             foreach ($_POST['gallery_alt_pt'] as $id => $altPt) {
                 $id = (int)$id;
@@ -330,7 +306,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
     }
 }
 
-// Handle image delete
 if (isset($_GET['delete_image']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $imageId = (int)$_GET['delete_image'];
@@ -348,7 +323,6 @@ if (isset($_GET['delete_image']) && isset($_GET['token'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber);
 }
 
-// Handle amenity add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_amenity'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $icon = trim($_POST['amenity_icon'] ?? '');
@@ -383,7 +357,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_amenity'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber);
 }
 
-// Handle amenity edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_amenity'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $amenityId = (int)$_POST['amenity_id'];
@@ -417,7 +390,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_amenity'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber);
 }
 
-// Handle amenity delete
 if (isset($_GET['delete_amenity']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $amenityId = (int)$_GET['delete_amenity'];
@@ -429,7 +401,6 @@ if (isset($_GET['delete_amenity']) && isset($_GET['token'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber);
 }
 
-// Handle bedroom add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_bedroom'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $maxNum = $db->fetch(
@@ -461,7 +432,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_bedroom'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
 }
 
-// Handle bedroom edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_bedroom'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $bedroomId = (int)$_POST['bedroom_id'];
@@ -495,7 +465,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_bedroom'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
 }
 
-// Handle bedroom delete
 if (isset($_GET['delete_bedroom']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $bedroomId = (int)$_GET['delete_bedroom'];
@@ -506,7 +475,6 @@ if (isset($_GET['delete_bedroom']) && isset($_GET['token'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
 }
 
-// Handle bathroom add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_bathroom'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $maxNum = $db->fetch(
@@ -542,7 +510,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_bathroom'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
 }
 
-// Handle bathroom edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_bathroom'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $bathroomId = (int)$_POST['bathroom_id'];
@@ -583,7 +550,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_bathroom'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
 }
 
-// Handle bathroom delete
 if (isset($_GET['delete_bathroom']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $bathroomId = (int)$_GET['delete_bathroom'];
@@ -594,7 +560,6 @@ if (isset($_GET['delete_bathroom']) && isset($_GET['token'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#spaces');
 }
 
-// Handle house rule add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_rule'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $maxOrder = $db->fetch(
@@ -625,7 +590,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_rule'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#rules');
 }
 
-// Handle house rule edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_rule'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $ruleId = (int)$_POST['rule_id'];
@@ -660,7 +624,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_rule'])) {
     redirect('/admin/alojamento/?casa=' . $selectedAccommodationNumber . '#rules');
 }
 
-// Handle house rule delete
 if (isset($_GET['delete_rule']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $ruleId = (int)$_GET['delete_rule'];
@@ -1976,7 +1939,6 @@ include dirname(__DIR__) . '/includes/header.php';
     }
     document.getElementById('deleteAmenityCancelBtn')?.addEventListener('click', () => deleteAmenityModal.classList.add('hidden'));
     deleteAmenityModal?.addEventListener('click', e => { if (e.target === deleteAmenityModal) deleteAmenityModal.classList.add('hidden'); });
-
 
     // --- Bedroom Modal ---
     const bedroomModal = document.getElementById('bedroomModal');

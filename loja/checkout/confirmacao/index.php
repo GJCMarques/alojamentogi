@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Order Confirmation Page
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 
@@ -15,14 +12,12 @@ $lang = Language::getInstance();
 $base = basePath();
 $isEnglish = $lang->isEnglish();
 
-// Rate limit: prevent brute force enumeration of order IDs
 $rateLimiter = \Core\RateLimiter::getInstance();
 if (!$rateLimiter->check('confirmation_page', 15, 60)) {
     Session::flash('error', $isEnglish ? 'Too many requests. Please wait.' : 'Demasiados pedidos. Aguarde um momento.');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
-// Get order from session first (secure), then fallback to URL with session validation
 $pendingOrder = Session::get('pending_order') ?? Session::get('checkout_order');
 $orderId = 0;
 
@@ -30,18 +25,16 @@ if ($pendingOrder) {
     $orderId = (int)($pendingOrder['id'] ?? $pendingOrder['order_id'] ?? 0);
 }
 
-// If order ID from URL, verify it belongs to the current session
 if (!$orderId && (isset($_GET['order']) || isset($_GET['order_id']))) {
     $requestedId = (int)($_GET['order'] ?? $_GET['order_id'] ?? 0);
-    // Only allow if the session knows about this order
+
     if ($pendingOrder && (int)($pendingOrder['id'] ?? $pendingOrder['order_id'] ?? 0) === $requestedId) {
         $orderId = $requestedId;
     } else {
-        // Log suspicious access attempt
+
         logMessage("Confirmation page direct access attempt: order_id={$requestedId} from " . getClientIp(), 'warning');
         $rateLimiter->recordFailure('confirmation_brute_force');
 
-        // Check for repeated failures - progressive blocking
         if ($rateLimiter->getFailureCount('confirmation_brute_force', 300) > 10) {
             http_response_code(403);
             exit;
@@ -56,14 +49,12 @@ if (!$orderId) {
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
-// Get order
 $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
 if (!$order) {
     Session::flash('error', $isEnglish ? 'Order not found.' : 'Encomenda não encontrada.');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
-// Get order items
 $orderItems = $db->fetchAll(
     "SELECT oi.*, COALESCE(pt.name, oi.product_name) as display_name
      FROM order_items oi
@@ -72,10 +63,8 @@ $orderItems = $db->fetchAll(
     [$orderId]
 );
 
-// Get invoice if exists
 $invoice = $db->fetch("SELECT * FROM invoices WHERE order_id = ?", [$orderId]);
 
-// If payment is confirmed and no invoice yet, generate one
 if ($order['payment_status'] === 'paid' && !$invoice) {
     try {
         $invoiceSystem = Invoice::getInstance();
@@ -89,7 +78,6 @@ if ($order['payment_status'] === 'paid' && !$invoice) {
     }
 }
 
-// Clear pending order from session
 Session::delete('pending_order');
 Session::delete('checkout_order');
 

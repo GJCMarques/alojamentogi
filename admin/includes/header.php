@@ -1,11 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Header
- *
- * Variables:
- * - $pageTitle: Page title
- * - $currentAdmin: Current logged in admin (from auth-check.php)
- */
 
 $pageTitle = $pageTitle ?? 'Dashboard';
 $base = basePath();

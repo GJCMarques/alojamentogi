@@ -1,12 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Settings
- *
- * Groups: general, contact, social, shop, payment, email
- * Removed: booking (now managed in admin/alojamento)
- * Removed from shop: shop_enabled (replaced by shop_mode in admin/loja),
- *                     shop_min_order (not used)
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -17,7 +9,6 @@ use Core\CSRF;
 use Core\Auth;
 use Core\Encryption;
 
-// Only admins can access settings
 if (!Auth::canManageUsers()) {
     Session::flash('error', 'Sem permissões para aceder às configurações.');
     redirect('/admin/');
@@ -25,7 +16,6 @@ if (!Auth::canManageUsers()) {
 
 $db = Database::getInstance();
 
-// Settings groups
 $settingsGroups = [
     'general' => [
         'label' => 'Geral',
@@ -99,12 +89,10 @@ $settingsGroups = [
     ],
 ];
 
-// Get current group
 $currentGroup = isset($_GET['group']) && isset($settingsGroups[$_GET['group']])
     ? $_GET['group']
     : 'general';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $group = $settingsGroups[$currentGroup];
@@ -112,26 +100,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($group['settings'] as $setting) {
             $key = $setting['key'];
 
-            // Skip readonly fields
             if ($setting['type'] === 'readonly') continue;
 
             $value = '';
             if ($setting['type'] === 'boolean') {
                 $value = isset($_POST[$key]) ? '1' : '0';
             } elseif ($setting['type'] === 'password') {
-                // Only update password fields if a new value was provided
+
                 $value = $_POST[$key] ?? '';
                 if (empty($value)) continue;
             } else {
                 $value = sanitize($_POST[$key] ?? '');
             }
 
-            // Encrypt sensitive settings before storing
             if (Encryption::isSensitive($key) && !empty($value)) {
                 $value = Encryption::encrypt($value);
             }
 
-            // Check if setting exists
             $existing = $db->fetch("SELECT id FROM settings WHERE setting_key = ?", [$key]);
 
             if ($existing) {
@@ -154,14 +139,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get all settings
 $allSettings = [];
 $settingsRows = $db->fetchAll("SELECT setting_key, setting_value FROM settings");
 foreach ($settingsRows as $row) {
     $allSettings[$row['setting_key']] = $row['setting_value'];
 }
 
-// Generate callback URL for payment settings
 if ($currentGroup === 'payment') {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];

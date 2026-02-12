@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Shopping Cart Page (Portuguese)
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 
@@ -16,10 +13,8 @@ $cart = Cart::getInstance();
 $cartItems = $cart->getItems();
 $cartErrors = $cart->validate();
 
-// Remove invalid items messages (except empty cart)
 $cartErrors = array_filter($cartErrors, fn($e) => $e !== 'O carrinho está vazio.');
 
-// Get hero image from database (cart page hero, fallback to shop)
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'cart' AND is_active = 1");
 if (!$pageHero) {
     $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
@@ -29,7 +24,6 @@ $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Page configuration
 $pageTitle = 'Carrinho de Compras';
 $pageDescription = 'Reveja os produtos no seu carrinho de compras da Casa do Gi.';
 $headerLayer = 2;

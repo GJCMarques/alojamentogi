@@ -1,9 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Invoice System
- * Handles invoice generation, verification, and management
- * with cryptographically secure UUID and 9-digit barcode system.
- */
 
 namespace Core;
 
@@ -25,9 +20,6 @@ class Invoice
         return self::$instance;
     }
 
-    /**
-     * Generate a new invoice for an order
-     */
     public function generate(int $orderId): ?array
     {
         $order = $this->db->fetch(
@@ -40,7 +32,6 @@ class Invoice
             return null;
         }
 
-        // Check if invoice already exists for this order
         $existing = $this->db->fetch(
             "SELECT * FROM invoices WHERE order_id = ?",
             [$orderId]
@@ -50,13 +41,11 @@ class Invoice
             return $existing;
         }
 
-        // Get order items
         $items = $this->db->fetchAll(
             "SELECT * FROM order_items WHERE order_id = ?",
             [$orderId]
         );
 
-        // Generate unique identifiers
         $uuid = $this->generateUUID();
         $barcode = $this->generateBarcode();
 
@@ -65,12 +54,10 @@ class Invoice
             return null;
         }
 
-        // Get current batch
         $batch = $this->db->fetch(
             "SELECT batch_number FROM barcode_batches WHERE is_active = 1 ORDER BY id DESC LIMIT 1"
         );
 
-        // Build items JSON snapshot
         $itemsSnapshot = array_map(function ($item) {
             return [
                 'product_id' => $item['product_id'],
@@ -84,7 +71,6 @@ class Invoice
 
         $itemsJson = json_encode($itemsSnapshot, JSON_UNESCAPED_UNICODE);
 
-        // Calculate integrity hash (tamper detection)
         $integrityHash = $this->calculateIntegrityHash(
             $uuid,
             $barcode,
@@ -93,7 +79,6 @@ class Invoice
             $itemsJson
         );
 
-        // Insert invoice
         try {
             $invoiceId = $this->db->insert('invoices', [
                 'order_id' => $orderId,
@@ -117,10 +102,8 @@ class Invoice
                 'payment_status' => $order['payment_status'] ?? 'pending',
             ]);
 
-            // Update order with invoice_id
             $this->db->update('orders', ['invoice_id' => $invoiceId], 'id = ?', [$orderId]);
 
-            // Increment batch counter
             $this->db->query(
                 "UPDATE barcode_batches SET codes_used = codes_used + 1 WHERE is_active = 1 ORDER BY id DESC LIMIT 1"
             );
@@ -133,9 +116,6 @@ class Invoice
         }
     }
 
-    /**
-     * Find invoice by 9-digit barcode
-     */
     public function findByBarcode(string $barcode): ?array
     {
         $barcode = preg_replace('/[^0-9]/', '', $barcode);
@@ -153,9 +133,6 @@ class Invoice
         );
     }
 
-    /**
-     * Find invoice by UUID
-     */
     public function findByUUID(string $uuid): ?array
     {
         $uuid = trim($uuid);
@@ -173,19 +150,14 @@ class Invoice
         );
     }
 
-    /**
-     * Find invoice by barcode OR UUID (auto-detect)
-     */
     public function findByCode(string $code): ?array
     {
         $code = trim($code);
 
-        // If it looks like a UUID
         if (strlen($code) === 36 && strpos($code, '-') !== false) {
             return $this->findByUUID($code);
         }
 
-        // If it's numeric (barcode) - strip any formatting
         $numericCode = preg_replace('/[^0-9]/', '', $code);
         if (strlen($numericCode) === 9) {
             return $this->findByBarcode($numericCode);
@@ -194,9 +166,6 @@ class Invoice
         return null;
     }
 
-    /**
-     * Verify invoice integrity (check if tampered)
-     */
     public function verify(string $code): array
     {
         $invoice = $this->findByCode($code);
@@ -209,7 +178,6 @@ class Invoice
             ];
         }
 
-        // Recalculate integrity hash
         $expectedHash = $this->calculateIntegrityHash(
             $invoice['invoice_uuid'],
             $invoice['barcode'],
@@ -229,9 +197,6 @@ class Invoice
         ];
     }
 
-    /**
-     * Mark invoice as paid
-     */
     public function markAsPaid(int $invoiceId): bool
     {
         return $this->db->update(
@@ -242,9 +207,6 @@ class Invoice
         ) > 0;
     }
 
-    /**
-     * Mark invoice as emailed
-     */
     public function markAsEmailed(int $invoiceId): bool
     {
         return $this->db->update(
@@ -255,9 +217,6 @@ class Invoice
         ) > 0;
     }
 
-    /**
-     * Send invoice email to customer
-     */
     public function sendEmail(int $invoiceId): bool
     {
         $invoice = $this->db->fetch("SELECT * FROM invoices WHERE id = ?", [$invoiceId]);
@@ -270,7 +229,6 @@ class Invoice
 
         $mailer = new Mailer();
 
-        // Render invoice email template
         $templateFile = TEMPLATES_PATH . '/emails/invoice.php';
         if (file_exists($templateFile)) {
             ob_start();
@@ -300,9 +258,6 @@ class Invoice
         return $sent;
     }
 
-    /**
-     * Get all invoices with optional filters
-     */
     public function getAll(array $filters = [], int $limit = 20, int $offset = 0): array
     {
         $where = "WHERE 1=1";
@@ -340,9 +295,6 @@ class Invoice
         );
     }
 
-    /**
-     * Count invoices with optional filters
-     */
     public function count(array $filters = []): int
     {
         $where = "WHERE 1=1";
@@ -371,47 +323,37 @@ class Invoice
     // PRIVATE METHODS
     // ============================================================
 
-    /**
-     * Generate a cryptographically secure UUID v4
-     */
     private function generateUUID(): string
     {
         $data = random_bytes(16);
 
-        // Set version to 4 (0100)
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
-        // Set variant to RFC 4122 (10xx)
+
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
 
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    /**
-     * Generate a unique 9-digit barcode
-     * Uses cryptographically secure random generation with collision detection
-     */
     private function generateBarcode(): ?string
     {
-        // Check if current batch has capacity
+
         $batch = $this->db->fetch(
             "SELECT * FROM barcode_batches WHERE is_active = 1 ORDER BY id DESC LIMIT 1"
         );
 
         if (!$batch) {
-            // Create first batch
+
             $this->db->insert('barcode_batches', [
                 'batch_number' => 1,
                 'codes_used' => 0,
                 'is_active' => 1,
             ]);
         } elseif ($batch['codes_used'] >= $batch['max_codes']) {
-            // Current batch exhausted - create new batch
+
             $newBatchNumber = $batch['batch_number'] + 1;
 
-            // Deactivate current batch
             $this->db->update('barcode_batches', ['is_active' => 0], 'id = ?', [$batch['id']]);
 
-            // Create new batch
             $this->db->insert('barcode_batches', [
                 'batch_number' => $newBatchNumber,
                 'codes_used' => 0,
@@ -421,20 +363,17 @@ class Invoice
             logMessage("Barcode batch #{$newBatchNumber} created (previous batch exhausted)", 'info');
         }
 
-        // Generate unique barcode with retry logic
         $maxAttempts = 100;
         for ($i = 0; $i < $maxAttempts; $i++) {
-            // Generate 9-digit code using secure random
+
             $randomBytes = random_bytes(5);
             $number = abs(unpack('N', "\0" . substr($randomBytes, 0, 3))[1]) % 900000000 + 100000000;
             $barcode = str_pad((string) $number, 9, '0', STR_PAD_LEFT);
 
-            // Ensure first digit is not 0
             if ($barcode[0] === '0') {
                 $barcode[0] = (string) (random_int(1, 9));
             }
 
-            // Check uniqueness
             $exists = $this->db->exists('invoices', 'barcode = ?', [$barcode]);
 
             if (!$exists) {
@@ -446,9 +385,6 @@ class Invoice
         return null;
     }
 
-    /**
-     * Calculate SHA-256 integrity hash for tamper detection
-     */
     private function calculateIntegrityHash(
         string $uuid,
         string $barcode,
@@ -456,7 +392,7 @@ class Invoice
         float $total,
         string $itemsJson
     ): string {
-        // Use app key or a fixed secret for HMAC
+
         $config = require CONFIG_PATH . '/config.php';
         $secret = $config['security']['invoice_secret'] ?? $config['payment']['ifthenpay']['anti_phishing_key'] ?? 'acasadogi_invoice_secret_2024';
 
@@ -471,9 +407,6 @@ class Invoice
         return hash_hmac('sha256', $payload, $secret);
     }
 
-    /**
-     * Default invoice email body when template doesn't exist
-     */
     private function getDefaultInvoiceEmailBody(array $invoice, array $items): string
     {
         $siteName = setting('site_name', 'A Casa do Gi');

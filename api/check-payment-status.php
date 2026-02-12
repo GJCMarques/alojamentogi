@@ -1,10 +1,4 @@
 <?php
-/**
- * Check Payment Status API
- * Used for AJAX polling to check if a payment has been confirmed
- *
- * Security: Session validation, rate limiting via simple check
- */
 
 require_once __DIR__ . '/../includes/init.php';
 
@@ -14,7 +8,6 @@ use Core\RateLimiter;
 header('Content-Type: application/json');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 
-// Rate limit: max 20 status checks per minute per IP (polling every 5s = 12/min)
 $rateLimiter = RateLimiter::getInstance();
 if (!$rateLimiter->check('check_payment_status', 20, 60)) {
     http_response_code(429);
@@ -22,7 +15,6 @@ if (!$rateLimiter->check('check_payment_status', 20, 60)) {
     exit;
 }
 
-// Only accept GET requests
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
@@ -37,7 +29,6 @@ if ($orderId <= 0) {
     exit;
 }
 
-// Verify the order belongs to the current session (prevent enumeration)
 $pendingOrder = $_SESSION['pending_order'] ?? $_SESSION['checkout_order'] ?? null;
 if (!$pendingOrder || ((int)($pendingOrder['id'] ?? 0) !== $orderId && (int)($pendingOrder['order_id'] ?? 0) !== $orderId)) {
     http_response_code(403);

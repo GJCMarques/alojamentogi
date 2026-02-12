@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Shop Management
- * Manage shop mode and view shop statistics
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -13,12 +9,11 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Handle mode change
 if (isset($_POST['update_mode'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $mode = sanitize($_POST['shop_mode']);
         if (in_array($mode, ['active', 'manual', 'closed'])) {
-            // Update or insert the setting
+
             $existing = $db->fetch("SELECT id FROM settings WHERE setting_key = 'shop_mode'");
 
             if ($existing) {
@@ -44,10 +39,8 @@ if (isset($_POST['update_mode'])) {
     redirect(basePath() . '/admin/loja/');
 }
 
-// Get current mode
 $shopMode = setting('shop_mode', 'active');
 
-// Get statistics
 $stats = [
     'total_orders' => 0,
     'pending_orders' => 0,
@@ -55,23 +48,18 @@ $stats = [
     'pending_manual' => 0
 ];
 
-// Total orders count
 $result = $db->fetch("SELECT COUNT(*) as c FROM orders");
 $stats['total_orders'] = $result ? (int)$result['c'] : 0;
 
-// Pending orders count
 $result = $db->fetch("SELECT COUNT(*) as c FROM orders WHERE status = 'pending'");
 $stats['pending_orders'] = $result ? (int)$result['c'] : 0;
 
-// Total revenue from paid orders
 $result = $db->fetch("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE payment_status = 'paid'");
 $stats['total_revenue'] = $result ? (float)$result['total'] : 0;
 
-// Pending manual orders
 $result = $db->fetch("SELECT COUNT(*) as c FROM manual_orders WHERE status = 'new'");
 $stats['pending_manual'] = $result ? (int)$result['c'] : 0;
 
-// Get recent orders (last 5)
 $recentOrders = $db->fetchAll(
     "SELECT id, order_number, customer_name, customer_email, total, status, payment_status, created_at
      FROM orders
@@ -79,7 +67,6 @@ $recentOrders = $db->fetchAll(
      LIMIT 5"
 );
 
-// Status labels
 $statusLabels = [
     'pending' => ['label' => 'Pendente', 'class' => 'bg-yellow-100 text-yellow-800'],
     'confirmed' => ['label' => 'Confirmada', 'class' => 'bg-blue-100 text-blue-800'],

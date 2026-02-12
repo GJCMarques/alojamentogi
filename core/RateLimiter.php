@@ -1,10 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Rate Limiter
- *
- * File-based rate limiting for API endpoints and form submissions.
- * Tracks requests per IP + action and enforces configurable limits.
- */
 
 namespace Core;
 
@@ -30,22 +24,12 @@ class RateLimiter
         return self::$instance;
     }
 
-    /**
-     * Check if request is allowed under rate limit
-     *
-     * @param string $action Action identifier (e.g., 'checkout', 'payment-callback')
-     * @param int $maxAttempts Maximum attempts allowed in the window
-     * @param int $windowSeconds Time window in seconds
-     * @param string|null $identifier Custom identifier (defaults to client IP)
-     * @return bool True if allowed, false if rate limited
-     */
     public function check(string $action, int $maxAttempts = 10, int $windowSeconds = 60, ?string $identifier = null): bool
     {
         $identifier = $identifier ?? $this->getClientIdentifier();
         $key = $this->buildKey($action, $identifier);
         $data = $this->loadData($key);
 
-        // Clean old entries outside the window
         $cutoff = time() - $windowSeconds;
         $data['attempts'] = array_filter($data['attempts'], fn($ts) => $ts > $cutoff);
 
@@ -59,9 +43,6 @@ class RateLimiter
         return true;
     }
 
-    /**
-     * Record a failed attempt (for progressive penalties)
-     */
     public function recordFailure(string $action, ?string $identifier = null): void
     {
         $identifier = $identifier ?? $this->getClientIdentifier();
@@ -71,9 +52,6 @@ class RateLimiter
         $this->saveData($key, $data);
     }
 
-    /**
-     * Get number of recent failures
-     */
     public function getFailureCount(string $action, int $windowSeconds = 3600, ?string $identifier = null): int
     {
         $identifier = $identifier ?? $this->getClientIdentifier();
@@ -84,9 +62,6 @@ class RateLimiter
         return count(array_filter($data['attempts'], fn($ts) => $ts > $cutoff));
     }
 
-    /**
-     * Enforce rate limit - returns true if allowed, sends 429 and exits if not
-     */
     public function enforce(string $action, int $maxAttempts = 10, int $windowSeconds = 60): bool
     {
         if (!$this->check($action, $maxAttempts, $windowSeconds)) {
@@ -107,9 +82,6 @@ class RateLimiter
         return true;
     }
 
-    /**
-     * Clean up old rate limit files (run periodically)
-     */
     public function cleanup(int $maxAgeSeconds = 7200): void
     {
         $files = glob($this->storageDir . '/*.json');

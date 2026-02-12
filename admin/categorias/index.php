@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Unified Categories Manager
- * Manage categories for both Activities and Shop Products
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -13,16 +9,13 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get current type filter (activity or product)
 $currentType = $_GET['type'] ?? 'activity';
 if (!in_array($currentType, ['activity', 'product'])) {
     $currentType = 'activity';
 }
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Available icons for activity categories
 $availableIcons = [
     'tree' => 'Árvore (Natureza)',
     'building' => 'Edifício',
@@ -46,16 +39,14 @@ $availableIcons = [
     'heart' => 'Coração'
 ];
 
-// Handle delete
 if (isset($_GET['delete']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $categoryId = (int)$_GET['delete'];
 
-        // Check category type
         $category = $db->fetch("SELECT type FROM categories WHERE id = ?", [$categoryId]);
 
         if ($category) {
-            // Check if category has items (activities or products)
+
             if ($category['type'] === 'activity') {
                 $hasItems = $db->fetch("SELECT COUNT(*) as count FROM activities WHERE category_id = ?", [$categoryId])['count'] > 0;
                 $itemType = 'atividades';
@@ -76,12 +67,10 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
     redirect('/admin/categorias/?type=' . $currentType);
 }
 
-// Handle form submission
 $errors = [];
 $editCategory = null;
 $editTranslations = [];
 
-// Check if editing
 if (isset($_GET['edit'])) {
     $editId = (int)$_GET['edit'];
     $editCategory = $db->fetch("SELECT * FROM categories WHERE id = ?", [$editId]);
@@ -106,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $isActive = isset($_POST['is_active']) ? 1 : 0;
         $translations = $_POST['translations'] ?? [];
 
-        // Validate
         $hasName = false;
         foreach ($translations as $trans) {
             if (!empty($trans['name'])) {
@@ -119,13 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'É necessário definir um nome para pelo menos uma língua.';
         }
 
-        // Auto-generate slug if empty
         if (empty($slug)) {
             $name = $translations[1]['name'] ?? $translations[2]['name'] ?? 'categoria';
             $slug = createSlug($name);
         }
 
-        // Check slug uniqueness (within same type)
         $existingSlug = $db->fetch(
             "SELECT id FROM categories WHERE slug = ? AND type = ? AND id != ?",
             [$slug, $type, $categoryId]
@@ -139,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             try {
                 if ($categoryId) {
-                    // Update
+
                     $updateData = [
                         'slug' => $slug,
                         'sort_order' => $sortOrder,
@@ -152,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $db->update('categories', $updateData, 'id = ?', [$categoryId]);
 
-                    // Update translations
                     foreach ($translations as $langId => $trans) {
                         $existing = $db->fetch(
                             "SELECT id FROM category_translations WHERE category_id = ? AND language_id = ?",
@@ -176,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     Session::flash('success', 'Categoria atualizada com sucesso.');
                 } else {
-                    // Create
+
                     $insertData = [
                         'type' => $type,
                         'slug' => $slug,
@@ -190,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $categoryId = $db->insert('categories', $insertData);
 
-                    // Insert translations
                     foreach ($translations as $langId => $trans) {
                         if (!empty($trans['name'])) {
                             $db->insert('category_translations', [
@@ -216,7 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get all categories for current type
 $categories = $db->fetchAll(
     "SELECT c.*, ct.name,
             (SELECT COUNT(*) FROM " . ($currentType === 'activity' ? 'activities' : 'products') . " WHERE category_id = c.id) as item_count

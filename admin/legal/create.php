@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Create Legal Section
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -13,7 +10,6 @@ use Core\CSRF;
 $db = Database::getInstance();
 $base = basePath();
 
-// GET page type
 $pageType = $_GET['page'] ?? 'terms';
 $pageLabels = [
     'terms' => 'Termos e Condições',
@@ -24,23 +20,19 @@ if (!array_key_exists($pageType, $pageLabels)) {
     redirect('/admin/legal/?page=terms');
 }
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $sortOrder = (int)($_POST['sort_order'] ?? 0);
         $isActive = isset($_POST['is_active']) ? 1 : 0;
 
-        // Insert section
         $sectionId = $db->insert('legal_sections', [
             'page' => $pageType,
             'sort_order' => $sortOrder,
             'is_active' => $isActive
         ]);
 
-        // Insert translations
         foreach ($languages as $lang) {
             $langId = $lang['id'];
             $title = $_POST['title_' . $langId] ?? '';
@@ -87,14 +79,14 @@ include dirname(__DIR__) . '/includes/header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
                 <label for="sort_order" class="block text-sm font-medium text-gray-700 mb-1">Ordem</label>
-                <input type="number" 
-                       name="sort_order" 
-                       id="sort_order" 
+                <input type="number"
+                       name="sort_order"
+                       id="sort_order"
                        value="<?= isset($_POST['sort_order']) ? e($_POST['sort_order']) : '0' ?>"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                 <p class="text-xs text-gray-500 mt-1">Número mais baixo aparece primeiro (ex: 1, 2, 3)</p>
             </div>
-            
+
             <div class="flex items-center mt-6">
                 <label class="flex items-center cursor-pointer">
                     <input type="checkbox" name="is_active" value="1" <?= isset($_POST['is_active']) || !isset($_POST['csrf_token']) ? 'checked' : '' ?> class="sr-only peer">
@@ -122,8 +114,8 @@ include dirname(__DIR__) . '/includes/header.php';
             <div class="lang-content p-4 <?= $i > 0 ? 'hidden' : '' ?>" data-lang="<?= $lang['id'] ?>">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
-                    <input type="text" 
-                           name="title_<?= $lang['id'] ?>" 
+                    <input type="text"
+                           name="title_<?= $lang['id'] ?>"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"
                            placeholder="Ex: 1. Introdução"
                            required>
@@ -131,7 +123,7 @@ include dirname(__DIR__) . '/includes/header.php';
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Conteúdo</label>
-                    <textarea name="content_<?= $lang['id'] ?>" 
+                    <textarea name="content_<?= $lang['id'] ?>"
                               rows="6"
                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 font-mono text-sm"></textarea>
                     <p class="text-xs text-gray-500 mt-1">Suporta HTML básico (&lt;p&gt;, &lt;ul&gt;, etc)</p>

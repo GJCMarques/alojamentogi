@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Activities / Tourist Guide Page
- * Complete system with Bento Grid, Slug pages, and External Links
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 
@@ -16,20 +12,16 @@ $db = Database::getInstance();
 $base = basePath();
 $currentLangId = $lang->getCurrentLangId();
 
-// Check if viewing a specific activity (slug system)
 $slug = $_GET['slug'] ?? null;
 $viewingActivity = !empty($slug);
 
-// Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'activities' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
 $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.jpg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Build hero URL (file_path from media already has leading slash)
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Get all categories for filter from database
 $categoriesFromDb = $db->fetchAll(
     "SELECT c.id, c.slug, c.icon, ct.name
      FROM categories c
@@ -39,7 +31,6 @@ $categoriesFromDb = $db->fetchAll(
     [$currentLangId]
 );
 
-// Build categories array with 'all' option
 $categories = [
     'all' => ['label' => $lang->getCurrentLang() === 'pt' ? 'Todas' : 'All', 'icon' => 'grid', 'slug' => 'all']
 ];
@@ -52,7 +43,6 @@ foreach ($categoriesFromDb as $cat) {
     ];
 }
 
-// If viewing specific activity
 if ($viewingActivity) {
     $activity = $db->fetch(
         "SELECT a.*, at.title, at.short_description, at.full_description, at.tips, at.address_description,
@@ -66,21 +56,18 @@ if ($viewingActivity) {
     );
 
     if (!$activity) {
-        // Activity not found, redirect to main page
+
         header('Location: ' . $base . '/en/activities/');
         exit;
     }
 
-    // Increment views
     $db->query("UPDATE activities SET views_count = views_count + 1 WHERE id = ?", [$activity['id']]);
 
-    // Get activity images from media table
     $activityImages = $db->fetchAll(
         "SELECT * FROM media WHERE entity_type = 'activity' AND entity_id = ? ORDER BY is_cover DESC, sort_order",
         [$activity['id']]
     );
 
-    // Get cover image from media
     $coverImage = null;
     foreach ($activityImages as $img) {
         if ($img['is_cover']) {
@@ -92,7 +79,6 @@ if ($viewingActivity) {
         $coverImage = $activityImages[0];
     }
 
-    // Get related activities (same category, excluding current)
     $relatedActivities = $db->fetchAll(
         "SELECT a.*, at.title, at.short_description,
                 c.slug as category_slug, ct.name as category_name,
@@ -107,7 +93,6 @@ if ($viewingActivity) {
         [$currentLangId, $currentLangId, $activity['id'], $activity['category_id']]
     );
 
-    // If not enough from same category, fill with other activities
     if (count($relatedActivities) < 4) {
         $excludeIds = array_merge([$activity['id']], array_column($relatedActivities, 'id'));
         $placeholders = implode(',', array_fill(0, count($excludeIds), '?'));
@@ -133,13 +118,12 @@ if ($viewingActivity) {
     $headerLayer = 2;
 
 } else {
-    // Main activities page
+
     $pageTitle = $lang->getCurrentLang() === 'pt' ? 'O Que Fazer em Mogadouro' : 'What to Do in Mogadouro';
     $pageDescription = $lang->getCurrentLang() === 'pt'
         ? 'Descubra as melhores atividades e atrações turísticas em Mogadouro e Trás-os-Montes. Natureza, gastronomia, história e cultura.'
         : 'Discover the best activities and tourist attractions in Mogadouro and Trás-os-Montes. Nature, gastronomy, history and culture.';
 
-    // Get all active activities
     $activities = $db->fetchAll(
         "SELECT a.*, at.title, at.short_description,
                 c.slug as category_slug, ct.name as category_name,
@@ -153,7 +137,6 @@ if ($viewingActivity) {
         [$currentLangId, $currentLangId]
     );
 
-    // Get external links
     $externalLinks = $db->fetchAll(
         "SELECT el.*, elt.title, elt.description
          FROM external_links el
@@ -523,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="text-white/80 text-sm font-medium">
             <span id="activity-lightbox-counter">1</span> / <span id="activity-lightbox-total"><?= count($activityImages) ?></span>
         </div>
-        
+
         <button onclick="closeActivityLightbox()" class="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
@@ -612,13 +595,13 @@ function closeActivityLightbox() {
 function updateActivityLightbox() {
     const img = document.getElementById('activity-lightbox-img');
     const loader = document.getElementById('activity-lightbox-loader');
-    
+
     loader.classList.remove('hidden');
     img.style.opacity = '0';
 
     const currentImg = activityImages[currentActivityImage];
     const newImg = new Image();
-    
+
     newImg.onload = function() {
         img.src = currentImg.url;
         loader.classList.add('hidden');
@@ -687,7 +670,6 @@ if (actLightboxModal) {
 }
 </script>
 <?php endif; ?>
-
 
 <style>
 /* Remove all spacing before footer for Single Activity Page */
@@ -779,18 +761,16 @@ footer {
             <?php
             $featuredCount = 0;
             foreach ($activities as $idx => $act):
-                // First 2 featured items get larger cards
+
                 $isBig = $act['is_featured'] && $featuredCount < 2;
                 if ($act['is_featured']) $featuredCount++;
 
-                // Get cover image from media
                 $actImage = $act['cover_img'] ?? null;
                 $imageUrl = null;
                 if ($actImage) {
                     $imageUrl = $base . $actImage;
                 }
 
-                // Category colors based on slug
                 $categorySlug = $act['category_slug'] ?? '';
                 $categoryColors = [
                     'nature' => 'from-green-700/80 to-primary/80',
@@ -806,7 +786,7 @@ footer {
                     'leisure' => 'from-sky-700/80 to-primary/80',
                 ];
                 $gradientClass = $categoryColors[$categorySlug] ?? 'from-secondary/80 to-primary/80';
-                $animDelay = min($idx * 50, 300); // Cap delay at 300ms
+                $animDelay = min($idx * 50, 300);
             ?>
             <article class="activity-card group <?= $isBig ? 'md:col-span-2 md:row-span-2' : '' ?> bg-white rounded-xl overflow-hidden border border-cream-200 hover:border-secondary/30 shadow-sm hover:shadow-md transition-all duration-300 animate-on-scroll"
                      data-animation="fade-up"
@@ -1102,7 +1082,6 @@ document.addEventListener('DOMContentLoaded', function() {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
 
 /* Remove all spacing before footer */
 footer {

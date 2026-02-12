@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Terms and Conditions
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
@@ -12,19 +9,16 @@ $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'terms_conditions' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.jpg'; // Fallback
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.jpg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Build hero URL
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Get legal sections
 $sections = $db->fetchAll(
-    "SELECT s.*, st.title, st.content 
-     FROM legal_sections s 
+    "SELECT s.*, st.title, st.content
+     FROM legal_sections s
      LEFT JOIN legal_section_translations st ON s.id = st.section_id AND st.language_id = ?
      WHERE s.page = 'terms' AND s.is_active = 1
      ORDER BY s.sort_order ASC",

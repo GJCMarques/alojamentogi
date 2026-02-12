@@ -1,18 +1,12 @@
 <?php
-/**
- * A Casa do Gi - Cart API Endpoint
- * Handles add, update, remove, and get cart operations
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
 use Core\Cart;
 use Core\CSRF;
 
-// Set JSON response header
 header('Content-Type: application/json; charset=utf-8');
 
-// Rate limit: max 60 cart operations per minute per IP
 $rateLimiter = \Core\RateLimiter::getInstance();
 if (!$rateLimiter->check('cart_api', 60, 60)) {
     http_response_code(429);
@@ -20,14 +14,12 @@ if (!$rateLimiter->check('cart_api', 60, 60)) {
     exit;
 }
 
-// Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
     exit;
 }
 
-// Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!$input) {
@@ -36,7 +28,6 @@ if (!$input) {
     exit;
 }
 
-// Verify CSRF token
 $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? $input['csrf_token'] ?? null;
 
 if (!$csrfToken || !CSRF::validate($csrfToken)) {

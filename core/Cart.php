@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Shopping Cart Class
- * Session-based cart for anonymous users
- */
 
 namespace Core;
 
@@ -21,9 +17,6 @@ class Cart
         $this->load();
     }
 
-    /**
-     * Get singleton instance
-     */
     public static function getInstance(): self
     {
         if (self::$instance === null) {
@@ -32,25 +25,16 @@ class Cart
         return self::$instance;
     }
 
-    /**
-     * Load cart from session
-     */
     private function load(): void
     {
         $this->items = $_SESSION[self::SESSION_KEY] ?? [];
     }
 
-    /**
-     * Save cart to session
-     */
     private function save(): void
     {
         $_SESSION[self::SESSION_KEY] = $this->items;
     }
 
-    /**
-     * Add product to cart
-     */
     public function add(int $productId, int $quantity = 1): bool
     {
         $product = Product::findWithTranslation($productId);
@@ -59,16 +43,13 @@ class Cart
             return false;
         }
 
-        // Check stock
         if ($product->track_inventory && $product->stock_quantity < $quantity) {
             return false;
         }
 
-        // Add or update quantity
         if (isset($this->items[$productId])) {
             $newQty = $this->items[$productId]['quantity'] + $quantity;
 
-            // Verify stock for new quantity
             if ($product->track_inventory && $product->stock_quantity < $newQty) {
                 $newQty = $product->stock_quantity;
             }
@@ -86,9 +67,6 @@ class Cart
         return true;
     }
 
-    /**
-     * Update product quantity
-     */
     public function update(int $productId, int $quantity): bool
     {
         if ($quantity <= 0) {
@@ -106,7 +84,6 @@ class Cart
             return false;
         }
 
-        // Check stock
         if ($product->track_inventory && $product->stock_quantity < $quantity) {
             $quantity = $product->stock_quantity;
         }
@@ -117,9 +94,6 @@ class Cart
         return true;
     }
 
-    /**
-     * Remove product from cart
-     */
     public function remove(int $productId): bool
     {
         if (isset($this->items[$productId])) {
@@ -130,18 +104,12 @@ class Cart
         return false;
     }
 
-    /**
-     * Clear entire cart
-     */
     public function clear(): void
     {
         $this->items = [];
         $this->save();
     }
 
-    /**
-     * Get all cart items with product details
-     */
     public function getItems(): array
     {
         $items = [];
@@ -150,12 +118,11 @@ class Cart
             $product = Product::findWithTranslation($productId);
 
             if (!$product || !$product->is_active) {
-                // Remove invalid products
+
                 unset($this->items[$productId]);
                 continue;
             }
 
-            // Adjust quantity if stock changed
             if ($product->track_inventory && $product->stock_quantity < $item['quantity']) {
                 $item['quantity'] = $product->stock_quantity;
                 $this->items[$productId]['quantity'] = $item['quantity'];
@@ -178,25 +145,16 @@ class Cart
         return $items;
     }
 
-    /**
-     * Get raw cart items (without product details)
-     */
     public function getRawItems(): array
     {
         return $this->items;
     }
 
-    /**
-     * Get item count
-     */
     public function getItemCount(): int
     {
         return count($this->items);
     }
 
-    /**
-     * Get total quantity of all items
-     */
     public function getTotalQuantity(): int
     {
         $total = 0;
@@ -206,9 +164,6 @@ class Cart
         return $total;
     }
 
-    /**
-     * Get cart subtotal
-     */
     public function getSubtotal(): float
     {
         $subtotal = 0;
@@ -220,12 +175,9 @@ class Cart
         return $subtotal;
     }
 
-    /**
-     * Get shipping cost
-     */
     public function getShippingCost(): float
     {
-        // Free shipping over threshold
+
         $freeShippingThreshold = (float)setting('free_shipping_threshold', 50);
         $shippingCost = (float)setting('shipping_cost', 5);
 
@@ -236,41 +188,26 @@ class Cart
         return $shippingCost;
     }
 
-    /**
-     * Get cart total
-     */
     public function getTotal(): float
     {
         return $this->getSubtotal() + $this->getShippingCost();
     }
 
-    /**
-     * Check if cart is empty
-     */
     public function isEmpty(): bool
     {
         return empty($this->items);
     }
 
-    /**
-     * Check if product is in cart
-     */
     public function hasProduct(int $productId): bool
     {
         return isset($this->items[$productId]);
     }
 
-    /**
-     * Get quantity for a specific product
-     */
     public function getQuantity(int $productId): int
     {
         return $this->items[$productId]['quantity'] ?? 0;
     }
 
-    /**
-     * Get total weight of cart (for shipping calculations)
-     */
     public function getTotalWeight(): float
     {
         $weight = 0;
@@ -284,10 +221,6 @@ class Cart
         return $weight;
     }
 
-    /**
-     * Validate cart before checkout
-     * Returns array of validation errors, empty if valid
-     */
     public function validate(): array
     {
         $errors = [];
@@ -320,9 +253,6 @@ class Cart
         return $errors;
     }
 
-    /**
-     * Convert cart to array for JSON
-     */
     public function toArray(): array
     {
         $items = [];

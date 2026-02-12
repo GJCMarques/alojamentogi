@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Order Details
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -19,7 +16,6 @@ if (!$orderId) {
     redirect($base . '/admin/encomendas/');
 }
 
-// Get order
 $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
 
 if (!$order) {
@@ -27,7 +23,6 @@ if (!$order) {
     redirect($base . '/admin/encomendas/');
 }
 
-// Handle status change
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $newStatus = sanitize($_POST['status']);
@@ -37,12 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         if (in_array($newStatus, $validStatuses)) {
             $updateData = ['status' => $newStatus];
 
-            // Add tracking code if provided
             if (!empty($_POST['tracking_code'])) {
                 $updateData['tracking_code'] = sanitize($_POST['tracking_code']);
             }
 
-            // Set timestamps
             if ($newStatus === 'shipped') {
                 $updateData['shipped_at'] = date('Y-m-d H:i:s');
             } elseif ($newStatus === 'delivered') {
@@ -51,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
             $db->update('orders', $updateData, 'id = ?', [$orderId]);
 
-            // Add to history
             $db->insert('order_status_history', [
                 'order_id' => $orderId,
                 'status' => $newStatus,
@@ -59,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 'changed_by' => $_SESSION['admin_id'] ?? null
             ]);
 
-            // Send email when status changes to shipped
             if ($newStatus === 'shipped') {
                 try {
                     $orderData = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
@@ -85,10 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     }
 }
 
-// Get order items
 $items = $db->fetchAll("SELECT * FROM order_items WHERE order_id = ?", [$orderId]);
 
-// Get status history
 $history = $db->fetchAll(
     "SELECT h.*, a.full_name as admin_name
      FROM order_status_history h
@@ -98,7 +87,6 @@ $history = $db->fetchAll(
     [$orderId]
 );
 
-// Status labels
 $statusLabels = [
     'pending' => ['label' => 'Pendente', 'class' => 'bg-yellow-100 text-yellow-800'],
     'confirmed' => ['label' => 'Confirmada', 'class' => 'bg-blue-100 text-blue-800'],

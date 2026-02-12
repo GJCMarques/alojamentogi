@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Content Images
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -12,10 +9,8 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get languages (needed for content_blocks content function)
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Image definitions
 $imageDefinitions = [
     'homepage' => [
         'label' => 'Página Inicial',
@@ -49,12 +44,10 @@ $imageDefinitions = [
     ]
 ];
 
-// Get current section
 $currentSection = isset($_GET['section']) && isset($imageDefinitions[$_GET['section']])
     ? $_GET['section']
     : 'homepage';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $section = $imageDefinitions[$currentSection];
@@ -62,38 +55,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorCount = 0;
 
         foreach ($section['images'] as $imageKey => $imageDef) {
-            // Check if file was uploaded
+
             if (isset($_FILES[$imageKey]) && $_FILES[$imageKey]['error'] === UPLOAD_ERR_OK) {
                 $file = $_FILES[$imageKey];
                 $allowed = ['jpg', 'jpeg', 'png', 'webp'];
                 $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
                 if (in_array($ext, $allowed)) {
-                    // Upload Directory
+
                     $uploadDir = ROOT_PATH . '/uploads/content';
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0755, true);
                     }
 
-                    // Generate Filename
                     $filename = $imageKey . '_' . time() . '.' . $ext;
                     $targetPath = $uploadDir . '/' . $filename;
                     $dbPath = '/uploads/content/' . $filename;
 
                     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-                        // 1. Insert into Media Table (Correct Schema)
+
                         $db->insert('media', [
                             'filename' => $filename,
                             'original_name' => $file['name'],
                             'file_path' => $dbPath,
-                            'file_type' => $file['type'], // Mime type e.g. image/jpeg
+                            'file_type' => $file['type'],
                             'file_size' => $file['size'],
                             'category' => 'content',
                             'uploaded_by' => Session::get('admin_id'),
                             'created_at' => date('Y-m-d H:i:s')
                         ]);
 
-                        // 2. Update Content Blocks for ALL languages
                         foreach ($languages as $lang) {
                             $existing = $db->fetch(
                                 "SELECT id FROM content_blocks WHERE block_key = ? AND language_id = ?",
@@ -118,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $errorCount++;
                     }
                 } else {
-                    $errorCount++; // Invalid format
+                    $errorCount++;
                 }
             }
         }
@@ -130,19 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             Session::flash('info', "Nenhuma alteração efetuada.");
         }
-        
+
         redirect('/admin/imagens/?section=' . $currentSection);
     }
 }
 
-// Get current images (using default language, assuming they are synced)
-$currentLangId = $languages[0]['id']; 
+$currentLangId = $languages[0]['id'];
 $imageKeys = array_keys($imageDefinitions[$currentSection]['images']);
 $placeholders = implode(',', array_fill(0, count($imageKeys), '?'));
 $currentImages = [];
 
 if (!empty($imageKeys)) {
-    // Just fetch one language version as they should be same
+
     $rows = $db->fetchAll(
         "SELECT block_key, content FROM content_blocks WHERE block_key IN ({$placeholders}) AND language_id = ?",
         array_merge($imageKeys, [$currentLangId])
@@ -203,9 +193,9 @@ include dirname(__DIR__) . '/includes/header.php';
                         <div class="grid md:grid-cols-2 gap-8">
                             <!-- Current / Preview Image -->
                             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden relative group h-64 flex items-center justify-center p-2" id="preview-container-<?= $imageKey ?>">
-                                <?php 
-                                $currentPath = $currentImages[$imageKey] ?? ''; 
-                                if ($currentPath): 
+                                <?php
+                                $currentPath = $currentImages[$imageKey] ?? '';
+                                if ($currentPath):
                                     $displayUrl = $currentPath[0] === '/' ? basePath() . $currentPath : asset($currentPath);
                                 ?>
                                     <img src="<?= e($displayUrl) ?>" alt="Preview" class="max-w-full max-h-full object-contain rounded">
@@ -228,13 +218,13 @@ include dirname(__DIR__) . '/includes/header.php';
                             <!-- Upload Zone -->
                             <div class="flex flex-col justify-center">
                                 <div class="w-full relative group">
-                                    <input type="file" 
-                                           name="<?= $imageKey ?>" 
+                                    <input type="file"
+                                           name="<?= $imageKey ?>"
                                            id="input-<?= $imageKey ?>"
                                            accept=".jpg,.jpeg,.png,.webp"
                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                            onchange="previewImage(this, '<?= $imageKey ?>')">
-                                    
+
                                     <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center group-hover:border-secondary-500 group-hover:bg-secondary-50 transition-all h-64 flex flex-col items-center justify-center">
                                         <div class="mb-4 p-3 bg-gray-100 rounded-full group-hover:bg-secondary-100 transition-colors">
                                             <svg class="w-8 h-8 text-gray-400 group-hover:text-secondary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,28 +261,28 @@ include dirname(__DIR__) . '/includes/header.php';
 <script>
 function previewImage(input, key) {
     const container = document.getElementById('preview-container-' + key);
-    
+
     if (input.files && input.files[0]) {
         const file = input.files[0];
         const reader = new FileReader();
-        
+
         // Update upload text if possible or just show preview
         // Note: The upload box is static text, but the preview box updates.
-        
+
         reader.onload = function(e) {
             // Clear existing content
             container.innerHTML = '';
-            
+
             // Image
             const img = document.createElement('img');
             img.src = e.target.result;
             img.className = 'max-w-full max-h-full object-contain rounded';
-            
+
             // Overlay with "New" badge
             const overlay = document.createElement('div');
             overlay.className = 'absolute top-2 right-2 bg-secondary-600 text-white text-xs font-bold px-2 py-1 rounded shadow animate-pulse';
             overlay.innerText = 'NOVA';
-            
+
             // Filename tag
             const nameTag = document.createElement('div');
             nameTag.className = 'absolute bottom-0 left-0 right-0 bg-secondary-900/80 px-3 py-1.5 text-center';
@@ -302,11 +292,10 @@ function previewImage(input, key) {
             container.appendChild(overlay);
             container.appendChild(nameTag);
         }
-        
+
         reader.readAsDataURL(file);
     }
 }
 </script>
-
 
 <?php include dirname(__DIR__) . '/includes/footer.php'; ?>

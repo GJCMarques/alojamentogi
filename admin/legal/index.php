@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Legal Sections
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -12,7 +9,6 @@ use Core\Session;
 $db = Database::getInstance();
 $base = basePath();
 
-// Get current page filter (terms or privacy)
 $currentLegalPage = $_GET['page'] ?? 'terms';
 $pageLabels = [
     'terms' => 'Termos e Condições',
@@ -23,7 +19,6 @@ if (!array_key_exists($currentLegalPage, $pageLabels)) {
     redirect('/admin/legal/?page=terms');
 }
 
-// Handle delete
 if (isset($_GET['delete']) && isset($_GET['token'])) {
     if (\Core\CSRF::validate($_GET['token'])) {
         $sectionId = (int)$_GET['delete'];
@@ -33,7 +28,6 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
     redirect('/admin/legal/?page=' . $currentLegalPage);
 }
 
-// Handle toggle active
 if (isset($_GET['toggle']) && isset($_GET['token'])) {
     if (\Core\CSRF::validate($_GET['token'])) {
         $sectionId = (int)$_GET['toggle'];
@@ -47,12 +41,11 @@ if (isset($_GET['toggle']) && isset($_GET['token'])) {
     redirect('/admin/legal/?page=' . $currentLegalPage);
 }
 
-// Get sections
 $sections = $db->fetchAll(
-    "SELECT s.*, st.title, st.content 
-     FROM legal_sections s 
+    "SELECT s.*, st.title, st.content
+     FROM legal_sections s
      LEFT JOIN legal_section_translations st ON s.id = st.section_id AND st.language_id = 1
-     WHERE s.page = ? 
+     WHERE s.page = ?
      ORDER BY s.sort_order ASC",
     [$currentLegalPage]
 );
@@ -80,9 +73,9 @@ include dirname(__DIR__) . '/includes/header.php';
     <nav class="-mb-px flex space-x-8">
         <?php foreach ($pageLabels as $key => $label): ?>
         <a href="?page=<?= $key ?>"
-           class="<?= $currentLegalPage === $key 
-               ? 'border-secondary-500 text-secondary-600' 
-               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?> 
+           class="<?= $currentLegalPage === $key
+               ? 'border-secondary-500 text-secondary-600'
+               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>
                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
             <?= $label ?>
         </a>

@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Payment Page (English)
- * Shows payment instructions after checkout
- */
 
 require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/includes/init.php';
 
@@ -17,7 +13,6 @@ $lang->setLanguage(LANG_EN);
 $base = basePath();
 $isEnglish = $lang->isEnglish();
 
-// Check for pending order in session
 $pendingOrder = Session::get('pending_order');
 
 if (!$pendingOrder || empty($pendingOrder['id'])) {
@@ -32,14 +27,12 @@ $paymentMethod = $pendingOrder['payment_method'] ?? 'mbway';
 $customerPhone = $pendingOrder['phone'] ?? '';
 $customerEmail = $pendingOrder['email'] ?? '';
 
-// Get full order from DB
 $order = $db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
 if (!$order) {
     Session::flash('error', $isEnglish ? 'Order not found.' : 'Encomenda nao encontrada.');
     redirect($base . ($isEnglish ? '/en/shop/' : '/loja/'));
 }
 
-// Get order items
 $orderItems = $db->fetchAll(
     "SELECT oi.*, COALESCE(pt.name, oi.product_name) as display_name
      FROM order_items oi
@@ -48,7 +41,6 @@ $orderItems = $db->fetchAll(
     [$orderId]
 );
 
-// Initialize payment via IfthenPay
 $gateway = IfthenPay::getInstance();
 $paymentData = null;
 $paymentError = null;
@@ -85,11 +77,11 @@ try {
             $returnUrl = $base . '/en/shop/checkout/confirmation/';
             $result = $gateway->createCardPayment($orderId, $totalAmount, $returnUrl);
             if ($result['success'] && !empty($result['payment_url'])) {
-                // Redirect to IfthenPay secure payment page
+
                 redirect($result['payment_url']);
             } else {
                 $paymentData = ['type' => 'card'];
-                // If no redirect URL, show card form placeholder
+
                 if (!$result['success']) {
                     $paymentError = $result['message'];
                 }

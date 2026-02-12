@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Page Heroes Manager
- * Manage hero images for all site pages
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -14,7 +10,6 @@ use Core\CSRF;
 $db = Database::getInstance();
 $base = basePath();
 
-// Default page heroes configuration
 $defaultHeroes = [
     ['page_key' => 'home', 'page_name_pt' => 'Página Inicial', 'page_name_en' => 'Homepage', 'sort_order' => 1],
     ['page_key' => 'accommodation_main', 'page_name_pt' => 'Alojamento (Página Principal)', 'page_name_en' => 'Accommodation (Main Page)', 'sort_order' => 2],
@@ -29,7 +24,6 @@ $defaultHeroes = [
     ['page_key' => 'privacy_policy', 'page_name_pt' => 'Política de Privacidade', 'page_name_en' => 'Privacy Policy', 'sort_order' => 11],
 ];
 
-// Auto-seed missing page heroes if table exists
 try {
     $existingKeys = $db->fetchAll("SELECT page_key FROM page_heroes");
     if ($existingKeys !== false) {
@@ -48,16 +42,14 @@ try {
         }
     }
 } catch (Exception $e) {
-    // Table doesn't exist yet, will show migration message
+
 }
 
-// Handle image upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $pageKey = sanitize($_POST['page_key'] ?? '');
         $heroOverlay = floatval($_POST['hero_overlay'] ?? 0.40);
 
-        // Validate page key exists
         $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = ?", [$pageKey]);
 
         if ($pageHero) {
@@ -65,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
                 'hero_overlay_opacity' => max(0, min(1, $heroOverlay))
             ];
 
-            // Handle file upload
             if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = ROOT_PATH . '/uploads/heroes/';
                 if (!is_dir($uploadDir)) {
@@ -73,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
                 }
 
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-                $maxSize = 10 * 1024 * 1024; // 10MB for hero images
+                $maxSize = 10 * 1024 * 1024;
 
                 $fileType = $_FILES['hero_image']['type'];
                 $fileSize = $_FILES['hero_image']['size'];
@@ -85,23 +76,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
                     $targetPath = $uploadDir . $newName;
 
                     if (move_uploaded_file($_FILES['hero_image']['tmp_name'], $targetPath)) {
-                        // Delete old image from media table and filesystem
+
                         $oldMedia = $db->fetch(
                             "SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1",
                             [$pageHero['id']]
                         );
 
                         if ($oldMedia) {
-                            // Delete physical file
+
                             $oldPath = ROOT_PATH . ltrim($oldMedia['file_path'], '/');
                             if (file_exists($oldPath)) {
                                 @unlink($oldPath);
                             }
-                            // Delete database record
+
                             $db->delete('media', 'id = ?', [$oldMedia['id']]);
                         }
 
-                        // Insert new image into media table
                         $db->insert('media', [
                             'filename' => $newName,
                             'original_name' => $originalName,
@@ -129,15 +119,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
     redirect('/admin/heroes/');
 }
 
-// Get all page heroes
 $pageHeroes = $db->fetchAll("SELECT * FROM page_heroes WHERE is_active = 1 ORDER BY sort_order");
 
-// If table doesn't exist yet, show migration message
 if ($pageHeroes === false) {
     $pageHeroes = [];
 }
 
-// Fetch hero images from media table
 $heroImages = [];
 if (!empty($pageHeroes)) {
     foreach ($pageHeroes as $hero) {

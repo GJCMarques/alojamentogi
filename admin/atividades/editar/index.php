@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Edit Activity
- * Edit existing activity with all fields pre-filled
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 require_once dirname(dirname(__DIR__)) . '/includes/auth-check.php';
@@ -13,23 +9,19 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get activity ID
 $activityId = (int)($_GET['id'] ?? 0);
 if (!$activityId) {
     redirect('/admin/atividades/');
 }
 
-// Fetch activity
 $activity = $db->fetch("SELECT * FROM activities WHERE id = ?", [$activityId]);
 if (!$activity) {
     Session::flash('error', 'Atividade não encontrada.');
     redirect('/admin/atividades/');
 }
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Get translations
 $translations = [];
 foreach ($languages as $lang) {
     $trans = $db->fetch(
@@ -44,19 +36,16 @@ foreach ($languages as $lang) {
     ];
 }
 
-// Get gallery images from media table
 $galleryImages = $db->fetchAll(
     "SELECT * FROM media WHERE entity_type = 'activity' AND entity_id = ? ORDER BY sort_order ASC",
     [$activityId]
 );
 
-// Get current cover image
 $currentCoverImage = $db->fetch(
     "SELECT * FROM media WHERE entity_type = 'activity' AND entity_id = ? AND is_cover = 1",
     [$activityId]
 );
 
-// Get activity categories from database
 $categories = $db->fetchAll(
     "SELECT c.id, ct.name
      FROM categories c
@@ -73,12 +62,10 @@ $priceRanges = [
     'expensive' => 'Premium',
 ];
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $errors = [];
 
-        // Validate required fields
         $titlePt = trim($_POST['title_1'] ?? '');
         if (empty($titlePt)) {
             $errors[] = 'O título (PT) é obrigatório.';
@@ -90,20 +77,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            // Generate/validate slug
+
             $slug = $_POST['slug'] ?? '';
             if (empty($slug)) {
                 $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $titlePt));
                 $slug = trim($slug, '-');
             }
 
-            // Ensure slug is unique (excluding current activity)
             $existingSlug = $db->fetch("SELECT id FROM activities WHERE slug = ? AND id != ?", [$slug, $activityId]);
             if ($existingSlug) {
                 $slug .= '-' . time();
             }
 
-            // Handle cover image upload - USE MEDIA TABLE
             if (!empty($_FILES['cover_image']['name']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = ROOT_PATH . '/uploads/activities/';
                 if (!is_dir($uploadDir)) {
@@ -119,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $newName = 'activity_cover_' . $activityId . '_' . uniqid() . '.' . $ext;
 
                     if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $uploadDir . $newName)) {
-                        // Delete old cover image from media
+
                         $oldCover = $db->fetch("SELECT * FROM media WHERE entity_type = 'activity' AND entity_id = ? AND is_cover = 1", [$activityId]);
                         if ($oldCover) {
                             $oldPath = ROOT_PATH . ltrim($oldCover['file_path'], '/');
@@ -127,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $db->delete('media', 'id = ?', [$oldCover['id']]);
                         }
 
-                        // Insert new cover image
                         $db->insert('media', [
                             'filename' => $newName,
                             'original_name' => $originalName,
@@ -145,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Update activity
             $db->update('activities', [
                 'slug' => $slug,
                 'category_id' => $categoryId,
@@ -164,7 +147,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'sort_order' => (int)($_POST['sort_order'] ?? 0)
             ], 'id = ?', [$activityId]);
 
-            // Update translations
             foreach ($languages as $lang) {
                 $existingTrans = $db->fetch(
                     "SELECT id FROM activity_translations WHERE activity_id = ? AND language_id = ?",
@@ -187,12 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Handle gallery images upload - USE MEDIA TABLE
             if (!empty($_FILES['gallery']['name'][0])) {
                 $uploadDir = ROOT_PATH . '/uploads/activities/';
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
-                // Get current max sort order from media
                 $maxSort = $db->fetch("SELECT MAX(sort_order) as max_sort FROM media WHERE entity_type = 'activity' AND entity_id = ?", [$activityId]);
                 $sortOrder = ($maxSort['max_sort'] ?? 0) + 1;
 
@@ -224,18 +204,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Handle gallery image deletions - USE MEDIA TABLE
             if (!empty($_POST['delete_images_list'])) {
                 $imageIds = array_filter(array_map('intval', explode(',', $_POST['delete_images_list'])));
                 foreach ($imageIds as $imageId) {
                     $image = $db->fetch("SELECT * FROM media WHERE id = ? AND entity_type = 'activity' AND entity_id = ?", [$imageId, $activityId]);
                     if ($image) {
-                        // Delete file
+
                         $filePath = ROOT_PATH . ltrim($image['file_path'], '/');
                         if (file_exists($filePath)) {
                             @unlink($filePath);
                         }
-                        // Delete from DB
+
                         $db->delete('media', 'id = ?', [$imageId]);
                     }
                 }

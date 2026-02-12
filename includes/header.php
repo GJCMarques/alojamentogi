@@ -1,28 +1,16 @@
 <?php
-/**
- * A Casa do Gi - Header Template
- *
- * Variables available:
- * - $pageTitle: Page title (required)
- * - $pageDescription: Meta description (optional)
- * - $bodyClass: Additional body classes (optional)
- * - $hideNav: Hide navigation (optional)
- */
 
 $lang = \Core\Language::getInstance();
 $currentLang = $lang->getCurrentLang();
 $isEnglish = $lang->isEnglish();
 $base = basePath();
 
-// Default values
 $pageTitle = $pageTitle ?? 'A Casa do Gi';
 $pageDescription = $pageDescription ?? ($isEnglish
     ? 'Local accommodation in Mogadouro, Portugal. Simplicity, warmth and love.'
     : 'Alojamento local em Mogadouro, Portugal. Simplicidade, acolhimento e muito amor.');
 $bodyClass = $bodyClass ?? '';
 $hideNav = $hideNav ?? false;
-
-// Navigation items
 
 $navItems = $isEnglish ? [
     ['url' => $base . '/en/', 'label' => 'Home'],
@@ -40,7 +28,6 @@ $navItems = $isEnglish ? [
     ['url' => $base . '/loja/', 'label' => 'Loja'],
 ];
 
-// Get current path for active state
 $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 ?>
 <!DOCTYPE html>
@@ -218,8 +205,6 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         html {
             scroll-behavior: smooth;
         }
-
-
 
         /* Smooth parallax */
         .parallax-bg {
@@ -405,7 +390,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center space-x-6">
                     <?php foreach ($navItems as $item):
-                        // Fix active detection logic
+
                         $homeUrlPT = $base . '/';
                         $homeUrlEN = $base . '/en/';
                         $itemUrlTrimmed = rtrim($item['url'], '/');
@@ -488,23 +473,20 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             </div>
         </nav>
 
-
-            
             <!-- Background with Gradient and Blur -->
-
 
     </header>
 
     <!-- Mobile Menu - Moved Outside Header for Perfect Stacking -->
     <div id="mobile-menu" class="mobile-menu fixed inset-0 w-full h-full lg:hidden z-[9999] opacity-0 invisible transition-all duration-300 ease-in-out">
-        
+
         <!-- Background with Gradient and Blur -->
         <!-- Background with Original Glass Gradient (Lighter Corners) -->
         <div class="absolute inset-0 bg-gradient-to-br from-primary-800/98 via-primary-700/95 to-primary-800/98 backdrop-blur-xl"></div>
-        
+
         <!-- Solid Overlay for Scroll (Lighter Corners) -->
         <div id="mobile-menu-bg-solid" class="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-800 transition-opacity duration-500 opacity-0"></div>
-        
+
         <!-- Decorative Watermark (Optional) -->
         <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none opacity-[0.03]">
                  <span class="font-cursive text-[40vh] text-cream leading-none select-none">Gi</span>
@@ -513,10 +495,10 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         <!-- Menu Content -->
         <div class="relative z-10 flex flex-col justify-center items-center h-full w-full px-6">
             <nav class="flex flex-col items-center space-y-6 md:space-y-8">
-                <?php 
-                $delay = 0; // Start immediately
+                <?php
+                $delay = 0;
                 foreach ($navItems as $item):
-                    // Active logic
+
                     $homeUrlPT = $base . '/'; $homeUrlEN = $base . '/en/';
                     $isActive = ($item['url'] === $homeUrlPT || $item['url'] === $homeUrlEN)
                             ? ($currentPath === $item['url'])
@@ -529,9 +511,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         <?= e($item['label']) ?>
                     </a>
                 </div>
-                <?php 
-                $delay += 75; // Slower stagger
-                endforeach; 
+                <?php
+                $delay += 75;
+                endforeach;
                 ?>
 
                 <div class="h-px w-48 bg-gradient-to-r from-transparent via-accent/50 to-transparent my-8 transform scale-x-0 transition-transform duration-500 delay-300" id="mobile-separator"></div>
@@ -634,7 +616,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     header.classList.remove('scrolled');
                 }
             }
-            
+
             // Adjust mobile menu close button position to match header
             if (mobileHeader) {
                 if (window.scrollY > 50) {
@@ -673,7 +655,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             mobileBtn.classList.add('open');
             document.body.style.overflow = 'hidden';
             document.documentElement.style.overflow = 'hidden'; // Ensure lock on HTML too
-            
+
             // Trigger Animation Stagger
             // Increased timeout for smoother entrance
             setTimeout(() => {
@@ -684,7 +666,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 if(mobileFooter) {
                     mobileFooter.classList.remove('translate-y-4', 'opacity-0');
                 }
-            }, 100); 
+            }, 100);
         }
 
         function closeMenu() {
@@ -728,7 +710,6 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 closeMenu();
             }
         });
-
 
         // Scroll Animations with Intersection Observer
         const animatedElements = document.querySelectorAll('.animate-on-scroll');

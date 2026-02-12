@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Orders List
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -12,7 +9,6 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Handle status change
 if (isset($_POST['update_status']) && isset($_POST['order_id'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $orderId = (int)$_POST['order_id'];
@@ -23,7 +19,6 @@ if (isset($_POST['update_status']) && isset($_POST['order_id'])) {
         if (in_array($newStatus, $validStatuses)) {
             $db->update('orders', ['status' => $newStatus], 'id = ?', [$orderId]);
 
-            // Add to history
             $db->insert('order_status_history', [
                 'order_id' => $orderId,
                 'status' => $newStatus,
@@ -37,14 +32,12 @@ if (isset($_POST['update_status']) && isset($_POST['order_id'])) {
     redirect('/admin/encomendas/');
 }
 
-// Filters
 $status = isset($_GET['status']) ? $_GET['status'] : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 20;
 $offset = ($page - 1) * $perPage;
 
-// Build query
 $where = "WHERE 1=1";
 $params = [];
 
@@ -60,7 +53,6 @@ if ($search) {
     $params[] = "%{$search}%";
 }
 
-// Get counts by status
 $statusCounts = $db->fetchAll("SELECT status, COUNT(*) as count FROM orders GROUP BY status");
 $counts = ['all' => 0];
 foreach ($statusCounts as $sc) {
@@ -68,17 +60,14 @@ foreach ($statusCounts as $sc) {
     $counts['all'] += $sc['count'];
 }
 
-// Get total
 $total = $db->fetch("SELECT COUNT(*) as c FROM orders {$where}", $params)['c'];
 $totalPages = ceil($total / $perPage);
 
-// Get orders
 $orders = $db->fetchAll(
     "SELECT * FROM orders {$where} ORDER BY created_at DESC LIMIT {$perPage} OFFSET {$offset}",
     $params
 );
 
-// Status labels
 $statusLabels = [
     'pending' => ['label' => 'Pendente', 'class' => 'bg-yellow-100 text-yellow-800'],
     'confirmed' => ['label' => 'Confirmada', 'class' => 'bg-blue-100 text-blue-800'],

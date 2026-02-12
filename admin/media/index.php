@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Media Manager
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -12,7 +9,6 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Handle file upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         if (isset($_FILES['files']) && !empty($_FILES['files']['name'][0])) {
@@ -42,28 +38,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                     continue;
                 }
 
-                // Validate extension from original filename
                 $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                 if (!in_array($ext, $allowedExtensions)) {
                     $errors[] = "Extensão não permitida: {$fileName}";
                     continue;
                 }
 
-                // Validate REAL MIME type using file contents (not client-supplied header)
                 $realMimeType = mime_content_type($tmpName);
                 if (!in_array($realMimeType, $allowedMimeTypes)) {
                     $errors[] = "Tipo de ficheiro inválido: {$fileName} ({$realMimeType})";
                     continue;
                 }
 
-                // Double-check with getimagesize (ensures it's actually an image)
                 $imageInfo = @getimagesize($tmpName);
                 if ($imageInfo === false) {
                     $errors[] = "Ficheiro não é uma imagem válida: {$fileName}";
                     continue;
                 }
 
-                // Use MIME-derived extension to prevent extension spoofing
                 $mimeToExt = [
                     'image/jpeg' => 'jpg',
                     'image/png' => 'png',
@@ -72,13 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                 ];
                 $safeExt = $mimeToExt[$realMimeType] ?? $ext;
 
-                // Generate unique filename with safe extension
                 $newName = bin2hex(random_bytes(16)) . '.' . $safeExt;
                 $targetPath = $uploadDir . $newName;
                 $fileType = $realMimeType;
 
                 if (move_uploaded_file($tmpName, $targetPath)) {
-                    // Save to database (using correct column names from schema)
+
                     $db->insert('media', [
                         'filename' => $newName,
                         'original_name' => $fileName,
@@ -105,20 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     }
 }
 
-// Handle delete
 if (isset($_GET['delete']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['delete'];
         $media = $db->fetch("SELECT * FROM media WHERE id = ?", [$id]);
 
         if ($media) {
-            // Delete file
+
             $filePath = ROOT_PATH . $media['file_path'];
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
 
-            // Delete from database
             $db->delete('media', 'id = ?', [$id]);
             Session::flash('success', 'Ficheiro eliminado com sucesso.');
         }
@@ -126,7 +115,6 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
     redirect('/admin/media/');
 }
 
-// Handle edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_media'])) {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $id = (int)$_POST['media_id'];
@@ -150,14 +138,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_media'])) {
     redirect('/admin/media/');
 }
 
-// Filters
 $type = isset($_GET['type']) ? $_GET['type'] : 'all';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 24;
 $offset = ($page - 1) * $perPage;
 
-// Build query
 $where = "WHERE 1=1";
 $params = [];
 
@@ -172,17 +158,14 @@ if ($search) {
     $params[] = "%{$search}%";
 }
 
-// Get total
 $total = $db->fetch("SELECT COUNT(*) as c FROM media {$where}", $params)['c'];
 $totalPages = ceil($total / $perPage);
 
-// Get media
 $media = $db->fetchAll(
     "SELECT * FROM media {$where} ORDER BY created_at DESC LIMIT {$perPage} OFFSET {$offset}",
     $params
 );
 
-// Format file size
 function formatFileSize($bytes) {
     if ($bytes >= 1048576) {
         return number_format($bytes / 1048576, 1) . ' MB';
@@ -256,7 +239,7 @@ include dirname(__DIR__) . '/includes/header.php';
     <?php else: ?>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
         <?php foreach ($media as $item):
-            // Prepare data for JavaScript (JSON encode to handle special chars)
+
             $itemData = json_encode([
                 'id' => $item['id'],
                 'name' => $item['original_name'],

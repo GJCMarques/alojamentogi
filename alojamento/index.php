@@ -1,9 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Accommodation Page (Portuguese)
- * Dual accommodation support: Casa 1 and Casa 2
- * Shows main page first, then specific casa when selected
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
@@ -15,11 +10,9 @@ $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Check if a specific casa is selected via URL parameter
 $casaParam = $_GET['casa'] ?? null;
-$showMainPage = ($casaParam === null); // Show main page if no casa parameter
+$showMainPage = ($casaParam === null);
 
-// Get selected accommodation number (only if parameter exists)
 $selectedAccommodationNumber = null;
 if ($casaParam !== null) {
     $selectedAccommodationNumber = (int)$casaParam;
@@ -29,14 +22,13 @@ if ($casaParam !== null) {
     Session::set('selected_accommodation', $selectedAccommodationNumber);
 }
 
-// Get accommodation data (for specific casa or first one for general info)
 if ($selectedAccommodationNumber) {
     $accommodation = $db->fetch(
         "SELECT * FROM accommodation WHERE accommodation_number = ? AND is_active = 1",
         [$selectedAccommodationNumber]
     );
 } else {
-    // Get first accommodation for general page info
+
     $accommodation = $db->fetch("SELECT * FROM accommodation WHERE is_active = 1 LIMIT 1");
 }
 
@@ -49,13 +41,10 @@ $accTranslation = $db->fetch(
     [$accommodation['id'] ?? 1, $lang->getCurrentLangId()]
 );
 
-// Get main page hero image from page_heroes table
 $mainPageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'accommodation_main'");
 
-// Get both accommodations for selection cards (main page)
 $allAccommodations = $db->fetchAll("SELECT * FROM accommodation WHERE is_active = 1 ORDER BY accommodation_number");
 
-// Helper function to get image URL
 function getAccommodationImageUrl($imagePath, $default = '') {
     if (!$imagePath) return $default;
     if (strpos($imagePath, 'uploads/') === 0) {
@@ -64,7 +53,6 @@ function getAccommodationImageUrl($imagePath, $default = '') {
     return asset($imagePath);
 }
 
-// Get highlighted amenities (max 8) + all amenities for modal
 $highlightedAmenities = $db->fetchAll(
     "SELECT a.*, at.name, a.category, aa.sort_order FROM amenities a
      JOIN amenity_translations at ON a.id = at.amenity_id
@@ -75,7 +63,6 @@ $highlightedAmenities = $db->fetchAll(
     [$accommodation['id'], $lang->getCurrentLangId()]
 );
 
-// Get ALL amenities for the modal (grouped by category)
 $allAmenities = $db->fetchAll(
     "SELECT a.*, at.name, a.category FROM amenities a
      JOIN amenity_translations at ON a.id = at.amenity_id
@@ -85,7 +72,6 @@ $allAmenities = $db->fetchAll(
     [$accommodation['id'], $lang->getCurrentLangId()]
 );
 
-// Group all amenities by category for modal
 $amenitiesByCategory = [];
 foreach ($allAmenities as $amenity) {
     $cat = $amenity['category'] ?: 'general';
@@ -108,13 +94,11 @@ $categoryLabels = [
     'services' => 'Serviços'
 ];
 
-// Get gallery images for this accommodation
 $galleryImages = $db->fetchAll(
     "SELECT * FROM media WHERE category = 'gallery' AND accommodation_id = ? ORDER BY sort_order LIMIT 12",
     [$accommodation['id']]
 );
 
-// Get bedrooms with translations
 $bedrooms = $db->fetchAll(
     "SELECT b.*, bt.beds_description, bt.name as room_name FROM bedrooms b
      LEFT JOIN bedroom_translations bt ON b.id = bt.bedroom_id AND bt.language_id = ?
@@ -123,7 +107,6 @@ $bedrooms = $db->fetchAll(
     [$lang->getCurrentLangId(), $accommodation['id']]
 );
 
-// Get bathrooms
 $bathrooms = $db->fetchAll(
     "SELECT b.*, bt.description, bt.name as bathroom_name FROM bathrooms b
      LEFT JOIN bathroom_translations bt ON b.id = bt.bathroom_id AND bt.language_id = ?
@@ -132,7 +115,6 @@ $bathrooms = $db->fetchAll(
     [$lang->getCurrentLangId(), $accommodation['id']]
 );
 
-// Get house rules (highlighted + all)
 $highlightedRules = $db->fetchAll(
     "SELECT hr.*, hrt.rule_text FROM house_rules hr
      JOIN house_rule_translations hrt ON hr.id = hrt.rule_id
@@ -150,12 +132,10 @@ $allRules = $db->fetchAll(
     [$accommodation['id'], $lang->getCurrentLangId()]
 );
 
-// Booking URLs from accommodation table
 $guestreadyUrl = $accommodation['guestready_url'] ?? null;
 $bookingUrl = $accommodation['booking_url'] ?? null;
 $airbnbUrl = $accommodation['airbnb_url'] ?? null;
 
-// Page configuration
 $pageTitle = $showMainPage ? 'Alojamento' : 'Casa do Gi ' . $selectedAccommodationNumber;
 $pageDescription = 'A Casa do Gi - Alojamento Local em Mogadouro. Casa de férias de 100m² para 6 hóspedes.';
 
@@ -213,7 +193,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
         <!-- Casa Selection Cards -->
         <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
             <?php foreach ($allAccommodations as $idx => $casa):
-                // Get cover image URL for this casa
+
                 $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.jpg' : 'images/Castelo.jpg');
                 $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.jpg' : 'images/Castelo.jpg'));
             ?>
@@ -290,7 +270,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 
 <!-- Hero Section -->
 <?php
-// Get hero image for this specific casa
+
 $casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.jpg';
 $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.jpg'));
 ?>
@@ -322,8 +302,6 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
         <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-lg animate-on-scroll" data-animation="fade-up" data-delay="100">
             Casa do Gi <?= $selectedAccommodationNumber ?>
         </h1>
-
-
 
         <!-- Location -->
         <div class="flex items-center justify-center gap-2 text-cream/80 animate-on-scroll" data-animation="fade-up" data-delay="300">
@@ -1161,10 +1139,10 @@ footer { margin-top: 0 !important; }
     // Simple, Robust Scroll Lock (Matching Header Logic)
     document.addEventListener('DOMContentLoaded', () => {
         const modalIds = ['lightbox-modal', 'amenities-modal', 'policies-modal', 'bookingModal'];
-        
+
         const observer = new MutationObserver(() => {
             let isLocked = false;
-            
+
             // Check visibility of any tracked modal
             modalIds.forEach(id => {
                 const el = document.getElementById(id);
@@ -1190,9 +1168,9 @@ footer { margin-top: 0 !important; }
         modalIds.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                observer.observe(el, { 
-                    attributes: true, 
-                    attributeFilter: ['class', 'style', 'hidden'] 
+                observer.observe(el, {
+                    attributes: true,
+                    attributeFilter: ['class', 'style', 'hidden']
                 });
             }
         });

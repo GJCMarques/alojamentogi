@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Shopping Cart Page (English)
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 
@@ -9,7 +6,6 @@ use Core\Cart;
 use Core\CSRF;
 use Core\Database;
 
-// Force English language
 $lang = \Core\Language::getInstance();
 $lang->setLanguage(LANG_EN);
 $isEnglish = true;
@@ -21,10 +17,8 @@ $cart = Cart::getInstance();
 $cartItems = $cart->getItems();
 $cartErrors = $cart->validate();
 
-// Remove invalid items messages (except empty cart)
 $cartErrors = array_filter($cartErrors, fn($e) => $e !== 'O carrinho está vazio.');
 
-// Get hero image from database (cart page hero, fallback to shop)
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'cart' AND is_active = 1");
 if (!$pageHero) {
     $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
@@ -34,7 +28,6 @@ $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Page configuration
 $pageTitle = 'Shopping Cart';
 $pageDescription = 'Review the products in your shopping cart at Casa do Gi.';
 $headerLayer = 2;

@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Sidebar Navigation
- */
 
 use Core\Auth;
 use Core\Database;
@@ -10,12 +7,10 @@ $base = basePath();
 $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $db = Database::getInstance();
 
-// Get badge counts
 $pendingOrders = $db->count('orders', "status IN ('pending', 'confirmed')");
 $newManualOrders = $db->count('manual_orders', "status = 'new'");
 $unreadMessages = $db->count('contact_submissions', 'is_read = 0');
 
-// Menu items
 $menuItems = [
     [
         'label' => 'Dashboard',
@@ -115,7 +110,6 @@ $menuItems = [
     ],
 ];
 
-// Admin-only items
 $adminItems = [];
 if (Auth::canManageUsers()) {
     $adminItems[] = [

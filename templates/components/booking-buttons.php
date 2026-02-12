@@ -1,17 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Booking Buttons Component
- *
- * Reusable component for booking platform buttons with official brand colors and logos.
- *
- * Usage:
- *   component('booking-buttons', [
- *       'layout' => 'vertical', // 'vertical', 'horizontal', 'grid'
- *       'size' => 'default',    // 'small', 'default', 'large'
- *       'show_labels' => true,  // Show "Direto" / "Parceiro" labels
- *       'platforms' => ['guestready', 'booking', 'airbnb'] // Which platforms to show
- *   ]);
- */
 
 $layout = $layout ?? 'vertical';
 $size = $size ?? 'default';
@@ -21,12 +8,10 @@ $platforms = $platforms ?? ['guestready', 'booking', 'airbnb'];
 $lang = \Core\Language::getInstance();
 $isEnglish = $lang->isEnglish();
 
-// Get URLs from settings
 $guestreadyUrl = setting('guestready_url', '');
 $bookingUrl = setting('booking_url', '');
 $airbnbUrl = setting('airbnb_url', '');
 
-// Size classes
 $sizeClasses = [
     'small' => 'p-2.5 text-sm',
     'default' => 'p-3.5',
@@ -49,7 +34,6 @@ $currentSize = $sizeClasses[$size] ?? $sizeClasses['default'];
 $currentIconSize = $iconSizes[$size] ?? $iconSizes['default'];
 $currentIconInnerSize = $iconInnerSizes[$size] ?? $iconInnerSizes['default'];
 
-// Layout classes
 $containerClasses = [
     'vertical' => 'flex flex-col space-y-3',
     'horizontal' => 'flex flex-wrap gap-3',
@@ -65,7 +49,6 @@ $buttonClasses = [
 $currentContainer = $containerClasses[$layout] ?? $containerClasses['vertical'];
 $currentButton = $buttonClasses[$layout] ?? $buttonClasses['vertical'];
 
-// Base button classes
 $baseButtonClasses = "flex items-center {$currentSize} rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 {$currentButton}";
 ?>
 

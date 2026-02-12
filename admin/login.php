@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Login Page
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
@@ -9,7 +6,6 @@ use Core\Auth;
 use Core\CSRF;
 use Core\Session;
 
-// Redirect if already logged in
 if (Auth::check()) {
     redirect('/admin/');
 }
@@ -17,24 +13,21 @@ if (Auth::check()) {
 $error = '';
 $username = '';
 
-// Rate limit login attempts: max 10 per 15 minutes per IP
 $rateLimiter = \Core\RateLimiter::getInstance();
 
-// Check if IP is heavily rate limited (brute force detection)
 $failureCount = $rateLimiter->getFailureCount('admin_login', 900);
 if ($failureCount >= 20) {
-    // Severe brute force: block completely for 15 min
+
     http_response_code(429);
     $error = 'Demasiadas tentativas de login. A sua conta foi temporariamente bloqueada por segurança. Tente novamente em 15 minutos.';
 }
 
-// Handle form submission
 if (isPost() && $failureCount < 20) {
-    // Rate limit: 10 attempts per 5 minutes
+
     if (!$rateLimiter->check('admin_login_submit', 10, 300)) {
         $error = 'Demasiadas tentativas. Aguarde alguns minutos antes de tentar novamente.';
     }
-    // Verify CSRF
+
     elseif (!CSRF::isValid()) {
         $error = 'Sessão expirada. Por favor, tente novamente.';
     } else {
@@ -47,13 +40,13 @@ if (isPost() && $failureCount < 20) {
             $result = Auth::attempt($username, $password);
 
             if ($result['success']) {
-                // Redirect to dashboard
+
                 $redirectTo = Session::get('redirect_after_login', '/admin/');
                 Session::remove('redirect_after_login');
                 redirect($redirectTo);
             } else {
                 $error = $result['message'];
-                // Record failed attempt for brute force detection
+
                 $rateLimiter->recordFailure('admin_login');
                 logMessage("Failed admin login attempt: username='{$username}' from " . getClientIp(), 'warning');
             }
@@ -129,10 +122,10 @@ if (isPost() && $failureCount < 20) {
         <!-- Left Side - Image -->
         <div class="hidden lg:block lg:w-1/2 relative bg-primary-700">
             <!-- Image Placeholder -->
-            <img src="<?= asset('images/mogadouroLogin.png') ?>" 
-                 alt="Mogadouro" 
+            <img src="<?= asset('images/mogadouroLogin.png') ?>"
+                 alt="Mogadouro"
                  class="absolute inset-0 w-full h-full object-cover opacity-60">
-            
+
             <div class="relative h-full flex flex-col justify-between p-12 text-white z-10">
                 <div>
                     <h1 class="text-5xl font-cursive text-cream tracking-wide drop-shadow-md pb-1">A Casa do Gi</h1>

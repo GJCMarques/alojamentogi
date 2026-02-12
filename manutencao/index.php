@@ -1,9 +1,8 @@
 <?php
-// Define flag to bypass maintenance check in init.php
+
 define('MAINTENANCE_PAGE', true);
 require_once dirname(__DIR__) . '/includes/init.php';
 
-// If maintenance is OFF, redirect to home
 if (!isMaintenanceMode()) {
     redirect('/');
 }
@@ -22,7 +21,7 @@ $instagram = setting('instagram_url', '');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manutenção - A Casa do Gi</title>
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
-    
+
     <!-- Open Graph / Social Meta -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="A Casa do Gi - Em Breve / Coming Soon">
@@ -31,7 +30,7 @@ $instagram = setting('instagram_url', '');
     <meta property="og:site_name" content="A Casa do Gi">
     <meta property="og:image" content="<?= asset('images/MogadouroAtividades.jpg') ?>">
     <meta property="og:locale" content="pt_PT">
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="A Casa do Gi - Em Breve">
@@ -67,7 +66,7 @@ $instagram = setting('instagram_url', '');
         .show-en .lang-en-inline { display: inline; }
         .show-en .lang-pt-inline { display: none; }
         .lang-en-inline { display: none; }
-        
+
         /* Smooth fade for language switch */
         h1 span, p span {
             animation: fadeIn 0.5s ease;
@@ -79,7 +78,7 @@ $instagram = setting('instagram_url', '');
     </style>
 </head>
 <body class="h-screen w-full overflow-hidden bg-primary text-cream font-sans">
-    
+
     <!-- Background -->
     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?= $bgImage ?>');">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
@@ -87,7 +86,7 @@ $instagram = setting('instagram_url', '');
 
     <!-- Content -->
     <div class="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
-        
+
         <!-- Logo Text -->
         <h1 class="font-cursive text-6xl md:text-8xl text-cream mb-8 drop-shadow-lg">
             A Casa do Gi
@@ -99,7 +98,7 @@ $instagram = setting('instagram_url', '');
                 <span class="lang-pt">Em Manutenção</span>
                 <span class="lang-en">Under Maintenance</span>
             </h1>
-            
+
             <p class="text-lg md:text-xl text-cream/80 mb-8 leading-relaxed">
                 <span class="lang-pt">Estamos temporariamente indisponíveis para melhorias. Voltaremos em breve.</span>
                 <span class="lang-en">We are temporarily unavailable for improvements. We will be back shortly.</span>
@@ -113,7 +112,7 @@ $instagram = setting('instagram_url', '');
                 <?= $email ?>
             </a>
             <?php endif; ?>
-            
+
             <?php if ($phone): ?>
             <a href="tel:<?= str_replace(' ', '', $phone) ?>" class="block text-lg hover:text-secondary transition-colors font-light tracking-wide">
                 <?= $phone ?>
@@ -130,7 +129,7 @@ $instagram = setting('instagram_url', '');
                 </svg>
             </a>
             <?php endif; ?>
-            
+
             <?php if ($instagram): ?>
             <a href="<?= $instagram ?>" target="_blank" class="text-cream/60 hover:text-white transition-colors transform hover:scale-110 duration-200">
                 <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
@@ -141,7 +140,7 @@ $instagram = setting('instagram_url', '');
         </div>
 
         <!-- Lang Toggle -->
-        <button id="lang-toggle" onclick="document.body.classList.toggle('show-en')" 
+        <button id="lang-toggle" onclick="document.body.classList.toggle('show-en')"
                 class="mt-16 px-6 py-2 border border-cream/30 rounded-full text-xs uppercase tracking-widest hover:bg-cream/10 transition-colors text-cream/70 hover:text-cream">
             <span class="lang-pt-inline">English</span>
             <span class="lang-en-inline">Português</span>

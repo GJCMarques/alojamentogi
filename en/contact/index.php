@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Contact Page (English)
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 
@@ -18,10 +15,8 @@ $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Check if contact form is enabled
 $formEnabled = isContactFormEnabled();
 
-// Form handling
 $success = false;
 $errors = [];
 $formData = [
@@ -33,16 +28,16 @@ $formData = [
 ];
 
 if (isPost() && $formEnabled) {
-    // Verify CSRF
+
     if (!CSRF::isValid()) {
         $errors['csrf'] = 'Session expired. Please reload the page.';
     } else {
-        // Honeypot check (anti-spam)
+
         if (!empty($_POST['website'])) {
-            // Bot detected - silently ignore
+
             $success = true;
         } else {
-            // Get form data
+
             $formData = [
                 'name' => sanitize(post('name', '')),
                 'email' => sanitizeEmail(post('email', '')),
@@ -51,7 +46,6 @@ if (isPost() && $formEnabled) {
                 'message' => sanitize(post('message', '')),
             ];
 
-            // Validate
             $validator = Validator::make($formData, [
                 'name' => 'required|min:2|max:100',
                 'email' => 'required|email|max:255',
@@ -63,7 +57,7 @@ if (isPost() && $formEnabled) {
             if ($validator->fails()) {
                 $errors = $validator->errors();
             } else {
-                // Rate limiting check
+
                 $recentSubmissions = $db->count(
                     'contact_submissions',
                     "ip_address = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)",
@@ -73,13 +67,12 @@ if (isPost() && $formEnabled) {
                 if ($recentSubmissions >= 3) {
                     $errors['limit'] = 'Too many submissions. Please wait a while before trying again.';
                 } else {
-                    // Check if email is in spam list
+
                     $isSpamEmail = $db->fetch(
                         "SELECT id FROM spam_emails WHERE email = ?",
                         [$formData['email']]
                     );
 
-                    // Save to database
                     $db->insert('contact_submissions', [
                         'name' => $formData['name'],
                         'email' => $formData['email'],
@@ -92,14 +85,12 @@ if (isPost() && $formEnabled) {
                         'is_spam' => $isSpamEmail ? 1 : 0,
                     ]);
 
-                    // Send email notifications
                     $mailer = new Mailer();
                     $mailer->sendContactNotification($formData);
                     $mailer->sendContactConfirmation($formData);
 
                     $success = true;
 
-                    // Clear form data
                     $formData = [
                         'name' => '',
                         'email' => '',
@@ -115,21 +106,17 @@ if (isPost() && $formEnabled) {
     }
 }
 
-// Get contact info
 $contactEmail = setting('contact_email', '');
 $contactPhone = setting('contact_phone', '');
 $contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
 
-// Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'contact' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
 $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroContacto.jpg';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Build hero URL (file_path from media already has leading slash)
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Page configuration
 $pageTitle = __('contact_title', 'Contact');
 $pageDescription = 'Get in touch with A Casa do Gi. We are available to answer your questions.';
 

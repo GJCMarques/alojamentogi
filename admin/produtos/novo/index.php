@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Create Product
- */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/init.php';
 require_once dirname(dirname(__DIR__)) . '/includes/auth-check.php';
@@ -13,7 +10,6 @@ use Core\Validator;
 
 $db = Database::getInstance();
 
-// Get categories
 $categories = $db->fetchAll(
     "SELECT c.id, ct.name
      FROM product_categories c
@@ -22,7 +18,6 @@ $categories = $db->fetchAll(
      ORDER BY ct.name"
 );
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
 $errors = [];
@@ -40,13 +35,12 @@ $product = [
 ];
 $translations = [];
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF
+
     if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
         $errors[] = 'Token de segurança inválido. Por favor, tente novamente.';
     } else {
-        // Get form data
+
         $product = [
             'category_id' => (int)($_POST['category_id'] ?? 0),
             'slug' => sanitize($_POST['slug'] ?? ''),
@@ -61,31 +55,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $translations = $_POST['translations'] ?? [];
 
-        // Validation
         $validator = new Validator();
         $validator->required($product['category_id'], 'category_id', 'Categoria');
         $validator->required($product['sku'], 'sku', 'SKU');
         $validator->required($product['price'], 'price', 'Preço');
 
-        // Check SKU uniqueness
         $existingSku = $db->fetch("SELECT id FROM products WHERE sku = ?", [$product['sku']]);
         if ($existingSku) {
             $validator->addError('sku', 'Este SKU já existe.');
         }
 
-        // Generate slug if empty
         if (empty($product['slug'])) {
             $name = $translations[1]['name'] ?? $translations[2]['name'] ?? 'produto';
             $product['slug'] = createSlug($name);
         }
 
-        // Check slug uniqueness
         $existingSlug = $db->fetch("SELECT id FROM products WHERE slug = ?", [$product['slug']]);
         if ($existingSlug) {
             $product['slug'] = $product['slug'] . '-' . time();
         }
 
-        // Check for translation names
         $hasName = false;
         foreach ($translations as $langId => $trans) {
             if (!empty($trans['name'])) {
@@ -103,10 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->beginTransaction();
 
             try {
-                // Insert product
+
                 $productId = $db->insert('products', $product);
 
-                // Insert translations
                 foreach ($translations as $langId => $trans) {
                     if (!empty($trans['name'])) {
                         $db->insert('product_translations', [
@@ -119,7 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                // Handle image uploads
                 if (!empty($_FILES['images']['name'][0])) {
                     $uploadDir = UPLOADS_PATH . '/products/';
 
@@ -135,13 +122,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $originalName = $_FILES['images']['name'][$key];
                             $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
-                            // Validate extension
                             $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
                             if (!in_array($extension, $allowedExtensions)) {
                                 continue;
                             }
 
-                            // Validate MIME type
                             $finfo = finfo_open(FILEINFO_MIME_TYPE);
                             $mimeType = finfo_file($finfo, $tmpName);
                             finfo_close($finfo);
@@ -151,7 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 continue;
                             }
 
-                            // Generate unique filename
                             $newFilename = $product['slug'] . '-' . uniqid() . '.' . $extension;
                             $targetPath = $uploadDir . $newFilename;
 
@@ -159,7 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $fileSize = $_FILES['images']['size'][$key];
                                 $fileType = $_FILES['images']['type'][$key];
 
-                                // Insert into media
                                 $mediaId = $db->insert('media', [
                                     'filename' => $newFilename,
                                     'original_name' => $originalName,
@@ -472,24 +455,24 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
 document.addEventListener('DOMContentLoaded', function() {
     // Language tabs
     const tabs = document.querySelectorAll('.lang-tab');
-    
+
     tabs.forEach(tab => {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
             const langId = this.getAttribute('data-lang');
-            
+
             // Update tabs styling
             tabs.forEach(t => {
                 t.classList.remove('border-secondary-600', 'text-secondary-600');
                 t.classList.add('border-transparent', 'text-gray-500');
             });
-            
+
             this.classList.remove('border-transparent', 'text-gray-500');
             this.classList.add('border-secondary-600', 'text-secondary-600');
-            
+
             // Show/Hide content
             const contents = document.querySelectorAll('.lang-content');
-            
+
             contents.forEach(c => {
                 const contentLang = c.getAttribute('data-lang');
                 if (contentLang == langId) {

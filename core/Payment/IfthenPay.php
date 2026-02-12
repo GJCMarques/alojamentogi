@@ -1,13 +1,4 @@
 <?php
-/**
- * A Casa do Gi - IfthenPay Payment Gateway Integration
- *
- * Supports: MBWay, Multibanco, Credit/Debit Card
- * API Documentation: https://ifthenpay.com/docs
- *
- * Configuration is read from config/config.php ['payment']['ifthenpay']
- * and from settings table (ifthenpay_* keys).
- */
 
 namespace Core\Payment;
 
@@ -18,15 +9,12 @@ class IfthenPay
     private const API_BASE = 'https://api.ifthenpay.com';
     private const SANDBOX_BASE = 'https://sandbox.ifthenpay.com';
 
-    // MBWay endpoints
     private const MBWAY_INIT = '/spg/payment/mbway';
     private const MBWAY_STATUS = '/spg/payment/mbway/status';
 
-    // Multibanco endpoints
     private const MB_INIT = '/multibanco/reference/init';
     private const MB_STATUS = '/multibanco/reference/status';
 
-    // Card (CCard) endpoints
     private const CARD_INIT = '/spg/payment/ccard';
     private const CARD_STATUS = '/spg/payment/ccard/status';
 
@@ -42,7 +30,6 @@ class IfthenPay
         $this->db = Database::getInstance();
         $this->sandbox = (bool) ($appConfig['payment']['sandbox'] ?? true);
 
-        // Merge file config with database settings
         $this->config = [
             'mbway_key' => setting('ifthenpay_mbway_key', $appConfig['payment']['ifthenpay']['mbway_key'] ?? ''),
             'multibanco_entity' => setting('ifthenpay_entity', $appConfig['payment']['ifthenpay']['multibanco_entity'] ?? ''),
@@ -61,21 +48,15 @@ class IfthenPay
         return self::$instance;
     }
 
-    /**
-     * Create MBWay payment request
-     *
-     * @return array ['success' => bool, 'request_id' => string|null, 'message' => string]
-     */
     public function createMBWayPayment(int $orderId, string $phone, float $amount): array
     {
         if (empty($this->config['mbway_key'])) {
             return ['success' => false, 'request_id' => null, 'message' => 'MBWay key not configured'];
         }
 
-        // Clean phone number
         $phone = preg_replace('/\D/', '', $phone);
         if (strlen($phone) === 9) {
-            $phone = '351' . $phone; // Add Portugal country code
+            $phone = '351' . $phone;
         }
 
         $order = $this->db->fetch("SELECT order_number FROM orders WHERE id = ?", [$orderId]);
@@ -94,7 +75,7 @@ class IfthenPay
         $response = $this->apiRequest(self::MBWAY_INIT, $payload);
 
         if ($response && isset($response['Status']) && $response['Status'] === '000') {
-            // Save payment reference
+
             $this->db->update('orders', [
                 'payment_reference' => $response['RequestId'] ?? $requestId,
                 'payment_status' => 'processing',
@@ -115,11 +96,6 @@ class IfthenPay
         return ['success' => false, 'request_id' => null, 'message' => $errorMsg];
     }
 
-    /**
-     * Create Multibanco payment reference
-     *
-     * @return array ['success' => bool, 'entity' => string, 'reference' => string, 'amount' => float]
-     */
     public function createMultibancoReference(int $orderId, float $amount): array
     {
         if (empty($this->config['multibanco_entity']) || empty($this->config['multibanco_subentity'])) {
@@ -141,7 +117,6 @@ class IfthenPay
             $entity = $response['Entity'] ?? $this->config['multibanco_entity'];
             $reference = $response['Reference'] ?? '';
 
-            // Save payment reference
             $this->db->update('orders', [
                 'payment_entity' => $entity,
                 'payment_reference' => $reference,
@@ -159,7 +134,6 @@ class IfthenPay
             ];
         }
 
-        // Fallback: generate local reference when API is not configured
         $reference = $this->generateLocalMultibancoReference($orderId);
         $entity = $this->config['multibanco_entity'];
 
@@ -178,12 +152,6 @@ class IfthenPay
         ];
     }
 
-    /**
-     * Create Card (Visa/Mastercard) payment
-     * Returns a URL to redirect the customer to the payment gateway
-     *
-     * @return array ['success' => bool, 'payment_url' => string|null, 'message' => string]
-     */
     public function createCardPayment(int $orderId, float $amount, string $returnUrl): array
     {
         if (empty($this->config['card_key'])) {
@@ -230,22 +198,15 @@ class IfthenPay
         return ['success' => false, 'payment_url' => null, 'message' => $errorMsg];
     }
 
-    /**
-     * Handle IfthenPay callback (webhook)
-     * Called by IfthenPay when payment status changes
-     *
-     * @return array ['success' => bool, 'message' => string]
-     */
     public function handleCallback(array $data): array
     {
-        // Verify anti-phishing key
+
         $receivedKey = $data['key'] ?? $data['anti_phishing_key'] ?? '';
         if (!$this->verifyAntiPhishing($receivedKey)) {
             logMessage("Payment callback rejected: invalid anti-phishing key", 'error');
             return ['success' => false, 'message' => 'Invalid anti-phishing key'];
         }
 
-        // Check for replay attack - look for duplicate transaction IDs
         $transactionId = $data['requestId'] ?? $data['reference'] ?? '';
         if (!empty($transactionId)) {
             $existing = $this->db->fetch(
@@ -258,7 +219,6 @@ class IfthenPay
             }
         }
 
-        // Find order by reference or order number
         $orderId = $data['orderId'] ?? null;
         $reference = $data['reference'] ?? $data['requestId'] ?? null;
 
@@ -281,14 +241,12 @@ class IfthenPay
             return ['success' => false, 'message' => 'Order not found'];
         }
 
-        // Verify amount matches (prevent manipulation)
         $callbackAmount = (float) ($data['amount'] ?? 0);
         if ($callbackAmount > 0 && abs($callbackAmount - (float) $order['total']) > 0.01) {
             logMessage("Payment callback amount mismatch: expected {$order['total']}, got {$callbackAmount}", 'error');
             return ['success' => false, 'message' => 'Amount mismatch'];
         }
 
-        // Update order payment status
         $status = $data['status'] ?? $data['paymentStatus'] ?? 'paid';
         $paymentStatus = $this->mapCallbackStatus($status);
 
@@ -304,14 +262,12 @@ class IfthenPay
 
         $this->db->update('orders', $updateData, 'id = ?', [$order['id']]);
 
-        // Add to status history
         $this->db->insert('order_status_history', [
             'order_id' => $order['id'],
             'status' => $paymentStatus === 'paid' ? 'confirmed' : $order['status'],
             'notes' => "Pagamento {$paymentStatus} via callback (TX: {$transactionId})",
         ]);
 
-        // If paid, generate invoice and send email
         if ($paymentStatus === 'paid') {
             $this->onPaymentConfirmed($order['id']);
         }
@@ -321,9 +277,6 @@ class IfthenPay
         return ['success' => true, 'message' => 'Callback processed'];
     }
 
-    /**
-     * Check payment status for an order (for AJAX polling)
-     */
     public function checkPaymentStatus(int $orderId): array
     {
         $order = $this->db->fetch(
@@ -335,7 +288,6 @@ class IfthenPay
             return ['status' => 'unknown', 'message' => 'Order not found'];
         }
 
-        // If already in a final state, return immediately
         if (in_array($order['payment_status'], ['paid', 'failed', 'refunded'])) {
             return [
                 'status' => $order['payment_status'],
@@ -343,7 +295,6 @@ class IfthenPay
             ];
         }
 
-        // For MBWay, check with IfthenPay API
         if ($order['payment_method'] === 'mbway' && !empty($order['payment_reference'])) {
             $apiStatus = $this->checkMBWayStatus($order['payment_reference']);
             if ($apiStatus) {
@@ -357,24 +308,18 @@ class IfthenPay
         ];
     }
 
-    /**
-     * Verify anti-phishing key from callback
-     */
     public function verifyAntiPhishing(string $receivedKey): bool
     {
         $expectedKey = $this->config['anti_phishing_key'];
 
         if (empty($expectedKey)) {
-            // If no key configured, accept (development mode)
+
             return $this->sandbox;
         }
 
         return hash_equals($expectedKey, $receivedKey);
     }
 
-    /**
-     * Check if gateway is configured and ready
-     */
     public function isConfigured(string $method = 'any'): bool
     {
         return match ($method) {
@@ -390,25 +335,20 @@ class IfthenPay
     // PRIVATE METHODS
     // ============================================================
 
-    /**
-     * Actions to perform when payment is confirmed
-     */
     private function onPaymentConfirmed(int $orderId): void
     {
         try {
-            // Generate invoice
+
             $invoice = \Core\Invoice::getInstance();
             $invoiceData = $invoice->generate($orderId);
 
             if ($invoiceData) {
-                // Mark invoice as paid
+
                 $invoice->markAsPaid($invoiceData['id']);
 
-                // Send invoice email
                 $invoice->sendEmail($invoiceData['id']);
             }
 
-            // Send order confirmation email
             $mailer = new \Core\Mailer();
             $order = $this->db->fetch("SELECT * FROM orders WHERE id = ?", [$orderId]);
             $items = $this->db->fetchAll("SELECT * FROM order_items WHERE order_id = ?", [$orderId]);
@@ -422,9 +362,6 @@ class IfthenPay
         }
     }
 
-    /**
-     * Check MBWay payment status via API
-     */
     private function checkMBWayStatus(string $requestId): ?array
     {
         $payload = [
@@ -451,9 +388,6 @@ class IfthenPay
         return null;
     }
 
-    /**
-     * Make API request to IfthenPay
-     */
     private function apiRequest(string $endpoint, array $payload): ?array
     {
         $baseUrl = $this->sandbox ? self::SANDBOX_BASE : self::API_BASE;
@@ -491,26 +425,17 @@ class IfthenPay
         return json_decode($response, true);
     }
 
-    /**
-     * Generate a unique request ID
-     */
     private function generateRequestId(): string
     {
         return bin2hex(random_bytes(16));
     }
 
-    /**
-     * Generate local Multibanco reference (fallback when API not available)
-     */
     private function generateLocalMultibancoReference(int $orderId): string
     {
         $ref = str_pad((string) $orderId, 9, '0', STR_PAD_LEFT);
         return substr($ref, 0, 3) . ' ' . substr($ref, 3, 3) . ' ' . substr($ref, 6, 3);
     }
 
-    /**
-     * Map IfthenPay callback status to our status
-     */
     private function mapCallbackStatus(string $status): string
     {
         $status = strtolower($status);
@@ -523,9 +448,6 @@ class IfthenPay
         };
     }
 
-    /**
-     * Get human-readable status message
-     */
     private function getStatusMessage(string $status): string
     {
         return match ($status) {

@@ -1,12 +1,7 @@
 <?php
-/**
- * A Casa do Gi - Email Mailer Class
- * Wrapper for PHPMailer
- */
 
 namespace Core;
 
-// PHPMailer will be loaded via Composer or manually
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -27,11 +22,6 @@ class Mailer
         }
     }
 
-    /**
-     * Initialize PHPMailer with SMTP settings
-     *
-     * Priority: DB settings (encrypted, via setting()) > config.php fallback
-     */
     private function initPHPMailer(): void
     {
         $this->mailer = new PHPMailer(true);
@@ -39,7 +29,6 @@ class Mailer
         try {
             $fileMail = $this->config['mail'];
 
-            // Read from DB settings (auto-decrypted) with config.php fallback
             $host = setting('smtp_host', $fileMail['host'] ?? '');
             $port = (int) setting('smtp_port', $fileMail['port'] ?? 587);
             $username = setting('smtp_user', $fileMail['username'] ?? '');
@@ -47,7 +36,6 @@ class Mailer
             $fromEmail = setting('smtp_from_email', $fileMail['from_email'] ?? 'noreply@acasadogi.pt');
             $fromName = setting('smtp_from_name', $fileMail['from_name'] ?? 'A Casa do Gi');
 
-            // Server settings
             if (!empty($host)) {
                 $this->mailer->isSMTP();
                 $this->mailer->Host = $host;
@@ -63,7 +51,6 @@ class Mailer
                 $this->mailer->SMTPSecure = $encryption === 'ssl' ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
             }
 
-            // Default sender
             $this->mailer->setFrom($fromEmail, $fromName);
 
             $replyTo = $fileMail['reply_to'] ?? '';
@@ -71,7 +58,6 @@ class Mailer
                 $this->mailer->addReplyTo($replyTo);
             }
 
-            // Character encoding
             $this->mailer->CharSet = 'UTF-8';
             $this->mailer->Encoding = 'base64';
 
@@ -80,9 +66,6 @@ class Mailer
         }
     }
 
-    /**
-     * Send email
-     */
     public function send(
         string|array $to,
         string $subject,
@@ -90,17 +73,16 @@ class Mailer
         bool $isHtml = true,
         array $attachments = []
     ): bool {
-        // If PHPMailer is not available, use fallback
+
         if (!$this->phpMailerAvailable || !$this->mailer) {
             return $this->sendFallback($to, $subject, $body, $isHtml);
         }
 
         try {
-            // Reset previous recipients
+
             $this->mailer->clearAddresses();
             $this->mailer->clearAttachments();
 
-            // Add recipients
             $recipients = is_array($to) ? $to : [$to];
             foreach ($recipients as $email => $name) {
                 if (is_numeric($email)) {
@@ -110,7 +92,6 @@ class Mailer
                 }
             }
 
-            // Content
             $this->mailer->isHTML($isHtml);
             $this->mailer->Subject = $subject;
             $this->mailer->Body = $body;
@@ -119,7 +100,6 @@ class Mailer
                 $this->mailer->AltBody = strip_tags($body);
             }
 
-            // Attachments
             foreach ($attachments as $attachment) {
                 if (is_array($attachment)) {
                     $this->mailer->addAttachment($attachment['path'], $attachment['name'] ?? '');
@@ -142,9 +122,6 @@ class Mailer
         }
     }
 
-    /**
-     * Fallback using PHP mail() function
-     */
     private function sendFallback(string|array $to, string $subject, string $body, bool $isHtml): bool
     {
         $recipients = is_array($to) ? implode(', ', array_values($to)) : $to;
@@ -168,9 +145,6 @@ class Mailer
         return $result;
     }
 
-    /**
-     * Send contact form notification
-     */
     public function sendContactNotification(array $data): bool
     {
         $adminEmail = setting('contact_email', $this->config['mail']['from_email'] ?? '');
@@ -194,9 +168,6 @@ class Mailer
         return $this->send($adminEmail, $subject, $body);
     }
 
-    /**
-     * Send contact form confirmation to user
-     */
     public function sendContactConfirmation(array $data): bool
     {
         if (empty($data['email'])) {
@@ -213,9 +184,6 @@ class Mailer
         return $this->send($data['email'], $subject, $body);
     }
 
-    /**
-     * Send order confirmation
-     */
     public function sendOrderConfirmation(array $order, array $items): bool
     {
         if (empty($order['customer_email'])) {
@@ -232,9 +200,6 @@ class Mailer
         return $this->send($order['customer_email'], $subject, $body);
     }
 
-    /**
-     * Send order notification to admin
-     */
     public function sendOrderNotification(array $order, array $items): bool
     {
         $adminEmail = setting('contact_email', $this->config['mail']['from_email'] ?? '');
@@ -253,9 +218,6 @@ class Mailer
         return $this->send($adminEmail, $subject, $body);
     }
 
-    /**
-     * Send invoice email
-     */
     public function sendInvoice(array $invoice, array $order): bool
     {
         if (empty($invoice['customer_email'])) {
@@ -276,9 +238,6 @@ class Mailer
         return $this->send($invoice['customer_email'], $subject, $body);
     }
 
-    /**
-     * Send order shipped notification
-     */
     public function sendOrderShipped(array $order, string $trackingCode = '', array $items = []): bool
     {
         if (empty($order['customer_email'])) {
@@ -296,9 +255,6 @@ class Mailer
         return $this->send($order['customer_email'], $subject, $body);
     }
 
-    /**
-     * Send manual order received confirmation to customer
-     */
     public function sendManualOrderReceived(array $manualOrder): bool
     {
         if (empty($manualOrder['customer_email'])) {
@@ -314,9 +270,6 @@ class Mailer
         return $this->send($manualOrder['customer_email'], $subject, $body);
     }
 
-    /**
-     * Send manual order notification to admin
-     */
     public function sendManualOrderNotification(array $manualOrder): bool
     {
         $adminEmail = setting('contact_email', $this->config['mail']['from_email'] ?? '');
@@ -359,15 +312,12 @@ class Mailer
         return $this->send($adminEmail, $subject, $body);
     }
 
-    /**
-     * Render email template
-     */
     private function renderTemplate(string $template, array $data = []): string
     {
         $templateFile = TEMPLATES_PATH . '/emails/' . $template . '.php';
 
         if (!file_exists($templateFile)) {
-            // Fallback to simple template
+
             return $this->getDefaultTemplate($template, $data);
         }
 
@@ -377,9 +327,6 @@ class Mailer
         return ob_get_clean();
     }
 
-    /**
-     * Get default email template
-     */
     private function getDefaultTemplate(string $template, array $data): string
     {
         $siteName = setting('site_name', 'A Casa do Gi');

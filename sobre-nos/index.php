@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - About Us Page (Portuguese)
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 
@@ -12,19 +9,15 @@ $lang = Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 
-// Get page content
 $content = $lang->getPageContents('about');
 
-// Get hero image from database
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'about' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
 $heroImage = $heroMedia['file_path'] ?? 'images/MogadouroSobre.png';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
-// Build hero URL (file_path from media already has leading slash)
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
-// Page configuration
 $pageTitle = 'Sobre Nós';
 $pageDescription = 'Conheça a história da Casa do Gi - construída nos anos 80, sinónimo de simplicidade, acolhimento e muito amor em Mogadouro.';
 
@@ -39,7 +32,7 @@ include INCLUDES_PATH . '/header.php';
         </div>
         <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
     </div>
-    
+
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
         <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             <?= content('about_hero_tagline') ?>
@@ -53,13 +46,11 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-
-
 <!-- Intro Section -->
 <section class="py-20 bg-white relative overflow-hidden">
     <!-- Decorative elements -->
     <div class="absolute top-0 left-0 w-64 h-64 bg-cream-100 rounded-br-full opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
-    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             <div class="animate-on-scroll" data-animation="fade-right">
@@ -75,13 +66,13 @@ include INCLUDES_PATH . '/header.php';
                         <?= $content['about_origin_text2'] ?? 'O que começou como um projeto de vida familiar transformou-se num refúgio para quem procura a paz do interior. Aqui, o tempo abranda e os dias são medidos pela luz do sol e pelas conversas à beira da lareira.' ?>
                     </p>
                 </div>
-                
+
                 <div class="mt-8 flex items-center gap-4">
                     <div class="h-px w-16 bg-accent"></div>
                     <span class="font-cursive text-2xl text-primary-600"><?= $content['about_origin_signature'] ?? 'Família Gi' ?></span>
                 </div>
             </div>
-            
+
             <div class="relative animate-on-scroll" data-animation="fade-left">
                 <!-- Image Composition -->
                 <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-700">
@@ -102,7 +93,7 @@ include INCLUDES_PATH . '/header.php';
 <section class="py-24 bg-cream relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
+
             <!-- Sticky Title Area -->
             <div class="lg:col-span-4 lg:sticky lg:top-32 animate-on-scroll" data-animation="fade-right">
                 <span class="text-accent text-sm font-bold tracking-widest uppercase mb-4 block"><?= $content['about_values_label'] ?? 'Valores' ?></span>
@@ -185,7 +176,7 @@ include INCLUDES_PATH . '/header.php';
             <p class="text-xl md:text-2xl font-light leading-relaxed text-white/90 mb-10 drop-shadow-lg animate-on-scroll" data-animation="fade-left" data-delay="300">
                 <?= $content['about_region_text'] ?? 'Onde o tempo pára e a alma respira. Uma terra de horizontes infinitos, guardiã de tradições milenares e de uma beleza natural bruta e intocada.' ?>
             </p>
-            
+
             <div class="flex flex-col sm:flex-row gap-4 justify-end animate-on-scroll" data-animation="fade-left" data-delay="400">
                  <a href="<?= $base ?>/contactos/" class="group inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 hover:bg-cream transition-all duration-300">
                     <span><?= $content['about_region_cta1'] ?? 'Planear Visita' ?></span>
@@ -197,13 +188,9 @@ include INCLUDES_PATH . '/header.php';
             </div>
         </div>
     </div>
-    
+
     <!-- Bottom gradient for smooth transition if needed -->
     <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/50 to-transparent z-10 pointer-events-none"></div>
 </section>
-
-
-
-
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>

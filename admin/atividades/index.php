@@ -1,8 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Activities Management
- * Complete CRUD with switcher for Activities and External Links
- */
 
 require_once dirname(dirname(__DIR__)) . '/includes/init.php';
 require_once dirname(__DIR__) . '/includes/auth-check.php';
@@ -13,16 +9,13 @@ use Core\CSRF;
 
 $db = Database::getInstance();
 
-// Get languages
 $languages = $db->fetchAll("SELECT * FROM languages WHERE is_active = 1 ORDER BY is_default DESC");
 
-// Current section (activities or links)
 $currentSection = $_GET['section'] ?? 'activities';
 if (!in_array($currentSection, ['activities', 'links'])) {
     $currentSection = 'activities';
 }
 
-// Categories for activities
 $activityCategories = [
     'nature' => 'Natureza',
     'culture' => 'Cultura',
@@ -37,7 +30,6 @@ $activityCategories = [
     'leisure' => 'Lazer',
 ];
 
-// Categories for external links
 $linkCategories = [
     'tourism' => 'Turismo',
     'government' => 'Governo',
@@ -50,19 +42,18 @@ $linkCategories = [
     'other' => 'Outros',
 ];
 
-// Handle DELETE actions
 if (isset($_GET['delete']) && isset($_GET['token']) && CSRF::validate($_GET['token'])) {
     $deleteId = (int)$_GET['delete'];
     $deleteType = $_GET['type'] ?? 'activity';
 
     if ($deleteType === 'activity') {
-        // Delete activity images from media table
+
         $images = $db->fetchAll("SELECT file_path FROM media WHERE entity_type = 'activity' AND entity_id = ?", [$deleteId]);
         foreach ($images as $img) {
             $path = ROOT_PATH . ltrim($img['file_path'], '/');
             if (file_exists($path)) @unlink($path);
         }
-        // Delete from media table
+
         $db->delete('media', 'entity_type = ? AND entity_id = ?', ['activity', $deleteId]);
         $db->delete('activity_translations', 'activity_id = ?', [$deleteId]);
         $db->delete('activities', 'id = ?', [$deleteId]);
@@ -76,7 +67,6 @@ if (isset($_GET['delete']) && isset($_GET['token']) && CSRF::validate($_GET['tok
     redirect('/admin/atividades/?section=' . $currentSection);
 }
 
-// Handle TOGGLE ACTIVE
 if (isset($_GET['toggle']) && isset($_GET['token']) && CSRF::validate($_GET['token'])) {
     $toggleId = (int)$_GET['toggle'];
     $toggleType = $_GET['type'] ?? 'activity';
@@ -96,7 +86,6 @@ if (isset($_GET['toggle']) && isset($_GET['token']) && CSRF::validate($_GET['tok
     redirect('/admin/atividades/?section=' . $currentSection);
 }
 
-// Handle TOGGLE FEATURED
 if (isset($_GET['featured']) && isset($_GET['token']) && CSRF::validate($_GET['token'])) {
     $featuredId = (int)$_GET['featured'];
     $featuredType = $_GET['type'] ?? 'activity';
@@ -116,9 +105,8 @@ if (isset($_GET['featured']) && isset($_GET['token']) && CSRF::validate($_GET['t
     redirect('/admin/atividades/?section=' . $currentSection);
 }
 
-// Get data based on current section
 if ($currentSection === 'activities') {
-    // Get filter
+
     $filterCategory = $_GET['category'] ?? '';
     $filterSearch = $_GET['search'] ?? '';
 
@@ -138,7 +126,6 @@ if ($currentSection === 'activities') {
 
     $whereClause = implode(' AND ', $whereConditions);
 
-    // Get total count first
     $countResult = $db->fetch("SELECT COUNT(DISTINCT a.id) as total FROM activities a WHERE 1=1");
     $totalActivities = $countResult ? (int)$countResult['total'] : 0;
 
@@ -152,12 +139,11 @@ if ($currentSection === 'activities') {
         $whereParams
     );
 
-    // Debug
     error_log("Activities query returned: " . count($activities) . " rows");
     error_log("Total activities count: " . $totalActivities);
 
 } else {
-    // External links
+
     $links = $db->fetchAll(
         "SELECT el.*, elt.title, elt.description
          FROM external_links el
@@ -168,7 +154,6 @@ if ($currentSection === 'activities') {
     $totalLinks = count($links);
 }
 
-// Page config
 $pageTitle = 'Gestão de Atividades';
 
 include dirname(__DIR__) . '/includes/header.php';
@@ -314,7 +299,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     <?php
-                    // Debug: Check count
+
                     error_log("Total activities in array: " . count($activities));
                     foreach ($activities as $act):
                     ?>

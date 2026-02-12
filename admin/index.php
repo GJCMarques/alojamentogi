@@ -1,7 +1,4 @@
 <?php
-/**
- * A Casa do Gi - Admin Dashboard
- */
 
 require_once dirname(__DIR__) . '/includes/init.php';
 require_once __DIR__ . '/includes/auth-check.php';
@@ -12,10 +9,8 @@ use Core\Auth;
 $db = Database::getInstance();
 $base = basePath();
 
-// Get shop mode
 $shopMode = setting('shop_mode', 'active');
 
-// Get statistics
 $stats = [
     'products' => $db->count('products', 'is_active = 1'),
     'orders_pending' => $db->count('orders', "status IN ('pending', 'confirmed')"),
@@ -28,29 +23,24 @@ $stats = [
     'manual_orders_new' => $db->count('manual_orders', "status = 'new'"),
 ];
 
-// Get recent orders
 $recentOrders = $db->fetchAll(
     "SELECT * FROM orders ORDER BY created_at DESC LIMIT 5"
 );
 
-// Get recent messages
 $recentMessages = $db->fetchAll(
     "SELECT * FROM contact_submissions ORDER BY created_at DESC LIMIT 5"
 );
 
-// Get recent manual orders
 $recentManualOrders = $db->fetchAll(
     "SELECT * FROM manual_orders WHERE status = 'new' ORDER BY created_at DESC LIMIT 5"
 );
 
-// Revenue this month
 $monthRevenue = $db->fetchColumn(
     "SELECT COALESCE(SUM(total), 0) FROM orders
      WHERE payment_status = 'paid' AND MONTH(created_at) = MONTH(CURRENT_DATE())
      AND YEAR(created_at) = YEAR(CURRENT_DATE())"
 );
 
-// Revenue total
 $totalRevenue = $db->fetchColumn(
     "SELECT COALESCE(SUM(total), 0) FROM orders WHERE payment_status = 'paid'"
 );
@@ -59,7 +49,6 @@ $pageTitle = 'Dashboard';
 
 include __DIR__ . '/includes/header.php';
 ?>
-
 
     <div class="mb-8 flex justify-between items-center">
         <div>
@@ -194,7 +183,6 @@ include __DIR__ . '/includes/header.php';
         </div>
     </div>
 
-
     <!-- Stats Cards - Row 2 (Secondary Stats) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Products -->
@@ -249,7 +237,6 @@ include __DIR__ . '/includes/header.php';
             </div>
         </div>
     </div>
-
 
     <!-- Content Grid -->
     <div class="grid lg:grid-cols-2 gap-6 mb-6">
