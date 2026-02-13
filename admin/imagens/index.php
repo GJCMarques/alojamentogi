@@ -65,12 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $uploadDir = ROOT_PATH . '/uploads/content';
                     if (!is_dir($uploadDir)) {
-                        mkdir($uploadDir, 0755, true);
+                        @mkdir($uploadDir, 0775, true);
                     }
 
                     $filename = $imageKey . '_' . time() . '.' . $ext;
                     $targetPath = $uploadDir . '/' . $filename;
                     $dbPath = '/uploads/content/' . $filename;
+
+                    if (!is_writable($uploadDir)) {
+                        logMessage("Upload dir not writable: {$uploadDir}", 'error');
+                        $errorCount++;
+                        continue;
+                    }
 
                     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
 
@@ -117,7 +123,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($uploadCount > 0) {
             Session::flash('success', "{$uploadCount} imagem(ns) atualizada(s) com sucesso.");
         } elseif ($errorCount > 0) {
-            Session::flash('error', "Erro ao atualizar imagens. Verifique os formatos.");
+            $uploadDir = ROOT_PATH . '/uploads/content';
+            $writable = is_writable($uploadDir) ? 'sim' : 'nao';
+            Session::flash('error', "Erro ao atualizar imagens. Dir writable: {$writable}. Verifique permissoes e formatos.");
         } else {
             Session::flash('info', "Nenhuma alteração efetuada.");
         }

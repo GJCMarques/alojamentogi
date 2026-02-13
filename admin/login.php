@@ -122,7 +122,7 @@ if (isPost() && $failureCount < 20) {
         <!-- Left Side - Image -->
         <div class="hidden lg:block lg:w-1/2 relative bg-primary-700">
             <!-- Image Placeholder -->
-            <img src="<?= asset('images/mogadouroLogin.png') ?>"
+            <img src="<?= asset('images/MogadouroLogin.png') ?>"
                  alt="Mogadouro"
                  class="absolute inset-0 w-full h-full object-cover opacity-60">
 
