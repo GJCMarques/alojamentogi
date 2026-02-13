@@ -3,10 +3,10 @@
 RewriteEngine On
 
 # Set base directory
-RewriteBase /alojamentogi/
+RewriteBase /
 
 # Custom 404 page
-ErrorDocument 404 /alojamentogi/404.php
+ErrorDocument 404 /404.php
 
 # Dynamic sitemap
 RewriteRule ^sitemap\.xml$ sitemap.php [L]

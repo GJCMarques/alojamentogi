@@ -24,8 +24,8 @@ INSERT INTO content_blocks (block_key, language_id, content_type, content) VALUE
 ('footer_rights_text', 2, 'text', 'All rights reserved.'),
 
 -- Cookie Banner Text
-('cookie_banner_text', 1, 'wysiwyg', 'Utilizamos cookies para melhorar a sua experiência no nosso website. Ao continuar a navegar, concorda com a utilização de cookies. Saiba mais nos nossos <a href="/alojamentogi/termos-condicoes/" class="text-secondary hover:underline">termos e condições</a> e <a href="/alojamentogi/politica-privacidade/" class="text-secondary hover:underline">política de privacidade</a>.'),
-('cookie_banner_text', 2, 'wysiwyg', 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="/alojamentogi/en/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="/alojamentogi/en/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'),
+('cookie_banner_text', 1, 'wysiwyg', 'Utilizamos cookies para melhorar a sua experiência no nosso website. Ao continuar a navegar, concorda com a utilização de cookies. Saiba mais nos nossos <a href="/termos-condicoes/" class="text-secondary hover:underline">termos e condições</a> e <a href="/politica-privacidade/" class="text-secondary hover:underline">política de privacidade</a>.'),
+('cookie_banner_text', 2, 'wysiwyg', 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="/en/termos-condicoes/" class="text-secondary hover:underline">terms and conditions</a> and <a href="/en/politica-privacidade/" class="text-secondary hover:underline">privacy policy</a>.'),
 
 -- Cookie Banner Buttons
 ('cookie_banner_accept', 1, 'text', 'Aceitar'),

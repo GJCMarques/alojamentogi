@@ -1,11 +1,11 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 11-Fev-2026 às 04:11
--- Versão do servidor: 10.4.32-MariaDB
--- versão do PHP: 8.2.12
+-- Tempo de geraÃ§Ã£o: 11-Fev-2026 Ã s 04:11
+-- VersÃ£o do servidor: 10.4.32-MariaDB
+-- versÃ£o do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -47,7 +47,7 @@ CREATE TABLE `accommodation` (
   `rating` decimal(2,1) DEFAULT NULL COMMENT 'Average rating (e.g., 4.3)',
   `reviews_count` int(10) UNSIGNED DEFAULT 0 COMMENT 'Total number of reviews',
   `city` varchar(100) DEFAULT 'Mogadouro' COMMENT 'City name',
-  `region` varchar(100) DEFAULT 'Trás-os-Montes' COMMENT 'Region name',
+  `region` varchar(100) DEFAULT 'TrÃ¡s-os-Montes' COMMENT 'Region name',
   `country` varchar(100) DEFAULT 'Portugal' COMMENT 'Country name',
   `host_type` enum('professional','superhost','standard') DEFAULT 'standard' COMMENT 'Host type badge',
   `checkin_type` enum('self_checkin','meet_host','key_lockbox','smart_lock') DEFAULT 'self_checkin' COMMENT 'Check-in method',
@@ -139,7 +139,7 @@ CREATE TABLE `accommodation_translations` (
 --
 
 INSERT INTO `accommodation_translations` (`id`, `accommodation_id`, `language_id`, `title`, `short_description`, `full_description`, `house_rules`, `name`, `tagline`, `description`, `location_description`, `refund_policy`, `checkin_description`, `host_description`, `cancellation_policy`, `activity_section_title`, `activity_section_description`) VALUES
-(1, 1, 1, 'A Casa do Gi', 'Casa de ferias de 100m2, andar nr 1, sem elevador', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', NULL, 'A Casa do Gi', 'Simplicidade, acolhimento e muito amor', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', '', 'wewewee', '', '', 'wewew', 'Mogadouro & Envolvência', ''),
+(1, 1, 1, 'A Casa do Gi', 'Casa de ferias de 100m2, andar nr 1, sem elevador', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', NULL, 'A Casa do Gi', 'Simplicidade, acolhimento e muito amor', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', '', 'wewewee', '', '', 'wewew', 'Mogadouro & EnvolvÃªncia', ''),
 (2, 1, 2, 'A Casa do Gi', 'Holiday home of 100m2, 1st floor, no elevator', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', NULL, 'A Casa do Gi', 'Simplicity, warmth and love', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', '', 'wewewe', '', '', '2wwewe', '', ''),
 (3, 2, 1, '', NULL, NULL, NULL, 'A Casa do Gi 2', 'Simplicidade, acolhimento e muito amor', 'A Casa do Gi e sinonimo de simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor! Construida nos anos 80, altura em que os artistas da construcao e os materiais eram escassos por Terras de Mogadouro.', '', '', '', '', '', '', ''),
 (4, 2, 2, '', NULL, NULL, NULL, 'A Casa do Gi 2', 'Simplicity, warmth and love', 'A Casa do Gi is synonymous with simplicity, welcoming, remarkable moments of conviviality, warmth of family, joy, fun, laughter and a lot of love! Built in the 80s, when construction artists and materials were scarce in the lands of Mogadouro.', '', '', '', '', '', '', '');
@@ -186,9 +186,9 @@ INSERT INTO `activities` (`id`, `category_id`, `slug`, `category`, `external_url
 (4, 8, 'museu-mogadouro', 'culture', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.30, 0, 1, 4, 0, '2026-01-19 12:51:20', '2026-02-06 22:04:33'),
 (5, 8, 'igreja-matriz', 'culture', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.20, 0, 1, 5, 0, '2026-01-19 12:51:20', '2026-02-06 22:04:33'),
 (6, 10, 'restaurante-a-lareira', 'restaurants', '', 'Av. Nossa Senhora do Caminho, 5200-207 Mogadouro', '', '', '', NULL, 'moderate', '', NULL, NULL, NULL, NULL, 0.10, 0, 1, 10, 3, '2026-02-06 14:42:31', '2026-02-07 01:29:09'),
-(8, 14, 'feira-medieval-mogadouro', 'events', '', 'Centro Histórico, 5200-207 Mogadouro', '', '', '', NULL, 'free', '', NULL, NULL, NULL, NULL, 0.00, 0, 1, 12, 0, '2026-02-06 14:42:31', '2026-02-06 22:04:33'),
-(9, 12, 'convento-sao-francisco', 'architecture', '', 'Largo de São Francisco, 5200-207 Mogadouro', '', '', '', NULL, 'free', '', NULL, NULL, NULL, NULL, 0.30, 0, 1, 13, 1, '2026-02-06 14:42:31', '2026-02-06 22:04:33'),
-(10, 8, 'praca-do-municipio', 'culture', NULL, 'Praça do Município, 5200-207 Mogadouro', NULL, NULL, NULL, NULL, 'free', NULL, NULL, NULL, NULL, NULL, 0.00, 0, 1, 14, 6, '2026-02-06 14:42:31', '2026-02-07 01:48:03'),
+(8, 14, 'feira-medieval-mogadouro', 'events', '', 'Centro HistÃ³rico, 5200-207 Mogadouro', '', '', '', NULL, 'free', '', NULL, NULL, NULL, NULL, 0.00, 0, 1, 12, 0, '2026-02-06 14:42:31', '2026-02-06 22:04:33'),
+(9, 12, 'convento-sao-francisco', 'architecture', '', 'Largo de SÃ£o Francisco, 5200-207 Mogadouro', '', '', '', NULL, 'free', '', NULL, NULL, NULL, NULL, 0.30, 0, 1, 13, 1, '2026-02-06 14:42:31', '2026-02-06 22:04:33'),
+(10, 8, 'praca-do-municipio', 'culture', NULL, 'PraÃ§a do MunicÃ­pio, 5200-207 Mogadouro', NULL, NULL, NULL, NULL, 'free', NULL, NULL, NULL, NULL, NULL, 0.00, 0, 1, 14, 6, '2026-02-06 14:42:31', '2026-02-07 01:48:03'),
 (13, 7, 'testar', 'nature', '', '', '', '', '', NULL, 'free', '', NULL, NULL, NULL, NULL, NULL, 0, 1, 0, 2, '2026-02-06 18:32:57', '2026-02-07 01:23:26');
 
 -- --------------------------------------------------------
@@ -216,7 +216,7 @@ CREATE TABLE `activity_translations` (
 --
 
 INSERT INTO `activity_translations` (`id`, `activity_id`, `language_id`, `title`, `short_description`, `full_description`, `address_description`, `opening_hours_text`, `tips`, `meta_title`, `meta_description`) VALUES
-(1, 1, 1, 'Castelo de Mogadouro', 'Castelo do seculo XIII com vista panoramica da regiao', '<p>O Castelo de Mogadouro, também conhecido como Torre de Menagem, é um dos monumentos mais emblemáticos do concelho. Construído no século XIII pelos Templários, esta torre medieval ergue-se majestosamente sobre a vila, oferecendo vistas panorâmicas deslumbrantes sobre a paisagem transmontana.</p><p>A torre, de planta quadrada, é o único elemento que resta do antigo castelo medieval que protegia a povoação. As suas paredes robustas contam histórias de batalhas e conquistas que moldaram a história desta região fronteiriça.</p><p>Visitar o Castelo de Mogadouro é fazer uma viagem no tempo, descobrindo os segredos da Ordem dos Templários e a importância estratégica que esta fortaleza teve na defesa do território português.</p>', NULL, NULL, 'Visite ao final da tarde para apreciar o pôr do sol sobre as montanhas. A entrada é gratuita e o local é acessível durante todo o ano.', NULL, NULL),
+(1, 1, 1, 'Castelo de Mogadouro', 'Castelo do seculo XIII com vista panoramica da regiao', '<p>O Castelo de Mogadouro, tambÃ©m conhecido como Torre de Menagem, Ã© um dos monumentos mais emblemÃ¡ticos do concelho. ConstruÃ­do no sÃ©culo XIII pelos TemplÃ¡rios, esta torre medieval ergue-se majestosamente sobre a vila, oferecendo vistas panorÃ¢micas deslumbrantes sobre a paisagem transmontana.</p><p>A torre, de planta quadrada, Ã© o Ãºnico elemento que resta do antigo castelo medieval que protegia a povoaÃ§Ã£o. As suas paredes robustas contam histÃ³rias de batalhas e conquistas que moldaram a histÃ³ria desta regiÃ£o fronteiriÃ§a.</p><p>Visitar o Castelo de Mogadouro Ã© fazer uma viagem no tempo, descobrindo os segredos da Ordem dos TemplÃ¡rios e a importÃ¢ncia estratÃ©gica que esta fortaleza teve na defesa do territÃ³rio portuguÃªs.</p>', NULL, NULL, 'Visite ao final da tarde para apreciar o pÃ´r do sol sobre as montanhas. A entrada Ã© gratuita e o local Ã© acessÃ­vel durante todo o ano.', NULL, NULL),
 (2, 1, 2, 'Mogadouro Castle', '13th century castle with panoramic views of the region', '<p>Mogadouro Castle, also known as the Keep Tower, is one of the most emblematic monuments in the municipality. Built in the 13th century by the Templars, this medieval tower rises majestically over the village, offering stunning panoramic views over the Transmontana landscape.</p><p>The square-plan tower is the only remaining element of the old medieval castle that protected the settlement. Its robust walls tell stories of battles and conquests that shaped the history of this border region.</p><p>Visiting Mogadouro Castle is a journey through time, discovering the secrets of the Order of the Templars and the strategic importance this fortress had in the defense of Portuguese territory.</p>', NULL, NULL, 'Visit in the late afternoon to enjoy the sunset over the mountains. Admission is free and the site is accessible year-round.', NULL, NULL),
 (3, 2, 1, 'Miradouro Serpente do Medal', 'Vista panoramica sobre o rio Douro nas Arribas', NULL, NULL, NULL, NULL, NULL, NULL),
 (4, 2, 2, 'Serpente do Medal Viewpoint', 'Panoramic view over the Douro river in the Arribas', NULL, NULL, NULL, NULL, NULL, NULL),
@@ -224,13 +224,13 @@ INSERT INTO `activity_translations` (`id`, `activity_id`, `language_id`, `title`
 (8, 4, 2, 'Mogadouro Museum', 'History and traditions of the region', NULL, NULL, NULL, NULL, NULL, NULL),
 (9, 5, 1, 'Igreja Matriz de Mogadouro', 'Igreja de origem romanica no centro historico', NULL, NULL, NULL, NULL, NULL, NULL),
 (10, 5, 2, 'Mogadouro Main Church', 'Romanesque origin church in the historic center', NULL, NULL, NULL, NULL, NULL, NULL),
-(11, 6, 1, 'Restaurante A Lareira', 'Cozinha tradicional transmontana com pratos típicos da região.', '<p>O Restaurante A Lareira é uma referência da gastronomia transmontana em Mogadouro. Com um ambiente acolhedor e rústico, oferece os melhores pratos da região, preparados com ingredientes locais de qualidade.</p><p>Especialidades da casa incluem a famosa posta mirandesa, cabrito assado, enchidos tradicionais e o delicioso folar de carne. A carta de vinhos apresenta uma seleção cuidada de vinhos regionais do Douro.</p>', NULL, NULL, '', NULL, NULL),
-(13, 8, 1, 'Feira Medieval de Mogadouro', 'Evento anual que recria a época medieval com mercado, espetáculos e gastronomia.', '<p>A Feira Medieval de Mogadouro é um dos eventos mais aguardados do ano. Durante três dias, o centro histórico transforma-se num autêntico mercado medieval, com artesãos, músicos, malabaristas e espetáculos de falcoaria.</p><p>Prove as iguarias medievais, assista a torneios de cavaleiros e mergulhe na atmosfera única desta festa que celebra a rica história templária de Mogadouro.</p>', NULL, NULL, '', NULL, NULL),
-(14, 9, 1, 'Convento de São Francisco', 'Antigo convento franciscano do século XIII com arquitetura gótica notável.', '<p>O Convento de São Francisco, fundado no século XIII, é um dos mais importantes monumentos religiosos de Mogadouro. A sua igreja preserva elementos arquitectónicos góticos e manuelinos de grande valor histórico.</p><p>Destaque para os azulejos do século XVIII que decoram o interior e para o claustro sereno que convida à contemplação.</p>', NULL, NULL, '', NULL, NULL),
-(15, 10, 1, 'Praça do Município', 'Centro nevrálgico de Mogadouro com esplanadas e comércio tradicional.', '<p>A Praça do Município é o coração de Mogadouro. Rodeada de edifícios históricos, é o local ideal para sentir o pulso da vila, tomar um café numa esplanada ou simplesmente observar o quotidiano transmontano.</p>', NULL, NULL, NULL, NULL, NULL),
+(11, 6, 1, 'Restaurante A Lareira', 'Cozinha tradicional transmontana com pratos tÃ­picos da regiÃ£o.', '<p>O Restaurante A Lareira Ã© uma referÃªncia da gastronomia transmontana em Mogadouro. Com um ambiente acolhedor e rÃºstico, oferece os melhores pratos da regiÃ£o, preparados com ingredientes locais de qualidade.</p><p>Especialidades da casa incluem a famosa posta mirandesa, cabrito assado, enchidos tradicionais e o delicioso folar de carne. A carta de vinhos apresenta uma seleÃ§Ã£o cuidada de vinhos regionais do Douro.</p>', NULL, NULL, '', NULL, NULL),
+(13, 8, 1, 'Feira Medieval de Mogadouro', 'Evento anual que recria a Ã©poca medieval com mercado, espetÃ¡culos e gastronomia.', '<p>A Feira Medieval de Mogadouro Ã© um dos eventos mais aguardados do ano. Durante trÃªs dias, o centro histÃ³rico transforma-se num autÃªntico mercado medieval, com artesÃ£os, mÃºsicos, malabaristas e espetÃ¡culos de falcoaria.</p><p>Prove as iguarias medievais, assista a torneios de cavaleiros e mergulhe na atmosfera Ãºnica desta festa que celebra a rica histÃ³ria templÃ¡ria de Mogadouro.</p>', NULL, NULL, '', NULL, NULL),
+(14, 9, 1, 'Convento de SÃ£o Francisco', 'Antigo convento franciscano do sÃ©culo XIII com arquitetura gÃ³tica notÃ¡vel.', '<p>O Convento de SÃ£o Francisco, fundado no sÃ©culo XIII, Ã© um dos mais importantes monumentos religiosos de Mogadouro. A sua igreja preserva elementos arquitectÃ³nicos gÃ³ticos e manuelinos de grande valor histÃ³rico.</p><p>Destaque para os azulejos do sÃ©culo XVIII que decoram o interior e para o claustro sereno que convida Ã  contemplaÃ§Ã£o.</p>', NULL, NULL, '', NULL, NULL),
+(15, 10, 1, 'PraÃ§a do MunicÃ­pio', 'Centro nevrÃ¡lgico de Mogadouro com esplanadas e comÃ©rcio tradicional.', '<p>A PraÃ§a do MunicÃ­pio Ã© o coraÃ§Ã£o de Mogadouro. Rodeada de edifÃ­cios histÃ³ricos, Ã© o local ideal para sentir o pulso da vila, tomar um cafÃ© numa esplanada ou simplesmente observar o quotidiano transmontano.</p>', NULL, NULL, NULL, NULL, NULL),
 (18, 6, 2, 'A Lareira Restaurant', 'Traditional Transmontana cuisine with typical regional dishes.', '<p>A Lareira Restaurant is a reference for Transmontana gastronomy in Mogadouro. With a cozy and rustic atmosphere, it offers the best dishes from the region, prepared with quality local ingredients.</p><p>House specialties include the famous Mirandesa steak, roasted kid, traditional sausages and the delicious meat folar. The wine list features a careful selection of regional Douro wines.</p>', NULL, NULL, '', NULL, NULL),
 (20, 8, 2, 'Mogadouro Medieval Fair', 'Annual event recreating the medieval era with market, shows and gastronomy.', '<p>The Mogadouro Medieval Fair is one of the most anticipated events of the year. For three days, the historic center transforms into an authentic medieval market, with artisans, musicians, jugglers and falconry shows.</p><p>Taste medieval delicacies, watch knight tournaments and immerse yourself in the unique atmosphere of this festival that celebrates Mogadouro\'s rich Templar history.</p>', NULL, NULL, '', NULL, NULL),
-(21, 9, 2, 'São Francisco Convent', 'Former 13th century Franciscan convent with notable Gothic architecture.', '<p>The São Francisco Convent, founded in the 13th century, is one of Mogadouro\'s most important religious monuments. Its church preserves Gothic and Manueline architectural elements of great historical value.</p><p>Highlights include the 18th century tiles that decorate the interior and the serene cloister that invites contemplation.</p>', NULL, NULL, '', NULL, NULL),
+(21, 9, 2, 'SÃ£o Francisco Convent', 'Former 13th century Franciscan convent with notable Gothic architecture.', '<p>The SÃ£o Francisco Convent, founded in the 13th century, is one of Mogadouro\'s most important religious monuments. Its church preserves Gothic and Manueline architectural elements of great historical value.</p><p>Highlights include the 18th century tiles that decorate the interior and the serene cloister that invites contemplation.</p>', NULL, NULL, '', NULL, NULL),
 (22, 10, 2, 'Municipality Square', 'Mogadouro\'s nerve center with terraces and traditional commerce.', '<p>The Municipality Square is the heart of Mogadouro. Surrounded by historic buildings, it\'s the ideal place to feel the pulse of the village, have a coffee on a terrace or simply observe the Transmontana daily life.</p>', NULL, NULL, NULL, NULL, NULL),
 (25, 13, 1, 'Testar esta cena', 'Nada', 'Nada completo', NULL, NULL, 'Nada para te dizer', NULL, NULL),
 (26, 13, 2, 'Testing this thing', 'Nothing', 'Nothing complete', NULL, NULL, 'Nothing to say to you', NULL, NULL);
@@ -371,11 +371,11 @@ INSERT INTO `amenity_translations` (`id`, `amenity_id`, `language_id`, `name`) V
 (24, 12, 2, 'Laptop workspace'),
 (25, 13, 1, 'Forno'),
 (26, 14, 1, 'Micro-ondas'),
-(27, 15, 1, 'Frigorífico'),
-(28, 16, 1, 'Máquina de café'),
+(27, 15, 1, 'FrigorÃ­fico'),
+(28, 16, 1, 'MÃ¡quina de cafÃ©'),
 (29, 17, 1, 'Torradeira'),
 (30, 18, 1, 'Chaleira'),
-(31, 19, 1, 'Utensílios de cozinha'),
+(31, 19, 1, 'UtensÃ­lios de cozinha'),
 (32, 13, 2, 'Oven'),
 (33, 14, 2, 'Microwave'),
 (34, 15, 2, 'Refrigerator'),
@@ -391,7 +391,7 @@ INSERT INTO `amenity_translations` (`id`, `amenity_id`, `language_id`, `name`) V
 (47, 21, 2, 'Extra pillows'),
 (48, 22, 2, 'Blackout curtains'),
 (49, 23, 2, 'Hangers'),
-(53, 24, 1, 'Água quente'),
+(53, 24, 1, 'Ãgua quente'),
 (54, 25, 1, 'Toalhas'),
 (55, 26, 1, 'Artigos de higiene'),
 (56, 24, 2, 'Hot water'),
@@ -400,15 +400,15 @@ INSERT INTO `amenity_translations` (`id`, `amenity_id`, `language_id`, `name`) V
 (59, 27, 1, 'Detetor de fumo'),
 (60, 28, 1, 'Extintor'),
 (61, 29, 1, 'Kit primeiros socorros'),
-(62, 30, 1, 'Detetor de monóxido'),
+(62, 30, 1, 'Detetor de monÃ³xido'),
 (66, 27, 2, 'Smoke detector'),
 (67, 28, 2, 'Fire extinguisher'),
 (68, 29, 2, 'First aid kit'),
 (69, 30, 2, 'Carbon monoxide detector'),
 (73, 31, 1, 'Cadeira alta'),
-(74, 32, 1, 'Berço'),
-(75, 33, 1, 'Banheira bebé'),
-(76, 34, 1, 'Proteções para crianças'),
+(74, 32, 1, 'BerÃ§o'),
+(75, 33, 1, 'Banheira bebÃ©'),
+(76, 34, 1, 'ProteÃ§Ãµes para crianÃ§as'),
 (80, 31, 2, 'High chair'),
 (81, 32, 2, 'Crib'),
 (82, 33, 2, 'Baby bath'),
@@ -421,7 +421,7 @@ INSERT INTO `amenity_translations` (`id`, `amenity_id`, `language_id`, `name`) V
 (95, 36, 2, 'Streaming (Netflix)'),
 (96, 37, 2, 'Books'),
 (97, 38, 2, 'Board games'),
-(101, 39, 1, 'Limpeza incluída'),
+(101, 39, 1, 'Limpeza incluÃ­da'),
 (102, 40, 1, 'Guarda bagagem'),
 (104, 39, 2, 'Cleaning included'),
 (105, 40, 2, 'Luggage storage');
@@ -865,7 +865,7 @@ CREATE TABLE `contact_submissions` (
 --
 
 INSERT INTO `contact_submissions` (`id`, `name`, `email`, `phone`, `subject`, `message`, `ip_address`, `user_agent`, `language`, `is_read`, `is_spam`, `is_ignored`, `created_at`) VALUES
-(2, 'Guilherme Marques', 'guilherme.jcmarques@gmail.com', '999323876', 'Testar sistema', 'Teste do Sistema de Formulário de Mensagens.', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'pt', 1, 0, 0, '2026-02-07 01:34:24');
+(2, 'Guilherme Marques', 'guilherme.jcmarques@gmail.com', '999323876', 'Testar sistema', 'Teste do Sistema de FormulÃ¡rio de Mensagens.', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'pt', 1, 0, 0, '2026-02-07 01:34:24');
 
 -- --------------------------------------------------------
 
@@ -906,15 +906,15 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 (24, 'activities_intro', 2, 'textarea', 'Discover the wonders of Mogadouro and surroundings', 'activities', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (25, 'contact_title', 2, 'text', 'Contact Us', 'contact', 'main', '2026-01-19 12:51:19', '2026-01-19 12:51:19'),
 (26, 'contact_intro', 2, 'textarea', 'Do you have any questions? Get in touch with us', 'contact', 'main', '2026-01-19 12:51:19', '2026-02-09 19:27:19'),
-(27, 'home_hero_subtitle', 1, 'text', 'Onde a tradi├º├úo transmontana encontra o conforto moderno', 'home', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(27, 'home_hero_subtitle', 1, 'text', 'Onde a tradiâ”œÂºâ”œÃºo transmontana encontra o conforto moderno', 'home', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (28, 'home_hero_subtitle', 2, 'text', 'Where Transmontana tradition meets modern comfort', 'home', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (29, 'home_split_left_label', 1, 'text', 'Bem-vindo ao', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (30, 'home_split_left_label', 2, 'text', 'Welcome to the', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(31, 'home_split_left_title', 1, 'text', 'Ref├║gio', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(31, 'home_split_left_title', 1, 'text', 'Refâ”œâ•‘gio', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (32, 'home_split_left_title', 2, 'text', 'Refuge', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (33, 'home_split_right_label', 1, 'text', 'Descubra a', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (34, 'home_split_right_label', 2, 'text', 'Discover the', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(35, 'home_split_right_title', 1, 'text', 'Tradi├º├úo', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(35, 'home_split_right_title', 1, 'text', 'Tradiâ”œÂºâ”œÃºo', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (36, 'home_split_right_title', 2, 'text', 'Tradition', 'home', 'split_hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (37, 'home_explore_title', 1, 'text', 'Explore o Nosso Mundo', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (38, 'home_explore_title', 2, 'text', 'Explore Our World', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
@@ -922,7 +922,7 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 (40, 'home_card1_label', 2, 'text', 'Sleep', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (41, 'home_card1_title', 1, 'text', 'Alojamento', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (42, 'home_card1_title', 2, 'text', 'Accommodation', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(43, 'home_card1_text', 1, 'text', 'Sinta o conforto das nossas casas r├║sticas.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(43, 'home_card1_text', 1, 'text', 'Sinta o conforto das nossas casas râ”œâ•‘sticas.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (44, 'home_card1_text', 2, 'text', 'Experience the comfort of our rustic houses.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (45, 'home_card1_cta', 1, 'text', 'Ver Casas', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (46, 'home_card1_cta', 2, 'text', 'View Rooms', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
@@ -930,7 +930,7 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 (48, 'home_card2_label', 2, 'text', 'Experience', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (49, 'home_card2_title', 1, 'text', 'Atividades', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (50, 'home_card2_title', 2, 'text', 'Activities', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(51, 'home_card2_text', 1, 'text', 'Descubra a natureza e hist├│ria de Mogadouro.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(51, 'home_card2_text', 1, 'text', 'Descubra a natureza e histâ”œâ”‚ria de Mogadouro.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (52, 'home_card2_text', 2, 'text', 'Discover the nature and history of Mogadouro.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (53, 'home_card2_cta', 1, 'text', 'Explorar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (54, 'home_card2_cta', 2, 'text', 'Explore', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
@@ -938,7 +938,7 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 (56, 'home_card3_label', 2, 'text', 'Taste', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (57, 'home_card3_title', 1, 'text', 'Loja Regional', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (58, 'home_card3_title', 2, 'text', 'Regional Shop', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(59, 'home_card3_text', 1, 'text', 'Sabores aut├¬nticos de Tr├ís-os-Montes.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(59, 'home_card3_text', 1, 'text', 'Sabores autâ”œÂ¬nticos de Trâ”œÃ­s-os-Montes.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (60, 'home_card3_text', 2, 'text', 'Authentic flavors from Tras-os-Montes.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (61, 'home_card3_cta', 1, 'text', 'Comprar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (62, 'home_card3_cta', 2, 'text', 'Shop Now', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
@@ -950,57 +950,57 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 (68, 'home_card4_text', 2, 'text', 'Get in touch and plan your visit.', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (69, 'home_card4_cta', 1, 'text', 'Contactar', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (70, 'home_card4_cta', 2, 'text', 'Get in Touch', 'home', 'explore', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(71, 'home_about_label', 1, 'text', 'A Nossa Hist├│ria', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(71, 'home_about_label', 1, 'text', 'A Nossa Histâ”œâ”‚ria', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (72, 'home_about_label', 2, 'text', 'Our Story', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (73, 'home_about_title', 1, 'html', 'Mais que uma casa,<br>um <span class=\"italic text-accent\">legado</span>.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (74, 'home_about_title', 2, 'html', 'More than a house,<br>a <span class=\"italic text-accent\">legacy</span>.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(75, 'home_about_text1', 1, 'textarea', 'A Casa do Gi nasceu da vontade de preservar as ra├¡zes transmontanas. O que outrora foi uma casa de fam├¡lia, ├® hoje um ref├║gio para quem procura a autenticidade do campo.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(75, 'home_about_text1', 1, 'textarea', 'A Casa do Gi nasceu da vontade de preservar as raâ”œÂ¡zes transmontanas. O que outrora foi uma casa de famâ”œÂ¡lia, â”œÂ® hoje um refâ”œâ•‘gio para quem procura a autenticidade do campo.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (76, 'home_about_text1', 2, 'textarea', 'A Casa do Gi was born from the will to preserve the roots of Tras-os-Montes. What was once a family home is now a refuge for those seeking the authenticity of the countryside.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(77, 'home_about_text2', 1, 'textarea', 'Aqui, o tempo abranda. Convidamo-lo a descobrir as tradi├º├Áes, os sabores e as gentes que fazem de Mogadouro um lugar ├║nico no mundo.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(77, 'home_about_text2', 1, 'textarea', 'Aqui, o tempo abranda. Convidamo-lo a descobrir as tradiâ”œÂºâ”œÃes, os sabores e as gentes que fazem de Mogadouro um lugar â”œâ•‘nico no mundo.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (78, 'home_about_text2', 2, 'textarea', 'Here, time slows down. We invite you to discover the traditions, the flavors, and the people that make Mogadouro a unique place in the world.', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(79, 'home_about_cta', 1, 'text', 'Ler Hist├│ria Completa', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(79, 'home_about_cta', 1, 'text', 'Ler Histâ”œâ”‚ria Completa', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (80, 'home_about_cta', 2, 'text', 'Read Full Story', 'home', 'about_teaser', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(81, 'about_hero_label', 1, 'text', 'A Nossa Hist├│ria', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(81, 'about_hero_label', 1, 'text', 'A Nossa Histâ”œâ”‚ria', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (82, 'about_hero_label', 2, 'text', 'Our Story', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (83, 'about_hero_subtitle', 1, 'textarea', 'Simplicidade, acolhimento, momentos de convivio marcantes, calor da familia, alegria, diversao, gargalhadas e muito amor!', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 20:08:48'),
 (84, 'about_hero_subtitle', 2, 'textarea', 'Simplicity, warmth, remarkable moments of conviviality, family warmth, joy, fun, laughter and lots of love!', 'about', 'hero', '2026-02-09 18:34:33', '2026-02-09 20:08:48'),
 (85, 'about_origin_label', 1, 'text', 'A Nossa Origem', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (86, 'about_origin_label', 2, 'text', 'Our Origins', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(87, 'about_origin_title', 1, 'html', 'Uma casa constru├¡da com <span class=\"italic text-secondary\">amor</span> e <span class=\"italic text-secondary\">saudade</span>.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(87, 'about_origin_title', 1, 'html', 'Uma casa construâ”œÂ¡da com <span class=\"italic text-secondary\">amor</span> e <span class=\"italic text-secondary\">saudade</span>.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (88, 'about_origin_title', 2, 'html', 'A house built with <span class=\"italic text-secondary\">love</span> and <span class=\"italic text-secondary\">longing</span>.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(89, 'about_origin_text1', 1, 'textarea', 'Erguida nos anos 80, a <strong>Casa do Gi</strong> conta a hist├│ria intemporal de quem partiu para longe mas nunca esqueceu as suas ra├¡zes. Constru├¡da tijolo a tijolo, representa o sonho concretizado de regressar a casa.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(89, 'about_origin_text1', 1, 'textarea', 'Erguida nos anos 80, a <strong>Casa do Gi</strong> conta a histâ”œâ”‚ria intemporal de quem partiu para longe mas nunca esqueceu as suas raâ”œÂ¡zes. Construâ”œÂ¡da tijolo a tijolo, representa o sonho concretizado de regressar a casa.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (90, 'about_origin_text1', 2, 'textarea', 'Built in the 80s, <strong>Casa do Gi</strong> tells the timeless story of those who left for distant lands but never forgot their roots. Constructed brick by brick, it represents the fulfilled dream of returning home.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(91, 'about_origin_text2', 1, 'textarea', 'O que come├ºou como um projeto de vida familiar transformou-se num ref├║gio para quem procura a paz do interior. Aqui, o tempo abranda e os dias s├úo medidos pela luz do sol e pelas conversas ├á beira da lareira.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(91, 'about_origin_text2', 1, 'textarea', 'O que comeâ”œÂºou como um projeto de vida familiar transformou-se num refâ”œâ•‘gio para quem procura a paz do interior. Aqui, o tempo abranda e os dias sâ”œÃºo medidos pela luz do sol e pelas conversas â”œÃ¡ beira da lareira.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (92, 'about_origin_text2', 2, 'textarea', 'What began as a family life project transformed into a refuge for those seeking the peace of the countryside. Here, time slows down and days are measured by sunlight and conversations by the fireplace.', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(93, 'about_origin_caption', 1, 'text', '1980 ÔÇó O In├¡cio', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(94, 'about_origin_caption', 2, 'text', '1980 ÔÇó The Beginning', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(95, 'about_origin_signature', 1, 'text', 'Fam├¡lia Gi', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(93, 'about_origin_caption', 1, 'text', '1980 Ã”Ã‡Ã³ O Inâ”œÂ¡cio', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(94, 'about_origin_caption', 2, 'text', '1980 Ã”Ã‡Ã³ The Beginning', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(95, 'about_origin_signature', 1, 'text', 'Famâ”œÂ¡lia Gi', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (96, 'about_origin_signature', 2, 'text', 'Gi Family', 'about', 'origin', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (97, 'about_values_label', 1, 'text', 'Valores', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (98, 'about_values_label', 2, 'text', 'Values', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(99, 'about_values_title', 1, 'html', 'A arte de bem receber,<br>├á moda antiga.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(99, 'about_values_title', 1, 'html', 'A arte de bem receber,<br>â”œÃ¡ moda antiga.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (100, 'about_values_title', 2, 'html', 'The art of welcoming,<br>the old-fashioned way.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(101, 'about_values_intro', 1, 'textarea', 'N├úo somos um hotel. Somos uma casa de fam├¡lia que decidiu abrir as portas ao mundo. Aqui, a hospitalidade n├úo ├® um servi├ºo, ├® a nossa natureza.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(101, 'about_values_intro', 1, 'textarea', 'Nâ”œÃºo somos um hotel. Somos uma casa de famâ”œÂ¡lia que decidiu abrir as portas ao mundo. Aqui, a hospitalidade nâ”œÃºo â”œÂ® um serviâ”œÂºo, â”œÂ® a nossa natureza.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (102, 'about_values_intro', 2, 'textarea', 'We are not a hotel. We are a family home that decided to open its doors to the world. Here, hospitality is not a service, it\'s our nature.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(103, 'about_value1_title', 1, 'text', 'Acolhimento Genu├¡no', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(103, 'about_value1_title', 1, 'text', 'Acolhimento Genuâ”œÂ¡no', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (104, 'about_value1_title', 2, 'text', 'Genuine Hospitality', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(105, 'about_value1_text', 1, 'textarea', 'Recebemos cada h├│spede como um velho amigo. Sem formalismos r├¡gidos, com o calor de um abra├ºo e a sinceridade de um sorriso transmontano.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(105, 'about_value1_text', 1, 'textarea', 'Recebemos cada hâ”œâ”‚spede como um velho amigo. Sem formalismos râ”œÂ¡gidos, com o calor de um abraâ”œÂºo e a sinceridade de um sorriso transmontano.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (106, 'about_value1_text', 2, 'textarea', 'We welcome each guest as an old friend. Without rigid formalities, with the warmth of a hug and the sincerity of a Transmontano smile.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (107, 'about_value2_title', 1, 'text', 'Paz Absoluta', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (108, 'about_value2_title', 2, 'text', 'Absolute Peace', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(109, 'about_value2_text', 1, 'textarea', 'O luxo do sil├¬ncio. Longe da confus├úo, onde o ├║nico ru├¡do ├® o vento nas ├írvores e o cantar dos p├íssaros. O ref├║gio perfeito para recarregar energias.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(109, 'about_value2_text', 1, 'textarea', 'O luxo do silâ”œÂ¬ncio. Longe da confusâ”œÃºo, onde o â”œâ•‘nico ruâ”œÂ¡do â”œÂ® o vento nas â”œÃ­rvores e o cantar dos pâ”œÃ­ssaros. O refâ”œâ•‘gio perfeito para recarregar energias.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (110, 'about_value2_text', 2, 'textarea', 'The luxury of silence. Far from the hustle, where the only sound is the wind in the trees and the singing of birds. The perfect refuge to recharge energies.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(111, 'about_value3_title', 1, 'text', 'Esp├¡rito de Partilha', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(111, 'about_value3_title', 1, 'text', 'Espâ”œÂ¡rito de Partilha', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (112, 'about_value3_title', 2, 'text', 'Spirit of Sharing', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(113, 'about_value3_text', 1, 'textarea', 'Acreditamos que as melhores mem├│rias s├úo constru├¡das ├á mesa. Partilhamos hist├│rias, sabores e experi├¬ncias que ficam para sempre.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(113, 'about_value3_text', 1, 'textarea', 'Acreditamos que as melhores memâ”œâ”‚rias sâ”œÃºo construâ”œÂ¡das â”œÃ¡ mesa. Partilhamos histâ”œâ”‚rias, sabores e experiâ”œÂ¬ncias que ficam para sempre.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (114, 'about_value3_text', 2, 'textarea', 'We believe the best memories are built at the table. We share stories, flavors and experiences that last forever.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(115, 'about_value4_title', 1, 'text', 'Aten├º├úo ao Detalhe', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(115, 'about_value4_title', 1, 'text', 'Atenâ”œÂºâ”œÃºo ao Detalhe', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (116, 'about_value4_title', 2, 'text', 'Attention to Detail', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(117, 'about_value4_text', 1, 'textarea', 'Nada ├® deixado ao acaso. Do pequeno-almo├ºo caseiro ├á decora├º├úo cuidada, tudo ├® pensado para o seu conforto e bem-estar.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(117, 'about_value4_text', 1, 'textarea', 'Nada â”œÂ® deixado ao acaso. Do pequeno-almoâ”œÂºo caseiro â”œÃ¡ decoraâ”œÂºâ”œÃºo cuidada, tudo â”œÂ® pensado para o seu conforto e bem-estar.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (118, 'about_value4_text', 2, 'textarea', 'Nothing is left to chance. From homemade breakfast to thoughtful decoration, everything is designed for your comfort and wellbeing.', 'about', 'values', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(119, 'about_region_label', 1, 'text', 'O Nosso Ber├ºo', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(119, 'about_region_label', 1, 'text', 'O Nosso Berâ”œÂºo', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (120, 'about_region_label', 2, 'text', 'Our Home', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
-(121, 'about_region_text', 1, 'textarea', 'Onde o tempo p├íra e a alma respira. Uma terra de horizontes infinitos, guardi├ú de tradi├º├Áes milenares e de uma beleza natural bruta e intocada.', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
+(121, 'about_region_text', 1, 'textarea', 'Onde o tempo pâ”œÃ­ra e a alma respira. Uma terra de horizontes infinitos, guardiâ”œÃº de tradiâ”œÂºâ”œÃes milenares e de uma beleza natural bruta e intocada.', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (122, 'about_region_text', 2, 'textarea', 'Where time stops and the soul breathes. A land of infinite horizons, guardian of ancient traditions and raw, untouched natural beauty.', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (123, 'about_region_cta1', 1, 'text', 'Planear Visita', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
 (124, 'about_region_cta1', 2, 'text', 'Plan Visit', 'about', 'region', '2026-02-09 18:34:33', '2026-02-09 18:34:33'),
@@ -1076,8 +1076,8 @@ INSERT INTO `content_blocks` (`id`, `block_key`, `language_id`, `content_type`, 
 (440, 'footer_book_title', 2, 'text', 'Book Now', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
 (441, 'footer_rights_text', 1, 'text', 'Todos os direitos reservados.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
 (442, 'footer_rights_text', 2, 'text', 'All rights reserved.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
-(443, 'cookie_banner_text', 1, '', 'Utilizamos cookies para melhorar a sua experi??ncia no nosso website. Ao continuar a navegar, concorda com a utiliza????o de cookies. Saiba mais nos nossos <a href=\"/alojamentogi/termos-condicoes/\" class=\"text-secondary hover:underline\">termos e condi????es</a> e <a href=\"/alojamentogi/politica-privacidade/\" class=\"text-secondary hover:underline\">pol??tica de privacidade</a>.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
-(444, 'cookie_banner_text', 2, '', 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href=\"/alojamentogi/en/termos-condicoes/\" class=\"text-secondary hover:underline\">terms and conditions</a> and <a href=\"/alojamentogi/en/politica-privacidade/\" class=\"text-secondary hover:underline\">privacy policy</a>.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(443, 'cookie_banner_text', 1, '', 'Utilizamos cookies para melhorar a sua experi??ncia no nosso website. Ao continuar a navegar, concorda com a utiliza????o de cookies. Saiba mais nos nossos <a href=\"/termos-condicoes/\" class=\"text-secondary hover:underline\">termos e condi????es</a> e <a href=\"/politica-privacidade/\" class=\"text-secondary hover:underline\">pol??tica de privacidade</a>.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
+(444, 'cookie_banner_text', 2, '', 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href=\"/en/termos-condicoes/\" class=\"text-secondary hover:underline\">terms and conditions</a> and <a href=\"/en/politica-privacidade/\" class=\"text-secondary hover:underline\">privacy policy</a>.', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
 (445, 'cookie_banner_accept', 1, 'text', 'Aceitar', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
 (446, 'cookie_banner_accept', 2, 'text', 'Accept', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
 (447, 'cookie_banner_details', 1, 'text', 'Ver Detalhes', NULL, NULL, '2026-02-09 20:31:09', '2026-02-09 20:34:54'),
@@ -1135,14 +1135,14 @@ CREATE TABLE `external_link_translations` (
 --
 
 INSERT INTO `external_link_translations` (`id`, `link_id`, `language_id`, `title`, `description`) VALUES
-(1, 1, 1, 'Câmara Municipal de Mogadouro', 'Site oficial da Câmara Municipal com informações sobre serviços, eventos e notícias locais.'),
+(1, 1, 1, 'CÃ¢mara Municipal de Mogadouro', 'Site oficial da CÃ¢mara Municipal com informaÃ§Ãµes sobre serviÃ§os, eventos e notÃ­cias locais.'),
 (2, 1, 2, 'Mogadouro City Hall', 'Official City Hall website with information about services, events and local news.'),
-(3, 2, 1, 'Parque Natural do Douro Internacional', 'Descubra a fauna e flora únicas das Arribas do Douro, um dos últimos refúgios de aves de rapina na Europa.'),
+(3, 2, 1, 'Parque Natural do Douro Internacional', 'Descubra a fauna e flora Ãºnicas das Arribas do Douro, um dos Ãºltimos refÃºgios de aves de rapina na Europa.'),
 (4, 2, 2, 'Douro International Natural Park', 'Discover the unique fauna and flora of the Douro Cliffs, one of the last refuges for birds of prey in Europe.'),
-(5, 3, 1, 'Visit Portugal - Trás-os-Montes', 'Portal oficial de turismo de Portugal com guias e sugestões para explorar a região transmontana.'),
-(6, 3, 2, 'Visit Portugal - Trás-os-Montes', 'Official Portugal tourism portal with guides and suggestions to explore the Transmontana region.'),
-(7, 4, 1, 'Centro de Portugal - Trás-os-Montes nao', 'Informações turísticas detalhadas sobre a região, incluindo roteiros e pontos de interesse.'),
-(8, 4, 2, 'Centro de Portugal - Trás-os-Montes nao', 'Informações turísticas detalhadas sobre a região, incluindo roteiros e pontos de interesse.'),
+(5, 3, 1, 'Visit Portugal - TrÃ¡s-os-Montes', 'Portal oficial de turismo de Portugal com guias e sugestÃµes para explorar a regiÃ£o transmontana.'),
+(6, 3, 2, 'Visit Portugal - TrÃ¡s-os-Montes', 'Official Portugal tourism portal with guides and suggestions to explore the Transmontana region.'),
+(7, 4, 1, 'Centro de Portugal - TrÃ¡s-os-Montes nao', 'InformaÃ§Ãµes turÃ­sticas detalhadas sobre a regiÃ£o, incluindo roteiros e pontos de interesse.'),
+(8, 4, 2, 'Centro de Portugal - TrÃ¡s-os-Montes nao', 'InformaÃ§Ãµes turÃ­sticas detalhadas sobre a regiÃ£o, incluindo roteiros e pontos de interesse.'),
 (11, 6, 1, 'Link testar', 'Nada'),
 (12, 6, 2, 'Link testar', 'Nada');
 
@@ -1270,7 +1270,7 @@ CREATE TABLE `languages` (
 --
 
 INSERT INTO `languages` (`id`, `code`, `name`, `locale`, `flag_icon`, `is_default`, `is_active`, `created_at`) VALUES
-(1, 'pt', 'Português', 'pt_PT', 'pt', 1, 1, '2026-01-19 12:51:19'),
+(1, 'pt', 'PortuguÃªs', 'pt_PT', 'pt', 1, 1, '2026-01-19 12:51:19'),
 (2, 'en', 'English', 'en_GB', 'gb', 0, 1, '2026-01-19 12:51:19');
 
 -- --------------------------------------------------------
@@ -1336,7 +1336,7 @@ CREATE TABLE `manual_orders` (
 --
 
 INSERT INTO `manual_orders` (`id`, `customer_name`, `customer_email`, `customer_phone`, `shipping_address`, `shipping_postal_code`, `shipping_city`, `items_json`, `subtotal`, `shipping_fee`, `total`, `status`, `admin_notes`, `converted_order_id`, `ip_address`, `user_agent`, `notes`, `created_at`, `updated_at`, `contacted_at`) VALUES
-(1, 'Guilherme Jose Costa Marques', 'guilherme.jcmarques@gmail.com', '965079823', 'R. Pádua Correia 166', '4430-999', 'Vila Nova de Gaia', '[{\"product_id\":2,\"product_name\":\"Banana das Américas Pack 5kg\",\"product_sku\":\"969\",\"quantity\":1,\"unit_price\":8,\"subtotal\":8}]', 8.00, 5.00, 13.00, 'converted', NULL, 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'Nada.', '2026-02-09 00:13:43', '2026-02-10 17:33:14', NULL),
+(1, 'Guilherme Jose Costa Marques', 'guilherme.jcmarques@gmail.com', '965079823', 'R. PÃ¡dua Correia 166', '4430-999', 'Vila Nova de Gaia', '[{\"product_id\":2,\"product_name\":\"Banana das AmÃ©ricas Pack 5kg\",\"product_sku\":\"969\",\"quantity\":1,\"unit_price\":8,\"subtotal\":8}]', 8.00, 5.00, 13.00, 'converted', NULL, 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'Nada.', '2026-02-09 00:13:43', '2026-02-10 17:33:14', NULL),
 (2, 'James', 'james@test.com', '998323447', NULL, NULL, NULL, '[{\"product_id\":2,\"product_name\":\"American Bananas\",\"product_sku\":\"969\",\"quantity\":1,\"unit_price\":8,\"subtotal\":8}]', 8.00, 5.00, 13.00, 'converted', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', NULL, '2026-02-09 23:08:20', '2026-02-10 17:08:04', '2026-02-10 16:52:30');
 
 -- --------------------------------------------------------
@@ -1463,7 +1463,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `invoice_id`, `order_number`, `customer_name`, `customer_email`, `customer_phone`, `customer_nif`, `billing_address`, `billing_postal_code`, `billing_city`, `billing_country`, `shipping_same_as_billing`, `shipping_address`, `shipping_postal_code`, `shipping_city`, `shipping_country`, `subtotal`, `shipping_fee`, `discount_amount`, `total`, `payment_method`, `payment_status`, `payment_reference`, `payment_entity`, `payment_transaction_id`, `paid_at`, `status`, `tracking_code`, `shipped_at`, `delivered_at`, `notes`, `admin_notes`, `ip_address`, `user_agent`, `language`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'GI-2026-13AEC8', 'Guilherme Jose Costa Marques', 'guilherme.jcmarques@gmail.com', '965079823', NULL, 'R. Pádua Correia 166', '4430-999', 'Vila Nova de Gaia', 'PT', 1, 'R. Pádua Correia 166', '4430-999', 'Vila Nova de Gaia', 'PT', 8.00, 5.00, 0.00, 13.00, 'transfer', 'paid', NULL, NULL, NULL, '2026-02-10 17:33:14', 'delivered', NULL, NULL, '2026-02-10 17:35:46', 'Nada.', 'Convertido do pedido manual #1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'pt', '2026-02-10 17:33:14', '2026-02-10 17:35:46');
+(1, NULL, 'GI-2026-13AEC8', 'Guilherme Jose Costa Marques', 'guilherme.jcmarques@gmail.com', '965079823', NULL, 'R. PÃ¡dua Correia 166', '4430-999', 'Vila Nova de Gaia', 'PT', 1, 'R. PÃ¡dua Correia 166', '4430-999', 'Vila Nova de Gaia', 'PT', 8.00, 5.00, 0.00, 13.00, 'transfer', 'paid', NULL, NULL, NULL, '2026-02-10 17:33:14', 'delivered', NULL, NULL, '2026-02-10 17:35:46', 'Nada.', 'Convertido do pedido manual #1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'pt', '2026-02-10 17:33:14', '2026-02-10 17:35:46');
 
 -- --------------------------------------------------------
 
@@ -1487,7 +1487,7 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `product_sku`, `quantity`, `unit_price`, `total_price`) VALUES
-(1, 1, 2, 'Banana das Américas Pack 5kg', '969', 1, 8.00, 8.00);
+(1, 1, 2, 'Banana das AmÃ©ricas Pack 5kg', '969', 1, 8.00, 8.00);
 
 -- --------------------------------------------------------
 
@@ -1535,17 +1535,17 @@ CREATE TABLE `page_heroes` (
 --
 
 INSERT INTO `page_heroes` (`id`, `page_key`, `page_name_pt`, `page_name_en`, `hero_overlay_opacity`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'home', 'Página Inicial', 'Homepage', 0.40, 1, 1, '2026-02-03 00:18:35', '2026-02-03 00:18:35'),
+(1, 'home', 'PÃ¡gina Inicial', 'Homepage', 0.40, 1, 1, '2026-02-03 00:18:35', '2026-02-03 00:18:35'),
 (2, 'accommodation_main', 'Alojamento', 'Accommodation (Main Page)', 0.40, 1, 2, '2026-02-03 00:18:35', '2026-02-06 18:11:40'),
 (3, 'activities', 'Atividades', 'Activities', 0.40, 1, 3, '2026-02-03 00:18:35', '2026-02-03 00:18:35'),
-(4, 'about', 'Sobre Nós', 'About Us', 0.40, 1, 4, '2026-02-03 00:18:35', '2026-02-03 02:10:03'),
+(4, 'about', 'Sobre NÃ³s', 'About Us', 0.40, 1, 4, '2026-02-03 00:18:35', '2026-02-03 02:10:03'),
 (5, 'contact', 'Contactos', 'Contact', 0.40, 1, 5, '2026-02-03 00:18:35', '2026-02-03 02:14:25'),
 (6, 'shop', 'Loja', 'Shop', 0.40, 1, 6, '2026-02-03 00:18:35', '2026-02-03 00:18:35'),
 (8, 'product_detail', 'Produto (Detalhe)', 'Product (Detail)', 0.40, 1, 7, '2026-02-08 18:45:41', '2026-02-08 18:45:41'),
 (9, 'cart', 'Carrinho de Compras', 'Shopping Cart', 0.40, 1, 8, '2026-02-08 18:45:42', '2026-02-08 18:45:42'),
 (10, 'checkout', 'Finalizar Compra', 'Checkout', 0.40, 1, 9, '2026-02-08 18:45:42', '2026-02-08 18:45:42'),
-(11, 'privacy_policy', 'Política de Privacidade', 'Privacy Policy', 0.40, 1, 10, '2026-02-09 20:08:12', '2026-02-10 21:37:27'),
-(12, 'terms_conditions', 'Termos e Condições', 'Terms and Conditions', 0.40, 1, 11, '2026-02-09 20:08:12', '2026-02-10 21:38:00');
+(11, 'privacy_policy', 'PolÃ­tica de Privacidade', 'Privacy Policy', 0.40, 1, 10, '2026-02-09 20:08:12', '2026-02-10 21:37:27'),
+(12, 'terms_conditions', 'Termos e CondiÃ§Ãµes', 'Terms and Conditions', 0.40, 1, 11, '2026-02-09 20:08:12', '2026-02-10 21:38:00');
 
 -- --------------------------------------------------------
 
@@ -1681,8 +1681,8 @@ CREATE TABLE `product_translations` (
 --
 
 INSERT INTO `product_translations` (`id`, `product_id`, `language_id`, `name`, `short_description`, `description`, `full_description`) VALUES
-(1, 2, 1, 'Banana das Américas Pack 5kg', 'Boa qualidade da Quinta do Zé', 'Apanhadas por crianças de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL),
-(2, 2, 2, 'American Bananas', 'Boa qualidade da Quinta do Zé', 'Apanhadas por crianças de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL);
+(1, 2, 1, 'Banana das AmÃ©ricas Pack 5kg', 'Boa qualidade da Quinta do ZÃ©', 'Apanhadas por crianÃ§as de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL),
+(2, 2, 2, 'American Bananas', 'Boa qualidade da Quinta do ZÃ©', 'Apanhadas por crianÃ§as de 12 anos pagas 8 Reais por hora a trabalharem 12 horas por dia para chegarem para a sua mesa.', NULL);
 
 -- --------------------------------------------------------
 
@@ -1726,7 +1726,7 @@ INSERT INTO `settings` (`id`, `setting_key`, `setting_value`, `setting_type`, `s
 (17, 'free_shipping_threshold', '50', 'number', 'shop', NULL, 0, '2026-01-20 16:22:55', '2026-01-20 16:22:55'),
 (18, 'shipping_cost', '5', 'number', 'shop', NULL, 0, '2026-01-20 16:22:55', '2026-01-20 16:22:55'),
 (82, 'shop_mode', 'manual', 'text', 'shop', 'Modo da loja: active, manual, closed', 0, '2026-02-07 20:01:43', '2026-02-09 00:34:35'),
-(83, 'site_description', '', 'text', 'general', 'Descrição (SEO)', 0, '2026-02-11 02:38:34', '2026-02-11 02:38:34');
+(83, 'site_description', '', 'text', 'general', 'DescriÃ§Ã£o (SEO)', 0, '2026-02-11 02:38:34', '2026-02-11 02:38:34');
 
 -- --------------------------------------------------------
 
@@ -1846,25 +1846,25 @@ DROP TABLE IF EXISTS `v_hero_media`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_hero_media`  AS SELECT `m`.`id` AS `id`, `m`.`filename` AS `filename`, `m`.`original_name` AS `original_name`, `m`.`file_path` AS `file_path`, `m`.`file_type` AS `file_type`, `m`.`file_size` AS `file_size`, `m`.`alt_text_pt` AS `alt_text_pt`, `m`.`alt_text_en` AS `alt_text_en`, `m`.`caption_pt` AS `caption_pt`, `m`.`caption_en` AS `caption_en`, `m`.`category` AS `category`, `m`.`entity_type` AS `entity_type`, `m`.`entity_id` AS `entity_id`, `m`.`is_cover` AS `is_cover`, `m`.`sort_order` AS `sort_order`, `m`.`uploaded_by` AS `uploaded_by`, `m`.`created_at` AS `created_at`, `m`.`accommodation_id` AS `accommodation_id`, `ph`.`page_key` AS `page_key`, `ph`.`is_active` AS `is_active` FROM (`media` `m` join `page_heroes` `ph` on(`m`.`entity_id` = `ph`.`id`)) WHERE `m`.`entity_type` = 'hero' ;
 
 --
--- Índices para tabelas despejadas
+-- Ãndices para tabelas despejadas
 --
 
 --
--- Índices para tabela `accommodation`
+-- Ãndices para tabela `accommodation`
 --
 ALTER TABLE `accommodation`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_accommodation_number` (`accommodation_number`);
 
 --
--- Índices para tabela `accommodation_amenities`
+-- Ãndices para tabela `accommodation_amenities`
 --
 ALTER TABLE `accommodation_amenities`
   ADD PRIMARY KEY (`accommodation_id`,`amenity_id`),
   ADD KEY `amenity_id` (`amenity_id`);
 
 --
--- Índices para tabela `accommodation_translations`
+-- Ãndices para tabela `accommodation_translations`
 --
 ALTER TABLE `accommodation_translations`
   ADD PRIMARY KEY (`id`),
@@ -1872,7 +1872,7 @@ ALTER TABLE `accommodation_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `activities`
+-- Ãndices para tabela `activities`
 --
 ALTER TABLE `activities`
   ADD PRIMARY KEY (`id`),
@@ -1885,7 +1885,7 @@ ALTER TABLE `activities`
   ADD KEY `idx_activities_featured_active` (`is_featured`,`is_active`);
 
 --
--- Índices para tabela `activity_translations`
+-- Ãndices para tabela `activity_translations`
 --
 ALTER TABLE `activity_translations`
   ADD PRIMARY KEY (`id`),
@@ -1893,7 +1893,7 @@ ALTER TABLE `activity_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `admins`
+-- Ãndices para tabela `admins`
 --
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`),
@@ -1904,13 +1904,13 @@ ALTER TABLE `admins`
   ADD KEY `idx_active` (`is_active`);
 
 --
--- Índices para tabela `amenities`
+-- Ãndices para tabela `amenities`
 --
 ALTER TABLE `amenities`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `amenity_translations`
+-- Ãndices para tabela `amenity_translations`
 --
 ALTER TABLE `amenity_translations`
   ADD PRIMARY KEY (`id`),
@@ -1918,7 +1918,7 @@ ALTER TABLE `amenity_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `audit_log`
+-- Ãndices para tabela `audit_log`
 --
 ALTER TABLE `audit_log`
   ADD PRIMARY KEY (`id`),
@@ -1928,7 +1928,7 @@ ALTER TABLE `audit_log`
   ADD KEY `idx_created` (`created_at`);
 
 --
--- Índices para tabela `barcode_batches`
+-- Ãndices para tabela `barcode_batches`
 --
 ALTER TABLE `barcode_batches`
   ADD PRIMARY KEY (`id`),
@@ -1936,14 +1936,14 @@ ALTER TABLE `barcode_batches`
   ADD KEY `idx_batch_active` (`is_active`);
 
 --
--- Índices para tabela `bathrooms`
+-- Ãndices para tabela `bathrooms`
 --
 ALTER TABLE `bathrooms`
   ADD PRIMARY KEY (`id`),
   ADD KEY `accommodation_id` (`accommodation_id`);
 
 --
--- Índices para tabela `bathroom_translations`
+-- Ãndices para tabela `bathroom_translations`
 --
 ALTER TABLE `bathroom_translations`
   ADD PRIMARY KEY (`id`),
@@ -1951,14 +1951,14 @@ ALTER TABLE `bathroom_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `bedrooms`
+-- Ãndices para tabela `bedrooms`
 --
 ALTER TABLE `bedrooms`
   ADD PRIMARY KEY (`id`),
   ADD KEY `accommodation_id` (`accommodation_id`);
 
 --
--- Índices para tabela `bedroom_translations`
+-- Ãndices para tabela `bedroom_translations`
 --
 ALTER TABLE `bedroom_translations`
   ADD PRIMARY KEY (`id`),
@@ -1966,7 +1966,7 @@ ALTER TABLE `bedroom_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `categories`
+-- Ãndices para tabela `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
@@ -1975,7 +1975,7 @@ ALTER TABLE `categories`
   ADD KEY `idx_active` (`is_active`);
 
 --
--- Índices para tabela `category_translations`
+-- Ãndices para tabela `category_translations`
 --
 ALTER TABLE `category_translations`
   ADD PRIMARY KEY (`id`),
@@ -1983,7 +1983,7 @@ ALTER TABLE `category_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `contact_submissions`
+-- Ãndices para tabela `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
   ADD PRIMARY KEY (`id`),
@@ -1993,7 +1993,7 @@ ALTER TABLE `contact_submissions`
   ADD KEY `idx_ignored` (`is_ignored`);
 
 --
--- Índices para tabela `content_blocks`
+-- Ãndices para tabela `content_blocks`
 --
 ALTER TABLE `content_blocks`
   ADD PRIMARY KEY (`id`),
@@ -2004,7 +2004,7 @@ ALTER TABLE `content_blocks`
   ADD KEY `idx_section` (`section`);
 
 --
--- Índices para tabela `external_links`
+-- Ãndices para tabela `external_links`
 --
 ALTER TABLE `external_links`
   ADD PRIMARY KEY (`id`),
@@ -2013,7 +2013,7 @@ ALTER TABLE `external_links`
   ADD KEY `idx_external_links_order` (`sort_order`);
 
 --
--- Índices para tabela `external_link_translations`
+-- Ãndices para tabela `external_link_translations`
 --
 ALTER TABLE `external_link_translations`
   ADD PRIMARY KEY (`id`),
@@ -2022,7 +2022,7 @@ ALTER TABLE `external_link_translations`
   ADD KEY `idx_external_link_trans_lang` (`language_id`);
 
 --
--- Índices para tabela `house_rules`
+-- Ãndices para tabela `house_rules`
 --
 ALTER TABLE `house_rules`
   ADD PRIMARY KEY (`id`),
@@ -2030,7 +2030,7 @@ ALTER TABLE `house_rules`
   ADD KEY `idx_highlighted` (`is_highlighted`);
 
 --
--- Índices para tabela `house_rule_translations`
+-- Ãndices para tabela `house_rule_translations`
 --
 ALTER TABLE `house_rule_translations`
   ADD PRIMARY KEY (`id`),
@@ -2038,7 +2038,7 @@ ALTER TABLE `house_rule_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `invoices`
+-- Ãndices para tabela `invoices`
 --
 ALTER TABLE `invoices`
   ADD PRIMARY KEY (`id`),
@@ -2052,7 +2052,7 @@ ALTER TABLE `invoices`
   ADD KEY `idx_invoice_date` (`issued_at`);
 
 --
--- Índices para tabela `languages`
+-- Ãndices para tabela `languages`
 --
 ALTER TABLE `languages`
   ADD PRIMARY KEY (`id`),
@@ -2061,7 +2061,7 @@ ALTER TABLE `languages`
   ADD KEY `idx_active` (`is_active`);
 
 --
--- Índices para tabela `legal_sections`
+-- Ãndices para tabela `legal_sections`
 --
 ALTER TABLE `legal_sections`
   ADD PRIMARY KEY (`id`),
@@ -2069,7 +2069,7 @@ ALTER TABLE `legal_sections`
   ADD KEY `idx_active` (`is_active`);
 
 --
--- Índices para tabela `legal_section_translations`
+-- Ãndices para tabela `legal_section_translations`
 --
 ALTER TABLE `legal_section_translations`
   ADD PRIMARY KEY (`id`),
@@ -2077,7 +2077,7 @@ ALTER TABLE `legal_section_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `manual_orders`
+-- Ãndices para tabela `manual_orders`
 --
 ALTER TABLE `manual_orders`
   ADD PRIMARY KEY (`id`),
@@ -2086,7 +2086,7 @@ ALTER TABLE `manual_orders`
   ADD KEY `idx_manual_email` (`customer_email`);
 
 --
--- Índices para tabela `media`
+-- Ãndices para tabela `media`
 --
 ALTER TABLE `media`
   ADD PRIMARY KEY (`id`),
@@ -2097,7 +2097,7 @@ ALTER TABLE `media`
   ADD KEY `idx_media_cover` (`is_cover`);
 
 --
--- Índices para tabela `orders`
+-- Ãndices para tabela `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
@@ -2109,7 +2109,7 @@ ALTER TABLE `orders`
   ADD KEY `idx_created` (`created_at`);
 
 --
--- Índices para tabela `order_items`
+-- Ãndices para tabela `order_items`
 --
 ALTER TABLE `order_items`
   ADD PRIMARY KEY (`id`),
@@ -2117,7 +2117,7 @@ ALTER TABLE `order_items`
   ADD KEY `idx_order` (`order_id`);
 
 --
--- Índices para tabela `order_status_history`
+-- Ãndices para tabela `order_status_history`
 --
 ALTER TABLE `order_status_history`
   ADD PRIMARY KEY (`id`),
@@ -2125,7 +2125,7 @@ ALTER TABLE `order_status_history`
   ADD KEY `idx_order` (`order_id`);
 
 --
--- Índices para tabela `page_heroes`
+-- Ãndices para tabela `page_heroes`
 --
 ALTER TABLE `page_heroes`
   ADD PRIMARY KEY (`id`),
@@ -2134,7 +2134,7 @@ ALTER TABLE `page_heroes`
   ADD KEY `idx_active` (`is_active`);
 
 --
--- Índices para tabela `products`
+-- Ãndices para tabela `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
@@ -2146,7 +2146,7 @@ ALTER TABLE `products`
   ADD KEY `idx_featured` (`is_featured`);
 
 --
--- Índices para tabela `product_categories`
+-- Ãndices para tabela `product_categories`
 --
 ALTER TABLE `product_categories`
   ADD PRIMARY KEY (`id`),
@@ -2155,7 +2155,7 @@ ALTER TABLE `product_categories`
   ADD KEY `idx_active` (`is_active`);
 
 --
--- Índices para tabela `product_category_translations`
+-- Ãndices para tabela `product_category_translations`
 --
 ALTER TABLE `product_category_translations`
   ADD PRIMARY KEY (`id`),
@@ -2163,7 +2163,7 @@ ALTER TABLE `product_category_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `product_images`
+-- Ãndices para tabela `product_images`
 --
 ALTER TABLE `product_images`
   ADD PRIMARY KEY (`id`),
@@ -2172,7 +2172,7 @@ ALTER TABLE `product_images`
   ADD KEY `idx_primary` (`is_primary`);
 
 --
--- Índices para tabela `product_translations`
+-- Ãndices para tabela `product_translations`
 --
 ALTER TABLE `product_translations`
   ADD PRIMARY KEY (`id`),
@@ -2180,7 +2180,7 @@ ALTER TABLE `product_translations`
   ADD KEY `language_id` (`language_id`);
 
 --
--- Índices para tabela `settings`
+-- Ãndices para tabela `settings`
 --
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`),
@@ -2189,7 +2189,7 @@ ALTER TABLE `settings`
   ADD KEY `idx_group` (`setting_group`);
 
 --
--- Índices para tabela `spam_emails`
+-- Ãndices para tabela `spam_emails`
 --
 ALTER TABLE `spam_emails`
   ADD PRIMARY KEY (`id`),
@@ -2429,7 +2429,7 @@ ALTER TABLE `spam_emails`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Restrições para despejos de tabelas
+-- RestriÃ§Ãµes para despejos de tabelas
 --
 
 --

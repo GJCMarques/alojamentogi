@@ -19,4 +19,4 @@ Disallow: /*?pesquisa=
 Disallow: /*?pagina=
 
 # Sitemap
-Sitemap: http://localhost/alojamentogi/sitemap.xml
+Sitemap: https://monrion.cloud/sitemap.xml
