@@ -21,6 +21,7 @@ $instagram = setting('instagram_url', '');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manutenção - A Casa do Gi</title>
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
+    <link rel="shortcut icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
 
     <!-- Open Graph / Social Meta -->
     <meta property="og:type" content="website">

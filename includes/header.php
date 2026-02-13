@@ -41,6 +41,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
+    <link rel="shortcut icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
 
     <!-- Open Graph / Social Meta -->
     <meta property="og:type" content="website">

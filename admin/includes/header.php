@@ -11,6 +11,7 @@ $base = basePath();
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($pageTitle) ?> | Admin - A Casa do Gi</title>
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
+    <link rel="shortcut icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

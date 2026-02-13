@@ -64,6 +64,7 @@ if (isPost() && $failureCount < 20) {
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
+    <link rel="shortcut icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
