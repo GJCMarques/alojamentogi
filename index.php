@@ -47,11 +47,14 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- HERO -->
-<section class="relative h-screen w-full overflow-hidden" id="mountain-hero" style="background-image: url('<?= $heroUrl ?>'); background-size: cover; background-position: center;">
+<section class="relative h-screen w-full overflow-hidden" id="mountain-hero">
+    <div class="absolute inset-0 will-change-transform" id="hero-bg" style="top: -15%; bottom: -15%;">
+        <img src="<?= $heroUrl ?>" alt="" class="w-full h-full object-cover" fetchpriority="high">
+    </div>
     <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-        <div id="hero-content">
+        <div id="hero-content" class="will-change-transform">
             <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
                 Tras-os-Montes, Portugal
             </span>
@@ -415,19 +418,24 @@ document.addEventListener('DOMContentLoaded', function() {
         revealObserver.observe(el);
     });
 
-    // 3. PARALLAX EFFECTS (Hero + General)
-    const mountainHero = document.getElementById('mountain-hero');
+    // 3. PARALLAX EFFECTS (Hero + General) - GPU-accelerated via translate3d
+    const heroBg = document.getElementById('hero-bg');
     const heroContent = document.getElementById('hero-content');
 
-    if (mountainHero && heroContent) {
+    if (heroBg && heroContent) {
+        let ticking = false;
         window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY;
-            if (scrolled < window.innerHeight) {
-                // Parallax text
-                heroContent.style.transform = `translateY(${scrolled * 0.4}px)`;
-                heroContent.style.opacity = 1 - (scrolled / 700);
-                // Parallax background (subtle)
-                mountainHero.style.backgroundPositionY = `${scrolled * 0.5}px`;
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    if (scrolled < window.innerHeight) {
+                        heroBg.style.transform = `translate3d(0, ${scrolled * 0.35}px, 0)`;
+                        heroContent.style.transform = `translate3d(0, ${scrolled * 0.4}px, 0)`;
+                        heroContent.style.opacity = 1 - (scrolled / 700);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
         }, { passive: true });
     }

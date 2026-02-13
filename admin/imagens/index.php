@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($uploadCount > 0 && empty($errors)) {
             Session::flash('success', "{$uploadCount} imagem(ns) atualizada(s) com sucesso.");
         } elseif ($uploadCount > 0 && !empty($errors)) {
-            Session::flash('success', "{$uploadCount} imagem(ns) OK. Erros: " . implode(' | ', $errors));
+            Session::flash('warning', "{$uploadCount} imagem(ns) OK, mas com erros: " . implode(' | ', $errors));
         } elseif (!empty($errors)) {
             Session::flash('error', "Erros: " . implode(' | ', $errors));
         } else {
