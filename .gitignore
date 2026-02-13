@@ -1,7 +1,6 @@
 # A Casa do Gi - Git Ignore
 
-# Configuration (contains credentials)
-config/config.php
+# Configuration (sensitive keys)
 config/encryption.key
 
 # Uploads (user content)
