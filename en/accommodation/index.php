@@ -938,7 +938,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
 // Gallery Data
 const galleryImages = <?= json_encode(array_map(function($img) use ($lang) {
     $path = str_replace('uploads/', '', $img['file_path']);
-    $url = empty($path) ? asset('images/placeholder.jpg') : upload($path);
+    $url = empty($path) ? asset('images/placeholder-activity.jpg') : upload($path);
     $alt = $lang->getCurrentLang() === 'pt'
         ? ($img['alt_text_pt'] ?? '')
         : ($img['alt_text_en'] ?? '');

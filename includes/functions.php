@@ -30,48 +30,41 @@ function basePath(): string
     static $basePath = null;
 
     if ($basePath === null) {
-        $appUrl = config('app.url', '');
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $dir = str_replace('\\', '/', dirname($scriptName));
 
-        if ($appUrl && filter_var($appUrl, FILTER_VALIDATE_URL)) {
-            $parsed = parse_url($appUrl);
-            $basePath = rtrim($parsed['path'] ?? '', '/');
-        } else {
+        $subfolders = [
+            '/admin',
+            '/en',
+            '/api',
+            '/alojamento',
+            '/loja',
+            '/atividades',
+            '/contactos',
+            '/sobre-nos',
+            '/accommodation',
+            '/shop',
+            '/activities',
+            '/contact',
+            '/about-us',
+            '/manutencao',
+            '/termos-condicoes',
+            '/politica-privacidade',
+        ];
 
-            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-            $dir = dirname($scriptName);
-
-            $dir = str_replace('\\', '/', $dir);
-
-            $subfolders = [
-                '/admin',
-                '/en',
-                '/api',
-                '/alojamento',
-                '/loja',
-                '/atividades',
-                '/contactos',
-                '/sobre-nos',
-                '/accommodation',
-                '/shop',
-                '/activities',
-                '/contact',
-                '/about-us',
-            ];
-
-            $cutPosition = strlen($dir);
-            foreach ($subfolders as $subfolder) {
-                $pos = strpos($dir, $subfolder);
-                if ($pos !== false && $pos < $cutPosition) {
-                    $cutPosition = $pos;
-                }
+        $cutPosition = strlen($dir);
+        foreach ($subfolders as $subfolder) {
+            $pos = strpos($dir, $subfolder);
+            if ($pos !== false && $pos < $cutPosition) {
+                $cutPosition = $pos;
             }
-
-            if ($cutPosition < strlen($dir)) {
-                $dir = substr($dir, 0, $cutPosition);
-            }
-
-            $basePath = rtrim($dir, '/');
         }
+
+        if ($cutPosition < strlen($dir)) {
+            $dir = substr($dir, 0, $cutPosition);
+        }
+
+        $basePath = rtrim($dir, '/');
     }
 
     return $basePath;

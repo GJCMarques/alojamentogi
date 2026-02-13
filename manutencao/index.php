@@ -8,7 +8,7 @@ if (!isMaintenanceMode()) {
 }
 
 $bgImage = asset('images/MogadouroAtividades.jpg');
-$logo = asset('images/logo_casa_do_gi.png');
+$logo = asset('images/CGsimbUp.png');
 $email = setting('contact_email', 'geral@acasadogi.pt');
 $phone = setting('contact_phone', '');
 $facebook = setting('facebook_url', '');
