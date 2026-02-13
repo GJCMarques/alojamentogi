@@ -24,27 +24,17 @@ $menuImages = [
     'contact' => 'images/FotoGi.png'
 ];
 
-$pageKeys = [
-    'accommodation' => 'accommodation',
-    'activities' => 'activities',
-    'shop' => 'shop',
-    'contact' => 'contact'
-];
-
-foreach ($pageKeys as $menuKey => $dbKey) {
-    if ($menuKey === 'accommodation') {
-
-        $hero = $db->fetch("SELECT id FROM page_heroes WHERE page_key = 'accommodation' AND is_active = 1");
-        if (!$hero) $hero = $db->fetch("SELECT id FROM page_heroes WHERE page_key = 'alojamento' AND is_active = 1");
-    } else {
-        $hero = $db->fetch("SELECT id FROM page_heroes WHERE page_key = ? AND is_active = 1", [$dbKey]);
-    }
-
-    if ($hero) {
-        $media = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$hero['id']]);
-        if ($media && !empty($media['file_path'])) {
-            $menuImages[$menuKey] = $media['file_path'];
-        }
+$heroRows = $db->fetchAll(
+    "SELECT ph.page_key, m.file_path
+     FROM page_heroes ph
+     INNER JOIN media m ON m.entity_type = 'hero' AND m.entity_id = ph.id AND m.is_cover = 1
+     WHERE ph.page_key IN ('accommodation', 'alojamento', 'activities', 'shop', 'contact')
+       AND ph.is_active = 1"
+);
+foreach ($heroRows as $row) {
+    $key = $row['page_key'] === 'alojamento' ? 'accommodation' : $row['page_key'];
+    if (!empty($row['file_path']) && isset($menuImages[$key])) {
+        $menuImages[$key] = $row['file_path'];
     }
 }
 
@@ -57,7 +47,7 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- HERO -->
-<section class="relative h-screen w-full overflow-hidden" id="mountain-hero" style="background-image: url('<?= $heroUrl ?>'); background-size: cover; background-position: center; background-attachment: fixed;">
+<section class="relative h-screen w-full overflow-hidden" id="mountain-hero" style="background-image: url('<?= $heroUrl ?>'); background-size: cover; background-position: center;">
     <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">

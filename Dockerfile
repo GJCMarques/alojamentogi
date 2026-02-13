@@ -17,7 +17,15 @@ RUN echo "upload_max_filesize = 10M\n\
 post_max_size = 10M\n\
 max_execution_time = 300\n\
 max_input_time = 300\n\
-memory_limit = 256M" > /usr/local/etc/php/conf.d/custom.ini
+memory_limit = 256M\n\
+opcache.enable=1\n\
+opcache.memory_consumption=128\n\
+opcache.interned_strings_buffer=16\n\
+opcache.max_accelerated_files=10000\n\
+opcache.revalidate_freq=60\n\
+opcache.validate_timestamps=1\n\
+opcache.save_comments=0\n\
+opcache.enable_file_override=1" > /usr/local/etc/php/conf.d/custom.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
