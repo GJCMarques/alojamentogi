@@ -21,10 +21,9 @@ WORKDIR /var/www/html
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-RUN mkdir -p uploads/products uploads/gallery uploads/activities uploads/content logs cache \
-    && chown -R www-data:www-data uploads logs cache config \
-    && chmod -R 775 uploads logs cache \
-    && chmod -R 755 config
+RUN mkdir -p uploads/products uploads/gallery uploads/activities uploads/content uploads/heroes uploads/media uploads/accommodation logs cache \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 uploads logs cache
 
 RUN echo "upload_max_filesize = 10M\n\
 post_max_size = 10M\n\

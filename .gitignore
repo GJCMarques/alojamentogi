@@ -3,14 +3,6 @@
 # Configuration (sensitive keys)
 config/encryption.key
 
-# Uploads (user content)
-uploads/*
-!uploads/.gitkeep
-!uploads/products/.gitkeep
-!uploads/gallery/.gitkeep
-!uploads/activities/.gitkeep
-!uploads/content/.gitkeep
-
 # Logs
 logs/*
 !logs/.gitkeep

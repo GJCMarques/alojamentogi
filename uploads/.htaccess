@@ -1,0 +1,54 @@
+# Block PHP execution in uploads directory
+# Prevent uploaded files from being executed as scripts
+
+# Disable PHP engine
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Block execution of PHP files via handler
+<FilesMatch "\.(?:php|phtml|php[3-8]|phps|phar)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Remove handlers for PHP files
+RemoveHandler .php .phtml .php3 .php4 .php5 .php6 .php7 .php8 .phps .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php6 .php7 .php8 .phps .phar
+
+# Force files to be downloaded/served as-is, never executed
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Only allow image files to be accessed
+<FilesMatch "\.(?:jpe?g|png|gif|webp|svg|ico|bmp|tiff?)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</FilesMatch>
+
+# Block access to hidden files
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes -ExecCGI
