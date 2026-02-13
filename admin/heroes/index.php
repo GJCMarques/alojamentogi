@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
 
                         if ($oldMedia) {
 
-                            $oldPath = ROOT_PATH . ltrim($oldMedia['file_path'], '/');
+                            $oldPath = ROOT_PATH . '/' . ltrim($oldMedia['file_path'], '/');
                             if (file_exists($oldPath)) {
                                 @unlink($oldPath);
                             }

@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (CSRF::validate($_POST['csrf_token'] ?? '')) {
         $section = $imageDefinitions[$currentSection];
         $uploadCount = 0;
-        $errorCount = 0;
+        $errors = [];
 
         foreach ($section['images'] as $imageKey => $imageDef) {
 
@@ -61,73 +61,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $allowed = ['jpg', 'jpeg', 'png', 'webp'];
                 $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-                if (in_array($ext, $allowed)) {
-
-                    $uploadDir = ROOT_PATH . '/uploads/content';
-                    if (!is_dir($uploadDir)) {
-                        @mkdir($uploadDir, 0775, true);
-                    }
-
-                    $filename = $imageKey . '_' . time() . '.' . $ext;
-                    $targetPath = $uploadDir . '/' . $filename;
-                    $dbPath = '/uploads/content/' . $filename;
-
-                    if (!is_writable($uploadDir)) {
-                        logMessage("Upload dir not writable: {$uploadDir}", 'error');
-                        $errorCount++;
-                        continue;
-                    }
-
-                    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-
-                        $db->insert('media', [
-                            'filename' => $filename,
-                            'original_name' => $file['name'],
-                            'file_path' => $dbPath,
-                            'file_type' => $file['type'],
-                            'file_size' => $file['size'],
-                            'category' => 'content',
-                            'uploaded_by' => Session::get('admin_id'),
-                            'created_at' => date('Y-m-d H:i:s')
-                        ]);
-
-                        foreach ($languages as $lang) {
-                            $existing = $db->fetch(
-                                "SELECT id FROM content_blocks WHERE block_key = ? AND language_id = ?",
-                                [$imageKey, $lang['id']]
-                            );
-
-                            if ($existing) {
-                                $db->update('content_blocks', [
-                                    'content' => $dbPath,
-                                    'updated_at' => date('Y-m-d H:i:s')
-                                ], 'id = ?', [$existing['id']]);
-                            } else {
-                                $db->insert('content_blocks', [
-                                    'block_key' => $imageKey,
-                                    'language_id' => $lang['id'],
-                                    'content' => $dbPath
-                                ]);
-                            }
-                        }
-                        $uploadCount++;
-                    } else {
-                        $errorCount++;
-                    }
-                } else {
-                    $errorCount++;
+                if (!in_array($ext, $allowed)) {
+                    $errors[] = "{$imageKey}: formato '.{$ext}' nao permitido";
+                    continue;
                 }
+
+                $uploadDir = ROOT_PATH . '/uploads/content';
+                if (!is_dir($uploadDir)) {
+                    @mkdir($uploadDir, 0775, true);
+                }
+
+                if (!is_dir($uploadDir)) {
+                    $errors[] = "{$imageKey}: impossivel criar dir {$uploadDir}";
+                    continue;
+                }
+
+                if (!is_writable($uploadDir)) {
+                    $errors[] = "{$imageKey}: dir sem permissao escrita: {$uploadDir}";
+                    continue;
+                }
+
+                $filename = $imageKey . '_' . time() . '.' . $ext;
+                $targetPath = $uploadDir . '/' . $filename;
+                $dbPath = '/uploads/content/' . $filename;
+
+                if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                    $err = error_get_last()['message'] ?? 'desconhecido';
+                    $errors[] = "{$imageKey}: move_uploaded_file falhou - {$err}";
+                    continue;
+                }
+
+                if (!file_exists($targetPath)) {
+                    $errors[] = "{$imageKey}: ficheiro nao existe apos move: {$targetPath}";
+                    continue;
+                }
+
+                $db->insert('media', [
+                    'filename' => $filename,
+                    'original_name' => $file['name'],
+                    'file_path' => $dbPath,
+                    'file_type' => $file['type'],
+                    'file_size' => $file['size'],
+                    'category' => 'content',
+                    'uploaded_by' => Session::get('admin_id'),
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+
+                foreach ($languages as $lang) {
+                    $existing = $db->fetch(
+                        "SELECT id FROM content_blocks WHERE block_key = ? AND language_id = ?",
+                        [$imageKey, $lang['id']]
+                    );
+
+                    if ($existing) {
+                        $db->update('content_blocks', [
+                            'content' => $dbPath,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ], 'id = ?', [$existing['id']]);
+                    } else {
+                        $db->insert('content_blocks', [
+                            'block_key' => $imageKey,
+                            'language_id' => $lang['id'],
+                            'content' => $dbPath
+                        ]);
+                    }
+                }
+                $uploadCount++;
+
+            } elseif (isset($_FILES[$imageKey]) && $_FILES[$imageKey]['error'] !== UPLOAD_ERR_NO_FILE) {
+                $errorCodes = [
+                    1 => 'ficheiro excede upload_max_filesize do php.ini',
+                    2 => 'ficheiro excede MAX_FILE_SIZE do form',
+                    3 => 'upload parcial',
+                    4 => 'nenhum ficheiro',
+                    6 => 'sem pasta temporaria',
+                    7 => 'falha ao escrever no disco',
+                    8 => 'extensao PHP bloqueou upload',
+                ];
+                $code = $_FILES[$imageKey]['error'];
+                $errors[] = "{$imageKey}: erro PHP #{$code} - " . ($errorCodes[$code] ?? 'desconhecido');
             }
         }
 
-        if ($uploadCount > 0) {
+        if ($uploadCount > 0 && empty($errors)) {
             Session::flash('success', "{$uploadCount} imagem(ns) atualizada(s) com sucesso.");
-        } elseif ($errorCount > 0) {
-            $uploadDir = ROOT_PATH . '/uploads/content';
-            $writable = is_writable($uploadDir) ? 'sim' : 'nao';
-            Session::flash('error', "Erro ao atualizar imagens. Dir writable: {$writable}. Verifique permissoes e formatos.");
+        } elseif ($uploadCount > 0 && !empty($errors)) {
+            Session::flash('success', "{$uploadCount} imagem(ns) OK. Erros: " . implode(' | ', $errors));
+        } elseif (!empty($errors)) {
+            Session::flash('error', "Erros: " . implode(' | ', $errors));
         } else {
-            Session::flash('info', "Nenhuma alteração efetuada.");
+            Session::flash('info', "Nenhuma alteracao efetuada.");
         }
 
         redirect('/admin/imagens/?section=' . $currentSection);
