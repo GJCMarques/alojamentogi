@@ -1,16 +1,6 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-try {
-    require_once __DIR__ . '/includes/init.php';
-} catch (\Throwable $e) {
-    http_response_code(500);
-    echo '<pre>' . htmlspecialchars($e->getMessage()) . "\n" . htmlspecialchars($e->getFile()) . ':' . $e->getLine() . "\n\n" . htmlspecialchars($e->getTraceAsString()) . '</pre>';
-    exit;
-}
+require_once __DIR__ . '/includes/init.php';
 
 use Core\Database;
 
