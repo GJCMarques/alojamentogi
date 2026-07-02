@@ -1,6 +1,16 @@
 <?php
 
-require_once __DIR__ . '/includes/init.php';
+try {
+    require_once __DIR__ . '/includes/init.php';
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo '<pre style="font-family:monospace;padding:20px">';
+    echo htmlspecialchars($e->getMessage()) . "\n";
+    echo htmlspecialchars($e->getFile()) . ':' . $e->getLine() . "\n\n";
+    echo htmlspecialchars($e->getTraceAsString());
+    echo '</pre>';
+    exit;
+}
 
 use Core\Database;
 
