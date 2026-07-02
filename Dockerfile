@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libonig-dev \
     unzip \
+    default-mysql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install gd pdo pdo_mysql mysqli zip opcache mbstring \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
