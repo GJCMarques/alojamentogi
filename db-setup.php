@@ -16,79 +16,117 @@ $sqlFile = __DIR__ . '/database/casadogiFinal.sql';
 
 echo '<pre>';
 
-// Connect
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$name;charset=utf8mb4", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
     echo "[OK] Connected to MySQL\n";
 } catch (PDOException $e) {
-    die("[FAIL] Connection failed: " . $e->getMessage() . "\n");
+    die("[FAIL] Connection: " . $e->getMessage() . "\n");
 }
 
-// Check current state
 $tables = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-echo "[INFO] Tables found before import: " . count($tables) . "\n";
+echo "[INFO] Tables before import: " . count($tables) . "\n";
 
 if (count($tables) > 5) {
-    echo "[SKIP] Database already has " . count($tables) . " tables. Import skipped.\n";
-    echo "Existing tables: " . implode(', ', $tables) . "\n";
+    echo "[SKIP] Already has " . count($tables) . " tables — import skipped.\n";
+    echo implode(', ', $tables) . "\n";
     echo '</pre>';
     exit;
 }
 
-// Read SQL file
 if (!file_exists($sqlFile)) {
     die("[FAIL] SQL file not found: $sqlFile\n");
 }
 
-echo "[INFO] Reading $sqlFile ...\n";
 $sql = file_get_contents($sqlFile);
+
+// Strip UTF-8 BOM (phpMyAdmin adds it)
+if (substr($sql, 0, 3) === "\xEF\xBB\xBF") {
+    $sql = substr($sql, 3);
+    echo "[INFO] Stripped UTF-8 BOM\n";
+}
+
 echo "[INFO] File size: " . number_format(strlen($sql)) . " bytes\n";
 
-// Split into individual statements
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
-$pdo->exec("SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO'");
+$pdo->exec("SET NAMES utf8mb4");
 
-$statements = array_filter(
-    array_map('trim', preg_split('/;\s*\n/', $sql)),
-    fn($s) => !empty($s) && !str_starts_with($s, '--') && !str_starts_with($s, '/*')
-);
-
-$total = count($statements);
-$ok = 0;
+// Line-by-line parser — correct approach for phpMyAdmin dumps
+// Accumulates lines into a statement until it ends with ';'
+$lines = preg_split('/\r?\n/', $sql);
+$stmt  = '';
+$ok    = 0;
 $errors = [];
 
-foreach ($statements as $stmt) {
-    if (empty(trim($stmt))) continue;
-    try {
-        $pdo->exec($stmt);
-        $ok++;
-    } catch (PDOException $e) {
-        $errors[] = $e->getMessage() . "\n  > " . substr($stmt, 0, 120);
+foreach ($lines as $line) {
+    $trimmed = ltrim($line);
+
+    // Skip empty lines and comment-only lines while not mid-statement
+    if (empty(trim($line))
+        || str_starts_with($trimmed, '--')
+        || str_starts_with($trimmed, '#')) {
+        continue;
+    }
+
+    $stmt .= $line . "\n";
+
+    // A statement is complete when the trimmed line ends with ';'
+    if (str_ends_with(rtrim($line), ';')) {
+        $stmt = trim($stmt);
+
+        if (!empty($stmt)) {
+            try {
+                $pdo->exec($stmt);
+                $ok++;
+            } catch (PDOException $e) {
+                $msg = $e->getMessage();
+
+                // VIEWs exported by phpMyAdmin use DEFINER=`root`@`localhost`
+                // which fails when running as casadogi_user — retry without DEFINER
+                if (str_contains($msg, 'DEFINER') || str_contains($msg, '1227')) {
+                    $clean = preg_replace(
+                        '/DEFINER\s*=\s*`[^`]+`@`[^`]+`\s*/i',
+                        '',
+                        $stmt
+                    );
+                    try {
+                        $pdo->exec($clean);
+                        $ok++;
+                    } catch (PDOException $e2) {
+                        $errors[] = '[VIEW] ' . $e2->getMessage() . "\n  > " . substr($clean, 0, 120);
+                    }
+                } else {
+                    $errors[] = $msg . "\n  > " . substr($stmt, 0, 120);
+                }
+            }
+        }
+
+        $stmt = '';
     }
 }
 
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 
-echo "[INFO] Executed $ok/$total statements\n";
+echo "[INFO] Statements executed OK: $ok\n";
 
-if ($errors) {
+$tablesAfter = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+echo "[INFO] Tables after import: " . count($tablesAfter) . "\n";
+
+if (!empty($errors)) {
     echo "\n[WARNINGS] " . count($errors) . " statement(s) failed:\n";
-    foreach ($errors as $err) {
+    foreach (array_slice($errors, 0, 30) as $err) {
         echo "  - $err\n";
     }
 }
 
-// Verify
-$tablesAfter = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-echo "\n[OK] Tables after import: " . count($tablesAfter) . "\n";
-echo implode(', ', $tablesAfter) . "\n";
-
 if (count($tablesAfter) > 5) {
-    echo "\n✅ DATABASE IMPORT COMPLETE! Delete this file: /db-setup.php\n";
+    echo "\n✅ DATABASE IMPORT COMPLETE!\n";
+    echo "Tables: " . implode(', ', $tablesAfter) . "\n";
+    echo "\nIMPORTANT: Delete this file after verifying the site works:\n";
+    echo "  git rm db-setup.php && git commit -m 'Remove setup script' && git push\n";
 } else {
-    echo "\n⚠️  Something may have gone wrong — fewer tables than expected.\n";
+    echo "\n⚠️  Something went wrong — fewer tables than expected.\n";
 }
 
 echo '</pre>';
