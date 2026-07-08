@@ -47,70 +47,8 @@ outputUrl($siteUrl . '/en/shop/', null, 'daily', '0.7');
 outputUrl($siteUrl . '/en/activities/', null, 'weekly', '0.7');
 outputUrl($siteUrl . '/en/contact/', null, 'monthly', '0.5');
 
-// ============================================================
-// DYNAMIC PAGES - PRODUCTS
-// ============================================================
-
-try {
-    $db = db();
-
-    $products = $db->query("
-        SELECT p.slug, p.updated_at, p.created_at
-        FROM products p
-        WHERE p.is_active = 1
-        ORDER BY p.created_at DESC
-    ")->fetchAll();
-
-    foreach ($products as $product) {
-
-        $lastmod = $product['updated_at'] ?: $product['created_at'];
-        outputUrl(
-            $siteUrl . '/loja/produto/?slug=' . urlencode($product['slug']),
-            $lastmod,
-            'weekly',
-            '0.7'
-        );
-
-        outputUrl(
-            $siteUrl . '/en/shop/product/?slug=' . urlencode($product['slug']),
-            $lastmod,
-            'weekly',
-            '0.6'
-        );
-    }
-
-    // ============================================================
-    // DYNAMIC PAGES - ACTIVITIES
-    // ============================================================
-
-    $activities = $db->query("
-        SELECT a.slug, a.updated_at, a.created_at
-        FROM activities a
-        WHERE a.is_active = 1
-        ORDER BY a.sort_order ASC, a.created_at DESC
-    ")->fetchAll();
-
-    foreach ($activities as $activity) {
-
-        $lastmod = $activity['updated_at'] ?: $activity['created_at'];
-        outputUrl(
-            $siteUrl . '/atividades/?slug=' . urlencode($activity['slug']),
-            $lastmod,
-            'weekly',
-            '0.7'
-        );
-
-        outputUrl(
-            $siteUrl . '/en/activities/?slug=' . urlencode($activity['slug']),
-            $lastmod,
-            'weekly',
-            '0.6'
-        );
-    }
-
-} catch (Exception $e) {
-
-    error_log('Sitemap generation error: ' . $e->getMessage());
-}
+// Nota: a loja está em migração (shopk.it) e as atividades passaram a ser uma
+// página informativa única — por isso não se geram URLs de produtos nem de
+// atividades individuais (evita 301/URLs sem conteúdo indexável).
 
 echo '</urlset>';
