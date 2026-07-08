@@ -39,27 +39,10 @@ $instagram = setting('instagram_url', '');
     <meta name="twitter:image" content="<?= asset('images/MogadouroAtividades.jpg') ?>">
 
     <!-- Use Tailwind via CDN for simplicity and isolation -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS (compilado localmente) -->
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=<?= @filemtime(ROOT_PATH . '/assets/css/app.css') ?>">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1A1A1A',
-                        secondary: '#C6A87C',
-                        cream: '#FDFBF7',
-                    },
-                    fontFamily: {
-                        serif: ['Playfair Display', 'serif'],
-                        sans: ['Lato', 'sans-serif'],
-                        cursive: ['Great Vibes', 'cursive'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         .lang-en { display: none; }
         .show-en .lang-en { display: block; }

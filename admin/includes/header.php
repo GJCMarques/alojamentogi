@@ -18,66 +18,8 @@ $base = basePath();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        // Sophisticated Nature Palette - Admin
-                        // Primary - Deep Slate Petrol (Sidebar, Headers)
-                        'primary': {
-                            50: '#e8edef', 100: '#d1dbdf', 200: '#a3b7bf', 300: '#75939f',
-                            400: '#476f7f', 500: '#264653', 600: '#1e3842', 700: '#172a32',
-                            800: '#0f1c21', 900: '#080e11', DEFAULT: '#264653'
-                        },
-                        // Secondary - Olive Sage (Active states, CTA)
-                        'secondary': {
-                            50: '#f2f4f0', 100: '#e5e9e1', 200: '#cbd3c3', 300: '#b1bda5',
-                            400: '#97a787', 500: '#768A68', 600: '#5e6e53', 700: '#47533e',
-                            800: '#2f372a', 900: '#181c15', DEFAULT: '#768A68'
-                        },
-                        // Accent - Gold Ocre (Highlights, Badges)
-                        'accent': {
-                            50: '#faf6ed', 100: '#f5eddb', 200: '#ebdbb7', 300: '#e1c993',
-                            400: '#d7b76f', 500: '#C5A059', 600: '#9e8047', 700: '#766035',
-                            800: '#4f4024', 900: '#272012', DEFAULT: '#C5A059'
-                        },
-                        // Background - Warm Cream
-                        'cream': {
-                            50: '#FDFBF7', 100: '#faf5eb', 200: '#f5ebd7', 300: '#f0e1c3',
-                            400: '#ebd7af', DEFAULT: '#FDFBF7'
-                        },
-                        // Text - Charcoal
-                        'charcoal': {
-                            50: '#f7f8f8', 100: '#ebedef', 200: '#d4d8dc', 300: '#b8bfc5',
-                            400: '#9aa3ab', 500: '#7b8792', 600: '#5f6a74', 700: '#4a5259',
-                            800: '#2D3748', 900: '#1a2028', DEFAULT: '#2D3748'
-                        },
-                        // Legacy mappings for backwards compatibility
-                        'sky': {
-                            50: '#e8edef', 100: '#d1dbdf', 200: '#a3b7bf', 300: '#75939f',
-                            400: '#476f7f', 500: '#264653', 600: '#1e3842', 700: '#172a32',
-                            800: '#0f1c21', 900: '#080e11'
-                        },
-                        'nature': {
-                            50: '#f2f4f0', 100: '#e5e9e1', 200: '#cbd3c3', 300: '#b1bda5',
-                            400: '#97a787', 500: '#768A68', 600: '#5e6e53', 700: '#47533e',
-                            800: '#2f372a', 900: '#181c15'
-                        },
-                        'earth': {
-                            50: '#FDFBF7', 100: '#faf5eb', 200: '#f5ebd7', 300: '#f0e1c3',
-                            400: '#ebd7af', 500: '#7b8792', 600: '#5f6a74', 700: '#4a5259',
-                            800: '#2D3748', 900: '#1a2028'
-                        },
-                        'pure': { 50: '#FDFBF7', 100: '#faf5eb', 200: '#f5ebd7' }
-                    },
-                    fontFamily: { 'sans': ['Inter', 'system-ui', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS (compilado localmente) -->
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=<?= @filemtime(ROOT_PATH . '/assets/css/app.css') ?>">
     <style>
         .font-cursive { font-family: 'Great Vibes', cursive; }
     </style>
