@@ -811,6 +811,3 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
     <!-- Main Content -->
     <main>
-
-    <!-- Main Content -->
-    <main>

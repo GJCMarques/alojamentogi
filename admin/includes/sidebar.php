@@ -110,6 +110,20 @@ $menuItems = [
     ],
 ];
 
+// Loja migrada para serviço externo (shopk.it): esconder secção da loja quando desativada.
+if (!isShopEnabled()) {
+    $shopUrls = ['/admin/loja/', '/admin/produtos/', '/admin/categorias/', '/admin/encomendas/', '/admin/faturas/', '/admin/pedidos-manuais/'];
+    $menuItems = array_values(array_filter($menuItems, function ($it) use ($shopUrls, $base) {
+        if (isset($it['type']) && ($it['label'] ?? '') === 'Loja Online') return false;
+        if (isset($it['url'])) {
+            foreach ($shopUrls as $u) {
+                if ($it['url'] === $base . $u) return false;
+            }
+        }
+        return true;
+    }));
+}
+
 $adminItems = [];
 if (Auth::canManageUsers()) {
     $adminItems[] = [
