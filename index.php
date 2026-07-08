@@ -64,7 +64,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <div id="hero-content">
             <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
-                Mogadouro · Trás-os-Montes, Portugal
+                Mogadouro · Trás-os-Montes
             </span>
             <h1 class="hero-animate-up hero-delay-2 font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl">
                 A Casa do Gi
@@ -123,9 +123,6 @@ include INCLUDES_PATH . '/header.php';
             <div class="flex flex-col md:flex-row gap-4 opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-200">
                 <a href="<?= $base ?>/atividades/" class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl hover:scale-105">
                     <?= $isEnglish ? 'Explore' : 'Explorar' ?>
-                </a>
-                <a href="<?= $base ?>/loja/" class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl hover:scale-105">
-                    <?= $isEnglish ? 'Shop' : 'Loja' ?>
                 </a>
             </div>
         </div>

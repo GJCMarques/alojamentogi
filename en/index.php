@@ -52,7 +52,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <div id="hero-content">
             <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
-                Mogadouro · Trás-os-Montes, Portugal
+                Mogadouro · Trás-os-Montes
             </span>
             <h1 class="hero-animate-up hero-delay-2 font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl">
                 A Casa do Gi
@@ -111,9 +111,6 @@ include INCLUDES_PATH . '/header.php';
             <div class="flex flex-col md:flex-row gap-4 opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-200">
                 <a href="<?= $base ?>/en/activities/" class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl hover:scale-105">
                     Explore
-                </a>
-                <a href="<?= $base ?>/en/shop/" class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl hover:scale-105">
-                    Shop
                 </a>
             </div>
         </div>
@@ -194,7 +191,7 @@ include INCLUDES_PATH . '/header.php';
                     </h3>
                     <div class="max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-700 ease-out opacity-0 group-hover:opacity-100">
                         <p class="text-white/90 text-lg font-light mt-4 max-w-md leading-relaxed">
-                            <?= $content['home_card3_text'] ?? 'Authentic flavors from Tras-os-Montes.' ?>
+                            <?= $content['home_card3_text'] ?? 'Authentic flavours from Trás-os-Montes.' ?>
                         </p>
                         <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1">
                             <?= $content['home_card3_cta'] ?? 'Shop Now' ?>
@@ -244,7 +241,7 @@ include INCLUDES_PATH . '/header.php';
                 </h2>
                 <div class="space-y-6 text-charcoal/70 text-lg leading-relaxed mb-10">
                     <p>
-                        <?= $content['home_about_text1'] ?? 'A Casa do Gi was born from the will to preserve the roots of Tras-os-Montes. What was once a family home is now a refuge for those seeking the authenticity of the countryside.' ?>
+                        <?= $content['home_about_text1'] ?? 'A Casa do Gi was born from the wish to preserve the roots of Trás-os-Montes. What was once a family home is now a refuge for those seeking the authenticity of the countryside.' ?>
                     </p>
                     <p>
                         <?= $content['home_about_text2'] ?? 'Here, time slows down. We invite you to discover the traditions, the flavors, and the people that make Mogadouro a unique place in the world.' ?>

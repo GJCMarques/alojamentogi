@@ -51,29 +51,6 @@ $settingsGroups = [
             ['key' => 'tripadvisor_url', 'label' => 'TripAdvisor URL', 'type' => 'url', 'default' => ''],
         ]
     ],
-    'shop' => [
-        'label' => 'Loja',
-        'description' => 'Configurações de envio e portes da loja online',
-        'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
-        'settings' => [
-            ['key' => 'shipping_cost', 'label' => 'Custo de Envio (EUR)', 'type' => 'number', 'default' => '5', 'hint' => 'Valor dos portes de envio por encomenda'],
-            ['key' => 'free_shipping_threshold', 'label' => 'Portes Grátis a partir de (EUR)', 'type' => 'number', 'default' => '50', 'hint' => 'Valor mínimo de encomenda para portes grátis (0 = sem portes grátis)'],
-        ]
-    ],
-    'payment' => [
-        'label' => 'Pagamentos',
-        'description' => 'Configuração da integração IfthenPay',
-        'icon' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
-        'settings' => [
-            ['key' => 'ifthenpay_enabled', 'label' => 'IfthenPay Ativo', 'type' => 'boolean', 'default' => '0', 'hint' => 'Ativa pagamentos automáticos via IfthenPay'],
-            ['key' => 'ifthenpay_entity', 'label' => 'Entidade Multibanco', 'type' => 'text', 'default' => '', 'hint' => 'Código de 5 dígitos'],
-            ['key' => 'ifthenpay_subentity', 'label' => 'Subentidade', 'type' => 'text', 'default' => '', 'hint' => 'Código de 3 dígitos'],
-            ['key' => 'ifthenpay_mbway_key', 'label' => 'MBWay Key', 'type' => 'text', 'default' => ''],
-            ['key' => 'ifthenpay_card_key', 'label' => 'CCard Key', 'type' => 'text', 'default' => '', 'hint' => 'Chave para pagamentos por cartão'],
-            ['key' => 'ifthenpay_anti_phishing_key', 'label' => 'Anti-Phishing Key', 'type' => 'password', 'default' => '', 'hint' => 'Chave de segurança para validar callbacks'],
-            ['key' => 'ifthenpay_callback_url', 'label' => 'Callback URL', 'type' => 'readonly', 'default' => '', 'hint' => 'URL a configurar no backoffice IfthenPay'],
-        ]
-    ],
     'email' => [
         'label' => 'Email (SMTP)',
         'description' => 'Configuração de envio de emails',
@@ -145,12 +122,6 @@ foreach ($settingsRows as $row) {
     $allSettings[$row['setting_key']] = $row['setting_value'];
 }
 
-if ($currentGroup === 'payment') {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $allSettings['ifthenpay_callback_url'] = $protocol . '://' . $host . basePath() . '/api/payment-callback.php';
-}
-
 $pageTitle = 'Configurações';
 $currentPage = 'configuracoes';
 include dirname(__DIR__) . '/includes/header.php';
@@ -185,10 +156,9 @@ include dirname(__DIR__) . '/includes/header.php';
         <!-- Info note -->
         <div class="bg-blue-50 rounded-lg p-4 mt-4 border border-blue-200">
             <p class="text-xs text-blue-700 leading-relaxed">
-                <strong>Nota:</strong> Os links de reserva (Booking, Airbnb, etc.) são agora geridos na página
+                <strong>Nota:</strong> O link de reservas (GuestReady) e os dados de cada casa são geridos na página
                 <a href="<?= basePath() ?>/admin/alojamento/" class="underline hover:text-blue-900">Alojamento</a>.
-                O modo da loja (ativa/manual/fechada) é gerido na página
-                <a href="<?= basePath() ?>/admin/loja/" class="underline hover:text-blue-900">Loja</a>.
+                A loja online é gerida externamente (shopk.it).
             </p>
         </div>
     </div>

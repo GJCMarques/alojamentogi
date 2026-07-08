@@ -22,12 +22,17 @@ chmod -R 775 /var/www/html/uploads \
              /var/www/html/logs \
              /var/www/html/cache
 
-# Auto-import database schema on first deploy
-DB_HOST="alojamentogi-mysql-8g3t8r"
-DB_USER="casadogi_user"
-DB_PASS="CasadoGi2026"
-DB_NAME="casadogi"
+# Auto-import database schema on first deploy.
+# Credenciais lidas do ambiente (definidas no Dokploy) — sem segredos no repositório.
+DB_HOST="${DB_HOST:-alojamentogi-mysql-8g3t8r}"
+DB_USER="${DB_USER:-casadogi_user}"
+DB_PASS="${DB_PASS:-}"
+DB_NAME="${DB_NAME:-casadogi}"
 SQL_FILE="/var/www/html/database/casadogiFinal.sql"
+
+if [ -z "$DB_PASS" ]; then
+    echo "[entrypoint] WARNING: DB_PASS não definido no ambiente — a saltar a importação automática da BD."
+fi
 
 echo "[entrypoint] Waiting for MySQL to be ready..."
 MAX_TRIES=30

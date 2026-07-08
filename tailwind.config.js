@@ -58,7 +58,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        serif: ['Merriweather', 'Georgia', 'serif'],
+        serif: ['Poppins', 'system-ui', 'sans-serif'],
         sans: ['Poppins', 'system-ui', 'sans-serif'],
         display: ['Great Vibes', 'cursive'],
         cursive: ['Great Vibes', 'cursive'],

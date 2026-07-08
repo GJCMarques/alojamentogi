@@ -32,19 +32,6 @@ return [
         'reply_to' => 'info@acasadogi.pt'
     ],
 
-    'payment' => [
-        'gateway' => 'ifthenpay',
-        'sandbox' => true,
-        'ifthenpay' => [
-            'mbway_key' => '',
-            'multibanco_entity' => '',
-            'multibanco_subentity' => '',
-            'card_key' => '',
-            'anti_phishing_key' => '',
-            'callback_url' => 'https://monrion.cloud/api/payment-callback' // Atualizado para o domínio real
-        ]
-    ],
-
     'security' => [
         'session_lifetime' => 1800,
         'csrf_token_lifetime' => 3600,
