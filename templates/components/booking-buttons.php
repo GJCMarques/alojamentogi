@@ -3,7 +3,7 @@
 $layout = $layout ?? 'vertical';
 $size = $size ?? 'default';
 $showLabels = $show_labels ?? true;
-$platforms = $platforms ?? ['guestready', 'booking', 'airbnb'];
+$platforms = $platforms ?? ['guestready', 'airbnb']; // Booking.com removido a pedido do cliente
 
 $lang = \Core\Language::getInstance();
 $isEnglish = $lang->isEnglish();
@@ -93,7 +93,7 @@ $baseButtonClasses = "flex items-center {$currentSize} rounded-lg shadow-md hove
         <div class="flex flex-col">
             <?php if ($showLabels): ?>
             <span class="text-[10px] text-white/70 uppercase tracking-wider font-medium">
-                <?= $isEnglish ? 'Partner' : 'Parceiro' ?>
+                <?= $isEnglish ? 'Booking' : 'Reservas' ?>
             </span>
             <?php endif; ?>
             <span class="font-bold">Booking.com</span>
@@ -117,7 +117,7 @@ $baseButtonClasses = "flex items-center {$currentSize} rounded-lg shadow-md hove
         <div class="flex flex-col">
             <?php if ($showLabels): ?>
             <span class="text-[10px] text-white/70 uppercase tracking-wider font-medium">
-                <?= $isEnglish ? 'Partner' : 'Parceiro' ?>
+                <?= $isEnglish ? 'Booking' : 'Reservas' ?>
             </span>
             <?php endif; ?>
             <span class="font-bold">Airbnb</span>

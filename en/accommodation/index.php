@@ -135,7 +135,7 @@ $allRules = $db->fetchAll(
 );
 
 $guestreadyUrl = $accommodation['guestready_url'] ?? null;
-$bookingUrl = $accommodation['booking_url'] ?? null;
+$bookingUrl = null; // Booking.com removed at client's request
 $airbnbUrl = $accommodation['airbnb_url'] ?? null;
 
 $pageTitle = $showMainPage ? 'Accommodation' : 'Casa do Gi ' . $selectedAccommodationNumber;

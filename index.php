@@ -64,7 +64,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <div id="hero-content">
             <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
-                Tras-os-Montes, Portugal
+                Mogadouro · Trás-os-Montes, Portugal
             </span>
             <h1 class="hero-animate-up hero-delay-2 font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl">
                 A Casa do Gi

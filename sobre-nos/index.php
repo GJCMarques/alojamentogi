@@ -148,7 +148,7 @@ include INCLUDES_PATH . '/header.php';
                     </div>
                     <h3 class="font-serif text-2xl text-primary mb-3 group-hover:translate-x-1 transition-transform duration-300"><?= $content['about_value4_title'] ?? 'Atenção ao Detalhe' ?></h3>
                     <p class="text-charcoal-500 font-light leading-relaxed">
-                        <?= $content['about_value4_text'] ?? 'Nada é deixado ao acaso. Do pequeno-almoço caseiro à decoração cuidada, tudo é pensado para o seu conforto e bem-estar.' ?>
+                        <?= $content['about_value4_text'] ?? 'Nada é deixado ao acaso. Da decoração cuidada aos pequenos detalhes, tudo é pensado para o seu conforto e bem-estar.' ?>
                     </p>
                 </div>
             </div>

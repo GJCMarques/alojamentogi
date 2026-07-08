@@ -3,12 +3,12 @@
 return [
 
     'db' => [
-        'host' => 'alojamentogi-mysql-8g3t8r', // O Internal Host do Dokploy
-        'name' => 'casadogi',
-        'user' => 'casadogi_user',
-        'pass' => 'CasadoGi2026',
+        'host' => getenv('DB_HOST') ?: (php_sapi_name() === 'cli-server' ? '127.0.0.1' : 'alojamentogi-mysql-8g3t8r'), // Dokploy internal host; local built-in server uses 127.0.0.1
+        'name' => getenv('DB_NAME') ?: 'casadogi',
+        'user' => getenv('DB_USER') ?: 'casadogi_user',
+        'pass' => getenv('DB_PASS') ?: 'CasadoGi2026',
         'charset' => 'utf8mb4',
-        'port' => 3306
+        'port' => (int) (getenv('DB_PORT') ?: 3306)
     ],
 
     'app' => [

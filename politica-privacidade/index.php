@@ -22,7 +22,7 @@ $sections = $db->fetchAll(
      LEFT JOIN legal_section_translations st ON s.id = st.section_id AND st.language_id = ?
      WHERE s.page = 'privacy' AND s.is_active = 1
      ORDER BY s.sort_order ASC",
-    [$lang->current()]
+    [$lang->getCurrentLangId()]
 );
 
 $pageTitle = content('privacy_hero_title');

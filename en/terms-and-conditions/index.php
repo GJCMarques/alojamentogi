@@ -23,7 +23,7 @@ $sections = $db->fetchAll(
      LEFT JOIN legal_section_translations st ON s.id = st.section_id AND st.language_id = ?
      WHERE s.page = 'terms' AND s.is_active = 1
      ORDER BY s.sort_order ASC",
-    [LANG_EN]
+    [$lang->getCurrentLangId()]
 );
 
 $pageTitle = content('terms_hero_title');

@@ -204,7 +204,7 @@ include INCLUDES_PATH . '/header.php';
                 <div class="mt-10 p-6 bg-primary rounded-lg animate-on-scroll" data-animation="fade-up" data-delay="300">
                     <h3 class="font-serif text-lg text-cream mb-4">Quer fazer uma reserva?</h3>
                     <p class="text-cream/80 text-sm mb-4">
-                        Reserve a sua estadia através das nossas plataformas parceiras.
+                        Reserve a sua estadia através das plataformas GuestReady e Airbnb.
                     </p>
                     <a href="<?= $base ?>/alojamento/" class="inline-flex items-center text-accent hover:text-accent/70 text-sm font-medium">
                         Ver opções de reserva

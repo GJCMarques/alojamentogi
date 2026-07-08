@@ -133,7 +133,7 @@ $allRules = $db->fetchAll(
 );
 
 $guestreadyUrl = $accommodation['guestready_url'] ?? null;
-$bookingUrl = $accommodation['booking_url'] ?? null;
+$bookingUrl = null; // Booking.com removido a pedido do cliente
 $airbnbUrl = $accommodation['airbnb_url'] ?? null;
 
 $pageTitle = $showMainPage ? 'Alojamento' : 'Casa do Gi ' . $selectedAccommodationNumber;
@@ -541,17 +541,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                         </a>
                         <?php endif; ?>
 
-                        <?php if ($bookingUrl): ?>
-                        <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#003580]/10 hover:border-[#003580] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
-                             <div class="flex items-center gap-4 relative z-10">
-                                <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
-                                     <img src="<?= asset('images/bookinglogo.jpg') ?>" alt="Booking" class="w-full h-full object-contain mix-blend-multiply group-hover:mix-blend-normal transition-all">
-                                </div>
-                                <span class="font-semibold text-primary group-hover:text-[#003580] transition-colors">Booking.com</span>
-                            </div>
-                            <svg class="w-5 h-5 text-cream-300 group-hover:text-[#003580] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                        <?php endif; ?>
+                        <?php /* Booking.com removido a pedido do cliente — apenas GuestReady e Airbnb */ ?>
 
                         <?php if ($airbnbUrl): ?>
                         <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#FF385C]/10 hover:border-[#FF385C] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
