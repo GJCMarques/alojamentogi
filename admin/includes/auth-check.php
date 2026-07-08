@@ -29,7 +29,9 @@ $_SESSION['_admin_last_activity'] = time();
 if (!isset($_SESSION['_last_regenerated'])) {
     $_SESSION['_last_regenerated'] = time();
 } elseif (time() - $_SESSION['_last_regenerated'] > 300) {
-    session_regenerate_id(true);
+    // Regeneração não-destrutiva: mantém a sessão antiga válida por breves instantes,
+    // evitando "sessão expirada" ao usar o botão "voltar" ou pedidos concorrentes.
+    session_regenerate_id(false);
     $_SESSION['_last_regenerated'] = time();
 }
 
