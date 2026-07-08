@@ -168,7 +168,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <div class="flex items-center">
                         <div class="h-12 w-12 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
                             <?php if ($product['image']): ?>
-                            <img src="<?= e(basePath() . $product['image']) ?>"
+                            <img loading="lazy" decoding="async" src="<?= e(basePath() . $product['image']) ?>"
                                  alt="<?= e($product['name']) ?>"
                                  class="h-12 w-12 object-cover">
                             <?php else: ?>

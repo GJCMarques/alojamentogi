@@ -443,7 +443,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                             <div class="flex items-start gap-4">
                                 <div id="cover-preview" class="w-32 h-24 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center border-2 border-dashed border-gray-300">
                                     <?php if ($currentCoverImage): ?>
-                                    <img src="<?= basePath() ?><?= htmlspecialchars($currentCoverImage['file_path']) ?>" class="w-full h-full object-cover">
+                                    <img loading="lazy" decoding="async" src="<?= basePath() ?><?= htmlspecialchars($currentCoverImage['file_path']) ?>" class="w-full h-full object-cover">
                                     <?php else: ?>
                                     <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -473,7 +473,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                                 <?php foreach ($galleryImages as $img): ?>
                                 <div class="relative group bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-red-300 transition-colors">
                                     <div class="aspect-video bg-gray-100">
-                                        <img src="<?= basePath() ?><?= htmlspecialchars($img['file_path']) ?>"
+                                        <img loading="lazy" decoding="async" src="<?= basePath() ?><?= htmlspecialchars($img['file_path']) ?>"
                                              alt="<?= htmlspecialchars($img['alt_text_pt'] ?? 'Gallery image') ?>"
                                              class="w-full h-full object-cover">
                                     </div>
@@ -665,7 +665,7 @@ function previewImage(input, previewId) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            preview.innerHTML = '<img loading="lazy" decoding="async" src="' + e.target.result + '" class="w-full h-full object-cover">';
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -829,7 +829,7 @@ function handleGalleryFiles() {
             const preview = document.createElement('div');
             preview.className = 'relative bg-gray-100 rounded-lg overflow-hidden aspect-square border border-gray-200';
             preview.innerHTML = `
-                <img src="${e.target.result}" class="w-full h-full object-cover">
+                <img loading="lazy" decoding="async" src="${e.target.result}" class="w-full h-full object-cover">
                 <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] px-1 py-0.5 truncate">
                     ${file.name}
                 </div>

@@ -15,7 +15,7 @@ $shopExternalUrl = setting('shop_external_url', 'https://shopk.it/');
 
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.webp';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.45;
 
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);

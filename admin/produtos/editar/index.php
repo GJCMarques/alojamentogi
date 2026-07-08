@@ -353,7 +353,7 @@ include dirname(dirname(__DIR__)) . '/includes/header.php';
                 <div class="grid grid-cols-4 gap-4 mb-6">
                     <?php foreach ($images as $image): ?>
                     <div class="relative aspect-square bg-gray-100 rounded overflow-hidden group">
-                        <img src="<?= e(basePath() . $image['file_path']) ?>"
+                        <img loading="lazy" decoding="async" src="<?= e(basePath() . $image['file_path']) ?>"
                              class="w-full h-full object-cover">
 
                         <?php if ($image['is_primary']): ?>
@@ -619,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const div = document.createElement('div');
                     div.className = 'relative aspect-square bg-gray-100 rounded overflow-hidden';
                     div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                        <img loading="lazy" decoding="async" src="${e.target.result}" class="w-full h-full object-cover">
                         <span class="absolute top-1 left-1 text-xs bg-gray-600 text-white px-2 py-1 rounded">Novo</span>
                     `;
                     imagePreview.appendChild(div);

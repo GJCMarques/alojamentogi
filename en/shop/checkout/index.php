@@ -191,7 +191,7 @@ if (!$checkoutHero) {
     $checkoutHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
 }
 $heroMedia = $checkoutHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$checkoutHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.webp';
 $heroOverlay = $checkoutHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
@@ -387,7 +387,7 @@ include INCLUDES_PATH . '/header.php';
                                    <?= $formData['payment_method'] === 'mbway' ? 'checked' : '' ?>
                                    class="sr-only">
                             <div class="flex-shrink-0 w-14 h-14 bg-white rounded-xl border border-granite-100 flex items-center justify-center mr-4 p-1.5">
-                                <img src="<?= asset('images/MB_WAY.jpg') ?>" alt="MB WAY" class="w-full h-full object-contain">
+                                <img loading="lazy" decoding="async" src="<?= asset('images/MB_WAY.webp') ?>" alt="MB WAY" class="w-full h-full object-contain">
                             </div>
                             <div class="flex-1">
                                 <span class="font-semibold text-granite-800 text-base">MB WAY</span>
@@ -408,7 +408,7 @@ include INCLUDES_PATH . '/header.php';
                                    <?= $formData['payment_method'] === 'multibanco' ? 'checked' : '' ?>
                                    class="sr-only">
                             <div class="flex-shrink-0 w-14 h-14 bg-white rounded-xl border border-granite-100 flex items-center justify-center mr-4 p-1.5">
-                                <img src="<?= asset('images/multibanco.png') ?>" alt="Multibanco" class="w-full h-full object-contain">
+                                <img loading="lazy" decoding="async" src="<?= asset('images/multibanco.webp') ?>" alt="Multibanco" class="w-full h-full object-contain">
                             </div>
                             <div class="flex-1">
                                 <span class="font-semibold text-granite-800 text-base">Multibanco</span>
@@ -430,8 +430,8 @@ include INCLUDES_PATH . '/header.php';
                                    class="sr-only">
                             <div class="flex-shrink-0 w-24 h-14 bg-white rounded-xl border border-granite-100 flex items-center justify-center mr-4 p-1">
                                 <div class="flex items-center gap-3">
-                                    <img src="<?= asset('images/VISA.png') ?>" alt="Visa" class="h-5 object-contain">
-                                    <img src="<?= asset('images/Mastercard.png') ?>" alt="Mastercard" class="h-7 object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= asset('images/VISA.webp') ?>" alt="Visa" class="h-5 object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= asset('images/Mastercard.webp') ?>" alt="Mastercard" class="h-7 object-contain">
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -466,7 +466,7 @@ include INCLUDES_PATH . '/header.php';
                         <?php foreach ($cartItems as $item): ?>
                         <div class="flex items-center space-x-4">
                             <div class="w-16 h-16 bg-cream-100 rounded overflow-hidden flex-shrink-0">
-                                <img src="<?= e(basePath() . $item['product']->getPrimaryImage()) ?>"
+                                <img loading="lazy" decoding="async" src="<?= e(basePath() . $item['product']->getPrimaryImage()) ?>"
                                      alt="<?= e($item['product']->name) ?>"
                                      class="w-full h-full object-cover">
                             </div>

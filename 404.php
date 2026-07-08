@@ -45,7 +45,7 @@ include INCLUDES_PATH . '/header.php';
 <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
-        <img src="<?= $base ?>/assets/images/Castelo.jpg" alt="Background" class="w-full h-full object-cover">
+        <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/Castelo.webp" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
     </div>
 

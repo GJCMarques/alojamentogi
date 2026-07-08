@@ -309,7 +309,7 @@ include dirname(__DIR__) . '/includes/header.php';
                             <div class="flex items-center gap-4">
                                 <div class="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                                     <?php if (!empty($act['cover_image_path'])): ?>
-                                    <img src="<?= basePath() ?><?= htmlspecialchars($act['cover_image_path']) ?>" alt="" class="w-full h-full object-cover">
+                                    <img loading="lazy" decoding="async" src="<?= basePath() ?><?= htmlspecialchars($act['cover_image_path']) ?>" alt="" class="w-full h-full object-cover">
                                     <?php else: ?>
                                     <div class="w-full h-full flex items-center justify-center text-gray-400">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

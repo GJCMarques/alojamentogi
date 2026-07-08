@@ -24,7 +24,7 @@ if (!$pageHero) {
     $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
 }
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.webp';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
@@ -39,7 +39,7 @@ include INCLUDES_PATH . '/header.php';
 <section class="relative h-[45vh] min-h-[400px] bg-gray-900 overflow-hidden">
     <!-- Hero Image -->
     <div class="absolute inset-0">
-        <img src="<?= e($heroUrl) ?>"
+        <img loading="lazy" decoding="async" src="<?= e($heroUrl) ?>"
              alt="Shopping Cart"
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-b from-black/<?= (int)($heroOverlay * 100) ?> via-black/<?= (int)($heroOverlay * 100) ?> to-black/70"></div>
@@ -145,7 +145,7 @@ include INCLUDES_PATH . '/header.php';
                                 <a href="<?= $base ?>/en/shop/product/?slug=<?= e($product->slug) ?>"
                                    class="w-24 h-24 md:w-28 md:h-28 flex-shrink-0 bg-cream-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 group">
                                     <?php if ($product->getPrimaryImage()): ?>
-                                    <img src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
+                                    <img loading="lazy" decoding="async" src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
                                          alt="<?= e($product->name) ?>"
                                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
                                     <?php else: ?>
@@ -325,25 +325,25 @@ include INCLUDES_PATH . '/header.php';
                             <!-- MB WAY -->
                             <div class="bg-white border border-granite-200 rounded-lg px-2 py-1.5 shadow-sm flex items-center gap-2">
                                 <div class="w-8 h-6 flex items-center justify-center flex-shrink-0">
-                                    <img src="<?= asset('images/MB_WAY.jpg') ?>" alt="MB WAY" class="max-w-full max-h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= asset('images/MB_WAY.webp') ?>" alt="MB WAY" class="max-w-full max-h-full object-contain">
                                 </div>
                             </div>
                             <!-- Multibanco -->
                             <div class="bg-white border border-granite-200 rounded-lg px-2 py-1.5 shadow-sm flex items-center gap-2">
                                 <div class="w-8 h-6 flex items-center justify-center flex-shrink-0">
-                                    <img src="<?= asset('images/multibanco.png') ?>" alt="Multibanco" class="max-w-full max-h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= asset('images/multibanco.webp') ?>" alt="Multibanco" class="max-w-full max-h-full object-contain">
                                 </div>
                             </div>
                             <!-- Visa -->
                             <div class="bg-white border border-granite-200 rounded-lg px-2 py-1.5 shadow-sm flex items-center gap-2">
                                 <div class="w-8 h-6 flex items-center justify-center flex-shrink-0">
-                                    <img src="<?= asset('images/VISA.png') ?>" alt="Visa" class="max-w-full max-h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= asset('images/VISA.webp') ?>" alt="Visa" class="max-w-full max-h-full object-contain">
                                 </div>
                             </div>
                             <!-- Mastercard -->
                             <div class="bg-white border border-granite-200 rounded-lg px-2 py-1.5 shadow-sm flex items-center gap-2">
                                 <div class="w-8 h-6 flex items-center justify-center flex-shrink-0">
-                                    <img src="<?= asset('images/Mastercard.png') ?>" alt="Mastercard" class="max-w-full max-h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= asset('images/Mastercard.webp') ?>" alt="Mastercard" class="max-w-full max-h-full object-contain">
                                 </div>
                             </div>
                         </div>

@@ -7,8 +7,8 @@ if (!isMaintenanceMode()) {
     redirect('/');
 }
 
-$bgImage = asset('images/MogadouroAtividades.jpg');
-$logo = asset('images/CGsimbUp.png');
+$bgImage = asset('images/MogadouroAtividades.webp');
+$logo = asset('images/CGsimbUp.webp');
 $email = setting('contact_email', 'geral@acasadogi.pt');
 $phone = setting('contact_phone', '');
 $facebook = setting('facebook_url', '');
@@ -29,14 +29,14 @@ $instagram = setting('instagram_url', '');
     <meta property="og:description" content="Estamos a preparar algo especial. Alojamento Local em Mogadouro. We are crafting something special. Local accommodation in Mogadouro.">
     <meta property="og:url" content="<?= setting('app_url', 'https://acasadogi.pt') ?>">
     <meta property="og:site_name" content="A Casa do Gi">
-    <meta property="og:image" content="<?= asset('images/MogadouroAtividades.jpg') ?>">
+    <meta property="og:image" content="<?= asset('images/MogadouroAtividades.webp') ?>">
     <meta property="og:locale" content="pt_PT">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="A Casa do Gi - Em Breve">
     <meta name="twitter:description" content="Estamos a preparar algo especial em Mogadouro.">
-    <meta name="twitter:image" content="<?= asset('images/MogadouroAtividades.jpg') ?>">
+    <meta name="twitter:image" content="<?= asset('images/MogadouroAtividades.webp') ?>">
 
     <!-- Use Tailwind via CDN for simplicity and isolation -->
     <!-- Tailwind CSS (compilado localmente) -->

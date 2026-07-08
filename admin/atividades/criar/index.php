@@ -531,7 +531,7 @@ function previewImage(input, previewId) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            preview.innerHTML = '<img loading="lazy" decoding="async" src="' + e.target.result + '" class="w-full h-full object-cover">';
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -606,7 +606,7 @@ function handleGalleryFiles() {
             const preview = document.createElement('div');
             preview.className = 'relative bg-gray-100 rounded-lg overflow-hidden aspect-square border border-gray-200';
             preview.innerHTML = `
-                <img src="${e.target.result}" class="w-full h-full object-cover">
+                <img loading="lazy" decoding="async" src="${e.target.result}" class="w-full h-full object-cover">
                 <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] px-1 py-0.5 truncate">
                     ${file.name}
                 </div>

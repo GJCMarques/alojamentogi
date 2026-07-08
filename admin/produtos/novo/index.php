@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const div = document.createElement('div');
                     div.className = 'relative aspect-square bg-gray-100 rounded overflow-hidden';
                     div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                        <img loading="lazy" decoding="async" src="${e.target.result}" class="w-full h-full object-cover">
                         ${index === 0 ? '<span class="absolute top-1 left-1 text-xs bg-secondary-600 text-white px-2 py-1 rounded">Principal</span>' : ''}
                     `;
                     imagePreview.appendChild(div);

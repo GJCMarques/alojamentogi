@@ -51,7 +51,7 @@ if (!$pageHero) {
     $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'shop' AND is_active = 1");
 }
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.jpeg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroNeve.webp';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
@@ -139,7 +139,7 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Main Image with Navigation -->
                 <div class="relative h-[400px] md:h-[500px] w-full bg-white rounded-2xl overflow-hidden shadow-lg mb-4 group" id="main-image-container">
                     <?php if ($product->getPrimaryImage()): ?>
-                    <img src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
+                    <img loading="lazy" decoding="async" src="<?= e(basePath() . $product->getPrimaryImage()) ?>"
                          alt="<?= e($product->name) ?>"
                          class="w-full h-full object-cover cursor-pointer"
                          id="main-image"
@@ -186,7 +186,7 @@ include INCLUDES_PATH . '/header.php';
                             class="aspect-square bg-white rounded-lg overflow-hidden border-2 transition-all thumbnail-btn <?= $index === 0 ? 'border-primary ring-2 ring-primary/20' : 'border-cream-200 hover:border-secondary' ?>"
                             data-image="<?= e(basePath() . $image['image_path']) ?>"
                             data-index="<?= $index ?>">
-                        <img src="<?= e(basePath() . $image['image_path']) ?>"
+                        <img loading="lazy" decoding="async" src="<?= e(basePath() . $image['image_path']) ?>"
                              alt="<?= e($product->name) ?> - Imagem <?= $index + 1 ?>"
                              class="w-full h-full object-cover">
                     </button>
@@ -397,7 +397,7 @@ include INCLUDES_PATH . '/header.php';
             <article class="product-card bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-cream-200 animate-on-scroll" data-animation="fade-up" data-delay="<?= $ridx * 100 ?>">
                 <a href="<?= $base ?>/loja/produto/?slug=<?= e($related->slug) ?>" class="block aspect-square relative overflow-hidden">
                     <?php if ($related->getPrimaryImage()): ?>
-                    <img src="<?= e(basePath() . $related->getPrimaryImage()) ?>"
+                    <img loading="lazy" decoding="async" src="<?= e(basePath() . $related->getPrimaryImage()) ?>"
                          alt="<?= e($related->name) ?>"
                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <?php else: ?>
@@ -456,7 +456,7 @@ include INCLUDES_PATH . '/header.php';
         </button>
 
         <div class="relative max-w-full max-h-[60vh] md:max-h-[70vh]">
-            <img id="lightbox-image" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
+            <img loading="lazy" decoding="async" id="lightbox-image" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
             <div id="lightbox-loader" class="absolute inset-0 flex items-center justify-center hidden">
                 <div class="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
             </div>
@@ -476,7 +476,7 @@ include INCLUDES_PATH . '/header.php';
                 <button onclick="goToImage(<?= $index ?>)"
                         class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 relative <?= $index === 0 ? 'border-accent opacity-100 scale-110 z-20 shadow-lg' : 'border-transparent opacity-50 z-0 hover:opacity-80' ?>"
                         data-index="<?= $index ?>">
-                    <img src="<?= e(basePath() . $image['image_path']) ?>" alt="" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="<?= e(basePath() . $image['image_path']) ?>" alt="" class="w-full h-full object-cover">
                 </button>
                 <?php endforeach; ?>
             </div>

@@ -149,7 +149,7 @@ $instagramUrl = setting('instagram_url', '');
                            class="w-full flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
                             <div class="w-10 h-10 bg-[#800020]/10 rounded-md flex items-center justify-center mr-3 text-white p-1">
                                 <!-- GuestReady Logo -->
-                                <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
+                                <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-[#800020]/80 uppercase tracking-wide">Parceiro</span>
@@ -162,7 +162,7 @@ $instagramUrl = setting('instagram_url', '');
                            class="w-full flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
                            style="background-color: #003580;">
                             <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white p-1">
-                                <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
+                                <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/bookinglogo.webp" alt="Booking.com" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
@@ -175,7 +175,7 @@ $instagramUrl = setting('instagram_url', '');
                            class="w-full flex items-center p-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
                            style="background-color: #FF385C;">
                             <div class="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mr-3 text-white p-1">
-                                <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
+                                <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/airbnblogo.webp" alt="Airbnb" class="w-full h-full object-contain">
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-white/80 uppercase tracking-wide">Parceiro</span>
@@ -237,7 +237,7 @@ $instagramUrl = setting('instagram_url', '');
                             <a href="<?= e($casa1['guestready_url']) ?>" target="_blank" rel="noopener"
                                class="flex items-center p-3 bg-[#FAF9F6] hover:bg-[#EAE8E0] transition-colors group w-full rounded-lg">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
-                                    <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1">
                                     <span class="text-[#800020] font-semibold">GuestReady</span>
@@ -253,7 +253,7 @@ $instagramUrl = setting('instagram_url', '');
                                class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
                                style="background-color: #003580;">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
-                                    <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/bookinglogo.webp" alt="Booking.com" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1">
                                     <span class="text-white font-semibold">Booking.com</span>
@@ -269,7 +269,7 @@ $instagramUrl = setting('instagram_url', '');
                                class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
                                style="background-color: #FF385C;">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
-                                    <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/airbnblogo.webp" alt="Airbnb" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1">
                                     <span class="text-white font-semibold">Airbnb</span>
@@ -291,7 +291,7 @@ $instagramUrl = setting('instagram_url', '');
                             <a href="<?= e($casa2['guestready_url']) ?>" target="_blank" rel="noopener"
                                class="flex items-center p-3 bg-[#FAF9F6] hover:bg-[#EAE8E0] transition-colors group w-full rounded-lg">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
-                                    <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1">
                                     <span class="text-[#800020] font-semibold">GuestReady</span>
@@ -307,7 +307,7 @@ $instagramUrl = setting('instagram_url', '');
                                class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
                                style="background-color: #003580;">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
-                                    <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/bookinglogo.webp" alt="Booking.com" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1">
                                     <span class="text-white font-semibold">Booking.com</span>
@@ -323,7 +323,7 @@ $instagramUrl = setting('instagram_url', '');
                                class="flex items-center p-3 transition-opacity hover:opacity-90 group w-full rounded-lg"
                                style="background-color: #FF385C;">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 p-1">
-                                    <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/airbnblogo.webp" alt="Airbnb" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1">
                                     <span class="text-white font-semibold">Airbnb</span>

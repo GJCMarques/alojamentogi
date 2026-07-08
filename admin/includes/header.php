@@ -87,7 +87,7 @@ $base = basePath();
                             <button onclick="this.nextElementSibling.classList.toggle('hidden')"
                                     data-dropdown-toggle="true"
                                     class="flex items-center space-x-3 text-sm focus:outline-none">
-                                <img src="<?= e($currentAdmin->getAvatarUrl()) ?>"
+                                <img loading="lazy" decoding="async" src="<?= e($currentAdmin->getAvatarUrl()) ?>"
                                      alt="<?= e($currentAdmin->getDisplayName()) ?>"
                                      class="w-8 h-8 rounded-full object-cover border border-accent/30">
                                 <span class="text-charcoal-700"><?= e($currentAdmin->getDisplayName()) ?></span>

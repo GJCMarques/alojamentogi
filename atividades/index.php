@@ -17,7 +17,7 @@ if (!empty($_GET['slug'])) {
 
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'activities' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.jpg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.webp';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.45;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
