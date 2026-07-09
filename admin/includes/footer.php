@@ -49,12 +49,12 @@
         }
     </script>
 
-    <!-- Inactivity Auto-Logout (1 minute without mouse movement) -->
+    <!-- Inactivity Auto-Logout (20 minutos sem atividade) -->
     <script>
     (function() {
         'use strict';
-        var inactivityTimeout = 60000; // 1 minute in milliseconds
-        var warningTimeout = 50000;    // Warning at 50 seconds
+        var inactivityTimeout = 1200000; // 20 minutos
+        var warningTimeout = 1190000;    // Aviso 10s antes (19min50s)
         var timer = null;
         var warningTimer = null;
         var warningShown = false;
