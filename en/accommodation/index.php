@@ -135,8 +135,6 @@ $allRules = $db->fetchAll(
 );
 
 $guestreadyUrl = $accommodation['guestready_url'] ?? null;
-$bookingUrl = null; // Booking.com removed at client's request
-$airbnbUrl = $accommodation['airbnb_url'] ?? null;
 
 $pageTitle = $showMainPage ? 'Accommodation' : 'Casa do Gi ' . $selectedAccommodationNumber;
 $pageDescription = 'A Casa do Gi - Local Accommodation in Mogadouro. 100m² holiday home for 6 guests.';
@@ -528,7 +526,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                     <div class="text-center mb-8">
                         <span class="text-accent text-xs font-bold tracking-widest uppercase mb-2 block">Availability</span>
                         <h3 class="font-serif text-3xl text-primary">Book Now</h3>
-                        <p class="text-charcoal/60 text-sm mt-2">Choose your preferred platform</p>
+                        <p class="text-charcoal/60 text-sm mt-2">Book your stay through GuestReady</p>
                     </div>
 
                     <div class="space-y-4">
@@ -541,30 +539,6 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                                 <span class="font-semibold text-primary group-hover:text-[#800020] transition-colors">GuestReady</span>
                             </div>
                             <svg class="w-5 h-5 text-cream-300 group-hover:text-[#800020] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                        <?php endif; ?>
-
-                        <?php if ($bookingUrl): ?>
-                        <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#003580]/10 hover:border-[#003580] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
-                             <div class="flex items-center gap-4 relative z-10">
-                                <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
-                                     <img loading="lazy" decoding="async" src="<?= asset('images/bookinglogo.webp') ?>" alt="Booking" class="w-full h-full object-contain mix-blend-multiply group-hover:mix-blend-normal transition-all">
-                                </div>
-                                <span class="font-semibold text-primary group-hover:text-[#003580] transition-colors">Booking.com</span>
-                            </div>
-                            <svg class="w-5 h-5 text-cream-300 group-hover:text-[#003580] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                        <?php endif; ?>
-
-                        <?php if ($airbnbUrl): ?>
-                        <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#FF385C]/10 hover:border-[#FF385C] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
-                             <div class="flex items-center gap-4 relative z-10">
-                                <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
-                                      <img loading="lazy" decoding="async" src="<?= asset('images/airbnblogo.webp') ?>" alt="Airbnb" class="w-full h-full object-contain transition-all">
-                                </div>
-                                <span class="font-semibold text-primary group-hover:text-[#FF385C] transition-colors">Airbnb</span>
-                            </div>
-                            <svg class="w-5 h-5 text-cream-300 group-hover:text-[#FF385C] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
                         <?php endif; ?>
                     </div>
@@ -714,7 +688,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                             <h4 class="font-bold text-primary">Cancellation</h4>
                         </div>
                         <p class="text-charcoal/70 text-sm leading-relaxed pl-11">
-                            <?= e($accTranslation['cancellation_policy'] ?? 'Free cancellation up to 30 days before check-in. Cancellations after this period are subject to fees according to the booking platform.') ?>
+                            <?= e($accTranslation['cancellation_policy'] ?? 'Free cancellation up to 30 days before check-in. Cancellations after this period are subject to fees according to the reservation platform.') ?>
                         </p>
                     </div>
 
@@ -1141,7 +1115,7 @@ footer { margin-top: 0 !important; }
 <script>
     // Simple, Robust Scroll Lock (Matching Header Logic)
     document.addEventListener('DOMContentLoaded', () => {
-        const modalIds = ['lightbox-modal', 'amenities-modal', 'policies-modal', 'bookingModal'];
+        const modalIds = ['lightbox-modal', 'amenities-modal', 'policies-modal'];
 
         const observer = new MutationObserver(() => {
             let isLocked = false;

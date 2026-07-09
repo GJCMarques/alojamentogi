@@ -206,7 +206,7 @@ include INCLUDES_PATH . '/header.php';
                 <div class="mt-10 p-6 bg-primary rounded-lg animate-on-scroll" data-animation="fade-up" data-delay="300">
                     <h3 class="font-serif text-lg text-cream mb-4">Want to make a booking?</h3>
                     <p class="text-cream/80 text-sm mb-4">
-                        Book your stay through GuestReady and Airbnb.
+                        Book your stay through GuestReady.
                     </p>
                     <a href="<?= $base ?>/en/accommodation/" class="inline-flex items-center text-accent hover:text-accent/70 text-sm font-medium">
                         View booking options
