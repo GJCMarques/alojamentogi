@@ -3,7 +3,7 @@
 $layout = $layout ?? 'vertical';
 $size = $size ?? 'default';
 $showLabels = $show_labels ?? true;
-$platforms = $platforms ?? ['guestready', 'booking', 'airbnb'];
+$platforms = $platforms ?? ['guestready', 'airbnb']; // Booking.com removido a pedido do cliente
 
 $lang = \Core\Language::getInstance();
 $isEnglish = $lang->isEnglish();
@@ -64,7 +64,7 @@ $baseButtonClasses = "flex items-center {$currentSize} rounded-lg shadow-md hove
        class="<?= $baseButtonClasses ?> bg-[#FAF9F6] hover:bg-[#EAE8E0] text-[#800020] group border border-[#800020]/10">
         <div class="<?= $currentIconSize ?> bg-[#800020]/10 rounded-lg flex items-center justify-center mr-3 group-hover:bg-[#800020]/20 transition-colors p-1">
             <!-- GuestReady Logo -->
-            <img src="<?= $base ?>/assets/images/guestreadylogo.png" alt="GuestReady" class="w-full h-full object-contain">
+            <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
         </div>
         <div class="flex flex-col">
             <?php if ($showLabels): ?>
@@ -88,12 +88,12 @@ $baseButtonClasses = "flex items-center {$currentSize} rounded-lg shadow-md hove
        class="<?= $baseButtonClasses ?> bg-[#003580] hover:bg-[#00264d] text-white group">
         <div class="<?= $currentIconSize ?> bg-white/20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-white/30 transition-colors p-1">
             <!-- Booking.com Logo -->
-            <img src="<?= $base ?>/assets/images/bookinglogo.jpg" alt="Booking.com" class="w-full h-full object-contain">
+            <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/bookinglogo.webp" alt="Booking.com" class="w-full h-full object-contain">
         </div>
         <div class="flex flex-col">
             <?php if ($showLabels): ?>
             <span class="text-[10px] text-white/70 uppercase tracking-wider font-medium">
-                <?= $isEnglish ? 'Partner' : 'Parceiro' ?>
+                <?= $isEnglish ? 'Booking' : 'Reservas' ?>
             </span>
             <?php endif; ?>
             <span class="font-bold">Booking.com</span>
@@ -112,12 +112,12 @@ $baseButtonClasses = "flex items-center {$currentSize} rounded-lg shadow-md hove
        class="<?= $baseButtonClasses ?> bg-[#FF385C] hover:bg-[#e62e50] text-white group">
         <div class="<?= $currentIconSize ?> bg-white/20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-white/30 transition-colors p-1">
             <!-- Airbnb Logo -->
-            <img src="<?= $base ?>/assets/images/airbnblogo.png" alt="Airbnb" class="w-full h-full object-contain">
+            <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/airbnblogo.webp" alt="Airbnb" class="w-full h-full object-contain">
         </div>
         <div class="flex flex-col">
             <?php if ($showLabels): ?>
             <span class="text-[10px] text-white/70 uppercase tracking-wider font-medium">
-                <?= $isEnglish ? 'Partner' : 'Parceiro' ?>
+                <?= $isEnglish ? 'Booking' : 'Reservas' ?>
             </span>
             <?php endif; ?>
             <span class="font-bold">Airbnb</span>

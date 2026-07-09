@@ -4,6 +4,32 @@ if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(__DIR__));
 }
 
+// Carregar variáveis de ambiente a partir de um ficheiro .env (não versionado), se existir.
+// Em produção (Dokploy) as variáveis são definidas no painel; o .env é apenas para dev local.
+(function () {
+    $envFile = ROOT_PATH . '/.env';
+    if (!is_readable($envFile)) {
+        return;
+    }
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#' || strpos($line, '=') === false) {
+            continue;
+        }
+        [$key, $value] = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+        // remover aspas envolventes opcionais
+        if (strlen($value) >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[-1] === $value[0]) {
+            $value = substr($value, 1, -1);
+        }
+        if ($key !== '' && getenv($key) === false) {
+            putenv("{$key}={$value}");
+            $_ENV[$key] = $value;
+        }
+    }
+})();
+
 if (file_exists(ROOT_PATH . '/vendor/autoload.php')) {
     require_once ROOT_PATH . '/vendor/autoload.php';
 }

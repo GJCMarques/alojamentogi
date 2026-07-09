@@ -229,7 +229,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                 if ($currentPath):
                                     $displayUrl = $currentPath[0] === '/' ? basePath() . $currentPath : asset($currentPath);
                                 ?>
-                                    <img src="<?= e($displayUrl) ?>" alt="Preview" class="max-w-full max-h-full object-contain rounded">
+                                    <img loading="lazy" decoding="async" src="<?= e($displayUrl) ?>" alt="Preview" class="max-w-full max-h-full object-contain rounded">
                                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <a href="<?= e($displayUrl) ?>" target="_blank" class="text-white text-sm bg-black/50 px-3 py-1 rounded-full hover:bg-black/70 transition-colors">
                                             Ver Tamanho Original

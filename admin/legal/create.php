@@ -104,7 +104,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         onclick="switchTab('<?= $lang['id'] ?>')"
                         class="lang-tab px-4 py-2 text-sm font-medium <?= $i === 0 ? 'bg-white text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>"
                         data-lang="<?= $lang['id'] ?>">
-                    <img src="<?= asset('images/flags/' . $lang['flag_icon'] . '.svg') ?>" class="w-4 h-4 inline-block mr-2" alt="">
+                    <img loading="lazy" decoding="async" src="<?= asset('images/flags/' . $lang['flag_icon'] . '.svg') ?>" class="w-4 h-4 inline-block mr-2" alt="">
                     <?= $lang['name'] ?>
                 </button>
                 <?php endforeach; ?>

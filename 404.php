@@ -45,30 +45,30 @@ include INCLUDES_PATH . '/header.php';
 <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
-        <img src="<?= $base ?>/assets/images/Castelo.jpg" alt="Background" class="w-full h-full object-cover">
+        <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/Castelo.webp" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
     </div>
 
-    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center text-white -mt-20">
+    <div class="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-6 lg:px-8 pt-28 pb-16 text-center text-white">
         <!-- 404 Number -->
         <div class="animate-on-scroll" data-animation="zoom-in">
-            <h1 class="font-serif text-[120px] sm:text-[180px] md:text-[220px] font-black text-white/20 leading-none select-none tracking-tighter mix-blend-overlay">
+            <h1 class="font-serif text-7xl sm:text-[140px] md:text-[200px] font-black text-white/20 leading-none select-none tracking-tighter mix-blend-overlay">
                 <?= $t['404_text'] ?>
             </h1>
         </div>
 
         <!-- Main Message -->
-        <div class="relative z-20 space-y-6 animate-on-scroll" data-delay="200">
-            <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide drop-shadow-lg">
+        <div class="relative z-20 space-y-4 sm:space-y-6 animate-on-scroll" data-delay="200">
+            <h2 class="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide drop-shadow-lg">
                 <?= $t['hero_title'] ?>
             </h2>
-            <p class="text-gray-100 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-light drop-shadow-md">
+            <p class="text-gray-100 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed font-light drop-shadow-md">
                 <?= $t['hero_message'] ?>
             </p>
         </div>
 
         <!-- Action Buttons -->
-        <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 animate-on-scroll" data-delay="300">
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 animate-on-scroll" data-delay="300">
             <button onclick="window.history.back()"
                     class="group relative inline-flex items-center px-8 py-4 bg-white/10 text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 hover:border-white/40 hover:-translate-y-1 transition-all duration-300 backdrop-blur-md overflow-hidden">
                 <div class="absolute inset-0 w-0 bg-white/10 transition-all duration-[250ms] ease-out group-hover:w-full"></div>

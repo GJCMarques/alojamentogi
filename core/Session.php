@@ -44,7 +44,8 @@ class Session
         if (!isset($_SESSION['_created'])) {
             $_SESSION['_created'] = time();
         } elseif (time() - $_SESSION['_created'] > 1800) {
-            session_regenerate_id(true);
+            // Não-destrutiva para não invalidar pedidos/abas com o cookie anterior.
+            session_regenerate_id(false);
             $_SESSION['_created'] = time();
         }
     }
@@ -174,7 +175,9 @@ class Session
     {
         self::regenerate();
         self::set(SESSION_USER_ID, $adminId);
-        self::set(SESSION_USER_IP, $_SERVER['REMOTE_ADDR'] ?? '');
+        // Usa o IP real do cliente (via X-Forwarded-For atrás do proxy Dokploy),
+        // consistente com a verificação em Auth::requireAuth.
+        self::set(SESSION_USER_IP, \getClientIp());
     }
 
     public static function clearAdmin(): void

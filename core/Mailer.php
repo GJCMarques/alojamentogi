@@ -255,21 +255,6 @@ class Mailer
         return $this->send($order['customer_email'], $subject, $body);
     }
 
-    public function sendManualOrderReceived(array $manualOrder): bool
-    {
-        if (empty($manualOrder['customer_email'])) {
-            return false;
-        }
-
-        $subject = "Pedido Recebido - A Casa do Gi";
-
-        $body = $this->renderTemplate('manual-order-received', [
-            'manualOrder' => $manualOrder,
-        ]);
-
-        return $this->send($manualOrder['customer_email'], $subject, $body);
-    }
-
     public function sendManualOrderNotification(array $manualOrder): bool
     {
         $adminEmail = setting('contact_email', $this->config['mail']['from_email'] ?? '');

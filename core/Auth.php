@@ -120,12 +120,13 @@ class Auth
     public static function requireAuth(string $redirectTo = '/admin/login.php'): void
     {
         if (!self::check()) {
-            Session::flash('error', 'Por favor, faca login para continuar');
+            // Sem flash de "erro": aceder ao /admin sem sessão mostra apenas o formulário de login.
             redirect($redirectTo);
         }
 
+        // IP do cliente via X-Forwarded-For (estável atrás do proxy), consistente com Session::setAdmin.
         $sessionIp = Session::get(SESSION_USER_IP);
-        $currentIp = $_SERVER['REMOTE_ADDR'] ?? '';
+        $currentIp = getClientIp();
 
         if ($sessionIp && $sessionIp !== $currentIp) {
             self::logout();

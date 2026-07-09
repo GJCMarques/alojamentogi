@@ -3,8 +3,7 @@
             <!-- Footer -->
             <footer class="border-t border-accent/20 bg-white px-6 py-4">
                 <div class="flex items-center justify-between text-sm text-charcoal-500">
-                    <p>&copy; <?= date('Y') ?> A Casa do Gi. Painel de Administracao.</p>
-                    <p>v2.5.0</p>
+                    <p>&copy; <?= date('Y') ?> A Casa do Gi. Painel de Administração.</p>
                 </div>
             </footer>
         </div>

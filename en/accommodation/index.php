@@ -135,7 +135,7 @@ $allRules = $db->fetchAll(
 );
 
 $guestreadyUrl = $accommodation['guestready_url'] ?? null;
-$bookingUrl = $accommodation['booking_url'] ?? null;
+$bookingUrl = null; // Booking.com removed at client's request
 $airbnbUrl = $accommodation['airbnb_url'] ?? null;
 
 $pageTitle = $showMainPage ? 'Accommodation' : 'Casa do Gi ' . $selectedAccommodationNumber;
@@ -152,7 +152,7 @@ include INCLUDES_PATH . '/header.php';
 <!-- Hero Section - Main -->
 <?php
 $mainHeroMedia = $mainPageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$mainPageHero['id']]) : null;
-$mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.jpg';
+$mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp';
 $mainHeroUrl = $mainHeroImage[0] === '/' ? basePath() . $mainHeroImage : asset($mainHeroImage);
 $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 ?>
@@ -196,8 +196,8 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
         <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
             <?php foreach ($allAccommodations as $idx => $casa):
 
-                $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.jpg' : 'images/Castelo.jpg');
-                $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.jpg' : 'images/Castelo.jpg'));
+                $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp');
+                $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp'));
             ?>
             <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('<?= $coverUrl ?>');"></div>
@@ -273,8 +273,8 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 <!-- Hero Section -->
 <?php
 
-$casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.jpg';
-$casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.jpg'));
+$casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.webp';
+$casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.webp'));
 ?>
 <section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
@@ -312,6 +312,13 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
             <span class="tracking-widest uppercase text-sm font-medium"><?= e($accommodation['city'] ?? 'Mogadouro') ?>, <?= e($accommodation['region'] ?? 'Trás-os-Montes') ?></span>
+        </div>
+
+        <div class="mt-6 flex justify-center animate-on-scroll" data-animation="fade-up" data-delay="350">
+            <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-accent text-primary text-xs md:text-sm font-bold tracking-[0.15em] uppercase shadow-lg">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                In Mogadouro since 2023
+            </span>
         </div>
 
         <!-- Casa Switcher -->
@@ -535,7 +542,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                         <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#800020]/10 hover:border-[#800020] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
                             <div class="flex items-center gap-4 relative z-10">
                                 <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
-                                     <img src="<?= asset('images/guestreadylogo.png') ?>" alt="GuestReady" class="w-full h-full object-contain transition-all">
+                                     <img loading="lazy" decoding="async" src="<?= asset('images/guestreadylogo.webp') ?>" alt="GuestReady" class="w-full h-full object-contain transition-all">
                                 </div>
                                 <span class="font-semibold text-primary group-hover:text-[#800020] transition-colors">GuestReady</span>
                             </div>
@@ -547,7 +554,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                         <a href="<?= e($bookingUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#003580]/10 hover:border-[#003580] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
                              <div class="flex items-center gap-4 relative z-10">
                                 <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
-                                     <img src="<?= asset('images/bookinglogo.jpg') ?>" alt="Booking" class="w-full h-full object-contain mix-blend-multiply group-hover:mix-blend-normal transition-all">
+                                     <img loading="lazy" decoding="async" src="<?= asset('images/bookinglogo.webp') ?>" alt="Booking" class="w-full h-full object-contain mix-blend-multiply group-hover:mix-blend-normal transition-all">
                                 </div>
                                 <span class="font-semibold text-primary group-hover:text-[#003580] transition-colors">Booking.com</span>
                             </div>
@@ -559,7 +566,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                         <a href="<?= e($airbnbUrl) ?>" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl border border-cream-200 bg-white hover:bg-[#FF385C]/10 hover:border-[#FF385C] group transition-all duration-300 shadow-sm hover:shadow-lg relative overflow-hidden">
                              <div class="flex items-center gap-4 relative z-10">
                                 <div class="w-10 h-10 bg-cream-50 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white transition-colors">
-                                      <img src="<?= asset('images/airbnblogo.png') ?>" alt="Airbnb" class="w-full h-full object-contain transition-all">
+                                      <img loading="lazy" decoding="async" src="<?= asset('images/airbnblogo.webp') ?>" alt="Airbnb" class="w-full h-full object-contain transition-all">
                                 </div>
                                 <span class="font-semibold text-primary group-hover:text-[#FF385C] transition-colors">Airbnb</span>
                             </div>
@@ -621,7 +628,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
             <!-- Main Image -->
             <?php if (isset($galleryImages[0])): ?>
             <div class="col-span-2 row-span-2 relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg" onclick="openLightbox(0)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[0]['file_path'])) ?>"
+                <img loading="lazy" decoding="async" src="<?= upload(str_replace('uploads/', '', $galleryImages[0]['file_path'])) ?>"
                      alt="<?= e($lang->getCurrentLang() === 'pt' ? ($galleryImages[0]['alt_text_pt'] ?? 'Accommodation') : ($galleryImages[0]['alt_text_en'] ?? 'Accommodation')) ?>"
                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -636,7 +643,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
             <?php for ($i = 1; $i <= 4; $i++): ?>
             <?php if (isset($galleryImages[$i])): ?>
             <div class="relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg aspect-[4/3] md:aspect-auto" onclick="openLightbox(<?= $i ?>)">
-                <img src="<?= upload(str_replace('uploads/', '', $galleryImages[$i]['file_path'])) ?>"
+                <img loading="lazy" decoding="async" src="<?= upload(str_replace('uploads/', '', $galleryImages[$i]['file_path'])) ?>"
                      alt="<?= e($lang->getCurrentLang() === 'pt' ? ($galleryImages[$i]['alt_text_pt'] ?? 'Accommodation') : ($galleryImages[$i]['alt_text_en'] ?? 'Accommodation')) ?>"
                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
@@ -845,7 +852,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
         </button>
 
         <div class="relative max-w-full max-h-[60vh] md:max-h-[70vh]">
-            <img id="lightbox-image" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
+            <img loading="lazy" decoding="async" id="lightbox-image" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
             <div id="lightbox-loader" class="absolute inset-0 flex items-center justify-center hidden">
                 <div class="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
             </div>
@@ -865,7 +872,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                 <button onclick="goToImage(<?= $index ?>)"
                         class="thumbnail-item flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 relative <?= $index === 0 ? 'border-accent opacity-100 scale-110 z-20 shadow-lg' : 'border-transparent opacity-50 z-0 hover:opacity-80' ?>"
                         data-index="<?= $index ?>">
-                    <img src="<?= upload(str_replace('uploads/', '', $image['file_path'])) ?>" alt="" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="<?= upload(str_replace('uploads/', '', $image['file_path'])) ?>" alt="" class="w-full h-full object-cover">
                 </button>
                 <?php endforeach; ?>
             </div>
@@ -931,14 +938,14 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
 </div>
 
 <!-- Leaflet CSS/JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>"/>
+<script src="<?= asset('vendor/leaflet/leaflet.js') ?>"></script>
 
 <script>
 // Gallery Data
 const galleryImages = <?= json_encode(array_map(function($img) use ($lang) {
     $path = str_replace('uploads/', '', $img['file_path']);
-    $url = empty($path) ? asset('images/placeholder-activity.jpg') : upload($path);
+    $url = empty($path) ? asset('images/placeholder-activity.webp') : upload($path);
     $alt = $lang->getCurrentLang() === 'pt'
         ? ($img['alt_text_pt'] ?? '')
         : ($img['alt_text_en'] ?? '');

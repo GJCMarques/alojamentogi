@@ -21,17 +21,17 @@ $isEnglish = $lang->isEnglish();
 
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'home' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.jpg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroAtividades.webp';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.30;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $langId = $isEnglish ? 2 : 1;
 
 $menuImages = [
-    'accommodation' => 'images/MogadouroAlojamento.jpg',
-    'activities' => 'images/MogadouroAtividades.jpg',
-    'shop' => 'images/MogadouroContacto.jpg',
-    'contact' => 'images/FotoGi.png'
+    'accommodation' => 'images/MogadouroAlojamento.webp',
+    'activities' => 'images/MogadouroAtividades.webp',
+    'shop' => 'images/MogadouroContacto.webp',
+    'contact' => 'images/FotoGi.webp'
 ];
 
 $heroRows = $db->fetchAll(
@@ -64,7 +64,7 @@ include INCLUDES_PATH . '/header.php';
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <div id="hero-content">
             <span class="hero-animate-up hero-delay-1 text-white/70 text-sm md:text-base font-bold tracking-[0.4em] uppercase mb-6 block">
-                Tras-os-Montes, Portugal
+                Mogadouro · Trás-os-Montes
             </span>
             <h1 class="hero-animate-up hero-delay-2 font-cursive text-6xl md:text-8xl lg:text-9xl text-cream mb-6 drop-shadow-2xl">
                 A Casa do Gi
@@ -72,6 +72,12 @@ include INCLUDES_PATH . '/header.php';
             <p class="hero-animate-up hero-delay-3 text-cream/80 text-lg md:text-xl font-light max-w-2xl mx-auto">
                 <?= $content['home_hero_subtitle'] ?? 'Onde a tradição transmontana encontra o conforto moderno' ?>
             </p>
+            <div class="hero-animate-up hero-delay-3 mt-8 flex justify-center">
+                <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-accent text-primary text-xs md:text-sm font-bold tracking-[0.15em] uppercase shadow-lg">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    A Casa do Gi 1 &amp; 2 · Desde 2023 em Mogadouro
+                </span>
+            </div>
         </div>
     </div>
 </section>
@@ -79,7 +85,7 @@ include INCLUDES_PATH . '/header.php';
 <!-- SPLIT HERO -->
 <div class="relative h-screen w-full flex flex-col md:flex-row overflow-hidden" id="split-hero">
     <div class="split-hero-left split-panel split-left relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
-        <img src="<?= resolveContentImage(content('home_image_split_left', 'images/IgrejaMatriz.jpg')) ?>" alt="Igreja Matriz de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
+        <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_split_left', 'images/IgrejaMatriz.webp')) ?>" alt="Igreja Matriz de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/10 transition-colors duration-700"></div>
         <div class="split-content-left split-content absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
             <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-accent">
@@ -111,7 +117,7 @@ include INCLUDES_PATH . '/header.php';
         </div>
     </div>
     <div class="split-hero-right split-panel split-right relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
-        <img src="<?= resolveContentImage(content('home_image_split_right', 'images/Castelo.jpg')) ?>" alt="Castelo de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
+        <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_split_right', 'images/Castelo.webp')) ?>" alt="Castelo de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <div class="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700"></div>
         <div class="split-content-right split-content absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
             <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-accent">
@@ -123,9 +129,6 @@ include INCLUDES_PATH . '/header.php';
             <div class="flex flex-col md:flex-row gap-4 opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-200">
                 <a href="<?= $base ?>/atividades/" class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl hover:scale-105">
                     <?= $isEnglish ? 'Explore' : 'Explorar' ?>
-                </a>
-                <a href="<?= $base ?>/loja/" class="inline-flex items-center justify-center px-10 py-4 backdrop-blur-md bg-white/10 border border-white/30 text-white font-medium tracking-widest uppercase text-xs rounded-full transition-all duration-300 hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl hover:scale-105">
-                    <?= $isEnglish ? 'Shop' : 'Loja' ?>
                 </a>
             </div>
         </div>
@@ -278,7 +281,7 @@ include INCLUDES_PATH . '/header.php';
                 <!-- Main Image -->
                 <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                     <div class="absolute inset-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>
-                    <img src="<?= resolveContentImage(content('home_image_about', 'images/MogadouroSobre.png')) ?>"
+                    <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_about', 'images/MogadouroSobre.webp')) ?>"
                          alt="A Casa do Gi"
                          class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)]">
                 </div>

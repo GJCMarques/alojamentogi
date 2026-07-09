@@ -70,13 +70,6 @@ $blockDefinitions = [
             'activities_hero_subtitle' => ['label' => 'Hero - Subtítulo', 'type' => 'textarea'],
         ]
     ],
-    'shop' => [
-        'label' => 'Loja',
-        'blocks' => [
-            'shop_intro' => ['label' => 'Introdução', 'type' => 'textarea'],
-            'shop_empty_message' => ['label' => 'Mensagem Vazio', 'type' => 'text'],
-        ]
-    ],
     'about' => [
         'label' => 'Sobre Nós',
         'blocks' => [
@@ -137,6 +130,7 @@ $blockDefinitions = [
     'footer' => [
         'label' => 'Rodapé',
         'blocks' => [
+            'guestready_url' => ['label' => 'Link GuestReady (Reservas)', 'type' => 'setting_url'],
             'footer_description' => ['label' => 'Descrição Marca', 'type' => 'textarea'],
             'footer_quicklinks_title' => ['label' => 'Título Links Rápidos', 'type' => 'text'],
             'footer_contact_title' => ['label' => 'Título Contactos', 'type' => 'text'],
@@ -159,6 +153,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $section = $blockDefinitions[$currentSection];
 
         foreach ($section['blocks'] as $blockKey => $blockDef) {
+            // Campos guardados em `settings` (não são por idioma nem content_blocks).
+            if (($blockDef['type'] ?? '') === 'setting_url') {
+                $value = trim($_POST[$blockKey] ?? '');
+                $existingSetting = $db->fetch("SELECT id FROM settings WHERE setting_key = ?", [$blockKey]);
+                if ($existingSetting) {
+                    $db->update('settings', ['setting_value' => $value], 'setting_key = ?', [$blockKey]);
+                } else {
+                    $db->insert('settings', ['setting_key' => $blockKey, 'setting_value' => $value]);
+                }
+                continue;
+            }
+
             foreach ($languages as $lang) {
                 $fieldName = $blockKey . '_' . $lang['id'];
                 $content = $_POST[$fieldName] ?? '';
@@ -202,6 +208,14 @@ if (!empty($blockKeys)) {
     }
 }
 
+// Valores guardados em `settings` (campos setting_url, ex.: link GuestReady).
+$settingValues = [];
+foreach ($blockDefinitions[$currentSection]['blocks'] as $bKey => $bDef) {
+    if (($bDef['type'] ?? '') === 'setting_url') {
+        $settingValues[$bKey] = setting($bKey, '');
+    }
+}
+
 $pageTitle = 'Conteúdos';
 $currentPage = 'conteudos';
 include dirname(__DIR__) . '/includes/header.php';
@@ -242,6 +256,17 @@ include dirname(__DIR__) . '/includes/header.php';
 
                 <div class="space-y-8">
                     <?php foreach ($blockDefinitions[$currentSection]['blocks'] as $blockKey => $blockDef): ?>
+                    <?php if (($blockDef['type'] ?? '') === 'setting_url'): ?>
+                    <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-4"><?= $blockDef['label'] ?></h3>
+                        <input type="url"
+                               name="<?= $blockKey ?>"
+                               value="<?= e($settingValues[$blockKey] ?? '') ?>"
+                               placeholder="https://..."
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
+                        <p class="text-xs text-gray-500 mt-1">Link usado no rodapé e na página de alojamento para as reservas GuestReady.</p>
+                    </div>
+                    <?php continue; endif; ?>
                     <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
                         <h3 class="text-sm font-semibold text-gray-700 mb-4"><?= $blockDef['label'] ?></h3>
 

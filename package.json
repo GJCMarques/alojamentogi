@@ -1,0 +1,14 @@
+{
+  "name": "casadogi-website",
+  "version": "1.0.0",
+  "description": "A Casa do Gi - build de CSS (Tailwind) para produção",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/app.css --minify",
+    "watch:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/app.css --watch"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.3",
+    "tailwindcss": "^3.4.17"
+  }
+}

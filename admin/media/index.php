@@ -251,7 +251,7 @@ include dirname(__DIR__) . '/includes/header.php';
         <div class="media-card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 hover:shadow-md transition-shadow">
             <!-- Image -->
             <div class="aspect-square bg-gray-100 relative group">
-                <img src="<?= basePath() . e($item['file_path']) ?>"
+                <img loading="lazy" decoding="async" src="<?= basePath() . e($item['file_path']) ?>"
                      alt="<?= e($item['original_name']) ?>"
                      class="w-full h-full object-cover">
                 <!-- Quick actions overlay -->

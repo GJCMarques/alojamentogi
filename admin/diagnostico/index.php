@@ -48,7 +48,7 @@ $heroImages = $db->fetchAll("
         'uploads/content/home_image_split_left_1770690443.jpg',
         'uploads/activities/activity_69860c41e0ec9.jpg',
         'assets/images/CGsimbUpNB.ico',
-        'assets/images/MogadouroLogin.png',
+        'assets/images/MogadouroLogin.webp',
     ];
     ?>
     <table class="w-full text-sm mb-4">

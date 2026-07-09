@@ -112,7 +112,7 @@ $contactAddress = '52 Avenida Nossa Senhora do Caminho, Mogadouro';
 
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'contact' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
-$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroContacto.jpg';
+$heroImage = $heroMedia['file_path'] ?? 'images/MogadouroContacto.webp';
 $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
@@ -206,7 +206,7 @@ include INCLUDES_PATH . '/header.php';
                 <div class="mt-10 p-6 bg-primary rounded-lg animate-on-scroll" data-animation="fade-up" data-delay="300">
                     <h3 class="font-serif text-lg text-cream mb-4">Want to make a booking?</h3>
                     <p class="text-cream/80 text-sm mb-4">
-                        Book your stay through our partner platforms.
+                        Book your stay through GuestReady and Airbnb.
                     </p>
                     <a href="<?= $base ?>/en/accommodation/" class="inline-flex items-center text-accent hover:text-accent/70 text-sm font-medium">
                         View booking options
@@ -418,10 +418,10 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>"/>
 
 <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="<?= asset('vendor/leaflet/leaflet.js') ?>"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

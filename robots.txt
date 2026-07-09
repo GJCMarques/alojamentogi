@@ -1,22 +1,12 @@
-# A Casa do Gi - Robots.txt
+# A Casa do Gi - robots.txt
+# O painel de administração e as APIs estão protegidos por autenticação e "noindex".
+# Não são listados aqui para não divulgar a estrutura interna do site.
+
 User-agent: *
 Allow: /
 
-# Block admin and private directories
-Disallow: /admin/
-Disallow: /api/
-Disallow: /config/
-Disallow: /core/
-Disallow: /models/
-Disallow: /includes/
-Disallow: /templates/
-Disallow: /database/
-Disallow: /logs/
-Disallow: /vendor/
-
-# Block query parameters for duplicate content
+# Evitar indexação de parâmetros de pesquisa/paginação (conteúdo duplicado)
 Disallow: /*?pesquisa=
 Disallow: /*?pagina=
 
-# Sitemap
 Sitemap: https://monrion.cloud/sitemap.xml

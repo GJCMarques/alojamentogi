@@ -7,8 +7,8 @@ config/encryption.key
 logs/*
 !logs/.gitkeep
 
-# Vendor (Composer dependencies)
-vendor/
+# Vendor (Composer dependencies) — apenas a pasta raiz, não assets/vendor
+/vendor/
 
 # IDE and OS files
 .idea/

@@ -71,48 +71,8 @@ if (isPost() && $failureCount < 20) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': {
-                            DEFAULT: '#264653',
-                            500: '#264653',
-                            600: '#1e3842',
-                            700: '#172a32',
-                        },
-                        'secondary': {
-                            DEFAULT: '#768A68',
-                            500: '#768A68',
-                            600: '#5e6e53',
-                        },
-                        'accent': {
-                            DEFAULT: '#C5A059',
-                            500: '#C5A059',
-                        },
-                        'cream': {
-                            DEFAULT: '#FDFBF7',
-                            100: '#faf5eb',
-                            200: '#f5ebd7',
-                        },
-                        'charcoal': {
-                            DEFAULT: '#2D3748',
-                            200: '#d4d8dc',
-                            500: '#7b8792',
-                            700: '#4a5259',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Poppins', 'system-ui', 'sans-serif'],
-                        'cursive': ['Great Vibes', 'cursive'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS (compilado localmente) -->
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=<?= @filemtime(ROOT_PATH . '/assets/css/app.css') ?>">
     <style>
         body { font-family: 'Poppins', system-ui, sans-serif; }
         .font-cursive { font-family: 'Great Vibes', cursive; }
@@ -123,7 +83,7 @@ if (isPost() && $failureCount < 20) {
         <!-- Left Side - Image -->
         <div class="hidden lg:block lg:w-1/2 relative bg-primary-700">
             <!-- Image Placeholder -->
-            <img src="<?= asset('images/MogadouroLogin.png') ?>"
+            <img loading="lazy" decoding="async" src="<?= asset('images/MogadouroLogin.webp') ?>"
                  alt="Mogadouro"
                  class="absolute inset-0 w-full h-full object-cover opacity-60">
 

@@ -1156,14 +1156,14 @@ include dirname(__DIR__) . '/includes/header.php';
                         ?>
                         <div class="relative aspect-video bg-gray-100 rounded-lg overflow-hidden mb-3">
                             <?php if ($heroUrl): ?>
-                            <img src="<?= $heroUrl ?>" alt="Hero Image" id="preview-hero-img" class="w-full h-full object-cover">
+                            <img loading="lazy" decoding="async" src="<?= $heroUrl ?>" alt="Hero Image" id="preview-hero-img" class="w-full h-full object-cover">
                             <?php else: ?>
                             <div id="placeholder-hero" class="w-full h-full flex items-center justify-center text-gray-400">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                             </div>
-                            <img src="" alt="Hero Image" id="preview-hero-img" class="w-full h-full object-cover hidden absolute inset-0">
+                            <img loading="lazy" decoding="async" src="" alt="Hero Image" id="preview-hero-img" class="w-full h-full object-cover hidden absolute inset-0">
                             <?php endif; ?>
                         </div>
                         <input type="file" name="hero_image" accept="image/jpeg,image/png,image/webp"
@@ -1193,14 +1193,14 @@ include dirname(__DIR__) . '/includes/header.php';
                         ?>
                         <div class="relative aspect-video bg-gray-100 rounded-lg overflow-hidden mb-3">
                             <?php if ($coverUrl): ?>
-                            <img src="<?= $coverUrl ?>" alt="Cover Image" id="preview-cover-img" class="w-full h-full object-cover">
+                            <img loading="lazy" decoding="async" src="<?= $coverUrl ?>" alt="Cover Image" id="preview-cover-img" class="w-full h-full object-cover">
                             <?php else: ?>
                             <div id="placeholder-cover" class="w-full h-full flex items-center justify-center text-gray-400">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                             </div>
-                            <img src="" alt="Cover Image" id="preview-cover-img" class="w-full h-full object-cover hidden absolute inset-0">
+                            <img loading="lazy" decoding="async" src="" alt="Cover Image" id="preview-cover-img" class="w-full h-full object-cover hidden absolute inset-0">
                             <?php endif; ?>
                         </div>
                         <input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp"
@@ -1221,7 +1221,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 <?php foreach ($galleryImages as $image): ?>
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <div class="relative group aspect-video bg-gray-100">
-                        <img src="<?= basePath() . e($image['file_path']) ?>" alt="" class="w-full h-full object-cover">
+                        <img loading="lazy" decoding="async" src="<?= basePath() . e($image['file_path']) ?>" alt="" class="w-full h-full object-cover">
                         <button type="button"
                                 data-delete-image-id="<?= $image['id'] ?>"
                                 data-delete-image-name="<?= e($image['original_name'] ?? 'imagem') ?>"
