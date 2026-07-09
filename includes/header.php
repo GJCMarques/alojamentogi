@@ -63,6 +63,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <meta name="twitter:description" content="<?= e($pageDescription) ?>">
     <meta name="twitter:image" content="<?= isset($ogImage) ? e($ogImage) : asset('images/MogadouroNeve.webp') ?>">
 
+    <!-- Progressive enhancement: só esconder conteúdo animado se o JS estiver disponível -->
+    <script>document.documentElement.classList.add('js');</script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -196,8 +199,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             50% { transform: scale(1.1); }
         }
 
-        /* Scroll animations */
-        .animate-on-scroll {
+        /* Scroll animations — só escondem quando há JS (.js), para o conteúdo/imagens
+           nunca ficarem invisíveis se o observer não correr no primeiro carregamento. */
+        .js .animate-on-scroll {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -208,7 +212,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             transform: translateY(0);
         }
 
-        .animate-on-scroll[data-animation="fade-left"] {
+        .js .animate-on-scroll[data-animation="fade-left"] {
             transform: translateX(-30px);
         }
 
@@ -216,7 +220,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             transform: translateX(0);
         }
 
-        .animate-on-scroll[data-animation="fade-right"] {
+        .js .animate-on-scroll[data-animation="fade-right"] {
             transform: translateX(30px);
         }
 
@@ -224,7 +228,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             transform: translateX(0);
         }
 
-        .animate-on-scroll[data-animation="zoom-in"] {
+        .js .animate-on-scroll[data-animation="zoom-in"] {
             transform: scale(0.9);
         }
 

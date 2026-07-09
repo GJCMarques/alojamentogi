@@ -154,7 +154,7 @@ $mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp
 $mainHeroUrl = $mainHeroImage[0] === '/' ? basePath() . $mainHeroImage : asset($mainHeroImage);
 $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 ?>
-<section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $mainHeroUrl ?>');">
@@ -274,7 +274,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 $casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.webp';
 $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.webp'));
 ?>
-<section class="relative h-screen md:h-[75vh] min-h-[600px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $casaHeroUrl ?>');">
@@ -310,13 +310,6 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
             <span class="tracking-widest uppercase text-sm font-medium"><?= e($accommodation['city'] ?? 'Mogadouro') ?>, <?= e($accommodation['region'] ?? 'Trás-os-Montes') ?></span>
-        </div>
-
-        <div class="mt-6 flex justify-center animate-on-scroll" data-animation="fade-up" data-delay="350">
-            <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-accent text-primary text-xs md:text-sm font-bold tracking-[0.15em] uppercase shadow-lg">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                Desde 2023 em Mogadouro
-            </span>
         </div>
 
         <!-- Casa Switcher -->

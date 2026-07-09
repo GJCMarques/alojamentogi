@@ -26,7 +26,7 @@ include INCLUDES_PATH . '/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative h-[70vh] min-h-[520px] flex items-center bg-primary overflow-hidden">
+<section class="relative h-screen flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
              style="background-image: url('<?= $heroUrl ?>');"></div>
