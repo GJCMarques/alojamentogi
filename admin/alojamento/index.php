@@ -167,8 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             'latitude' => !empty($_POST['latitude']) ? (float)$_POST['latitude'] : null,
             'longitude' => !empty($_POST['longitude']) ? (float)$_POST['longitude'] : null,
             'guestready_url' => trim($_POST['guestready_url'] ?? ''),
-            'booking_url' => trim($_POST['booking_url'] ?? ''),
-            'airbnb_url' => trim($_POST['airbnb_url'] ?? ''),
+            'booking_url' => null,
+            'airbnb_url' => null,
             'is_active' => isset($_POST['is_active']) ? 1 : 0
         ], 'id = ?', [$accommodation['id']]);
 
@@ -734,26 +734,14 @@ include dirname(__DIR__) . '/includes/header.php';
                     </div>
                 </div>
 
-                <!-- Booking URLs -->
+                <!-- URL de Reserva -->
                 <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-medium text-gray-800 mb-4">URLs de Reserva</h2>
+                    <h2 class="text-lg font-medium text-gray-800 mb-4">URL de Reserva</h2>
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">GuestReady URL</label>
                             <input type="url" name="guestready_url" value="<?= e($accommodation['guestready_url'] ?? '') ?>"
                                    placeholder="https://book.guestready.com/..."
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Booking.com URL</label>
-                            <input type="url" name="booking_url" value="<?= e($accommodation['booking_url'] ?? '') ?>"
-                                   placeholder="https://www.booking.com/..."
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Airbnb URL</label>
-                            <input type="url" name="airbnb_url" value="<?= e($accommodation['airbnb_url'] ?? '') ?>"
-                                   placeholder="https://www.airbnb.com/..."
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
                         </div>
                     </div>
