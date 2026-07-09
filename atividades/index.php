@@ -24,27 +24,33 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $pageTitle = 'O Que Fazer em Mogadouro';
 $pageDescription = 'Descubra o que visitar e fazer em Mogadouro e Trás-os-Montes através da Câmara Municipal e do Posto de Turismo de Mogadouro.';
 
-// Recursos oficiais + guias de referência
-$officialLinks = [
-    [
-        'title' => 'Câmara Municipal de Mogadouro',
-        'desc'  => 'Informação oficial do concelho: o que visitar, património, eventos e contactos.',
-        'url'   => 'https://www.mogadouro.pt/',
-        'tag'   => 'Site Oficial',
-    ],
-    [
-        'title' => 'Posto de Turismo de Mogadouro',
-        'desc'  => 'Loja Interativa de Turismo — pontos de interesse, percursos e apoio ao visitante.',
-        'url'   => 'https://www.mogadouro.pt/pages/17',
-        'tag'   => 'Turismo',
-    ],
-];
+// Recursos oficiais + guias de referência (geríveis no admin » Atividades)
+$officialLinks = [];
+$guideLinks = [];
+try {
+    $linkRows = $db->fetchAll("SELECT * FROM activity_links WHERE is_active = 1 ORDER BY sort_order, id");
+    foreach ($linkRows as $r) {
+        if ($r['section'] === 'guide') {
+            $guideLinks[] = ['title' => $r['title_pt'], 'url' => $r['url']];
+        } else {
+            $officialLinks[] = ['title' => $r['title_pt'], 'desc' => $r['desc_pt'], 'url' => $r['url'], 'tag' => $r['tag_pt']];
+        }
+    }
+} catch (\Throwable $e) { /* tabela ainda não migrada — usa fallback abaixo */ }
 
-$guideLinks = [
-    ['title' => 'Roteiro por Mogadouro — Vagamundos', 'url' => 'https://www.vagamundos.pt/visitar-mogadouro-roteiro/'],
-    ['title' => 'Atrações em torno de Mogadouro — Komoot', 'url' => 'https://www.komoot.com/pt-pt/guide/900754/atracoes-em-torno-de-mogadouro'],
-    ['title' => 'Mogadouro — Tripadvisor', 'url' => 'https://www.tripadvisor.pt/Attractions-g1458520-Activities-Mogadouro_Braganca_District_Northern_Portugal.html'],
-];
+if (empty($officialLinks)) {
+    $officialLinks = [
+        ['title' => 'Câmara Municipal de Mogadouro', 'desc' => 'Informação oficial do concelho: o que visitar, património, eventos e contactos.', 'url' => 'https://www.mogadouro.pt/', 'tag' => 'Site Oficial'],
+        ['title' => 'Posto de Turismo de Mogadouro', 'desc' => 'Loja Interativa de Turismo — pontos de interesse, percursos e apoio ao visitante.', 'url' => 'https://www.mogadouro.pt/pages/17', 'tag' => 'Turismo'],
+    ];
+}
+if (empty($guideLinks)) {
+    $guideLinks = [
+        ['title' => 'Roteiro por Mogadouro — Vagamundos', 'url' => 'https://www.vagamundos.pt/visitar-mogadouro-roteiro/'],
+        ['title' => 'Atrações em torno de Mogadouro — Komoot', 'url' => 'https://www.komoot.com/pt-pt/guide/900754/atracoes-em-torno-de-mogadouro'],
+        ['title' => 'Mogadouro — Tripadvisor', 'url' => 'https://www.tripadvisor.pt/Attractions-g1458520-Activities-Mogadouro_Braganca_District_Northern_Portugal.html'],
+    ];
+}
 
 include INCLUDES_PATH . '/header.php';
 ?>
@@ -67,18 +73,6 @@ include INCLUDES_PATH . '/header.php';
         </h1>
         <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed">
             Da natureza à gastronomia, história e cultura em Trás-os-Montes.
-        </p>
-    </div>
-</section>
-
-<!-- Destaque: Desde 2023 em Mogadouro -->
-<section class="bg-accent/15 border-y border-accent/30">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-center gap-3 text-center">
-        <svg class="w-6 h-6 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-        </svg>
-        <p class="text-base md:text-lg font-semibold text-accent-700">
-            Desde 2023 em Mogadouro — a receber quem nos visita com o melhor de Trás-os-Montes.
         </p>
     </div>
 </section>

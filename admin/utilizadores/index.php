@@ -181,7 +181,7 @@ $currentPage = 'utilizadores';
 include dirname(__DIR__) . '/includes/header.php';
 ?>
 
-<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
     <div>
         <h1 class="text-2xl font-bold text-primary">Utilizadores</h1>
         <p class="text-granite-500 text-sm">Gerir utilizadores do back-office</p>
@@ -208,21 +208,21 @@ include dirname(__DIR__) . '/includes/header.php';
 <div class="grid lg:grid-cols-3 gap-6">
     <!-- Users List -->
     <div class="lg:col-span-2">
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-granite-200">
+        <div class="bg-white rounded-lg shadow-sm overflow-x-auto border border-granite-200">
             <table class="min-w-full divide-y divide-granite-200">
                 <thead class="bg-granite-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Utilizador</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Role</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-granite-500 uppercase">Estado</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Último Login</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-granite-500 uppercase">Ações</th>
+                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Utilizador</th>
+                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase">Role</th>
+                        <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-granite-500 uppercase">Estado</th>
+                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-granite-500 uppercase hidden md:table-cell">Último Login</th>
+                        <th class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-granite-500 uppercase">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-granite-200">
                     <?php foreach ($users as $user): ?>
                     <tr class="hover:bg-granite-50 <?= $user['id'] === ($_SESSION['admin_id'] ?? 0) ? 'bg-secondary-50/50' : '' ?>">
-                        <td class="px-6 py-4">
+                        <td class="px-4 sm:px-6 py-4">
                             <div class="flex items-center">
                                 <div class="w-10 h-10 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-600 font-semibold mr-3">
                                     <?= strtoupper(substr($user['full_name'] ?: $user['username'], 0, 1)) ?>
@@ -238,12 +238,12 @@ include dirname(__DIR__) . '/includes/header.php';
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-4 sm:px-6 py-4">
                             <span class="inline-flex px-2 py-1 text-xs font-medium rounded <?= $user['role'] === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-granite-100 text-granite-800' ?>">
                                 <?= $roles[$user['role']] ?? $user['role'] ?>
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-center">
+                        <td class="px-4 sm:px-6 py-4 text-center">
                             <?php if ($user['id'] !== ($_SESSION['admin_id'] ?? 0) && !$authLocked): ?>
                             <form method="POST" class="inline">
                                 <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
@@ -259,10 +259,10 @@ include dirname(__DIR__) . '/includes/header.php';
                             </span>
                             <?php endif; ?>
                         </td>
-                        <td class="px-6 py-4 text-xs text-granite-500">
+                        <td class="px-4 sm:px-6 py-4 text-xs text-granite-500 hidden md:table-cell">
                             <?= $user['last_login'] ? timeAgo($user['last_login']) : 'Nunca' ?>
                         </td>
-                        <td class="px-6 py-4 text-right">
+                        <td class="px-4 sm:px-6 py-4 text-right">
                             <a href="?edit=<?= $user['id'] ?>"
                                class="text-secondary-600 hover:text-secondary-800 text-sm mr-3">Editar</a>
                             <?php if ($user['id'] !== ($_SESSION['admin_id'] ?? 0) && !$authLocked): ?>

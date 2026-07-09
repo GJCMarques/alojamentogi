@@ -49,34 +49,17 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <!-- Construction Notice -->
-<section class="py-20 lg:py-28 bg-cream-50 min-h-[50vh]">
+<section class="py-20 lg:py-28 bg-cream-50">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-cream-200 p-10 md:p-14">
-            <div class="w-20 h-20 mx-auto mb-8 bg-accent/10 rounded-full flex items-center justify-center">
-                <svg class="w-10 h-10 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                </svg>
-            </div>
-
-            <span class="inline-block text-accent text-sm font-bold tracking-[0.2em] uppercase mb-4">Under Construction</span>
-            <h2 class="font-serif text-3xl md:text-4xl text-primary mb-5">Online shop under construction</h2>
-            <p class="text-charcoal/70 text-lg leading-relaxed mb-8">
-                We are preparing our online shop to offer you the finest regional products from Trás-os-Montes
-                with total convenience. Very soon you will be able to place your orders through our new platform.
-            </p>
-
-            <a href="<?= e($shopExternalUrl) ?>" target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-secondary text-white font-medium rounded-xl hover:bg-secondary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                </svg>
-                Visit the new shop
-            </a>
-
-            <p class="mt-8 text-sm text-charcoal/50">
-                For orders or information, <a href="<?= $base ?>/en/contact/" class="text-secondary hover:underline">contact us</a>.
-            </p>
-        </div>
+        <span class="inline-block text-accent text-sm font-bold tracking-[0.2em] uppercase mb-4">Under Construction</span>
+        <h2 class="text-3xl md:text-4xl text-primary mb-6">Online shop under construction</h2>
+        <p class="text-charcoal/75 text-lg leading-relaxed mb-6">
+            We are preparing our online shop to offer you the finest regional products from Trás-os-Montes
+            with total convenience. Very soon you will be able to place your orders through our new platform.
+        </p>
+        <p class="text-charcoal/60">
+            For orders or information, <a href="<?= $base ?>/en/contact/" class="text-secondary hover:underline">contact us</a>.
+        </p>
     </div>
 </section>
 

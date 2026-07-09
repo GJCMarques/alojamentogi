@@ -26,26 +26,33 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $pageTitle = 'What to Do in Mogadouro';
 $pageDescription = 'Discover what to visit and do in Mogadouro and Trás-os-Montes through the Mogadouro Town Council and Tourism Office.';
 
-$officialLinks = [
-    [
-        'title' => 'Mogadouro Town Council',
-        'desc'  => 'Official municipal information: what to visit, heritage, events and contacts.',
-        'url'   => 'https://www.mogadouro.pt/',
-        'tag'   => 'Official Site',
-    ],
-    [
-        'title' => 'Mogadouro Tourism Office',
-        'desc'  => 'Interactive Tourism Office — points of interest, trails and visitor support.',
-        'url'   => 'https://www.mogadouro.pt/pages/17',
-        'tag'   => 'Tourism',
-    ],
-];
+// Official resources + reference guides (managed in admin » Activities)
+$officialLinks = [];
+$guideLinks = [];
+try {
+    $linkRows = $db->fetchAll("SELECT * FROM activity_links WHERE is_active = 1 ORDER BY sort_order, id");
+    foreach ($linkRows as $r) {
+        if ($r['section'] === 'guide') {
+            $guideLinks[] = ['title' => $r['title_en'], 'url' => $r['url']];
+        } else {
+            $officialLinks[] = ['title' => $r['title_en'], 'desc' => $r['desc_en'], 'url' => $r['url'], 'tag' => $r['tag_en']];
+        }
+    }
+} catch (\Throwable $e) { /* table not migrated yet — fallback below */ }
 
-$guideLinks = [
-    ['title' => 'Mogadouro itinerary — Vagamundos', 'url' => 'https://www.vagamundos.pt/visitar-mogadouro-roteiro/'],
-    ['title' => 'Attractions around Mogadouro — Komoot', 'url' => 'https://www.komoot.com/pt-pt/guide/900754/atracoes-em-torno-de-mogadouro'],
-    ['title' => 'Mogadouro — Tripadvisor', 'url' => 'https://www.tripadvisor.pt/Attractions-g1458520-Activities-Mogadouro_Braganca_District_Northern_Portugal.html'],
-];
+if (empty($officialLinks)) {
+    $officialLinks = [
+        ['title' => 'Mogadouro Town Council', 'desc' => 'Official municipal information: what to visit, heritage, events and contacts.', 'url' => 'https://www.mogadouro.pt/', 'tag' => 'Official Site'],
+        ['title' => 'Mogadouro Tourism Office', 'desc' => 'Interactive Tourism Office — points of interest, trails and visitor support.', 'url' => 'https://www.mogadouro.pt/pages/17', 'tag' => 'Tourism'],
+    ];
+}
+if (empty($guideLinks)) {
+    $guideLinks = [
+        ['title' => 'Mogadouro itinerary — Vagamundos', 'url' => 'https://www.vagamundos.pt/visitar-mogadouro-roteiro/'],
+        ['title' => 'Attractions around Mogadouro — Komoot', 'url' => 'https://www.komoot.com/pt-pt/guide/900754/atracoes-em-torno-de-mogadouro'],
+        ['title' => 'Mogadouro — Tripadvisor', 'url' => 'https://www.tripadvisor.pt/Attractions-g1458520-Activities-Mogadouro_Braganca_District_Northern_Portugal.html'],
+    ];
+}
 
 include INCLUDES_PATH . '/header.php';
 ?>
@@ -68,18 +75,6 @@ include INCLUDES_PATH . '/header.php';
         </h1>
         <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed">
             From nature to gastronomy, history and culture in Trás-os-Montes.
-        </p>
-    </div>
-</section>
-
-<!-- Highlight: Since 2023 in Mogadouro -->
-<section class="bg-accent/15 border-y border-accent/30">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-center gap-3 text-center">
-        <svg class="w-6 h-6 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-        </svg>
-        <p class="text-base md:text-lg font-semibold text-accent-700">
-            In Mogadouro since 2023 — welcoming our guests with the very best of Trás-os-Montes.
         </p>
     </div>
 </section>
