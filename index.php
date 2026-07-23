@@ -245,7 +245,7 @@ include INCLUDES_PATH . '/header.php';
                 </h2>
                 <div class="space-y-6 text-charcoal/70 text-lg leading-relaxed mb-10">
                     <p>
-                        <?= $content['home_about_text1'] ?? 'Fundada em 2023 em Mogadouro. A Casa do Gi nasceu da vontade de preservar as raízes transmontanas. O que outrora foi uma casa de família, é hoje um refúgio para quem procura a autenticidade do campo.' ?>
+                        <?= $content['home_about_text1'] ?? 'Fundada em 2024 em Mogadouro. A Casa do Gi nasceu da vontade de preservar as raízes transmontanas. O que outrora foi uma casa de família, é hoje um refúgio para quem procura a autenticidade do campo.' ?>
                     </p>
                     <p>
                         <?= $content['home_about_text2'] ?? 'Aqui, o tempo abranda. Convidamo-lo a descobrir as tradições, os sabores e as gentes que fazem de Mogadouro um lugar único no mundo.' ?>

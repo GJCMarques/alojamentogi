@@ -233,7 +233,7 @@ include INCLUDES_PATH . '/header.php';
                 </h2>
                 <div class="space-y-6 text-charcoal/70 text-lg leading-relaxed mb-10">
                     <p>
-                        <?= $content['home_about_text1'] ?? 'Founded in 2023 in Mogadouro. A Casa do Gi was born from the wish to preserve the roots of Trás-os-Montes. What was once a family home is now a refuge for those seeking the authenticity of the countryside.' ?>
+                        <?= $content['home_about_text1'] ?? 'Founded in 2024 in Mogadouro. A Casa do Gi was born from the wish to preserve the roots of Trás-os-Montes. What was once a family home is now a refuge for those seeking the authenticity of the countryside.' ?>
                     </p>
                     <p>
                         <?= $content['home_about_text2'] ?? 'Here, time slows down. We invite you to discover the traditions, the flavors, and the people that make Mogadouro a unique place in the world.' ?>
