@@ -54,9 +54,16 @@ function basePath(): string
 
         $cutPosition = strlen($dir);
         foreach ($subfolders as $subfolder) {
-            $pos = strpos($dir, $subfolder);
-            if ($pos !== false && $pos < $cutPosition) {
-                $cutPosition = $pos;
+            $offset = 0;
+            while (($pos = strpos($dir, $subfolder, $offset)) !== false) {
+                $charAfter = $dir[$pos + strlen($subfolder)] ?? '';
+                if ($charAfter === '' || $charAfter === '/') {
+                    if ($pos < $cutPosition) {
+                        $cutPosition = $pos;
+                    }
+                    break;
+                }
+                $offset = $pos + 1;
             }
         }
 

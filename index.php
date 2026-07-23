@@ -147,7 +147,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="flex flex-col md:flex-row h-[800px] gap-2 md:gap-4">
 
             <!-- CARD 1: ALOJAMENTO -->
-            <a href="<?= $base ?>/alojamento/" class="animate-on-scroll relative flex-[1_1_25%] group hover:flex-[1_1_37.5%] transition-[flex-basis] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[flex-basis] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/alojamento/" class="animate-on-scroll relative flex-1 md:flex-[1_1_25%] group hover:flex-[1.5] md:hover:flex-[1_1_40%] transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['accommodation']) ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -161,15 +161,13 @@ include INCLUDES_PATH . '/header.php';
                         <p class="text-white/90 text-lg font-light mt-4 max-w-md leading-relaxed">
                             <?= $content['home_card1_text'] ?? 'Sinta o conforto das nossas casas rústicas.' ?>
                         </p>
-                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1">
-                            <?= $content['home_card1_cta'] ?? 'Ver Casas' ?>
-                        </span>
+                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1"><?= $content['home_card1_cta'] ?? 'Ver Casas' ?></span>
                     </div>
                 </div>
             </a>
 
             <!-- CARD 2: ATIVIDADES -->
-            <a href="<?= $base ?>/atividades/" class="animate-on-scroll delay-100 relative flex-[1_1_25%] group hover:flex-[1_1_37.5%] transition-[flex-basis] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[flex-basis] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/atividades/" class="animate-on-scroll delay-100 relative flex-1 md:flex-[1_1_25%] group hover:flex-[1.5] md:hover:flex-[1_1_40%] transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['activities']) ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -183,15 +181,13 @@ include INCLUDES_PATH . '/header.php';
                         <p class="text-white/90 text-lg font-light mt-4 max-w-md leading-relaxed">
                             <?= $content['home_card2_text'] ?? 'Descubra a natureza e história de Mogadouro.' ?>
                         </p>
-                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1">
-                            <?= $content['home_card2_cta'] ?? 'Explorar' ?>
-                        </span>
+                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1"><?= $content['home_card2_cta'] ?? 'Explorar' ?></span>
                     </div>
                 </div>
             </a>
 
             <!-- CARD 3: LOJA -->
-            <a href="<?= $base ?>/loja/" class="animate-on-scroll delay-200 relative flex-[1_1_25%] group hover:flex-[1_1_37.5%] transition-[flex-basis] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[flex-basis] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/loja/" class="animate-on-scroll delay-200 relative flex-1 md:flex-[1_1_25%] group hover:flex-[1.5] md:hover:flex-[1_1_40%] transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['shop']) ?>');"></div>
                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -205,15 +201,13 @@ include INCLUDES_PATH . '/header.php';
                         <p class="text-white/90 text-lg font-light mt-4 max-w-md leading-relaxed">
                             <?= $content['home_card3_text'] ?? 'Sabores autênticos de Trás-os-Montes.' ?>
                         </p>
-                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1">
-                            <?= $content['home_card3_cta'] ?? 'Comprar' ?>
-                        </span>
+                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1"><?= $content['home_card3_cta'] ?? 'Comprar' ?></span>
                     </div>
                 </div>
             </a>
 
             <!-- CARD 4: SOBRE / CONTACTOS -->
-            <a href="<?= $base ?>/contactos/" class="animate-on-scroll delay-300 relative flex-[1_1_25%] group hover:flex-[1_1_37.5%] transition-[flex-basis] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[flex-basis] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/contactos/" class="animate-on-scroll delay-300 relative flex-1 md:flex-[1_1_25%] group hover:flex-[1.5] md:hover:flex-[1_1_40%] transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['contact']) ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -225,11 +219,9 @@ include INCLUDES_PATH . '/header.php';
                     </h3>
                     <div class="max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-700 ease-out opacity-0 group-hover:opacity-100">
                         <p class="text-white/90 text-lg font-light mt-4 max-w-md leading-relaxed">
-                            <?= $content['home_card4_text'] ?? 'Fale connosco e planeie a sua visita.' ?>
+                            <?= $content['home_card4_text'] ?? 'Entre em contacto connosco e planeie a sua visita.' ?>
                         </p>
-                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1">
-                            <?= $content['home_card4_cta'] ?? 'Contactar' ?>
-                        </span>
+                        <span class="inline-flex items-center mt-6 text-white text-sm font-bold uppercase tracking-widest border-b border-accent pb-1"><?= $content['home_card4_cta'] ?? 'Contactar' ?></span>
                     </div>
                 </div>
             </a>
