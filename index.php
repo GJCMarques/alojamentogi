@@ -18,6 +18,7 @@ $lang = \Core\Language::getInstance();
 $db = Database::getInstance();
 $base = basePath();
 $isEnglish = $lang->isEnglish();
+$content = $lang->getPageContents('home');
 
 $pageHero = $db->fetch("SELECT * FROM page_heroes WHERE page_key = 'home' AND is_active = 1");
 $heroMedia = $pageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$pageHero['id']]) : null;
