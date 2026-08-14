@@ -142,8 +142,8 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                                     <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-[#800020] font-bold text-sm">GuestReady</span>
-                                    <span class="text-[#800020] text-xs font-medium">A Casa do Gi 1</span>
+                                    <span class="text-[#800020] font-bold text-sm">A Casa do Gi 1</span>
+                                    <span class="text-[#800020]/80 text-xs font-medium">GuestReady</span>
                                 </div>
                             </a>
                             <?php endif; ?>
@@ -155,8 +155,8 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                                     <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-[#800020] font-bold text-sm">GuestReady</span>
-                                    <span class="text-[#800020] text-xs font-medium">A Casa do Gi 2</span>
+                                    <span class="text-[#800020] font-bold text-sm">A Casa do Gi 2</span>
+                                    <span class="text-[#800020]/80 text-xs font-medium">GuestReady</span>
                                 </div>
                             </a>
                             <?php endif; ?>
