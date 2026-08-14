@@ -3,12 +3,12 @@
 return [
 
     'db' => [
-        'host' => getenv('DB_HOST') ?: (php_sapi_name() === 'cli-server' ? '127.0.0.1' : 'alojamentogi-mysql-8g3t8r'), // Dokploy internal host; local built-in server uses 127.0.0.1
-        'name' => getenv('DB_NAME') ?: 'casadogi',
-        'user' => getenv('DB_USER') ?: 'casadogi_user',
-        'pass' => getenv('DB_PASS') ?: '', // Segredo: definir via variável de ambiente DB_PASS (Dokploy) ou .env local
+        'host' => '127.0.0.1',
+        'name' => 'casadogi',
+        'user' => 'root',
+        'pass' => '',
         'charset' => 'utf8mb4',
-        'port' => (int) (getenv('DB_PORT') ?: 3306)
+        'port' => 3306
     ],
 
     'app' => [
