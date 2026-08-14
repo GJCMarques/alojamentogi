@@ -356,10 +356,7 @@ function isMaintenanceMode(): bool
     return (bool) setting('maintenance_mode', false);
 }
 
-function isShopEnabled(): bool
-{
-    return (bool) setting('shop_enabled', true);
-}
+
 
 function isContactFormEnabled(): bool
 {

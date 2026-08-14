@@ -336,17 +336,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         </a>
                     </div>
 
-                    <!-- Cart Icon (if shop enabled) -->
-                    <?php if (isShopEnabled()): ?>
-                    <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
-                       class="relative p-2 text-cream hover:text-accent transition-colors ml-4"
-                       title="<?= $isEnglish ? 'Shopping Cart' : 'Carrinho' ?>">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                        <span id="cart-count" class="cart-count cart-badge absolute -top-1 -right-1 w-5 h-5 bg-accent text-primary text-xs font-bold rounded-full flex items-center justify-center hidden">0</span>
-                    </a>
-                    <?php endif; ?>
+
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -434,17 +424,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                          <span class="text-sm font-medium uppercase tracking-[0.2em]"><?= $isEnglish ? 'PT' : 'EN' ?></span>
                     </a>
 
-                    <!-- Cart Mobile -->
-                    <?php if (isShopEnabled()): ?>
-                    <div class="w-px h-4 bg-cream/20"></div>
-                    <a href="<?= $lang->url($isEnglish ? 'shop/cart' : 'loja/carrinho') ?>"
-                       class="relative flex items-center gap-3 text-cream/80 hover:text-accent transition-colors">
-                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                         </svg>
-                         <span id="mobile-cart-count" class="absolute -top-2 -right-2 w-5 h-5 bg-accent text-primary text-[10px] font-bold rounded-full flex items-center justify-center hidden shadow-sm">0</span>
-                    </a>
-                    <?php endif; ?>
+
                 </div>
             </nav>
         </div>
