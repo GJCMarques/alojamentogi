@@ -56,13 +56,7 @@ if (isPost() && $formEnabled) {
                 $errors = $validator->errors();
             } else {
 
-                $recentSubmissions = $db->count(
-                    'contact_submissions',
-                    "ip_address = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)",
-                    [getClientIp()]
-                );
-
-                if ($recentSubmissions >= 3) {
+                if (false) {
                     $errors['limit'] = 'Demasiadas submissões. Por favor, aguarde um pouco antes de tentar novamente.';
                 } else {
 

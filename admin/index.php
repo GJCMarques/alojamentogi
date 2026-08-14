@@ -12,7 +12,7 @@ $base = basePath();
 $stats = [
     'messages_unread' => $db->count('contact_submissions', 'is_read = 0'),
     'messages_total'  => $db->count('contact_submissions'),
-    'activities'      => $db->count('activities', 'is_active = 1'),
+    'activities'      => $db->count('activity_links', 'is_active = 1'),
     'accommodations'  => $db->count('accommodation', 'is_active = 1'),
     'media'           => $db->count('media'),
 ];
@@ -94,7 +94,7 @@ include __DIR__ . '/includes/header.php';
             </div>
             <div class="flex justify-between items-end">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Atividades ativas</p>
+                    <p class="text-sm font-medium text-gray-500">Atividades Links</p>
                     <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= $stats['activities'] ?></h3>
                 </div>
                 <a href="<?= $base ?>/admin/atividades/" class="text-sm text-secondary-600 hover:text-secondary-800 font-medium flex items-center gap-1 group">

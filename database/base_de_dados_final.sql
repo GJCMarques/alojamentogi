@@ -144,58 +144,6 @@ INSERT INTO `accommodation_translations` VALUES (1,1,1,'A Casa do Gi','Casa de f
 UNLOCK TABLES;
 
 --
--- Table structure for table `activities`
---
-
-DROP TABLE IF EXISTS `activities`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `activities` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `category_id` int(10) unsigned DEFAULT NULL,
-  `slug` varchar(255) NOT NULL,
-  `category` enum('nature','culture','gastronomy','adventure','wellness','events','restaurants','cafes','accommodation','architecture','rural_tourism','leisure') DEFAULT 'culture',
-  `external_url` varchar(500) DEFAULT NULL,
-  `address` varchar(500) DEFAULT NULL COMMENT 'Full address of the location',
-  `phone` varchar(50) DEFAULT NULL COMMENT 'Contact phone number',
-  `website` varchar(500) DEFAULT NULL COMMENT 'Official website URL',
-  `email` varchar(255) DEFAULT NULL COMMENT 'Contact email',
-  `opening_hours` text DEFAULT NULL COMMENT 'Opening hours JSON or text',
-  `price_range` enum('free','budget','moderate','expensive') DEFAULT NULL COMMENT 'Price range indicator',
-  `google_maps_embed` text DEFAULT NULL COMMENT 'Google Maps iframe embed code',
-  `meta_title` varchar(255) DEFAULT NULL COMMENT 'SEO meta title',
-  `meta_description` text DEFAULT NULL COMMENT 'SEO meta description',
-  `latitude` decimal(10,8) DEFAULT NULL,
-  `longitude` decimal(11,8) DEFAULT NULL,
-  `distance_km` decimal(5,2) DEFAULT NULL,
-  `is_featured` tinyint(1) DEFAULT 0,
-  `is_active` tinyint(1) DEFAULT 1,
-  `sort_order` int(10) unsigned DEFAULT 0,
-  `views_count` int(10) unsigned DEFAULT 0 COMMENT 'Number of page views',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `slug` (`slug`),
-  KEY `idx_slug` (`slug`),
-  KEY `idx_category` (`category`),
-  KEY `idx_active` (`is_active`),
-  KEY `idx_activities_slug` (`slug`),
-  KEY `idx_activities_category` (`category`),
-  KEY `idx_activities_featured_active` (`is_featured`,`is_active`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `activities`
---
-
-LOCK TABLES `activities` WRITE;
-/*!40000 ALTER TABLE `activities` DISABLE KEYS */;
-INSERT INTO `activities` VALUES (1,8,'castelo-mogadouro','culture','','Largo do Castelo, 5200-251 Mogadouro','','','',NULL,'free','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.1234567890123!2d-6.7134700!3d41.3421700!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDIwJzMxLjgiTiA2wrA0MicxMC4yIlc!5e0!3m2!1spt-PT!2spt!4v1234567890123!5m2!1spt-PT!2spt\" width=\"100%\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"></iframe>',NULL,NULL,41.34217000,-6.71347000,0.50,1,1,1,52,'2026-01-19 12:51:20','2026-02-11 14:13:46'),(2,7,'miradouro-serpente-medal','nature',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,15.00,0,1,2,3,'2026-01-19 12:51:20','2026-02-11 13:30:38'),(4,8,'museu-mogadouro','culture',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.30,0,1,4,0,'2026-01-19 12:51:20','2026-02-06 22:04:33'),(5,8,'igreja-matriz','culture',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.20,0,1,5,0,'2026-01-19 12:51:20','2026-02-06 22:04:33'),(6,10,'restaurante-a-lareira','restaurants','','Av. Nossa Senhora do Caminho, 5200-207 Mogadouro','','','',NULL,'moderate','',NULL,NULL,NULL,NULL,0.10,0,1,10,3,'2026-02-06 14:42:31','2026-02-07 01:29:09'),(8,14,'feira-medieval-mogadouro','events','','Centro Histórico, 5200-207 Mogadouro','','','',NULL,'free','',NULL,NULL,NULL,NULL,0.00,0,1,12,0,'2026-02-06 14:42:31','2026-02-06 22:04:33'),(9,12,'convento-sao-francisco','architecture','','Largo de São Francisco, 5200-207 Mogadouro','','','',NULL,'free','',NULL,NULL,NULL,NULL,0.30,0,1,13,1,'2026-02-06 14:42:31','2026-02-06 22:04:33'),(10,8,'praca-do-municipio','culture',NULL,'Praça do Município, 5200-207 Mogadouro',NULL,NULL,NULL,NULL,'free',NULL,NULL,NULL,NULL,NULL,0.00,0,1,14,6,'2026-02-06 14:42:31','2026-02-07 01:48:03'),(13,7,'testar','nature','','','','','',NULL,'free','',NULL,NULL,NULL,NULL,NULL,1,1,0,4,'2026-02-06 18:32:57','2026-02-11 21:31:00');
-/*!40000 ALTER TABLE `activities` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `activity_links`
 --
 
@@ -226,43 +174,6 @@ LOCK TABLES `activity_links` WRITE;
 /*!40000 ALTER TABLE `activity_links` DISABLE KEYS */;
 INSERT INTO `activity_links` VALUES (1,'official','SITE OFICIAL','OFFICIAL SITE','CÔmara Municipal de Mogadouro','Mogadouro City Hall','InformaþÒo oficial do concelho: o que visitar, patrim¾nio, eventos e contactos.','Official county info: what to visit, heritage, events and contacts.','https://www.mogadouro.pt/',1,1),(2,'official','TURISMO','TOURISM','Posto de Turismo de Mogadouro','Mogadouro Tourism Office','Loja Interativa de Turismo ù pontos de interesse, percursos e apoio ao visitante.','Interactive Tourism Shop ù points of interest, routes and visitor support.','https://www.mogadouro.pt/pages/17',2,1),(3,'guide','','','Roteiro por Mogadouro ù Vagamundos','Mogadouro Guide ù Vagamundos','','','https://www.vagamundos.pt/visitar-mogadouro-roteiro/',3,1),(4,'guide','','','Atraþ§es em torno de Mogadouro ù Komoot','Attractions around Mogadouro ù Komoot','','','https://www.komoot.com/pt-pt/guide/900754/atracoes-em-torno-de-mogadouro',4,1),(5,'guide','','','Mogadouro ù Tripadvisor','Mogadouro ù Tripadvisor','','','https://www.tripadvisor.pt/Attractions-g1458520-Activities-Mogadouro_Braganca_District_Northern_Portugal.html',5,1);
 /*!40000 ALTER TABLE `activity_links` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `activity_translations`
---
-
-DROP TABLE IF EXISTS `activity_translations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `activity_translations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `activity_id` int(10) unsigned NOT NULL,
-  `language_id` int(10) unsigned NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `short_description` text DEFAULT NULL,
-  `full_description` text DEFAULT NULL,
-  `address_description` varchar(500) DEFAULT NULL COMMENT 'Localized address/directions description',
-  `opening_hours_text` text DEFAULT NULL COMMENT 'Localized opening hours text',
-  `tips` text DEFAULT NULL COMMENT 'Local tips and recommendations',
-  `meta_title` varchar(255) DEFAULT NULL COMMENT 'Localized SEO title',
-  `meta_description` text DEFAULT NULL COMMENT 'Localized SEO description',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_act_lang` (`activity_id`,`language_id`),
-  KEY `language_id` (`language_id`),
-  CONSTRAINT `activity_translations_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `activities` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `activity_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `activity_translations`
---
-
-LOCK TABLES `activity_translations` WRITE;
-/*!40000 ALTER TABLE `activity_translations` DISABLE KEYS */;
-INSERT INTO `activity_translations` VALUES (1,1,1,'Castelo de Mogadouro','Castelo do seculo XIII com vista panoramica da regiao','<p>O Castelo de Mogadouro, também conhecido como Torre de Menagem, é um dos monumentos mais emblemáticos do concelho. Construído no século XIII pelos Templários, esta torre medieval ergue-se majestosamente sobre a vila, oferecendo vistas panorâmicas deslumbrantes sobre a paisagem transmontana.</p><p>A torre, de planta quadrada, é o único elemento que resta do antigo castelo medieval que protegia a povoação. As suas paredes robustas contam histórias de batalhas e conquistas que moldaram a história desta região fronteiriça.</p><p>Visitar o Castelo de Mogadouro é fazer uma viagem no tempo, descobrindo os segredos da Ordem dos Templários e a importância estratégica que esta fortaleza teve na defesa do território português.</p>',NULL,NULL,'Visite ao final da tarde para apreciar o pôr do sol sobre as montanhas. A entrada é gratuita e o local é acessível durante todo o ano.',NULL,NULL),(2,1,2,'Mogadouro Castle','13th century castle with panoramic views of the region','<p>Mogadouro Castle, also known as the Keep Tower, is one of the most emblematic monuments in the municipality. Built in the 13th century by the Templars, this medieval tower rises majestically over the village, offering stunning panoramic views over the Transmontana landscape.</p><p>The square-plan tower is the only remaining element of the old medieval castle that protected the settlement. Its robust walls tell stories of battles and conquests that shaped the history of this border region.</p><p>Visiting Mogadouro Castle is a journey through time, discovering the secrets of the Order of the Templars and the strategic importance this fortress had in the defense of Portuguese territory.</p>',NULL,NULL,'Visit in the late afternoon to enjoy the sunset over the mountains. Admission is free and the site is accessible year-round.',NULL,NULL),(3,2,1,'Miradouro Serpente do Medal','Vista panoramica sobre o rio Douro nas Arribas',NULL,NULL,NULL,NULL,NULL,NULL),(4,2,2,'Serpente do Medal Viewpoint','Panoramic view over the Douro river in the Arribas',NULL,NULL,NULL,NULL,NULL,NULL),(7,4,1,'Museu de Mogadouro','Historia e tradicoes da regiao',NULL,NULL,NULL,NULL,NULL,NULL),(8,4,2,'Mogadouro Museum','History and traditions of the region',NULL,NULL,NULL,NULL,NULL,NULL),(9,5,1,'Igreja Matriz de Mogadouro','Igreja de origem romanica no centro historico',NULL,NULL,NULL,NULL,NULL,NULL),(10,5,2,'Mogadouro Main Church','Romanesque origin church in the historic center',NULL,NULL,NULL,NULL,NULL,NULL),(11,6,1,'Restaurante A Lareira','Cozinha tradicional transmontana com pratos típicos da região.','<p>O Restaurante A Lareira é uma referência da gastronomia transmontana em Mogadouro. Com um ambiente acolhedor e rústico, oferece os melhores pratos da região, preparados com ingredientes locais de qualidade.</p><p>Especialidades da casa incluem a famosa posta mirandesa, cabrito assado, enchidos tradicionais e o delicioso folar de carne. A carta de vinhos apresenta uma seleção cuidada de vinhos regionais do Douro.</p>',NULL,NULL,'',NULL,NULL),(13,8,1,'Feira Medieval de Mogadouro','Evento anual que recria a época medieval com mercado, espetáculos e gastronomia.','<p>A Feira Medieval de Mogadouro é um dos eventos mais aguardados do ano. Durante três dias, o centro histórico transforma-se num autêntico mercado medieval, com artesãos, músicos, malabaristas e espetáculos de falcoaria.</p><p>Prove as iguarias medievais, assista a torneios de cavaleiros e mergulhe na atmosfera única desta festa que celebra a rica história templária de Mogadouro.</p>',NULL,NULL,'',NULL,NULL),(14,9,1,'Convento de São Francisco','Antigo convento franciscano do século XIII com arquitetura gótica notável.','<p>O Convento de São Francisco, fundado no século XIII, é um dos mais importantes monumentos religiosos de Mogadouro. A sua igreja preserva elementos arquitectónicos góticos e manuelinos de grande valor histórico.</p><p>Destaque para os azulejos do século XVIII que decoram o interior e para o claustro sereno que convida à contemplação.</p>',NULL,NULL,'',NULL,NULL),(15,10,1,'Praça do Município','Centro nevrálgico de Mogadouro com esplanadas e comércio tradicional.','<p>A Praça do Município é o coração de Mogadouro. Rodeada de edifícios históricos, é o local ideal para sentir o pulso da vila, tomar um café numa esplanada ou simplesmente observar o quotidiano transmontano.</p>',NULL,NULL,NULL,NULL,NULL),(18,6,2,'A Lareira Restaurant','Traditional Transmontana cuisine with typical regional dishes.','<p>A Lareira Restaurant is a reference for Transmontana gastronomy in Mogadouro. With a cozy and rustic atmosphere, it offers the best dishes from the region, prepared with quality local ingredients.</p><p>House specialties include the famous Mirandesa steak, roasted kid, traditional sausages and the delicious meat folar. The wine list features a careful selection of regional Douro wines.</p>',NULL,NULL,'',NULL,NULL),(20,8,2,'Mogadouro Medieval Fair','Annual event recreating the medieval era with market, shows and gastronomy.','<p>The Mogadouro Medieval Fair is one of the most anticipated events of the year. For three days, the historic center transforms into an authentic medieval market, with artisans, musicians, jugglers and falconry shows.</p><p>Taste medieval delicacies, watch knight tournaments and immerse yourself in the unique atmosphere of this festival that celebrates Mogadouro\'s rich Templar history.</p>',NULL,NULL,'',NULL,NULL),(21,9,2,'São Francisco Convent','Former 13th century Franciscan convent with notable Gothic architecture.','<p>The São Francisco Convent, founded in the 13th century, is one of Mogadouro\'s most important religious monuments. Its church preserves Gothic and Manueline architectural elements of great historical value.</p><p>Highlights include the 18th century tiles that decorate the interior and the serene cloister that invites contemplation.</p>',NULL,NULL,'',NULL,NULL),(22,10,2,'Municipality Square','Mogadouro\'s nerve center with terraces and traditional commerce.','<p>The Municipality Square is the heart of Mogadouro. Surrounded by historic buildings, it\'s the ideal place to feel the pulse of the village, have a coffee on a terrace or simply observe the Transmontana daily life.</p>',NULL,NULL,NULL,NULL,NULL),(25,13,1,'Testar esta cena','Nada','Nada completo',NULL,NULL,'Nada para te dizer',NULL,NULL),(26,13,2,'Testing this thing','Nothing','Nothing complete',NULL,NULL,'Nothing to say to you',NULL,NULL);
-/*!40000 ALTER TABLE `activity_translations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -303,7 +214,7 @@ CREATE TABLE `admins` (
 
 LOCK TABLES `admins` WRITE;
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` VALUES (1,'admin','admin@acasadogi.pt','$2y$12$h1hHCeq1svPUpfFc82tKYuHPtR3j8bReNo1nSeCcR7ZK3M3YKld.G','Administrador','super_admin',NULL,1,'2026-08-14 02:54:35',0,NULL,NULL,NULL,'2026-01-19 12:51:19','2026-08-14 01:54:35');
+INSERT INTO `admins` VALUES (1,'admin','admin@acasadogi.pt','$2y$12$h1hHCeq1svPUpfFc82tKYuHPtR3j8bReNo1nSeCcR7ZK3M3YKld.G','Administrador','super_admin',NULL,1,'2026-08-14 16:43:11',0,NULL,NULL,NULL,'2026-01-19 12:51:19','2026-08-14 15:43:11');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -492,72 +403,6 @@ INSERT INTO `bedrooms` VALUES (13,1,1,'2026-02-10 18:23:26',NULL),(14,1,2,'2026-
 UNLOCK TABLES;
 
 --
--- Table structure for table `categories`
---
-
-DROP TABLE IF EXISTS `categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `categories` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` enum('activity','product') NOT NULL DEFAULT 'product',
-  `slug` varchar(100) NOT NULL,
-  `icon` varchar(50) DEFAULT NULL COMMENT 'Icon identifier for activities',
-  `sort_order` int(11) DEFAULT 0,
-  `is_active` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_slug_type` (`slug`,`type`),
-  KEY `idx_type` (`type`),
-  KEY `idx_active` (`is_active`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `categories`
---
-
-LOCK TABLES `categories` WRITE;
-/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'product','mel',NULL,1,1,'2026-01-19 12:51:19','2026-02-06 22:01:32'),(2,'product','azeite',NULL,2,1,'2026-01-19 12:51:19','2026-02-06 22:01:32'),(3,'product','vinho',NULL,3,1,'2026-01-19 12:51:19','2026-02-06 22:01:32'),(4,'product','enchidos',NULL,4,1,'2026-01-19 12:51:19','2026-02-06 22:01:32'),(5,'product','queijos',NULL,5,1,'2026-01-19 12:51:19','2026-02-06 22:01:32'),(6,'product','doces',NULL,6,1,'2026-01-19 12:51:19','2026-02-06 22:01:32'),(7,'activity','nature','tree',1,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(8,'activity','culture','building',2,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(9,'activity','gastronomy','utensils',3,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(10,'activity','restaurants','utensils',4,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(12,'activity','architecture','building',6,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(13,'activity','adventure','mountain',7,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(14,'activity','events','calendar',8,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(15,'activity','wellness','spa',9,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(16,'activity','rural_tourism','tractor',10,1,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(17,'activity','leisure','gamepad',11,1,'2026-02-06 22:03:51','2026-02-06 22:03:51');
-/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `category_translations`
---
-
-DROP TABLE IF EXISTS `category_translations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category_translations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `category_id` int(10) unsigned NOT NULL,
-  `language_id` int(10) unsigned NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_category_language` (`category_id`,`language_id`),
-  KEY `language_id` (`language_id`),
-  CONSTRAINT `category_translations_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `category_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category_translations`
---
-
-LOCK TABLES `category_translations` WRITE;
-/*!40000 ALTER TABLE `category_translations` DISABLE KEYS */;
-INSERT INTO `category_translations` VALUES (1,1,1,'Mel','Mel da regiao de Tras-os-Montes','2026-02-06 22:03:51','2026-02-06 22:03:51'),(2,1,2,'Honey','Honey from Tras-os-Montes region','2026-02-06 22:03:51','2026-02-06 22:03:51'),(3,2,1,'Azeite','Azeite do vale do Sabor','2026-02-06 22:03:51','2026-02-06 22:03:51'),(4,2,2,'Olive Oil','Olive oil from Sabor valley','2026-02-06 22:03:51','2026-02-06 22:03:51'),(5,3,1,'Vinho','Vinhos da regiao do Douro','2026-02-06 22:03:51','2026-02-06 22:03:51'),(6,3,2,'Wine','Wines from Douro region','2026-02-06 22:03:51','2026-02-06 22:03:51'),(7,4,1,'Enchidos','Enchidos tradicionais transmontanos','2026-02-06 22:03:51','2026-02-06 22:03:51'),(8,4,2,'Cured Meats','Traditional Transmontano cured meats','2026-02-06 22:03:51','2026-02-06 22:03:51'),(9,5,1,'Queijos','Queijos de ovelha e cabra','2026-02-06 22:03:51','2026-02-06 22:03:51'),(10,5,2,'Cheeses','Sheep and goat cheeses','2026-02-06 22:03:51','2026-02-06 22:03:51'),(11,6,1,'Doces','Doces e bolos tradicionais','2026-02-06 22:03:51','2026-02-06 22:03:51'),(12,6,2,'Sweets','Traditional sweets and cakes','2026-02-06 22:03:51','2026-02-06 22:03:51'),(16,7,1,'Natureza',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(17,8,1,'Cultura',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(18,9,1,'Gastronomia',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(19,10,1,'Restaurantes',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(21,12,1,'Arquitetura',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(22,13,1,'Aventura',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(23,14,1,'Eventos',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(24,15,1,'Bem-estar',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(25,16,1,'Turismo Rural',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(26,17,1,'Lazer',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(31,7,2,'Nature',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(32,8,2,'Culture',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(33,9,2,'Gastronomy',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(34,10,2,'Restaurants',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(36,12,2,'Architecture',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(37,13,2,'Adventure',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(38,14,2,'Events',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(39,15,2,'Wellness',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(40,16,2,'Rural Tourism',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51'),(41,17,2,'Leisure',NULL,'2026-02-06 22:03:51','2026-02-06 22:03:51');
-/*!40000 ALTER TABLE `category_translations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `contact_submissions`
 --
 
@@ -583,7 +428,7 @@ CREATE TABLE `contact_submissions` (
   KEY `idx_read` (`is_read`),
   KEY `idx_created` (`created_at`),
   KEY `idx_ignored` (`is_ignored`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -592,7 +437,7 @@ CREATE TABLE `contact_submissions` (
 
 LOCK TABLES `contact_submissions` WRITE;
 /*!40000 ALTER TABLE `contact_submissions` DISABLE KEYS */;
-INSERT INTO `contact_submissions` VALUES (2,'Guilherme Marques','guilherme.jcmarques@gmail.com','999323876','Testar sistema','Teste do Sistema de Formulário de Mensagens.','::1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36','pt',1,0,0,'2026-02-07 01:34:24');
+INSERT INTO `contact_submissions` VALUES (2,'Guilherme Marques','guilherme.jcmarques@gmail.com','999323876','Testar sistema','Teste do Sistema de Formulário de Mensagens.','::1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36','pt',1,0,0,'2026-02-07 01:34:24'),(7,'Teste','guilherme.jcmarques@gmail.com','999000222','teste','wewewewewew','::1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36','pt',1,0,0,'2026-08-14 15:03:58'),(8,'teste2','guilherme.jcmarques@gmail.com','999888777','testye2','sdsfdsvdvsdvdvdfdfcxc','::1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36','en',1,0,0,'2026-08-14 15:04:25'),(9,'teste3','teste@teste.com','999888222','wewewewew','wraeaefsefrsreg','::1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36','pt',1,0,0,'2026-08-14 15:30:21');
 /*!40000 ALTER TABLE `contact_submissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -803,8 +648,8 @@ CREATE TABLE `media` (
   `alt_text_en` varchar(255) DEFAULT NULL,
   `caption_pt` varchar(500) DEFAULT NULL COMMENT 'Portuguese caption',
   `caption_en` varchar(500) DEFAULT NULL COMMENT 'English caption',
-  `category` enum('gallery','products','activities','content','other') DEFAULT 'other',
-  `entity_type` enum('activity','hero','accommodation','product','standalone','other') DEFAULT 'standalone' COMMENT 'Type of entity this media belongs to',
+  `category` enum('gallery','content','other') DEFAULT 'other',
+  `entity_type` enum('hero','accommodation','standalone','other') DEFAULT 'standalone',
   `entity_id` int(10) unsigned DEFAULT NULL COMMENT 'ID of the related entity (activity_id, hero_id, etc)',
   `is_cover` tinyint(1) DEFAULT 0 COMMENT 'Is this the cover/main image for the entity',
   `sort_order` int(10) unsigned DEFAULT 0,
@@ -827,7 +672,7 @@ CREATE TABLE `media` (
 
 LOCK TABLES `media` WRITE;
 /*!40000 ALTER TABLE `media` DISABLE KEYS */;
-INSERT INTO `media` VALUES (8,'6976756e94c17_1769370990.jpg','AlojamentoQuarto8.jpg','/uploads/media/6976756e94c17_1769370990.jpg','image/jpeg',77675,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(9,'6976756e992d1_1769370990.jpg','AlojamentoQuarto7.jpg','/uploads/media/6976756e992d1_1769370990.jpg','image/jpeg',78878,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(10,'6976756e9adb4_1769370990.jpg','AlojamentoQuarto6.jpg','/uploads/media/6976756e9adb4_1769370990.jpg','image/jpeg',86814,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(11,'6976756e9c308_1769370990.jpg','AlojamentoQuarto5.jpg','/uploads/media/6976756e9c308_1769370990.jpg','image/jpeg',82471,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(12,'6976756e9d47d_1769370990.jpg','AlojamentoQuarto4.jpg','/uploads/media/6976756e9d47d_1769370990.jpg','image/jpeg',100462,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(13,'6976756e9e5a6_1769370990.jpg','AlojamentoQuarto3.jpg','/uploads/media/6976756e9e5a6_1769370990.jpg','image/jpeg',93303,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(14,'6976756e9f8b2_1769370990.jpg','AlojamentoQuarto2.jpg','/uploads/media/6976756e9f8b2_1769370990.jpg','image/jpeg',75318,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(15,'6976756ea0995_1769370990.jpg','AlojamentoQuarto1.jpg','/uploads/media/6976756ea0995_1769370990.jpg','image/jpeg',97800,'Quarto Cama de Casal','Double Bed Room',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(19,'6976986c696fb_1769379948.jpg','AlojamentoQuarto49.jpg','/uploads/media/6976986c696fb_1769379948.jpg','image/jpeg',57394,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(20,'6976986c6ad28_1769379948.jpg','AlojamentoQuarto48.jpg','/uploads/media/6976986c6ad28_1769379948.jpg','image/jpeg',163886,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(21,'6976986c6c3a6_1769379948.jpg','AlojamentoQuarto47.jpg','/uploads/media/6976986c6c3a6_1769379948.jpg','image/jpeg',129213,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(22,'6976986c6e346_1769379948.jpg','AlojamentoQuarto46.jpg','/uploads/media/6976986c6e346_1769379948.jpg','image/jpeg',98581,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(23,'6976986c7080e_1769379948.jpg','AlojamentoQuarto45.jpg','/uploads/media/6976986c7080e_1769379948.jpg','image/jpeg',67252,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 22:25:48',1),(24,'6976986c72fde_1769379948.jpg','AlojamentoQuarto44.jpg','/uploads/media/6976986c72fde_1769379948.jpg','image/jpeg',63988,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(25,'accommodation_697698bc063af.jpg','AlojamentoQuarto26.jpg','/uploads/accommodation/accommodation_697698bc063af.jpg','image/jpeg',69718,'','',NULL,NULL,'gallery','standalone',NULL,0,1,NULL,'2026-01-25 22:27:08',1),(26,'activity_gallery_1_698618f7cee51.jpg','activity_gallery_1_698618f7cee51.jpg','/uploads/activities/activity_gallery_1_698618f7cee51.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'activities','activity',1,0,1,NULL,'2026-02-06 16:38:15',NULL),(27,'activity_gallery_1_698618f7d243f.jpg','activity_gallery_1_698618f7d243f.jpg','/uploads/activities/activity_gallery_1_698618f7d243f.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'activities','activity',1,0,2,NULL,'2026-02-06 16:38:15',NULL),(28,'activity_gallery_1_698618f7d3769.jpg','activity_gallery_1_698618f7d3769.jpg','/uploads/activities/activity_gallery_1_698618f7d3769.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'activities','activity',1,0,3,NULL,'2026-02-06 16:38:15',NULL),(29,'activity_gallery_1_698618f7d4806.jpg','activity_gallery_1_698618f7d4806.jpg','/uploads/activities/activity_gallery_1_698618f7d4806.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'activities','activity',1,0,4,NULL,'2026-02-06 16:38:15',NULL),(30,'activity_gallery_1_698618f7d5980.jpg','activity_gallery_1_698618f7d5980.jpg','/uploads/activities/activity_gallery_1_698618f7d5980.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'activities','activity',1,0,5,NULL,'2026-02-06 16:38:15',NULL),(33,'activity_69860c41e0ec9.jpg','activity_69860c41e0ec9.jpg','/uploads/activities/activity_69860c41e0ec9.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'activities','activity',1,1,0,NULL,'2026-02-06 17:11:45',NULL),(37,'hero_about_1770084603.png','hero_about_1770084603.png','/uploads/heroes/hero_about_1770084603.png','image/jpeg',0,NULL,NULL,NULL,NULL,'content','hero',4,1,0,NULL,'2026-02-03 00:18:35',NULL),(38,'hero_contact_1770084865.jpg','hero_contact_1770084865.jpg','/uploads/heroes/hero_contact_1770084865.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'content','hero',5,1,0,NULL,'2026-02-03 00:18:35',NULL),(41,'hero_accommodation_main_1770400137.jpg','MogadouroAlojamento.jpg','/uploads/heroes/hero_accommodation_main_1770400137.jpg','image/jpeg',267538,NULL,NULL,NULL,NULL,'content','hero',2,1,0,1,'2026-02-06 17:48:57',NULL),(42,'hero_shop_1770400179.png','MogadouroLogin2.png','/uploads/heroes/hero_shop_1770400179.png','image/png',48057,NULL,NULL,NULL,NULL,'content','hero',6,1,0,1,'2026-02-06 17:49:39',NULL),(43,'hero_activities_1770400187.jpg','MogadouroAtividades.jpg','/uploads/heroes/hero_activities_1770400187.jpg','image/jpeg',618067,NULL,NULL,NULL,NULL,'content','hero',3,1,0,1,'2026-02-06 17:49:47',NULL),(44,'hero_home_1770400193.jpg','MogadouroAtividades.jpg','/uploads/heroes/hero_home_1770400193.jpg','image/jpeg',618067,NULL,NULL,NULL,NULL,'content','hero',1,1,0,1,'2026-02-06 17:49:53',NULL),(45,'activity_cover_13_698633d9d42ad.png','FotoGi.png','/uploads/activities/activity_cover_13_698633d9d42ad.png','image/png',573857,NULL,NULL,NULL,NULL,'activities','activity',13,1,0,1,'2026-02-06 18:32:57',NULL),(46,'activity_gallery_13_698633d9d6dd0.jpg','MogadouroAtividades.jpg','/uploads/activities/activity_gallery_13_698633d9d6dd0.jpg','image/jpeg',618067,NULL,NULL,NULL,NULL,'activities','activity',13,0,1,1,'2026-02-06 18:32:57',NULL),(47,'activity_gallery_13_698633d9d80d0.jpg','MogadouroContacto.jpg','/uploads/activities/activity_gallery_13_698633d9d80d0.jpg','image/jpeg',262185,NULL,NULL,NULL,NULL,'activities','activity',13,0,2,1,'2026-02-06 18:32:57',NULL),(48,'activity_gallery_13_698633d9d939e.jpg','MogadouroContacto2.jpg','/uploads/activities/activity_gallery_13_698633d9d939e.jpg','image/jpeg',164906,NULL,NULL,NULL,NULL,'activities','activity',13,0,3,1,'2026-02-06 18:32:57',NULL),(49,'activity_gallery_13_698633d9daadc.png','MogadouroLogin.png','/uploads/activities/activity_gallery_13_698633d9daadc.png','image/png',70079,NULL,NULL,NULL,NULL,'activities','activity',13,0,4,1,'2026-02-06 18:32:57',NULL),(50,'activity_gallery_13_698633d9dc7ec.png','MogadouroLogin2.png','/uploads/activities/activity_gallery_13_698633d9dc7ec.png','image/png',48057,NULL,NULL,NULL,NULL,'activities','activity',13,0,5,1,'2026-02-06 18:32:57',NULL),(51,'activity_gallery_13_698633d9dda8c.jpeg','MogadouroNeve.jpeg','/uploads/activities/activity_gallery_13_698633d9dda8c.jpeg','image/jpeg',263714,NULL,NULL,NULL,NULL,'activities','activity',13,0,6,1,'2026-02-06 18:32:57',NULL),(52,'activity_gallery_13_698633d9deee7.jpeg','MogadouroNeve2.jpeg','/uploads/activities/activity_gallery_13_698633d9deee7.jpeg','image/jpeg',147542,NULL,NULL,NULL,NULL,'activities','activity',13,0,7,1,'2026-02-06 18:32:57',NULL),(53,'activity_gallery_13_698633d9dfdfc.png','MogadouroSobre.png','/uploads/activities/activity_gallery_13_698633d9dfdfc.png','image/png',206730,NULL,NULL,NULL,NULL,'activities','activity',13,0,8,1,'2026-02-06 18:32:57',NULL),(54,'banana-americas-6987cc4c52fff.jpg','banan2.jpg','/uploads/products/banana-americas-6987cc4c52fff.jpg','image/jpeg',248844,'','',NULL,NULL,'products','standalone',NULL,0,0,NULL,'2026-02-07 23:35:40',NULL),(55,'banana-americas-6987cc4c566d0.jpg','bananacapa.jpg','/uploads/products/banana-americas-6987cc4c566d0.jpg','image/jpeg',524349,NULL,NULL,NULL,NULL,'products','standalone',NULL,0,0,NULL,'2026-02-07 23:35:40',NULL),(57,'home_image_split_left_1770689962.png','Atelier Logo.png','/uploads/content/home_image_split_left_1770689962.png','image/png',1084608,NULL,NULL,NULL,NULL,'content','standalone',NULL,0,0,1,'2026-02-10 02:19:22',NULL),(59,'home_image_split_left_1770815718.jpg','IgrejaMatriz.jpg','/uploads/content/home_image_split_left_1770815718.jpg','image/jpeg',123974,NULL,NULL,NULL,NULL,'content','standalone',NULL,0,0,1,'2026-02-11 13:15:18',NULL);
+INSERT INTO `media` VALUES (8,'6976756e94c17_1769370990.jpg','AlojamentoQuarto8.jpg','/uploads/media/6976756e94c17_1769370990.jpg','image/jpeg',77675,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(9,'6976756e992d1_1769370990.jpg','AlojamentoQuarto7.jpg','/uploads/media/6976756e992d1_1769370990.jpg','image/jpeg',78878,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(10,'6976756e9adb4_1769370990.jpg','AlojamentoQuarto6.jpg','/uploads/media/6976756e9adb4_1769370990.jpg','image/jpeg',86814,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(11,'6976756e9c308_1769370990.jpg','AlojamentoQuarto5.jpg','/uploads/media/6976756e9c308_1769370990.jpg','image/jpeg',82471,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(12,'6976756e9d47d_1769370990.jpg','AlojamentoQuarto4.jpg','/uploads/media/6976756e9d47d_1769370990.jpg','image/jpeg',100462,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(13,'6976756e9e5a6_1769370990.jpg','AlojamentoQuarto3.jpg','/uploads/media/6976756e9e5a6_1769370990.jpg','image/jpeg',93303,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(14,'6976756e9f8b2_1769370990.jpg','AlojamentoQuarto2.jpg','/uploads/media/6976756e9f8b2_1769370990.jpg','image/jpeg',75318,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(15,'6976756ea0995_1769370990.jpg','AlojamentoQuarto1.jpg','/uploads/media/6976756ea0995_1769370990.jpg','image/jpeg',97800,'Quarto Cama de Casal','Double Bed Room',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 19:56:30',1),(19,'6976986c696fb_1769379948.jpg','AlojamentoQuarto49.jpg','/uploads/media/6976986c696fb_1769379948.jpg','image/jpeg',57394,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(20,'6976986c6ad28_1769379948.jpg','AlojamentoQuarto48.jpg','/uploads/media/6976986c6ad28_1769379948.jpg','image/jpeg',163886,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(21,'6976986c6c3a6_1769379948.jpg','AlojamentoQuarto47.jpg','/uploads/media/6976986c6c3a6_1769379948.jpg','image/jpeg',129213,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(22,'6976986c6e346_1769379948.jpg','AlojamentoQuarto46.jpg','/uploads/media/6976986c6e346_1769379948.jpg','image/jpeg',98581,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(23,'6976986c7080e_1769379948.jpg','AlojamentoQuarto45.jpg','/uploads/media/6976986c7080e_1769379948.jpg','image/jpeg',67252,'','',NULL,NULL,'gallery','standalone',NULL,0,0,1,'2026-01-25 22:25:48',1),(24,'6976986c72fde_1769379948.jpg','AlojamentoQuarto44.jpg','/uploads/media/6976986c72fde_1769379948.jpg','image/jpeg',63988,NULL,NULL,NULL,NULL,'other','standalone',NULL,0,0,1,'2026-01-25 22:25:48',NULL),(25,'accommodation_697698bc063af.jpg','AlojamentoQuarto26.jpg','/uploads/accommodation/accommodation_697698bc063af.jpg','image/jpeg',69718,'','',NULL,NULL,'gallery','standalone',NULL,0,1,NULL,'2026-01-25 22:27:08',1),(37,'hero_about_1770084603.png','hero_about_1770084603.png','/uploads/heroes/hero_about_1770084603.png','image/jpeg',0,NULL,NULL,NULL,NULL,'content','hero',4,1,0,NULL,'2026-02-03 00:18:35',NULL),(38,'hero_contact_1770084865.jpg','hero_contact_1770084865.jpg','/uploads/heroes/hero_contact_1770084865.jpg','image/jpeg',0,NULL,NULL,NULL,NULL,'content','hero',5,1,0,NULL,'2026-02-03 00:18:35',NULL),(41,'hero_accommodation_main_1770400137.jpg','MogadouroAlojamento.jpg','/uploads/heroes/hero_accommodation_main_1770400137.jpg','image/jpeg',267538,NULL,NULL,NULL,NULL,'content','hero',2,1,0,1,'2026-02-06 17:48:57',NULL),(42,'hero_shop_1770400179.png','MogadouroLogin2.png','/uploads/heroes/hero_shop_1770400179.png','image/png',48057,NULL,NULL,NULL,NULL,'content','hero',6,1,0,1,'2026-02-06 17:49:39',NULL),(43,'hero_activities_1770400187.jpg','MogadouroAtividades.jpg','/uploads/heroes/hero_activities_1770400187.jpg','image/jpeg',618067,NULL,NULL,NULL,NULL,'content','hero',3,1,0,1,'2026-02-06 17:49:47',NULL),(44,'hero_home_1770400193.jpg','MogadouroAtividades.jpg','/uploads/heroes/hero_home_1770400193.jpg','image/jpeg',618067,NULL,NULL,NULL,NULL,'content','hero',1,1,0,1,'2026-02-06 17:49:53',NULL),(57,'home_image_split_left_1770689962.png','Atelier Logo.png','/uploads/content/home_image_split_left_1770689962.png','image/png',1084608,NULL,NULL,NULL,NULL,'content','standalone',NULL,0,0,1,'2026-02-10 02:19:22',NULL),(59,'home_image_split_left_1770815718.jpg','IgrejaMatriz.jpg','/uploads/content/home_image_split_left_1770815718.jpg','image/jpeg',123974,NULL,NULL,NULL,NULL,'content','standalone',NULL,0,0,1,'2026-02-11 13:15:18',NULL);
 /*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -927,58 +772,6 @@ LOCK TABLES `spam_emails` WRITE;
 UNLOCK TABLES;
 
 --
--- Temporary table structure for view `v_activity_media`
---
-
-DROP TABLE IF EXISTS `v_activity_media`;
-/*!50001 DROP VIEW IF EXISTS `v_activity_media`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `v_activity_media` AS SELECT
- 1 AS `id`,
-  1 AS `filename`,
-  1 AS `original_name`,
-  1 AS `file_path`,
-  1 AS `file_type`,
-  1 AS `file_size`,
-  1 AS `alt_text_pt`,
-  1 AS `alt_text_en`,
-  1 AS `caption_pt`,
-  1 AS `caption_en`,
-  1 AS `category`,
-  1 AS `entity_type`,
-  1 AS `entity_id`,
-  1 AS `is_cover`,
-  1 AS `sort_order`,
-  1 AS `uploaded_by`,
-  1 AS `created_at`,
-  1 AS `accommodation_id`,
-  1 AS `activity_slug`,
-  1 AS `activity_title` */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `v_categories_with_translations`
---
-
-DROP TABLE IF EXISTS `v_categories_with_translations`;
-/*!50001 DROP VIEW IF EXISTS `v_categories_with_translations`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `v_categories_with_translations` AS SELECT
- 1 AS `id`,
-  1 AS `type`,
-  1 AS `slug`,
-  1 AS `icon`,
-  1 AS `sort_order`,
-  1 AS `is_active`,
-  1 AS `language_id`,
-  1 AS `language_code`,
-  1 AS `name`,
-  1 AS `description` */;
-SET character_set_client = @saved_cs_client;
-
---
 -- Temporary table structure for view `v_hero_media`
 --
 
@@ -1010,42 +803,6 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Final view structure for view `v_activity_media`
---
-
-/*!50001 DROP VIEW IF EXISTS `v_activity_media`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_activity_media` AS select `m`.`id` AS `id`,`m`.`filename` AS `filename`,`m`.`original_name` AS `original_name`,`m`.`file_path` AS `file_path`,`m`.`file_type` AS `file_type`,`m`.`file_size` AS `file_size`,`m`.`alt_text_pt` AS `alt_text_pt`,`m`.`alt_text_en` AS `alt_text_en`,`m`.`caption_pt` AS `caption_pt`,`m`.`caption_en` AS `caption_en`,`m`.`category` AS `category`,`m`.`entity_type` AS `entity_type`,`m`.`entity_id` AS `entity_id`,`m`.`is_cover` AS `is_cover`,`m`.`sort_order` AS `sort_order`,`m`.`uploaded_by` AS `uploaded_by`,`m`.`created_at` AS `created_at`,`m`.`accommodation_id` AS `accommodation_id`,`a`.`slug` AS `activity_slug`,`at`.`title` AS `activity_title` from ((`media` `m` join `activities` `a` on(`m`.`entity_id` = `a`.`id`)) left join `activity_translations` `at` on(`a`.`id` = `at`.`activity_id` and `at`.`language_id` = 1)) where `m`.`entity_type` = 'activity' */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `v_categories_with_translations`
---
-
-/*!50001 DROP VIEW IF EXISTS `v_categories_with_translations`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_categories_with_translations` AS select `c`.`id` AS `id`,`c`.`type` AS `type`,`c`.`slug` AS `slug`,`c`.`icon` AS `icon`,`c`.`sort_order` AS `sort_order`,`c`.`is_active` AS `is_active`,`ct`.`language_id` AS `language_id`,`l`.`code` AS `language_code`,`ct`.`name` AS `name`,`ct`.`description` AS `description` from ((`categories` `c` left join `category_translations` `ct` on(`c`.`id` = `ct`.`category_id`)) left join `languages` `l` on(`ct`.`language_id` = `l`.`id`)) where `c`.`is_active` = 1 order by `c`.`type`,`c`.`sort_order`,`ct`.`language_id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
 -- Final view structure for view `v_hero_media`
 --
 
@@ -1072,4 +829,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-08-14  2:59:33
+-- Dump completed on 2026-08-14 16:55:41
