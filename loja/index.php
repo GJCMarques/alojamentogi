@@ -35,13 +35,13 @@ include INCLUDES_PATH . '/header.php';
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4">
+        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             Produtos Regionais
         </span>
-        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl">
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
             A Nossa Loja
         </h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed">
+        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="200">
             Sabores autênticos de Trás-os-Montes, em breve à distância de um clique.
         </p>
     </div>
@@ -49,7 +49,7 @@ include INCLUDES_PATH . '/header.php';
 
 <!-- Construction Notice -->
 <section class="py-20 lg:py-28 bg-cream-50">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-on-scroll" data-animation="fade-up">
         <span class="inline-block text-accent text-sm font-bold tracking-[0.2em] uppercase mb-4">Em Construção</span>
         <h2 class="text-3xl md:text-4xl text-primary mb-6">Loja Online em construção</h2>
         <p class="text-charcoal/75 text-lg leading-relaxed mb-6">

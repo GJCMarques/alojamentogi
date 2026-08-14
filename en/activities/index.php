@@ -67,13 +67,13 @@ include INCLUDES_PATH . '/header.php';
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4">
+        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             Discover Mogadouro
         </span>
-        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl">
+        <h1 class="font-cursive text-6xl md:text-7xl lg:text-8xl text-cream mb-6 drop-shadow-xl animate-on-scroll" data-animation="fade-up" data-delay="100">
             What to Do
         </h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed">
+        <p class="text-xl md:text-2xl text-cream/90 max-w-2xl mx-auto font-light leading-relaxed animate-on-scroll" data-animation="fade-up" data-delay="200">
             From nature to gastronomy, history and culture in Trás-os-Montes.
         </p>
     </div>
@@ -82,7 +82,7 @@ include INCLUDES_PATH . '/header.php';
 <!-- Official Resources -->
 <section class="py-16 lg:py-24 bg-cream-50">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12 animate-on-scroll" data-animation="fade-up">
             <span class="inline-block text-accent text-sm font-medium tracking-[0.2em] uppercase mb-3">Official Information</span>
             <h2 class="font-serif text-3xl md:text-4xl text-primary mb-4">Plan your visit</h2>
             <p class="text-charcoal/70 max-w-2xl mx-auto">
@@ -91,9 +91,9 @@ include INCLUDES_PATH . '/header.php';
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
-            <?php foreach ($officialLinks as $link): ?>
+            <?php foreach ($officialLinks as $idx => $link): ?>
             <a href="<?= e($link['url']) ?>" target="_blank" rel="noopener noreferrer"
-               class="group bg-white rounded-2xl border border-cream-200 p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+               class="group bg-white rounded-2xl border border-cream-200 p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col animate-on-scroll" data-animation="fade-up" data-delay="<?= ($idx + 1) * 100 ?>">
                 <span class="inline-block self-start text-[11px] font-bold uppercase tracking-widest text-secondary bg-secondary/10 px-3 py-1 rounded-full mb-4"><?= e($link['tag']) ?></span>
                 <h3 class="font-serif text-2xl text-primary mb-3 group-hover:text-secondary transition-colors"><?= e($link['title']) ?></h3>
                 <p class="text-charcoal/70 leading-relaxed mb-6 flex-1"><?= e($link['desc']) ?></p>
@@ -107,13 +107,13 @@ include INCLUDES_PATH . '/header.php';
             <?php endforeach; ?>
         </div>
 
-        <!-- Reference guides -->
-        <div class="mt-14">
+        <!-- Useful guides -->
+        <div class="mt-14 animate-on-scroll" data-animation="fade-up">
             <h3 class="font-serif text-xl text-primary mb-6 text-center">Useful guides and itineraries</h3>
             <div class="flex flex-wrap justify-center gap-3">
-                <?php foreach ($guideLinks as $g): ?>
+                <?php foreach ($guideLinks as $idx => $g): ?>
                 <a href="<?= e($g['url']) ?>" target="_blank" rel="noopener noreferrer"
-                   class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-cream-200 rounded-xl text-charcoal/80 hover:border-secondary hover:text-secondary hover:shadow-md transition-all">
+                   class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-cream-200 rounded-xl text-charcoal/80 hover:border-secondary hover:text-secondary hover:shadow-md transition-all animate-on-scroll" data-animation="fade-up" data-delay="<?= ($idx + 1) * 50 ?>">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5m6.828-.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5"/>
                     </svg>
