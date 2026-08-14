@@ -403,7 +403,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="inline-flex px-1.5 py-0.5 bg-granite-200 text-granite-700 rounded text-[10px] font-bold mt-0.5">EDT</span>
-                    <span>Gerir conteúdos, produtos, encomendas, media e faturas</span>
+                    <span>Gerir conteúdos e media</span>
                 </li>
             </ul>
         </div>

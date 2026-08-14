@@ -418,7 +418,6 @@ include dirname(__DIR__) . '/includes/header.php';
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
                         <option value="other">Outro</option>
                         <option value="gallery">Galeria (Alojamento)</option>
-                        <option value="products">Produtos</option>
                         <option value="activities">Atividades</option>
                         <option value="content">Conteúdo</option>
                     </select>

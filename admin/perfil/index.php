@@ -297,7 +297,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <p class="text-xs text-granite-500 uppercase tracking-wider font-medium mb-1">Nível de Acesso</p>
             <p class="text-sm text-granite-700"><?= $admin->role === 'super_admin' ? 'Super Administrador' : ($admin->role === 'admin' ? 'Administrador' : 'Editor') ?></p>
             <p class="text-xs text-granite-400 mt-0.5">
-                <?= $admin->role === 'editor' ? 'Pode gerir conteúdos e produtos' : 'Acesso total ao painel' ?>
+                <?= $admin->role === 'editor' ? 'Pode gerir conteúdos' : 'Acesso total ao painel' ?>
             </p>
         </div>
         <div>
