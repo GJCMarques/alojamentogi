@@ -145,6 +145,9 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                                     <span class="text-[#800020] font-bold text-sm">A Casa do Gi 1</span>
                                     <span class="text-[#800020] opacity-80 text-xs font-medium">GuestReady</span>
                                 </div>
+                                <svg class="w-5 h-5 text-[#800020] opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
                             </a>
                             <?php endif; ?>
 
@@ -158,6 +161,9 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                                     <span class="text-[#800020] font-bold text-sm">A Casa do Gi 2</span>
                                     <span class="text-[#800020] opacity-80 text-xs font-medium">GuestReady</span>
                                 </div>
+                                <svg class="w-5 h-5 text-[#800020] opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
                             </a>
                             <?php endif; ?>
                         </div>
