@@ -141,7 +141,6 @@ include INCLUDES_PATH . '/header.php';
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
-                    <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4 opacity-80"><?= $content['home_card1_label'] ?? 'Sleep' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
                         <?= $content['home_card1_title'] ?? 'Accommodation' ?>
                     </h3>
@@ -161,7 +160,6 @@ include INCLUDES_PATH . '/header.php';
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
-                    <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4 opacity-80"><?= $content['home_card2_label'] ?? 'Experience' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
                         <?= $content['home_card2_title'] ?? 'Activities' ?>
                     </h3>
@@ -181,7 +179,6 @@ include INCLUDES_PATH . '/header.php';
                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
-                    <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4 opacity-80"><?= $content['home_card3_label'] ?? 'Taste' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
                         <?= $content['home_card3_title'] ?? 'Regional Shop' ?>
                     </h3>
@@ -201,7 +198,6 @@ include INCLUDES_PATH . '/header.php';
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
 
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-12 z-10 flex flex-col justify-end h-full">
-                    <span class="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4 opacity-80"><?= $content['home_card4_label'] ?? 'Connect' ?></span>
                     <h3 class="font-cursive text-5xl md:text-6xl text-white mb-2 transform origin-left transition-transform duration-500 group-hover:scale-105">
                         <?= $content['home_card4_title'] ?? 'Contact Us' ?>
                     </h3>
