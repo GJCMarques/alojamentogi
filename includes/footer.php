@@ -23,7 +23,8 @@ $contactPhone = setting('contact_phone', '');
 $contactAddress = content('footer_address', '52 Avenida Nossa Senhora do Caminho, Mogadouro');
 $facebookUrl = setting('facebook_url', '');
 $instagramUrl = setting('instagram_url', '');
-$guestreadyUrl = setting('guestready_url', '');
+$guestreadyUrl1 = setting('guestready_url_casa1', '');
+$guestreadyUrl2 = setting('guestready_url_casa2', '');
 ?>
     </main>
 
@@ -133,16 +134,33 @@ $guestreadyUrl = setting('guestready_url', '');
                         <p class="text-cream-200 text-sm font-light -mt-2 mb-2">
                             <?= $isEnglish ? 'Book directly through:' : 'Reservas através de:' ?>
                         </p>
-                        <?php if ($guestreadyUrl): ?>
-                        <a href="<?= e($guestreadyUrl) ?>" target="_blank" rel="noopener noreferrer"
-                           class="w-full flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                            <div class="w-10 h-10 bg-[#800020]/10 rounded-md flex items-center justify-center mr-3 p-1">
-                                <!-- GuestReady Logo -->
-                                <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
-                            </div>
-                            <span class="text-[#800020] font-bold">GuestReady</span>
-                        </a>
-                        <?php endif; ?>
+                        <div class="space-y-3">
+                            <?php if ($guestreadyUrl1): ?>
+                            <a href="<?= e($guestreadyUrl1) ?>" target="_blank" rel="noopener noreferrer"
+                               class="w-full flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="w-10 h-10 bg-[#800020]/10 rounded-md flex items-center justify-center mr-3 p-1">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[#800020] font-bold text-sm">GuestReady</span>
+                                    <span class="text-granite-600 text-xs">A Casa do Gi 1</span>
+                                </div>
+                            </a>
+                            <?php endif; ?>
+
+                            <?php if ($guestreadyUrl2): ?>
+                            <a href="<?= e($guestreadyUrl2) ?>" target="_blank" rel="noopener noreferrer"
+                               class="w-full flex items-center p-3 bg-[#FAF9F6] border border-[#800020]/10 rounded-lg hover:bg-[#EAE8E0] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="w-10 h-10 bg-[#800020]/10 rounded-md flex items-center justify-center mr-3 p-1">
+                                    <img loading="lazy" decoding="async" src="<?= $base ?>/assets/images/guestreadylogo.webp" alt="GuestReady" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[#800020] font-bold text-sm">GuestReady</span>
+                                    <span class="text-granite-600 text-xs">A Casa do Gi 2</span>
+                                </div>
+                            </a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>

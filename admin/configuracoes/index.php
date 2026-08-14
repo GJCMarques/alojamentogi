@@ -51,6 +51,15 @@ $settingsGroups = [
             ['key' => 'tripadvisor_url', 'label' => 'TripAdvisor URL', 'type' => 'url', 'default' => ''],
         ]
     ],
+    'reservations' => [
+        'label' => 'Reservas (GuestReady)',
+        'description' => 'Links para os botões de reserva no rodapé do website',
+        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+        'settings' => [
+            ['key' => 'guestready_url_casa1', 'label' => 'Link GuestReady - Casa do Gi 1', 'type' => 'url', 'default' => ''],
+            ['key' => 'guestready_url_casa2', 'label' => 'Link GuestReady - Casa do Gi 2', 'type' => 'url', 'default' => ''],
+        ]
+    ],
 ];
 
 $currentGroup = isset($_GET['group']) && isset($settingsGroups[$_GET['group']])
