@@ -143,7 +143,7 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="text-[#800020] font-bold text-sm">A Casa do Gi 1</span>
-                                    <span class="text-[#800020]/80 text-xs font-medium">GuestReady</span>
+                                    <span class="text-[#800020] opacity-80 text-xs font-medium">GuestReady</span>
                                 </div>
                             </a>
                             <?php endif; ?>
@@ -156,7 +156,7 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="text-[#800020] font-bold text-sm">A Casa do Gi 2</span>
-                                    <span class="text-[#800020]/80 text-xs font-medium">GuestReady</span>
+                                    <span class="text-[#800020] opacity-80 text-xs font-medium">GuestReady</span>
                                 </div>
                             </a>
                             <?php endif; ?>
