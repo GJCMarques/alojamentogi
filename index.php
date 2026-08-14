@@ -241,7 +241,7 @@ include INCLUDES_PATH . '/header.php';
                     <?= $content['home_about_label'] ?? 'A Nossa História' ?>
                 </span>
                 <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl text-primary mb-8 leading-tight">
-                    <?= $content['home_about_title'] ?? 'Mais que uma casa,<br>um <span class="italic text-accent">legado</span>.' ?>
+                    <?= $content['home_about_title'] ?? 'Mais do que uma casa, um <span class="italic text-accent">legado</span>.' ?>
                 </h2>
                 <div class="space-y-6 text-charcoal/70 text-lg leading-relaxed mb-10">
                     <p>
