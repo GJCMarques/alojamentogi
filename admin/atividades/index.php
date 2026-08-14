@@ -77,7 +77,7 @@ include dirname(__DIR__) . '/includes/header.php';
 <div class="flex justify-between items-center mb-2">
     <div>
         <h1 class="text-2xl font-bold text-primary">Gestão de Atividades</h1>
-        <p class="text-gray-600">Links informativos mostrados na página <em>Atividades</em> (recursos oficiais e guias). A página já não usa fotografias.</p>
+        <p class="text-gray-600">Links informativos de Recursos oficiais e Guias.</p>
     </div>
 </div>
 
