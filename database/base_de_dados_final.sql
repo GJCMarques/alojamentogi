@@ -638,74 +638,6 @@ INSERT INTO `content_blocks` VALUES (6,'accommodation_title',1,'text','O Alojame
 UNLOCK TABLES;
 
 --
--- Table structure for table `external_link_translations`
---
-
-DROP TABLE IF EXISTS `external_link_translations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `external_link_translations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `link_id` int(10) unsigned NOT NULL,
-  `language_id` int(10) unsigned NOT NULL,
-  `title` varchar(255) NOT NULL COMMENT 'Link title',
-  `description` text DEFAULT NULL COMMENT 'Link description',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_link_language` (`link_id`,`language_id`),
-  KEY `idx_external_link_trans_link` (`link_id`),
-  KEY `idx_external_link_trans_lang` (`language_id`),
-  CONSTRAINT `fk_external_link_trans_lang` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_external_link_trans_link` FOREIGN KEY (`link_id`) REFERENCES `external_links` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `external_link_translations`
---
-
-LOCK TABLES `external_link_translations` WRITE;
-/*!40000 ALTER TABLE `external_link_translations` DISABLE KEYS */;
-INSERT INTO `external_link_translations` VALUES (1,1,1,'Câmara Municipal de Mogadouro','Site oficial da Câmara Municipal com informações sobre serviços, eventos e notícias locais.'),(2,1,2,'Mogadouro City Hall','Official City Hall website with information about services, events and local news.'),(3,2,1,'Parque Natural do Douro Internacional','Descubra a fauna e flora únicas das Arribas do Douro, um dos últimos refúgios de aves de rapina na Europa.'),(4,2,2,'Douro International Natural Park','Discover the unique fauna and flora of the Douro Cliffs, one of the last refuges for birds of prey in Europe.'),(5,3,1,'Visit Portugal - Trás-os-Montes','Portal oficial de turismo de Portugal com guias e sugestões para explorar a região transmontana.'),(6,3,2,'Visit Portugal - Trás-os-Montes','Official Portugal tourism portal with guides and suggestions to explore the Transmontana region.'),(7,4,1,'Centro de Portugal - Trás-os-Montes nao','Informações turísticas detalhadas sobre a região, incluindo roteiros e pontos de interesse.'),(8,4,2,'Centro de Portugal - Trás-os-Montes nao','Informações turísticas detalhadas sobre a região, incluindo roteiros e pontos de interesse.'),(11,6,1,'Link testar','Nada'),(12,6,2,'Link testar','Nada');
-/*!40000 ALTER TABLE `external_link_translations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `external_links`
---
-
-DROP TABLE IF EXISTS `external_links`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `external_links` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `url` varchar(500) NOT NULL COMMENT 'External website URL',
-  `icon` varchar(100) DEFAULT NULL COMMENT 'Icon class or path',
-  `icon_image` varchar(255) DEFAULT NULL COMMENT 'Custom icon image path',
-  `category` enum('tourism','government','news','gastronomy','culture','nature','events','accommodation','other') DEFAULT 'tourism',
-  `is_featured` tinyint(1) DEFAULT 0 COMMENT 'Show in featured section',
-  `is_active` tinyint(1) DEFAULT 1,
-  `sort_order` int(10) unsigned DEFAULT 0,
-  `clicks_count` int(10) unsigned DEFAULT 0 COMMENT 'Track clicks',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `idx_external_links_active` (`is_active`),
-  KEY `idx_external_links_featured` (`is_featured`),
-  KEY `idx_external_links_order` (`sort_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `external_links`
---
-
-LOCK TABLES `external_links` WRITE;
-/*!40000 ALTER TABLE `external_links` DISABLE KEYS */;
-INSERT INTO `external_links` VALUES (1,'https://www.cm-mogadouro.pt/','building',NULL,'government',0,1,1,0,'2026-02-06 14:42:31','2026-02-07 01:51:28'),(2,'https://natural.pt/protected-areas/parque-natural-do-douro-internacional','tree',NULL,'nature',1,1,2,0,'2026-02-06 14:42:31','2026-02-06 14:42:31'),(3,'https://www.visitportugal.com/pt-pt/destinos/porto-e-norte/tras-os-montes','map',NULL,'tourism',1,1,3,0,'2026-02-06 14:42:31','2026-02-06 14:42:31'),(4,'https://www.centerofportugal.com/pt/regiao/tras-os-montes/','compass',NULL,'tourism',0,1,4,0,'2026-02-06 14:42:31','2026-02-06 14:42:31'),(6,'https://www.youtube.com/watch?v=wh-07BzfgYY','globe',NULL,'events',1,1,0,0,'2026-02-06 18:34:43','2026-02-07 01:51:36');
-/*!40000 ALTER TABLE `external_links` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `house_rule_translations`
 --
 
@@ -1144,4 +1076,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-08-14  2:24:37
+-- Dump completed on 2026-08-14  2:28:17
