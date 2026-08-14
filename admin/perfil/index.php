@@ -62,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($profileErrors)) {
             $db->update('admins', $data, 'id = ?', [$admin->id]);
             Session::flash('success', 'Perfil atualizado com sucesso.');
-            logMessage("Admin {$admin->username} updated their profile", 'info');
             redirect('/admin/perfil/');
         }
 
@@ -100,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!password_verify($currentPassword, $admin->password_hash)) {
             $validator->addError('current_password', 'A password atual está incorreta.');
             $rateLimiter->recordFailure('admin_password_verify');
-            logMessage("Failed password verification for profile change by admin ID {$admin->id}", 'warning');
         }
 
         $passwordErrors = $validator->getErrors();
@@ -109,7 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newHash = password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 12]);
             $db->update('admins', ['password_hash' => $newHash], 'id = ?', [$admin->id]);
             Session::flash('success', 'Password alterada com sucesso.');
-            logMessage("Admin {$admin->username} changed their password", 'info');
             redirect('/admin/perfil/');
         }
     }

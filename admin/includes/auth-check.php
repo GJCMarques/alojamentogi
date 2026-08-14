@@ -6,7 +6,6 @@ if (!Auth::check()) {
     $rateLimiter = \Core\RateLimiter::getInstance();
 
     if (!$rateLimiter->check('admin_page_access', 30, 300)) {
-        logMessage("Admin page brute force blocked from " . getClientIp(), 'warning');
         http_response_code(429);
         exit('Too many requests. Please try again later.');
     }

@@ -110,7 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $admin = Auth::user();
-        logMessage("Admin {$admin->username} updated settings group: {$currentGroup}", 'info');
         Session::flash('success', 'Configurações guardadas com sucesso.');
         redirect('/admin/configuracoes/?group=' . $currentGroup);
     }

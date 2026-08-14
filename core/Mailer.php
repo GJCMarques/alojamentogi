@@ -62,7 +62,6 @@ class Mailer
             $this->mailer->Encoding = 'base64';
 
         } catch (Exception $e) {
-            logMessage("Mailer initialization failed: " . $e->getMessage(), 'error');
         }
     }
 
@@ -111,13 +110,11 @@ class Mailer
             $result = $this->mailer->send();
 
             if ($result) {
-                logMessage("Email sent to: " . implode(', ', $recipients), 'info');
             }
 
             return $result;
 
         } catch (Exception $e) {
-            logMessage("Email sending failed: " . $this->mailer->ErrorInfo, 'error');
             return false;
         }
     }
@@ -137,9 +134,7 @@ class Mailer
         $result = @mail($recipients, $subject, $body, implode("\r\n", $headers));
 
         if ($result) {
-            logMessage("Email sent (fallback) to: {$recipients}", 'info');
         } else {
-            logMessage("Email fallback failed to: {$recipients}", 'error');
         }
 
         return $result;
@@ -150,7 +145,6 @@ class Mailer
         $adminEmail = setting('contact_email', $this->config['mail']['from_email'] ?? '');
 
         if (empty($adminEmail)) {
-            logMessage("Contact notification failed: No admin email configured", 'error');
             return false;
         }
 

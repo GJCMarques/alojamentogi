@@ -67,7 +67,7 @@ class Auth
         Session::setAdmin($admin->id);
         Session::set('_admin_last_activity', time());
 
-        self::logAction($admin->id, 'login', 'admin', $admin->id);
+
 
         return [
             'success' => true,
@@ -81,7 +81,7 @@ class Auth
         $adminId = Session::getAdminId();
 
         if ($adminId) {
-            self::logAction($adminId, 'logout', 'admin', $adminId);
+
         }
 
         Session::clearAdmin();
@@ -181,27 +181,7 @@ class Auth
         return $admin && $admin->canEditContent();
     }
 
-    public static function logAction(
-        ?int $adminId,
-        string $action,
-        string $entityType,
-        ?int $entityId = null,
-        ?array $oldValues = null,
-        ?array $newValues = null
-    ): void {
-        $db = Database::getInstance();
 
-        $db->insert('audit_log', [
-            'admin_id' => $adminId,
-            'action' => $action,
-            'entity_type' => $entityType,
-            'entity_id' => $entityId,
-            'old_values' => $oldValues ? json_encode($oldValues) : null,
-            'new_values' => $newValues ? json_encode($newValues) : null,
-            'ip_address' => getClientIp(),
-            'user_agent' => substr(getUserAgent(), 0, 500)
-        ]);
-    }
 
     public static function generatePasswordResetToken(Admin $admin): string
     {

@@ -36,13 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         elseif (!password_verify($adminPassword, $currentAdmin->password_hash)) {
             Session::flash('error', 'Password de confirmação incorreta.');
             $rateLimiter->recordFailure('admin_user_mgmt_auth');
-            logMessage("Failed admin password verification for user delete by admin ID {$currentAdmin->id}", 'warning');
         } else {
             $targetUser = $db->fetch("SELECT full_name, username FROM admins WHERE id = ?", [$id]);
             if ($targetUser) {
                 $db->delete('admins', 'id = ?', [$id]);
                 Session::flash('success', 'Utilizador "' . e($targetUser['full_name'] ?: $targetUser['username']) . '" eliminado.');
-                logMessage("Admin {$currentAdmin->username} deleted user ID {$id} ({$targetUser['username']})", 'info');
             }
         }
     }
@@ -59,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } else {
             $db->query("UPDATE admins SET is_active = NOT is_active WHERE id = ?", [$id]);
             Session::flash('success', 'Estado atualizado.');
-            logMessage("Admin {$currentAdmin->username} toggled active state for user ID {$id}", 'info');
         }
     }
     redirect('/admin/utilizadores/');
@@ -86,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
             } elseif (!password_verify($adminPassword, $currentAdmin->password_hash)) {
                 $errors[] = 'Password de confirmação incorreta.';
                 $rateLimiter->recordFailure('admin_user_mgmt_auth');
-                logMessage("Failed admin password verification for user save by admin ID {$currentAdmin->id}", 'warning');
             }
         }
 
@@ -148,11 +144,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['action']) || $_POST
                 }
                 $db->update('admins', $data, 'id = ?', [$editId]);
                 Session::flash('success', 'Utilizador atualizado.');
-                logMessage("Admin {$currentAdmin->username} updated user ID {$editId}", 'info');
             } else {
                 $db->insert('admins', $data);
                 Session::flash('success', 'Utilizador criado.');
-                logMessage("Admin {$currentAdmin->username} created new user: {$username}", 'info');
             }
             redirect('/admin/utilizadores/');
         } else {

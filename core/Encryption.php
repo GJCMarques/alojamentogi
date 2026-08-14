@@ -98,7 +98,6 @@ class Encryption
         $packed = base64_decode(substr($value, strlen(self::ENCRYPTED_PREFIX)), true);
 
         if ($packed === false) {
-            logMessage('Decryption failed: invalid base64', 'error');
             return '';
         }
 
@@ -106,7 +105,6 @@ class Encryption
         $minLength = $ivLength + self::TAG_LENGTH + 1;
 
         if (strlen($packed) < $minLength) {
-            logMessage('Decryption failed: data too short', 'error');
             return '';
         }
 
@@ -124,7 +122,6 @@ class Encryption
         );
 
         if ($plaintext === false) {
-            logMessage('Decryption failed: authentication failed or wrong key', 'error');
             return '';
         }
 

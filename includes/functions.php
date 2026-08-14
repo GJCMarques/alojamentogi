@@ -390,21 +390,7 @@ function dump(mixed ...$vars): void
     echo '</pre>';
 }
 
-function logMessage(string $message, string $level = 'info'): void
-{
-    $logDir = ROOT_PATH . '/logs';
 
-    if (!is_dir($logDir)) {
-        mkdir($logDir, 0755, true);
-    }
-
-    $logFile = $logDir . '/app-' . date('Y-m-d') . '.log';
-    $timestamp = date('Y-m-d H:i:s');
-    $level = strtoupper($level);
-
-    $logLine = "[{$timestamp}] [{$level}] {$message}" . PHP_EOL;
-    file_put_contents($logFile, $logLine, FILE_APPEND);
-}
 
 function csrfField(): string
 {

@@ -75,7 +75,6 @@ class RateLimiter
                 echo 'Too many requests. Please try again later.';
             }
 
-            logMessage("Rate limit exceeded: {$action} from " . getClientIp(), 'warning');
             exit;
         }
 

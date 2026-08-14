@@ -48,7 +48,6 @@ if (isPost() && $failureCount < 20) {
                 $error = $result['message'];
 
                 $rateLimiter->recordFailure('admin_login');
-                logMessage("Failed admin login attempt: username='{$username}' from " . getClientIp(), 'warning');
             }
         }
     }
