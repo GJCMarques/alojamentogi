@@ -51,19 +51,6 @@ $settingsGroups = [
             ['key' => 'tripadvisor_url', 'label' => 'TripAdvisor URL', 'type' => 'url', 'default' => ''],
         ]
     ],
-    'email' => [
-        'label' => 'Email (SMTP)',
-        'description' => 'Configuração de envio de emails',
-        'icon' => 'M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207',
-        'settings' => [
-            ['key' => 'smtp_host', 'label' => 'SMTP Host', 'type' => 'text', 'default' => '', 'hint' => 'Ex: smtp.gmail.com'],
-            ['key' => 'smtp_port', 'label' => 'SMTP Port', 'type' => 'number', 'default' => '587'],
-            ['key' => 'smtp_user', 'label' => 'SMTP Usuário', 'type' => 'text', 'default' => ''],
-            ['key' => 'smtp_pass', 'label' => 'SMTP Password', 'type' => 'password', 'default' => ''],
-            ['key' => 'smtp_from_email', 'label' => 'Email Remetente', 'type' => 'email', 'default' => '', 'hint' => 'O email que aparece como remetente'],
-            ['key' => 'smtp_from_name', 'label' => 'Nome Remetente', 'type' => 'text', 'default' => 'A Casa do Gi'],
-        ]
-    ],
 ];
 
 $currentGroup = isset($_GET['group']) && isset($settingsGroups[$_GET['group']])
@@ -157,7 +144,6 @@ include dirname(__DIR__) . '/includes/header.php';
             <p class="text-xs text-blue-700 leading-relaxed">
                 <strong>Nota:</strong> O link de reservas (GuestReady) e os dados de cada casa são geridos na página
                 <a href="<?= basePath() ?>/admin/alojamento/" class="underline hover:text-blue-900">Alojamento</a>.
-                A loja online é gerida externamente (shopk.it).
             </p>
         </div>
     </div>

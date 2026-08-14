@@ -5,7 +5,7 @@ require_once dirname(__DIR__) . '/includes/init.php';
 use Core\Database;
 use Core\Language;
 use Core\Validator;
-use Core\Mailer;
+
 use Core\CSRF;
 use Core\Session;
 
@@ -83,9 +83,7 @@ if (isPost() && $formEnabled) {
                         'is_spam' => $isSpamEmail ? 1 : 0,
                     ]);
 
-                    $mailer = new Mailer();
-                    $mailer->sendContactNotification($formData);
-                    $mailer->sendContactConfirmation($formData);
+
 
                     $success = true;
 
