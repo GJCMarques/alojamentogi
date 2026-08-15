@@ -382,8 +382,8 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                         <?= $isEnglish ? 'We use the following types of cookies:' : 'Utilizamos os seguintes tipos de cookies:' ?>
                     </p>
                     <ul class="list-disc list-inside space-y-2 ml-1 text-cream-200">
-                        <li><?= $isEnglish ? '<strong class="text-cream">Essential:</strong> Session & security' : '<strong class="text-cream">Essenciais:</strong> Gestão de sessão e segurança' ?></li>
-                        <li><?= $isEnglish ? '<strong class="text-cream">Preferences:</strong> Language & consent' : '<strong class="text-cream">Preferências:</strong> Idioma e consentimento' ?></li>
+                        <li><?= $isEnglish ? '<strong class="text-cream">Essential:</strong> Required for the basic functioning of the website' : '<strong class="text-cream">Essenciais:</strong> Necessários para o funcionamento básico do website' ?></li>
+                        <li><?= $isEnglish ? '<strong class="text-cream">Preferences:</strong> Remember your choices (e.g., selected language)' : '<strong class="text-cream">Preferências:</strong> Guardam as suas escolhas (ex: idioma selecionado)' ?></li>
                     </ul>
                 </div>
             </div>
