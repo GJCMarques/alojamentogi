@@ -390,7 +390,7 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center justify-end gap-6 mt-4">
             <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
                 <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
             </button>
