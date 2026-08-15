@@ -419,10 +419,10 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
             banner.style.display = 'block';
             banner.style.transition = 'opacity 0.5s ease-in-out';
             
-            // Show after 1.5 seconds
+            // Show after 0.7 seconds
             setTimeout(() => {
                 banner.style.opacity = '1';
-            }, 1500);
+            }, 700);
         }
 
         // Accept cookies
