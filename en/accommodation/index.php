@@ -197,31 +197,37 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
                 $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp');
                 $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp'));
             ?>
-            <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group flex flex-col bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden animate-on-scroll border border-primary/5" data-delay="<?= ($idx + 1) * 100 ?>">
+            <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group flex flex-col transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
                 
-                <div class="relative h-64 md:h-72 lg:h-80 overflow-hidden">
+                <!-- Image Header -->
+                <div class="relative h-72 md:h-80 lg:h-96 rounded-3xl overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-500">
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('<?= $coverUrl ?>');"></div>
-                    <div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                    <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-500"></div>
                 </div>
 
-                <div class="relative p-8 md:p-10 flex-1 flex flex-col bg-white">
-                    <span class="text-accent text-xs font-bold tracking-widest uppercase mb-3 block">Accommodation</span>
+                <!-- Content Body -->
+                <div class="relative pt-8 pb-4 flex-1 flex flex-col">
+                    <!-- Tag -->
+                    <span class="text-accent text-xs font-bold tracking-widest uppercase mb-6 block">Accommodation</span>
                     
-                    <h3 class="font-cursive text-5xl md:text-6xl text-primary mb-4">Casa do Gi <?= $casa['accommodation_number'] ?></h3>
+                    <!-- Title -->
+                    <h3 class="font-cursive text-5xl md:text-6xl text-primary mb-6 group-hover:text-accent transition-colors duration-300">Casa do Gi <?= $casa['accommodation_number'] ?></h3>
                     
-                    <p class="text-charcoal/70 mb-8 leading-relaxed flex-1">
+                    <!-- Description -->
+                    <p class="text-charcoal/70 mb-10 leading-relaxed flex-1 text-lg">
                         <?= $casa['accommodation_number'] == 1
                             ? 'Discover the comfort and Transmontana tradition in this cozy house, perfect for families and groups of friends.'
                             : 'A unique space with views of the Transmontana landscapes, ideal for moments of rest and connection with nature.' ?>
                     </p>
 
+                    <!-- Features & Link -->
                     <div class="pt-6 border-t border-primary/10 flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center gap-4 text-sm font-medium text-primary/80">
-                            <span class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-6 text-sm font-medium text-primary/80">
+                            <span class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <?= $casa['max_guests'] ?? 6 ?> Guests
                             </span>
-                            <span class="flex items-center gap-1.5">
+                            <span class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 <?= $casa['bedrooms'] ?? 3 ?> Bedrooms
                             </span>
