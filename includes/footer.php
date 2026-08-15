@@ -389,13 +389,8 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
             </div>
         </div>
 
-        <style>
-            @media (min-width: 640px) {
-                #cookie-banner-actions { margin-top: 0px !important; }
-            }
-        </style>
         <!-- Actions -->
-        <div id="cookie-banner-actions" class="flex items-center justify-end gap-6 mt-4">
+        <div id="cookie-banner-actions" class="flex items-center justify-end gap-6 mt-4 sm:mt-0">
             <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
                 <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
             </button>
