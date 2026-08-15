@@ -417,12 +417,12 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         if (!localStorage.getItem('cookie_consent')) {
             banner.style.opacity = '0';
             banner.style.display = 'block';
-            banner.style.transition = 'opacity 0.4s ease-in-out';
+            banner.style.transition = 'opacity 0.5s ease-in-out';
             
-            // Small delay to ensure display:block applies before opacity transition
+            // Show after 1.5 seconds
             setTimeout(() => {
                 banner.style.opacity = '1';
-            }, 50);
+            }, 1500);
         }
 
         // Accept cookies
