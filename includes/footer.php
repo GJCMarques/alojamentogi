@@ -356,55 +356,52 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
     <?php endif; ?>
 
     <!-- Cookie Consent Banner -->
-    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[90] shadow-2xl" style="display:none;">
-        <!-- Details panel (above main bar) -->
-        <div id="cookie-details" class="bg-primary-700 border-b border-accent/10 px-4 sm:px-6 lg:px-8">
-            <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out;">
-                <div class="py-5">
-                    <div class="max-w-7xl mx-auto">
-                        <h3 class="text-cream font-semibold text-base mb-3">
-                            <?= $isEnglish ? 'About Cookies' : 'Sobre os Cookies' ?>
-                        </h3>
-                        <div class="space-y-2 text-cream-200 text-sm">
-                            <p class="leading-relaxed">
-                                <?= $isEnglish
-                                    ? 'We use the following types of cookies:'
-                                    : 'Utilizamos os seguintes tipos de cookies:' ?>
-                            </p>
-                            <ul class="list-disc list-inside space-y-1 ml-2">
-                                <li><?= $isEnglish ? '<strong class="text-cream">Essential cookies:</strong> Required for the website to function properly (session management, security)' : '<strong class="text-cream">Cookies essenciais:</strong> Necessários para o funcionamento do website (gestão de sessão, segurança)' ?></li>
-                                <li><?= $isEnglish ? '<strong class="text-cream">Preference cookies:</strong> Remember your preferences (language, consent choices)' : '<strong class="text-cream">Cookies de preferências:</strong> Guardam as suas preferências (idioma, escolhas de consentimento)' ?></li>
-                            </ul>
-                            <p class="leading-relaxed pt-2">
-                                <?= $isEnglish
-                                    ? 'For more information, please read our <a href="' . $base . '/en/terms-and-conditions/" class="text-secondary hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-secondary hover:underline font-medium">privacy policy</a>.'
-                                    : 'Para mais informações, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-secondary hover:underline font-medium">Termos e Condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-secondary hover:underline font-medium">Política de Privacidade</a>.' ?>
-                            </p>
-                        </div>
-                    </div>
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-md z-[90] shadow-2xl bg-white rounded-2xl border border-gray-100 p-5 sm:p-6" style="display:none;">
+        
+        <!-- Main text -->
+        <div class="mb-4">
+            <h3 class="text-gray-900 font-bold text-lg mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
+                <?= $isEnglish ? 'Privacy & Cookies' : 'Privacidade e Cookies' ?>
+            </h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+                <?= $isEnglish 
+                    ? 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="' . $base . '/en/terms-and-conditions/" class="text-accent hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-accent hover:underline font-medium">privacy policy</a>.'
+                    : 'Utilizamos cookies para melhorar a sua experiência no nosso website. Ao continuar a navegar, concorda com a utilização de cookies. Saiba mais nos nossos <a href="' . $base . '/termos-condicoes/" class="text-accent hover:underline font-medium">termos e condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-accent hover:underline font-medium">política de privacidade</a>.' ?>
+            </p>
+        </div>
+
+        <!-- Details panel (collapsible) -->
+        <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out;">
+            <div class="pt-2 pb-4 border-t border-gray-100 mt-2">
+                <h4 class="text-gray-800 font-semibold text-sm mb-2">
+                    <?= $isEnglish ? 'About Cookies' : 'Sobre os Cookies' ?>
+                </h4>
+                <div class="space-y-2 text-gray-600 text-xs">
+                    <p>
+                        <?= $isEnglish ? 'We use the following types of cookies:' : 'Utilizamos os seguintes tipos de cookies:' ?>
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 ml-1 text-gray-500">
+                        <li><?= $isEnglish ? '<strong class="text-gray-700">Essential cookies:</strong> Required for the website to function properly (session management, security)' : '<strong class="text-gray-700">Cookies essenciais:</strong> Necessários para o funcionamento do website (gestão de sessão, segurança)' ?></li>
+                        <li><?= $isEnglish ? '<strong class="text-gray-700">Preference cookies:</strong> Remember your preferences (language, consent choices)' : '<strong class="text-gray-700">Cookies de preferências:</strong> Guardam as suas preferências (idioma, escolhas de consentimento)' ?></li>
+                    </ul>
+                    <p class="pt-1">
+                        <?= $isEnglish
+                            ? 'For more information, please read our <a href="' . $base . '/en/terms-and-conditions/" class="text-accent hover:underline font-medium">Terms and Conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-accent hover:underline font-medium">Privacy Policy</a>.'
+                            : 'Para mais informações, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-accent hover:underline font-medium">Termos e Condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-accent hover:underline font-medium">Política de Privacidade</a>.' ?>
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Main bar -->
-        <div class="bg-primary border-t border-accent/20 px-4 sm:px-6 lg:px-8 py-4">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div class="flex-1">
-                        <p class="text-cream-100 text-sm leading-relaxed">
-                            <?= content('cookie_banner_text') ?>
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
-                            <?= content('cookie_banner_details') ?>
-                        </button>
-                        <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all duration-200 shadow-md hover:shadow-lg text-sm whitespace-nowrap">
-                            <?= content('cookie_banner_accept') ?>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <!-- Actions -->
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+            <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-gray-500 hover:text-gray-800 text-sm font-medium transition-colors underline flex-1 text-left">
+                <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
+            </button>
+            <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all duration-200 shadow-md hover:shadow-lg text-sm whitespace-nowrap">
+                <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
+            </button>
         </div>
     </div>
 
@@ -419,8 +416,8 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         // Show banner if consent not given
         if (!localStorage.getItem('cookie_consent')) {
             banner.style.display = 'block';
-            banner.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
-            banner.style.transform = 'translateY(100%)';
+            banner.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease-out';
+            banner.style.transform = 'translateY(20px)';
             banner.style.opacity = '0';
             setTimeout(() => {
                 banner.style.transform = 'translateY(0)';
@@ -431,9 +428,9 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         // Accept cookies
         window.acceptCookies = function() {
             localStorage.setItem('cookie_consent', 'accepted');
-            banner.style.transform = 'translateY(100%)';
+            banner.style.transform = 'translateY(20px) scale(0.95)';
             banner.style.opacity = '0';
-            setTimeout(() => { banner.style.display = 'none'; }, 300);
+            setTimeout(() => { banner.style.display = 'none'; }, 400);
         };
 
         // Toggle details panel
@@ -444,7 +441,7 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                 detailsBtn.textContent = '<?= $isEnglish ? "Hide Details" : "Ocultar Detalhes" ?>';
             } else {
                 detailsInner.style.maxHeight = '0';
-                detailsBtn.textContent = '<?= $isEnglish ? "Details" : "Ver Detalhes" ?>';
+                detailsBtn.textContent = '<?= $isEnglish ? "View Details" : "Ver Detalhes" ?>';
             }
         };
     })();
