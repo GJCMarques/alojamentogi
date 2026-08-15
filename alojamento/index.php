@@ -162,7 +162,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
     </div>
 
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <span class="inline-block text-white/80 text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
+        <span class="inline-block text-accent text-lg font-medium tracking-[0.2em] uppercase mb-4 animate-on-scroll" data-animation="fade-up">
             <?= content('accommodation_hero_tagline') ?>
         </span>
 
