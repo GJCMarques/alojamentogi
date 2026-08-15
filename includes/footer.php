@@ -356,11 +356,11 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
     <?php endif; ?>
 
     <!-- Cookie Consent Banner -->
-    <div id="cookie-banner" class="fixed bottom-4 left-4 z-[90] w-[calc(100%-2rem)] max-w-[24rem] shadow-2xl bg-primary rounded-2xl border border-white/10 p-6" style="display:none;">
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-md z-[90] shadow-2xl bg-primary rounded-2xl border border-white/10 p-5 sm:p-6" style="display:none;">
         
         <!-- Main text -->
-        <div class="mb-5">
-            <h3 class="text-cream font-bold text-lg mb-3 flex items-center gap-2">
+        <div class="mb-4">
+            <h3 class="text-cream font-bold text-lg mb-2 flex items-center gap-2">
                 <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
                 <?= $isEnglish ? 'Privacy & Cookies' : 'Privacidade e Cookies' ?>
             </h3>
@@ -372,8 +372,8 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         </div>
 
         <!-- Details panel (collapsible) -->
-        <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out;">
-            <div class="pb-5 border-b border-white/10 mb-4">
+        <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out;">
+            <div class="pt-2 pb-4 border-t border-white/10 mt-2">
                 <h4 class="text-cream font-semibold text-sm mb-2">
                     <?= $isEnglish ? 'About Cookies' : 'Sobre os Cookies' ?>
                 </h4>
@@ -382,19 +382,24 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                         <?= $isEnglish ? 'We use the following types of cookies:' : 'Utilizamos os seguintes tipos de cookies:' ?>
                     </p>
                     <ul class="list-disc list-inside space-y-1 ml-1 text-cream-300">
-                        <li><?= $isEnglish ? '<strong class="text-cream">Essential:</strong> Session & security' : '<strong class="text-cream">Essenciais:</strong> Gestão de sessão e segurança' ?></li>
-                        <li><?= $isEnglish ? '<strong class="text-cream">Preferences:</strong> Language & consent' : '<strong class="text-cream">Preferências:</strong> Idioma e consentimento' ?></li>
+                        <li><?= $isEnglish ? '<strong class="text-cream">Essential cookies:</strong> Required for the website to function properly (session management, security)' : '<strong class="text-cream">Cookies essenciais:</strong> Necessários para o funcionamento do website (gestão de sessão, segurança)' ?></li>
+                        <li><?= $isEnglish ? '<strong class="text-cream">Preference cookies:</strong> Remember your preferences (language, consent choices)' : '<strong class="text-cream">Cookies de preferências:</strong> Guardam as suas preferências (idioma, escolhas de consentimento)' ?></li>
                     </ul>
+                    <p class="pt-1">
+                        <?= $isEnglish
+                            ? 'For more information, please read our <a href="' . $base . '/en/terms-and-conditions/" class="text-accent hover:underline font-medium">Terms and Conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-accent hover:underline font-medium">Privacy Policy</a>.'
+                            : 'Para mais informações, consulte os nossos <a href="' . $base . '/termos-condicoes/" class="text-accent hover:underline font-medium">Termos e Condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-accent hover:underline font-medium">Política de Privacidade</a>.' ?>
+                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center justify-between mt-2 pt-2">
-            <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
+            <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline flex-1 text-left">
                 <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
             </button>
-            <button onclick="acceptCookies()" class="px-5 py-2 bg-accent text-white font-semibold rounded hover:bg-accent/90 transition-colors text-sm">
+            <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all duration-200 shadow-md hover:shadow-lg text-sm whitespace-nowrap">
                 <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
             </button>
         </div>
@@ -410,12 +415,12 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
 
         // Show banner if consent not given
         if (!localStorage.getItem('cookie_consent')) {
-            banner.style.display = 'block';
-            banner.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
-            banner.style.transform = 'translateY(20px)';
             banner.style.opacity = '0';
+            banner.style.display = 'block';
+            banner.style.transition = 'opacity 0.4s ease-in-out';
+            
+            // Small delay to ensure display:block applies before opacity transition
             setTimeout(() => {
-                banner.style.transform = 'translateY(0)';
                 banner.style.opacity = '1';
             }, 50);
         }
@@ -423,8 +428,7 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         // Accept cookies
         window.acceptCookies = function() {
             localStorage.setItem('cookie_consent', 'accepted');
-            banner.style.transition = 'transform 0.3s ease-in, opacity 0.3s ease-in';
-            banner.style.transform = 'translateY(20px)';
+            banner.style.transition = 'opacity 0.3s ease-in-out';
             banner.style.opacity = '0';
             setTimeout(() => { banner.style.display = 'none'; }, 300);
         };
