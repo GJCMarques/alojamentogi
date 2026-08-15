@@ -191,36 +191,35 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
         <!-- Casa Selection Cards -->
         <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
             <?php foreach ($allAccommodations as $idx => $casa):
-
                 $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp');
                 $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp'));
             ?>
-            <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group flex flex-col transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
+            <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group flex flex-col bg-primary rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
                 
                 <!-- Image Header -->
-                <div class="relative h-72 md:h-80 lg:h-96 rounded-3xl overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-500">
+                <div class="relative h-80 md:h-96 lg:h-[450px] overflow-hidden">
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('<?= $coverUrl ?>');"></div>
-                    <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-500"></div>
+                    <div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
                 </div>
 
                 <!-- Content Body -->
-                <div class="relative pt-8 pb-4 flex-1 flex flex-col">
+                <div class="relative p-8 md:p-10 flex-1 flex flex-col bg-primary text-white">
                     <!-- Tag -->
-                    <span class="text-accent text-xs font-bold tracking-widest uppercase mb-6 block">Alojamento</span>
+                    <span class="text-accent text-xs font-bold tracking-widest uppercase mb-4 block">Alojamento</span>
                     
                     <!-- Title -->
-                    <h3 class="font-cursive text-5xl md:text-6xl text-primary mb-6 group-hover:text-accent transition-colors duration-300">Casa do Gi <?= $casa['accommodation_number'] ?></h3>
+                    <h3 class="font-cursive text-5xl md:text-6xl text-white mb-6">Casa do Gi <?= $casa['accommodation_number'] ?></h3>
                     
                     <!-- Description -->
-                    <p class="text-charcoal/70 mb-10 leading-relaxed flex-1 text-lg">
+                    <p class="text-white/70 mb-10 leading-relaxed flex-1 text-lg">
                         <?= $casa['accommodation_number'] == 1
                             ? 'Descubra o conforto e a tradição transmontana nesta casa acolhedora, perfeita para famílias e grupos de amigos.'
                             : 'Um espaço único com vista para as paisagens transmontanas, ideal para momentos de descanso e conexão com a natureza.' ?>
                     </p>
 
                     <!-- Features & Link -->
-                    <div class="pt-6 border-t border-primary/10 flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center gap-6 text-sm font-medium text-primary/80">
+                    <div class="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-6 text-sm font-medium text-white/80">
                             <span class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <?= $casa['max_guests'] ?? 6 ?> Hóspedes
@@ -231,7 +230,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
                             </span>
                         </div>
                         
-                        <span class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-accent group-hover:text-primary transition-colors">
+                        <span class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-accent group-hover:text-white transition-colors">
                             Ver Detalhes
                             <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </span>
