@@ -372,16 +372,16 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         </div>
 
         <!-- Details panel (collapsible) -->
-        <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out;">
-            <div class="pb-5 border-b border-white/10 mb-4">
-                <h4 class="text-cream font-semibold text-sm mb-2">
+        <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out;">
+            <div class="pt-4 mt-4 border-t border-white/10 mb-2">
+                <h4 class="text-cream font-semibold text-base mb-3">
                     <?= $isEnglish ? 'About Cookies' : 'Sobre os Cookies' ?>
                 </h4>
-                <div class="space-y-2 text-cream-200 text-xs">
+                <div class="space-y-3 text-cream-100 text-sm">
                     <p>
                         <?= $isEnglish ? 'We use the following types of cookies:' : 'Utilizamos os seguintes tipos de cookies:' ?>
                     </p>
-                    <ul class="list-disc list-inside space-y-1 ml-1 text-cream-300">
+                    <ul class="list-disc list-inside space-y-2 ml-1 text-cream-200">
                         <li><?= $isEnglish ? '<strong class="text-cream">Essential:</strong> Session & security' : '<strong class="text-cream">Essenciais:</strong> Gestão de sessão e segurança' ?></li>
                         <li><?= $isEnglish ? '<strong class="text-cream">Preferences:</strong> Language & consent' : '<strong class="text-cream">Preferências:</strong> Idioma e consentimento' ?></li>
                     </ul>
@@ -390,11 +390,11 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center justify-between mt-2 pt-2">
+        <div class="flex items-center justify-between mt-4">
             <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline">
                 <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
             </button>
-            <button onclick="acceptCookies()" class="px-5 py-2 bg-accent text-white font-semibold rounded hover:bg-accent/90 transition-colors text-sm">
+            <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors text-sm">
                 <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
             </button>
         </div>
