@@ -358,34 +358,22 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
     <!-- Cookie Consent Banner -->
     <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 md:left-8 md:right-8 max-w-7xl mx-auto z-[90] shadow-2xl bg-primary rounded-2xl p-5 sm:p-6" style="display:none;">
         
-        <div class="md:flex md:items-end md:justify-between md:gap-8">
-            <!-- Main text -->
-            <div class="flex-1 mb-4 md:mb-0">
-                <h3 class="text-cream font-bold text-lg mb-3 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
-                    <?= $isEnglish ? 'Privacy & Cookies' : 'Privacidade e Cookies' ?>
-                </h3>
-                <p class="text-cream-100 text-sm leading-relaxed">
-                    <?= $isEnglish 
-                        ? 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="' . $base . '/en/terms-and-conditions/" class="text-accent hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-accent hover:underline font-medium">privacy policy</a>.'
-                        : 'Utilizamos cookies para melhorar a sua experiência no nosso website. Ao continuar a navegar, concorda com a utilização de cookies. Saiba mais nos nossos <a href="' . $base . '/termos-condicoes/" class="text-accent hover:underline font-medium">termos e condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-accent hover:underline font-medium">política de privacidade</a>.' ?>
-                </p>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex items-center justify-end gap-6 shrink-0 mt-2 md:mt-0">
-                <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline whitespace-nowrap">
-                    <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
-                </button>
-                <button onclick="acceptCookies()" class="px-6 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors text-sm">
-                    <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
-                </button>
-            </div>
+        <!-- Main text -->
+        <div class="mb-4">
+            <h3 class="text-cream font-bold text-lg mb-3 flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
+                <?= $isEnglish ? 'Privacy & Cookies' : 'Privacidade e Cookies' ?>
+            </h3>
+            <p class="text-cream-100 text-sm leading-relaxed max-w-5xl">
+                <?= $isEnglish 
+                    ? 'We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies. Learn more in our <a href="' . $base . '/en/terms-and-conditions/" class="text-accent hover:underline font-medium">terms and conditions</a> and <a href="' . $base . '/en/privacy-policy/" class="text-accent hover:underline font-medium">privacy policy</a>.'
+                    : 'Utilizamos cookies para melhorar a sua experiência no nosso website. Ao continuar a navegar, concorda com a utilização de cookies. Saiba mais nos nossos <a href="' . $base . '/termos-condicoes/" class="text-accent hover:underline font-medium">termos e condições</a> e <a href="' . $base . '/politica-privacidade/" class="text-accent hover:underline font-medium">política de privacidade</a>.' ?>
+            </p>
         </div>
 
         <!-- Details panel (collapsible) -->
         <div id="cookie-details-inner" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out;">
-            <div class="pt-4 mt-4 border-t border-white/10 mb-2">
+            <div class="pt-4 mt-2 border-t border-white/10 mb-4">
                 <h4 class="text-cream font-semibold text-base mb-3">
                     <?= $isEnglish ? 'About Cookies' : 'Sobre os Cookies' ?>
                 </h4>
@@ -399,6 +387,16 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
                     </ul>
                 </div>
             </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-start gap-6 mt-2">
+            <button onclick="acceptCookies()" class="px-8 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors text-sm">
+                <?= $isEnglish ? 'Accept' : 'Aceitar' ?>
+            </button>
+            <button onclick="toggleCookieDetails()" id="cookie-details-btn" class="text-cream-200 hover:text-white text-sm font-medium transition-colors underline whitespace-nowrap">
+                <?= $isEnglish ? 'View Details' : 'Ver Detalhes' ?>
+            </button>
         </div>
     </div>
 
