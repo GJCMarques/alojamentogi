@@ -197,7 +197,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
             <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group flex flex-col bg-primary rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
                 
                 <!-- Image Header -->
-                <div class="relative h-80 md:h-96 lg:h-[450px] overflow-hidden">
+                <div class="relative w-full aspect-[4/3] lg:aspect-[3/2] overflow-hidden">
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('<?= $coverUrl ?>');"></div>
                     <div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
                 </div>
