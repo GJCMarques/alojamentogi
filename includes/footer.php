@@ -356,7 +356,7 @@ $guestreadyUrl2 = setting('guestready_url_casa2', '');
     <?php endif; ?>
 
     <!-- Cookie Consent Banner -->
-    <div id="cookie-banner" class="fixed bottom-4 left-4 z-[90] w-[calc(100%-2rem)] max-w-[24rem] shadow-2xl bg-primary rounded-2xl p-6" style="display:none;">
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 md:left-8 md:right-8 max-w-7xl mx-auto z-[90] shadow-2xl bg-primary rounded-2xl p-5 sm:p-6" style="display:none;">
         
         <!-- Main text -->
         <div class="mb-5">
