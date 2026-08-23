@@ -169,11 +169,11 @@ include INCLUDES_PATH . '/header.php';
             <span class="inline-block py-1 px-3 border border-white/30 rounded-full text-xs font-bold tracking-[0.2em] uppercase mb-6 backdrop-blur-sm animate-on-scroll" data-animation="fade-left">
                 <?= $content['about_region_label'] ?? 'O Nosso Berço' ?>
             </span>
-            <h2 class="font-serif text-6xl md:text-7xl lg:text-8xl mb-6 shadow-black drop-shadow-2xl animate-on-scroll" data-animation="fade-left" data-delay="100">
+            <h2 class="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-6 shadow-black drop-shadow-2xl animate-on-scroll" data-animation="fade-left" data-delay="100">
                 Mogadouro
             </h2>
             <div class="w-24 h-1 bg-accent ml-auto mb-8 animate-on-scroll" data-animation="fade-left" data-delay="200"></div>
-            <p class="text-xl md:text-2xl font-light leading-relaxed text-white/90 mb-10 drop-shadow-lg animate-on-scroll" data-animation="fade-left" data-delay="300">
+            <p class="text-lg sm:text-xl md:text-2xl font-light leading-relaxed text-white/90 mb-10 drop-shadow-lg animate-on-scroll" data-animation="fade-left" data-delay="300">
                 <?= $content['about_region_text'] ?? 'Onde o tempo pára e a alma respira. Uma terra de horizontes infinitos, guardiã de tradições milenares e de uma beleza natural bruta e intocada.' ?>
             </p>
 
