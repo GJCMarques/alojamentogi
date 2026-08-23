@@ -372,7 +372,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="animate-on-scroll" data-delay="200">
             <!-- Map Container -->
             <div class="relative rounded-2xl overflow-hidden shadow-xl border border-charcoal/10">
-                <div id="contact-map" class="w-full h-[400px] md:h-[500px]"></div>
+                <div id="contact-map" class="w-full" style="min-height: 500px; height: 60vh; max-height: 700px;"></div>
 
                 <!-- Map Overlay Card -->
                 <div class="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-sm bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-5 border border-charcoal/10 z-[5000]">
