@@ -70,7 +70,7 @@ include INCLUDES_PATH . '/header.php';
         <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_split_left', 'images/IgrejaMatriz.webp')) ?>" alt="<?= $content['home_split_left_title'] ?? 'Refuge' ?>" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/10 transition-colors duration-700"></div>
         <div class="split-content-left split-content absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
-            <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-accent">
+            <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-white">
                 <?= $content['home_split_left_label'] ?? 'Welcome to the' ?>
             </span>
             <h2 class="font-cursive text-5xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:text-white">
@@ -102,7 +102,7 @@ include INCLUDES_PATH . '/header.php';
         <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_split_right', 'images/Castelo.webp')) ?>" alt="<?= $content['home_split_right_title'] ?? 'Tradition' ?>" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
         <div class="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700"></div>
         <div class="split-content-right split-content absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
-            <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-accent">
+            <span class="text-white/80 text-sm font-bold tracking-[0.5em] uppercase mb-10 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 block group-hover:tracking-[0.8em] group-hover:text-white">
                 <?= $content['home_split_right_label'] ?? 'Discover the' ?>
             </span>
             <h2 class="font-cursive text-5xl md:text-7xl lg:text-8xl text-cream mb-8 drop-shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:text-white">
