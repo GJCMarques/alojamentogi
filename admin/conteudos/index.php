@@ -56,6 +56,10 @@ $blockDefinitions = [
             'accommodation_feature_2' => ['label' => 'Feature 2 - Label', 'type' => 'text'],
             'accommodation_feature_3' => ['label' => 'Feature 3 - Label', 'type' => 'text'],
             'accommodation_feature_4' => ['label' => 'Feature 4 - Label', 'type' => 'text'],
+
+            'accommodation_desc_1' => ['label' => 'Descrição Casa 1', 'type' => 'textarea'],
+            'accommodation_desc_2' => ['label' => 'Descrição Casa 2', 'type' => 'textarea'],
+            'accommodation_view_details' => ['label' => 'Texto "Ver Detalhes"', 'type' => 'text'],
         ]
     ],
     'activities' => [

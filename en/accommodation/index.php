@@ -214,9 +214,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
                     
                     <!-- Description -->
                     <p class="text-white/70 mb-10 leading-relaxed flex-1 text-lg">
-                        <?= $casa['accommodation_number'] == 1
-                            ? 'Discover the comfort and Transmontana tradition in this cozy house, perfect for families and groups of friends.'
-                            : 'A unique space with views of the Transmontana landscapes, ideal for moments of rest and connection with nature.' ?>
+                        <?= content('accommodation_desc_' . $casa['accommodation_number']) ?>
                     </p>
 
                     <!-- Features & Link -->
@@ -233,7 +231,7 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
                         </div>
                         
                         <span class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-accent group-hover:text-white transition-colors">
-                            View Details
+                            <?= content('accommodation_view_details') ?>
                             <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </span>
                     </div>
