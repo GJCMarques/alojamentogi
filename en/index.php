@@ -135,7 +135,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="flex flex-col md:flex-row h-[800px] gap-2 md:gap-4">
 
             <!-- CARD 1: ALOJAMENTO -->
-            <a href="<?= $base ?>/en/accommodation/" class="animate-on-scroll relative flex-1 group duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/en/accommodation/" class="animate-on-scroll relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('accommodation', 'images/MogadouroAlojamento.webp') ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -154,7 +154,7 @@ include INCLUDES_PATH . '/header.php';
             </a>
 
             <!-- CARD 2: ATIVIDADES -->
-            <a href="<?= $base ?>/en/activities/" class="animate-on-scroll delay-100 relative flex-1 group duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/en/activities/" class="animate-on-scroll delay-100 relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('activities', 'images/MogadouroAtividades.webp') ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -173,7 +173,7 @@ include INCLUDES_PATH . '/header.php';
             </a>
 
             <!-- CARD 3: LOJA -->
-            <a href="<?= $base ?>/en/shop/" class="animate-on-scroll delay-200 relative flex-1 group duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/en/shop/" class="animate-on-scroll delay-200 relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('shop', 'images/MogadouroContacto.webp') ?>');"></div>
                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
@@ -192,7 +192,7 @@ include INCLUDES_PATH . '/header.php';
             </a>
 
             <!-- CARD 4: SOBRE / CONTACTOS -->
-            <a href="<?= $base ?>/en/contact/" class="animate-on-scroll delay-300 relative flex-1 group duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden rounded-3xl cursor-pointer">
+            <a href="<?= $base ?>/en/contact/" class="animate-on-scroll delay-300 relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= getCardImage('contact', 'images/FotoGi.webp') ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500"></div>
