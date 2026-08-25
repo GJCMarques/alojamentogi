@@ -117,8 +117,8 @@ $base = basePath();
             <!-- Flash Messages -->
             <?php if (\Core\Session::hasFlash()): ?>
             <div class="px-6 pt-4 space-y-2" id="flashMessages">
-                <?php foreach (\Core\Session::getFlash() as $type => $messages): ?>
-                    <?php foreach ($messages as $message): ?>
+                <?php foreach (\Core\Session::getFlash() as $type => $flashMessagesList): ?>
+                    <?php foreach ($flashMessagesList as $message): ?>
                     <?php
                     $icon = '';
                     $classes = '';

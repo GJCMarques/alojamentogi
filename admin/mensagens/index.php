@@ -27,72 +27,6 @@ if (isset($_GET['unread']) && isset($_GET['token'])) {
     redirect('/admin/mensagens/');
 }
 
-if (isset($_GET['ignore']) && isset($_GET['token'])) {
-    if (CSRF::validate($_GET['token'])) {
-        $id = (int)$_GET['ignore'];
-        $db->update('contact_submissions', ['is_ignored' => 1], 'id = ?', [$id]);
-        Session::flash('success', 'Mensagem ignorada.');
-    }
-    redirect('/admin/mensagens/');
-}
-
-if (isset($_GET['unignore']) && isset($_GET['token'])) {
-    if (CSRF::validate($_GET['token'])) {
-        $id = (int)$_GET['unignore'];
-        $db->update('contact_submissions', ['is_ignored' => 0], 'id = ?', [$id]);
-        Session::flash('success', 'Mensagem restaurada.');
-    }
-    redirect('/admin/mensagens/');
-}
-
-if (isset($_GET['spam']) && isset($_GET['token'])) {
-    if (CSRF::validate($_GET['token'])) {
-        $id = (int)$_GET['spam'];
-
-        $message = $db->fetch("SELECT email FROM contact_submissions WHERE id = ?", [$id]);
-
-        if ($message) {
-
-            $db->update('contact_submissions', ['is_spam' => 1], 'id = ?', [$id]);
-
-            try {
-                $db->insert('spam_emails', [
-                    'email' => $message['email'],
-                    'reason' => 'Marcado como spam manualmente pelo administrador'
-                ]);
-            } catch (Exception $e) {
-
-            }
-
-            $db->query(
-                "UPDATE contact_submissions SET is_spam = 1 WHERE email = ? AND id != ?",
-                [$message['email'], $id]
-            );
-
-            Session::flash('success', 'Mensagem marcada como spam. Todas as mensagens futuras deste email serão automaticamente marcadas como spam.');
-        }
-    }
-    redirect('/admin/mensagens/');
-}
-
-if (isset($_GET['unspam']) && isset($_GET['token'])) {
-    if (CSRF::validate($_GET['token'])) {
-        $id = (int)$_GET['unspam'];
-
-        $message = $db->fetch("SELECT email FROM contact_submissions WHERE id = ?", [$id]);
-
-        if ($message) {
-
-            $db->update('contact_submissions', ['is_spam' => 0], 'id = ?', [$id]);
-
-            $db->delete('spam_emails', 'email = ?', [$message['email']]);
-
-            Session::flash('success', 'Mensagem removida do spam.');
-        }
-    }
-    redirect('/admin/mensagens/');
-}
-
 if (isset($_GET['delete']) && isset($_GET['token'])) {
     if (CSRF::validate($_GET['token'])) {
         $id = (int)$_GET['delete'];
@@ -107,32 +41,22 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 20;
 $offset = ($page - 1) * $perPage;
 
-$where = "WHERE 1=1";
+$where = "WHERE 1=1 AND is_spam = 0 AND is_ignored = 0";
 $params = [];
 
 switch ($filter) {
     case 'unread':
-        $where .= " AND is_read = 0 AND is_spam = 0 AND is_ignored = 0";
+        $where .= " AND is_read = 0";
         break;
     case 'read':
-        $where .= " AND is_read = 1 AND is_spam = 0 AND is_ignored = 0";
+        $where .= " AND is_read = 1";
         break;
-    case 'ignored':
-        $where .= " AND is_ignored = 1 AND is_spam = 0";
-        break;
-    case 'spam':
-        $where .= " AND is_spam = 1";
-        break;
-    default:
-        $where .= " AND is_spam = 0 AND is_ignored = 0";
 }
 
 $counts = [
     'all' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 0 AND is_ignored = 0")['c'],
     'unread' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 0 AND is_spam = 0 AND is_ignored = 0")['c'],
     'read' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_read = 1 AND is_spam = 0 AND is_ignored = 0")['c'],
-    'ignored' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_ignored = 1 AND is_spam = 0")['c'],
-    'spam' => $db->fetch("SELECT COUNT(*) as c FROM contact_submissions WHERE is_spam = 1")['c'],
 ];
 
 $total = $db->fetch("SELECT COUNT(*) as c FROM contact_submissions {$where}", $params)['c'];
@@ -155,13 +79,6 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </div>
 
-<!-- Flash Messages -->
-<?php if ($flash = Session::getFlash('success')): ?>
-<div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
-    <?= e($flash) ?>
-</div>
-<?php endif; ?>
-
 <!-- Filters -->
 <div class="bg-white rounded-lg shadow-sm mb-6">
     <div class="flex border-b border-gray-200">
@@ -173,12 +90,6 @@ include dirname(__DIR__) . '/includes/header.php';
         </a>
         <a href="?filter=read" class="px-6 py-3 text-sm font-medium <?= $filter === 'read' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
             Lidas (<?= $counts['read'] ?>)
-        </a>
-        <a href="?filter=ignored" class="px-6 py-3 text-sm font-medium <?= $filter === 'ignored' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
-            Ignoradas (<?= $counts['ignored'] ?>)
-        </a>
-        <a href="?filter=spam" class="px-6 py-3 text-sm font-medium <?= $filter === 'spam' ? 'text-secondary-600 border-b-2 border-secondary-600' : 'text-gray-500 hover:text-gray-700' ?>">
-            Spam (<?= $counts['spam'] ?>)
         </a>
     </div>
 </div>
@@ -203,9 +114,6 @@ include dirname(__DIR__) . '/includes/header.php';
                     <div class="flex items-center gap-3 mb-2">
                         <?php if (!$msg['is_read']): ?>
                         <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-lg">Nova</span>
-                        <?php endif; ?>
-                        <?php if ($msg['is_ignored']): ?>
-                        <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 rounded-lg">Ignorada</span>
                         <?php endif; ?>
                         <h3 class="text-sm font-semibold text-gray-900">
                             <?= e($msg['name']) ?>
@@ -255,48 +163,6 @@ include dirname(__DIR__) . '/includes/header.php';
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
                         </svg>
                     </a>
-
-                    <!-- Ignore/Unignore -->
-                    <?php if (!$msg['is_ignored'] && !$msg['is_spam']): ?>
-                    <a href="?ignore=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                       title="Ignorar">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                        </svg>
-                    </a>
-                    <?php elseif ($msg['is_ignored']): ?>
-                    <a href="?unignore=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-blue-500 hover:text-blue-700 transition-colors"
-                       title="Restaurar">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </a>
-                    <?php endif; ?>
-
-                    <!-- Spam/Unspam -->
-                    <?php if (!$msg['is_spam']): ?>
-                    <button type="button"
-                            class="spam-message-btn text-sm text-yellow-600 hover:text-yellow-800 transition-colors"
-                            data-id="<?= $msg['id'] ?>"
-                            data-name="<?= e($msg['name']) ?>"
-                            data-email="<?= e($msg['email']) ?>"
-                            title="Marcar como spam">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                        </svg>
-                    </button>
-                    <?php else: ?>
-                    <a href="?unspam=<?= $msg['id'] ?>&filter=<?= $filter ?>&token=<?= CSRF::getToken() ?>"
-                       class="text-sm text-green-600 hover:text-green-800 transition-colors"
-                       title="Remover do spam">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </a>
-                    <?php endif; ?>
 
                     <!-- Delete -->
                     <button type="button"
@@ -369,48 +235,18 @@ include dirname(__DIR__) . '/includes/header.php';
             </div>
             <div class="ml-3">
                 <h3 class="text-lg font-medium text-gray-900">Eliminar Mensagem</h3>
-                <div class="mt-2 text-sm text-gray-500">
-                    Tem a certeza que deseja eliminar a mensagem de <strong id="messageName"></strong>?
-                    Esta ação não pode ser revertida.
-                </div>
+                <p class="mt-2 text-sm text-gray-500">
+                    Tem a certeza que pretende eliminar a mensagem de <span id="messageName" class="font-semibold text-gray-700"></span>?<br>
+                    Esta ação não pode ser desfeita.
+                </p>
             </div>
         </div>
-        <div class="flex justify-end gap-3">
-            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
+        <div class="flex justify-end gap-3 mt-6">
+            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                 Cancelar
             </button>
-            <button type="button" id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            <button type="button" id="confirmDeleteBtn" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors">
                 Eliminar
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Spam Confirmation Modal -->
-<div id="spamModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-        <div class="flex items-start mb-4">
-            <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-            </div>
-            <div class="ml-3">
-                <h3 class="text-lg font-medium text-gray-900">Marcar como Spam</h3>
-                <div class="mt-2 text-sm text-gray-500">
-                    Tem a certeza que deseja marcar a mensagem de <strong id="spamName"></strong> (<strong id="spamEmail"></strong>) como spam?
-                    <div class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                        <strong>Atenção:</strong> Todas as mensagens futuras deste email serão automaticamente marcadas como spam.
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flex justify-end gap-3">
-            <button type="button" onclick="closeSpamModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
-                Cancelar
-            </button>
-            <button type="button" id="confirmSpamBtn" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
-                Marcar como Spam
             </button>
         </div>
     </div>
@@ -489,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var csrfToken = '<?= CSRF::getToken() ?>';
     var currentFilter = '<?= e($filter) ?>';
     var pendingDeleteUrl = null;
-    var pendingSpamUrl = null;
 
     // Modal helpers
     function openModal(id) {
@@ -509,24 +344,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function closeDeleteModal() { closeModal('deleteModal'); }
-    function closeSpamModal() { closeModal('spamModal'); }
     function closeMessageModal() { closeModal('messageModal'); }
 
     window.closeDeleteModal = closeDeleteModal;
-    window.closeSpamModal = closeSpamModal;
     window.closeMessageModal = closeMessageModal;
 
     // Confirm Delete - navigate via window.location
     document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
         if (pendingDeleteUrl) {
             window.location.href = pendingDeleteUrl;
-        }
-    });
-
-    // Confirm Spam - navigate via window.location
-    document.getElementById('confirmSpamBtn').addEventListener('click', function() {
-        if (pendingSpamUrl) {
-            window.location.href = pendingSpamUrl;
         }
     });
 
@@ -544,23 +370,6 @@ document.addEventListener('DOMContentLoaded', function() {
             pendingDeleteUrl = '?delete=' + id + '&filter=' + currentFilter + '&token=' + csrfToken;
             document.getElementById('messageName').textContent = name;
             openModal('deleteModal');
-            return;
-        }
-
-        // Spam button
-        var spamBtn = e.target.closest('.spam-message-btn');
-        if (spamBtn) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            var id = spamBtn.dataset.id;
-            var name = spamBtn.dataset.name;
-            var email = spamBtn.dataset.email;
-
-            pendingSpamUrl = '?spam=' + id + '&filter=' + currentFilter + '&token=' + csrfToken;
-            document.getElementById('spamName').textContent = name;
-            document.getElementById('spamEmail').textContent = email;
-            openModal('spamModal');
             return;
         }
 
@@ -619,13 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteModal();
-            closeSpamModal();
             closeMessageModal();
         }
     });
 
     // Close modals on background click
-    ['deleteModal', 'spamModal', 'messageModal'].forEach(function(id) {
+    ['deleteModal', 'messageModal'].forEach(function(id) {
         var modal = document.getElementById(id);
         if (modal) {
             modal.addEventListener('click', function(e) {
