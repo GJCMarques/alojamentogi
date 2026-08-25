@@ -33,11 +33,20 @@ if (isPost() && $formEnabled) {
         $errors['csrf'] = 'Session expired. Please reload the page.';
     } else {
 
-        if (!empty($_POST['website'])) {
+        $formTime = (int)post('form_time', 0);
+        $timeTaken = time() - $formTime;
+        $isBot = false;
 
+        // 1. Honeypot checks (hidden field filled OR form submitted too fast)
+        if (!empty($_POST['website']) || ($formTime > 0 && $timeTaken < 3)) {
+            $isBot = true;
+        }
+
+        if ($isBot) {
+            // Fake success for bots
             $success = true;
+            Session::flash('success', 'Message sent successfully! We will get back to you soon.');
         } else {
-
             $formData = [
                 'name' => sanitize(post('name', '')),
                 'email' => sanitizeEmail(post('email', '')),
@@ -57,15 +66,36 @@ if (isPost() && $formEnabled) {
             if ($validator->fails()) {
                 $errors = $validator->errors();
             } else {
-
-                if (false) {
+                $rateLimiter = \Core\RateLimiter::getInstance();
+                
+                // Allow max 3 submissions per hour per IP
+                if (!$rateLimiter->check('contact_form_submission', 3, 3600)) {
                     $errors['limit'] = 'Too many submissions. Please wait a while before trying again.';
                 } else {
+                    // Check for spam content (URL count or keywords)
+                    $spamKeywords = ['seo', 'marketing', 'viagra', 'casino', 'bitcoin', 'crypto', 'guaranteed ranking', 'generate leads', 'buy traffic'];
+                    $lowerMessage = strtolower($formData['message'] . ' ' . $formData['subject']);
+                    
+                    $isSpamContent = false;
+                    foreach ($spamKeywords as $keyword) {
+                        if (str_contains($lowerMessage, $keyword)) {
+                            $isSpamContent = true;
+                            break;
+                        }
+                    }
+                    
+                    // If message has 3 or more URLs, flag as spam
+                    $urlCount = preg_match_all('/https?:\/\//i', $formData['message']);
+                    if ($urlCount >= 3) {
+                        $isSpamContent = true;
+                    }
 
                     $isSpamEmail = $db->fetch(
                         "SELECT id FROM spam_emails WHERE email = ?",
                         [$formData['email']]
                     );
+
+                    $isSpam = $isSpamEmail || $isSpamContent ? 1 : 0;
 
                     $db->insert('contact_submissions', [
                         'name' => $formData['name'],
@@ -76,10 +106,8 @@ if (isPost() && $formEnabled) {
                         'ip_address' => getClientIp(),
                         'user_agent' => substr(getUserAgent(), 0, 500),
                         'language' => $lang->getCurrentLang(),
-                        'is_spam' => $isSpamEmail ? 1 : 0,
+                        'is_spam' => $isSpam,
                     ]);
-
-
 
                     $success = true;
 
@@ -264,6 +292,7 @@ include INCLUDES_PATH . '/header.php';
                         <div style="display:none;" aria-hidden="true">
                             <label for="website">Website</label>
                             <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+                            <input type="hidden" name="form_time" value="<?= time() ?>">
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-6">
