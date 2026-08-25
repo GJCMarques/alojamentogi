@@ -408,76 +408,94 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>"/>
-
-<!-- Leaflet JS -->
-<script src="<?= asset('vendor/leaflet/leaflet.js') ?>"></script>
-
+<!-- Leaflet Map Initialization (Lazy Loaded) -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // A Casa do Gi coordinates (Mogadouro)
-    const lat = 41.34217;
-    const lng = -6.71347;
+    const mapContainer = document.getElementById('contact-map');
+    if (!mapContainer) return;
 
-    // Initialize map
-    const map = L.map('contact-map', {
-        scrollWheelZoom: false // Disable scroll zoom for better UX
-    }).setView([lat, lng], 15);
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadLeaflet();
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: "300px 0px" });
 
-    // Add OpenStreetMap tiles with custom styling
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    observer.observe(mapContainer);
 
-    // Custom marker icon with brand colors
-    const customIcon = L.divIcon({
-        className: 'custom-map-marker',
-        html: `
-            <div style="
-                width: 40px;
-                height: 40px;
-                background: linear-gradient(135deg, #264653 0%, #1d3a47 100%);
-                border-radius: 50% 50% 50% 0;
-                transform: rotate(-45deg);
-                box-shadow: 0 4px 12px rgba(38, 70, 83, 0.4);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-                <svg style="transform: rotate(45deg); width: 20px; height: 20px; color: #C5A059;" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                </svg>
+    function loadLeaflet() {
+        // Load CSS
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '<?= asset("vendor/leaflet/leaflet.css") ?>';
+        document.head.appendChild(link);
+
+        // Load JS
+        const script = document.createElement('script');
+        script.src = '<?= asset("vendor/leaflet/leaflet.js") ?>';
+        script.onload = initMap;
+        document.body.appendChild(script);
+    }
+
+    function initMap() {
+        const lat = 41.34217;
+        const lng = -6.71347;
+
+        const map = L.map('contact-map', {
+            scrollWheelZoom: false
+        }).setView([lat, lng], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        const customIcon = L.divIcon({
+            className: 'custom-map-marker',
+            html: `
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    background: linear-gradient(135deg, #264653 0%, #1d3a47 100%);
+                    border-radius: 50% 50% 50% 0;
+                    transform: rotate(-45deg);
+                    box-shadow: 0 4px 12px rgba(38, 70, 83, 0.4);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                ">
+                    <svg style="transform: rotate(45deg); width: 20px; height: 20px; color: #C5A059;" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                </div>
+            `,
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40]
+        });
+
+        const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+        marker.bindPopup(`
+            <div style="text-align: center; padding: 8px;">
+                <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
+                <span style="color: #2D3748; font-size: 12px;">Casa do Gi</span><br>
+                <span style="color: #2D3748; font-size: 12px;">52 Avenida Nossa Senhora do Caminho, Mogadouro</span>
             </div>
-        `,
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-        popupAnchor: [0, -40]
-    });
+        `, {
+            className: 'custom-popup'
+        });
 
-    // Add marker with popup
-    const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+        map.on('click', function() {
+            map.scrollWheelZoom.enable();
+        });
 
-    marker.bindPopup(`
-        <div style="text-align: center; padding: 8px;">
-            <strong style="color: #264653; font-size: 14px;">A Casa do Gi</strong><br>
-            <span style="color: #2D3748; font-size: 12px;">Casa do Gi</span><br>
-            <span style="color: #2D3748; font-size: 12px;">52 Avenida Nossa Senhora do Caminho, Mogadouro</span>
-        </div>
-    `, {
-        className: 'custom-popup'
-    });
-
-    // Enable scroll zoom on click
-    map.on('click', function() {
-        map.scrollWheelZoom.enable();
-    });
-
-    // Disable scroll zoom when mouse leaves
-    map.on('mouseout', function() {
-        map.scrollWheelZoom.disable();
-    });
+        map.on('mouseout', function() {
+            map.scrollWheelZoom.disable();
+        });
+    }
 });
 </script>
 
