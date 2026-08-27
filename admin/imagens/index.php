@@ -81,18 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     continue;
                 }
 
-                $filename = $imageKey . '_' . time() . '.' . $ext;
+                $filename = $imageKey . '_' . time() . '.webp';
                 $targetPath = $uploadDir . '/' . $filename;
                 $dbPath = '/uploads/content/' . $filename;
 
-                if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-                    $err = error_get_last()['message'] ?? 'desconhecido';
-                    $errors[] = "{$imageKey}: move_uploaded_file falhou - {$err}";
+                if (!\Core\ImageOptimizer::processUpload($file['tmp_name'], $targetPath)) {
+                    $errors[] = "{$imageKey}: conversão e otimização falhou";
                     continue;
                 }
 
                 if (!file_exists($targetPath)) {
-                    $errors[] = "{$imageKey}: ficheiro nao existe apos move: {$targetPath}";
+                    $errors[] = "{$imageKey}: ficheiro nao existe apos processamento: {$targetPath}";
                     continue;
                 }
 
@@ -100,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'filename' => $filename,
                     'original_name' => $file['name'],
                     'file_path' => $dbPath,
-                    'file_type' => $file['type'],
-                    'file_size' => $file['size'],
+                    'file_type' => 'image/webp',
+                    'file_size' => filesize($targetPath),
                     'category' => 'content',
                     'uploaded_by' => Session::get('admin_id'),
                     'created_at' => date('Y-m-d H:i:s')

@@ -209,10 +209,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
             $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
             if (in_array($_FILES['hero_image']['type'], $allowedTypes)) {
-                $ext = pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION);
-                $newName = 'hero_casa' . $selectedAccommodationNumber . '_' . time() . '.' . $ext;
+                $newName = 'hero_casa' . $selectedAccommodationNumber . '_' . time() . '.webp';
 
-                if (move_uploaded_file($_FILES['hero_image']['tmp_name'], $uploadDir . $newName)) {
+                if (\Core\ImageOptimizer::processUpload($_FILES['hero_image']['tmp_name'], $uploadDir . $newName)) {
 
                     if ($accommodation['hero_image'] && strpos($accommodation['hero_image'], 'uploads/') === 0) {
                         $oldPath = ROOT_PATH . '/' . $accommodation['hero_image'];
@@ -233,10 +232,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
             $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
             if (in_array($_FILES['cover_image']['type'], $allowedTypes)) {
-                $ext = pathinfo($_FILES['cover_image']['name'], PATHINFO_EXTENSION);
-                $newName = 'cover_casa' . $selectedAccommodationNumber . '_' . time() . '.' . $ext;
+                $newName = 'cover_casa' . $selectedAccommodationNumber . '_' . time() . '.webp';
 
-                if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $uploadDir . $newName)) {
+                if (\Core\ImageOptimizer::processUpload($_FILES['cover_image']['tmp_name'], $uploadDir . $newName)) {
 
                     if ($accommodation['cover_image'] && strpos($accommodation['cover_image'], 'uploads/') === 0) {
                         $oldPath = ROOT_PATH . '/' . $accommodation['cover_image'];
@@ -265,13 +263,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 if ($_FILES['gallery']['error'][$key] !== UPLOAD_ERR_OK) continue;
                 if (!in_array($_FILES['gallery']['type'][$key], $allowedTypes)) continue;
 
-                $ext = pathinfo($_FILES['gallery']['name'][$key], PATHINFO_EXTENSION);
-                $newName = 'accommodation_' . $selectedAccommodationNumber . '_' . uniqid() . '.' . $ext;
+                $newName = 'accommodation_' . $selectedAccommodationNumber . '_' . uniqid() . '.webp';
 
-                if (move_uploaded_file($tmpName, $uploadDir . $newName)) {
+                if (\Core\ImageOptimizer::processUpload($tmpName, $uploadDir . $newName)) {
                     $maxOrder++;
-                    $fileSize = $_FILES['gallery']['size'][$key];
-                    $fileType = $_FILES['gallery']['type'][$key];
+                    $fileSize = filesize($uploadDir . $newName);
+                    $fileType = 'image/webp';
                     $originalName = $_FILES['gallery']['name'][$key];
 
                     $db->insert('media', [

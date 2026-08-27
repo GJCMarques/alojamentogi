@@ -66,12 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
                 $fileSize = $_FILES['hero_image']['size'];
 
                 if (in_array($fileType, $allowedTypes) && $fileSize <= $maxSize) {
-                    $ext = pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION);
-                    $originalName = $_FILES['hero_image']['name'];
-                    $newName = 'hero_' . $pageKey . '_' . time() . '.' . $ext;
+                    $newName = 'hero_' . $pageKey . '_' . time() . '.webp';
                     $targetPath = $uploadDir . $newName;
 
-                    if (move_uploaded_file($_FILES['hero_image']['tmp_name'], $targetPath)) {
+                    if (\Core\ImageOptimizer::processUpload($_FILES['hero_image']['tmp_name'], $targetPath)) {
 
                         $oldMedia = $db->fetch(
                             "SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1",
@@ -87,6 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
 
                             $db->delete('media', 'id = ?', [$oldMedia['id']]);
                         }
+
+                        $fileSize = filesize($targetPath);
+                        $fileType = 'image/webp';
 
                         $db->insert('media', [
                             'filename' => $newName,

@@ -56,32 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                     continue;
                 }
 
-                $mimeToExt = [
-                    'image/jpeg' => 'jpg',
-                    'image/png' => 'png',
-                    'image/gif' => 'gif',
-                    'image/webp' => 'webp',
-                ];
-                $safeExt = $mimeToExt[$realMimeType] ?? $ext;
-
-                $newName = bin2hex(random_bytes(16)) . '.' . $safeExt;
+                $newName = bin2hex(random_bytes(16)) . '.webp';
                 $targetPath = $uploadDir . $newName;
-                $fileType = $realMimeType;
 
-                if (move_uploaded_file($tmpName, $targetPath)) {
-
+                if (\Core\ImageOptimizer::processUpload($tmpName, $targetPath)) {
                     $db->insert('media', [
                         'filename' => $newName,
                         'original_name' => $fileName,
                         'file_path' => '/uploads/media/' . $newName,
-                        'file_type' => $fileType,
-                        'file_size' => $fileSize,
+                        'file_type' => 'image/webp',
+                        'file_size' => filesize($targetPath),
                         'category' => 'other',
                         'uploaded_by' => $_SESSION['admin_id'] ?? null
                     ]);
                     $uploaded++;
                 } else {
-                    $errors[] = "Falha ao mover: {$fileName}";
+                    $errors[] = "Falha ao processar: {$fileName}";
                 }
             }
 
