@@ -212,14 +212,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 $newName = 'hero_casa' . $selectedAccommodationNumber . '_' . time() . '.webp';
 
                 if (\Core\ImageOptimizer::processUpload($_FILES['hero_image']['tmp_name'], $uploadDir . $newName)) {
-
-                    if ($accommodation['hero_image'] && strpos($accommodation['hero_image'], 'uploads/') === 0) {
-                        $oldPath = ROOT_PATH . '/' . $accommodation['hero_image'];
+                    $oldMedia = $db->fetch("SELECT * FROM media WHERE entity_type = 'accommodation' AND category = 'hero' AND accommodation_id = ?", [$accommodation['id']]);
+                    if ($oldMedia) {
+                        $oldPath = ROOT_PATH . '/' . ltrim($oldMedia['file_path'], '/');
                         if (file_exists($oldPath)) {
                             @unlink($oldPath);
                         }
+                        $db->delete('media', 'id = ?', [$oldMedia['id']]);
                     }
-                    $db->update('accommodation', ['hero_image' => 'uploads/accommodation/' . $newName], 'id = ?', [$accommodation['id']]);
+
+                    $db->insert('media', [
+                        'filename' => $newName,
+                        'original_name' => $_FILES['hero_image']['name'],
+                        'file_path' => '/uploads/accommodation/' . $newName,
+                        'file_type' => 'image/webp',
+                        'file_size' => filesize($uploadDir . $newName),
+                        'category' => 'hero',
+                        'entity_type' => 'accommodation',
+                        'accommodation_id' => $accommodation['id'],
+                        'is_cover' => 0
+                    ]);
                 }
             }
         }
@@ -235,14 +247,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 $newName = 'cover_casa' . $selectedAccommodationNumber . '_' . time() . '.webp';
 
                 if (\Core\ImageOptimizer::processUpload($_FILES['cover_image']['tmp_name'], $uploadDir . $newName)) {
-
-                    if ($accommodation['cover_image'] && strpos($accommodation['cover_image'], 'uploads/') === 0) {
-                        $oldPath = ROOT_PATH . '/' . $accommodation['cover_image'];
+                    $oldMedia = $db->fetch("SELECT * FROM media WHERE entity_type = 'accommodation' AND category = 'cover' AND accommodation_id = ?", [$accommodation['id']]);
+                    if ($oldMedia) {
+                        $oldPath = ROOT_PATH . '/' . ltrim($oldMedia['file_path'], '/');
                         if (file_exists($oldPath)) {
                             @unlink($oldPath);
                         }
+                        $db->delete('media', 'id = ?', [$oldMedia['id']]);
                     }
-                    $db->update('accommodation', ['cover_image' => 'uploads/accommodation/' . $newName], 'id = ?', [$accommodation['id']]);
+
+                    $db->insert('media', [
+                        'filename' => $newName,
+                        'original_name' => $_FILES['cover_image']['name'],
+                        'file_path' => '/uploads/accommodation/' . $newName,
+                        'file_type' => 'image/webp',
+                        'file_size' => filesize($uploadDir . $newName),
+                        'category' => 'cover',
+                        'entity_type' => 'accommodation',
+                        'accommodation_id' => $accommodation['id'],
+                        'is_cover' => 1
+                    ]);
                 }
             }
         }
@@ -1129,7 +1153,8 @@ include dirname(__DIR__) . '/includes/header.php';
                     </div>
                     <div class="p-4">
                         <?php
-                        $heroImage = $accommodation['hero_image'] ?? '';
+                        $heroMedia = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'accommodation' AND category = 'hero' AND accommodation_id = ?", [$accommodation['id']]);
+                        $heroImage = $heroMedia['file_path'] ?? '';
                         $heroUrl = '';
                         if ($heroImage) {
                             if (strpos($heroImage, 'uploads/') === 0) {
@@ -1166,7 +1191,8 @@ include dirname(__DIR__) . '/includes/header.php';
                     </div>
                     <div class="p-4">
                         <?php
-                        $coverImage = $accommodation['cover_image'] ?? '';
+                        $coverMedia = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'accommodation' AND category = 'cover' AND accommodation_id = ?", [$accommodation['id']]);
+                        $coverImage = $coverMedia['file_path'] ?? '';
                         $coverUrl = '';
                         if ($coverImage) {
                             if (strpos($coverImage, 'uploads/') === 0) {

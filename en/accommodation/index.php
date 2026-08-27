@@ -193,7 +193,8 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
         <!-- Casa Selection Cards -->
         <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
             <?php foreach ($allAccommodations as $idx => $casa):
-                $coverImage = $casa['cover_image'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp');
+                $coverMedia = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'accommodation' AND category = 'cover' AND accommodation_id = ?", [$casa['id']]);
+                $coverImage = $coverMedia['file_path'] ?? ($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp');
                 $coverUrl = getAccommodationImageUrl($coverImage, asset($casa['accommodation_number'] == 1 ? 'images/IgrejaMatriz.webp' : 'images/Castelo.webp'));
             ?>
             <a href="?casa=<?= $casa['accommodation_number'] ?>" class="group flex flex-col bg-primary rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden animate-on-scroll" data-delay="<?= ($idx + 1) * 100 ?>">
@@ -280,8 +281,8 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 
 <!-- Hero Section -->
 <?php
-
-$casaHeroImage = $accommodation['hero_image'] ?? 'images/MogadouroAlojamento.webp';
+$casaHeroMedia = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'accommodation' AND category = 'hero' AND accommodation_id = ?", [$accommodation['id']]);
+$casaHeroImage = $casaHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp';
 $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.webp'));
 ?>
 <section class="relative h-screen flex items-center bg-primary overflow-hidden">

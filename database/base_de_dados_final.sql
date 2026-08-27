@@ -54,8 +54,6 @@ CREATE TABLE `accommodation` (
   `guestready_url` varchar(500) DEFAULT NULL COMMENT 'GuestReady booking URL',
   `booking_url` varchar(500) DEFAULT NULL COMMENT 'Booking.com URL',
   `airbnb_url` varchar(500) DEFAULT NULL COMMENT 'Airbnb URL',
-  `hero_image` varchar(500) DEFAULT NULL COMMENT 'Hero image for this accommodation',
-  `cover_image` varchar(500) DEFAULT NULL COMMENT 'Cover image for selection cards on main page',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_accommodation_number` (`accommodation_number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -650,7 +648,7 @@ CREATE TABLE `media` (
   `alt_text_en` varchar(255) DEFAULT NULL,
   `caption_pt` varchar(500) DEFAULT NULL COMMENT 'Portuguese caption',
   `caption_en` varchar(500) DEFAULT NULL COMMENT 'English caption',
-  `category` enum('gallery','content','other') DEFAULT 'other',
+  `category` enum('gallery','content','cover','hero','other') DEFAULT 'other',
   `entity_type` enum('hero','accommodation','standalone','other') DEFAULT 'standalone',
   `entity_id` int(10) unsigned DEFAULT NULL COMMENT 'ID of the related entity (activity_id, hero_id, etc)',
   `is_cover` tinyint(1) DEFAULT 0 COMMENT 'Is this the cover/main image for the entity',
