@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hero'])) {
 
                         $db->insert('media', [
                             'filename' => $newName,
-                            'original_name' => $originalName,
+                            'original_name' => $_FILES['hero_image']['name'],
                             'file_path' => '/uploads/heroes/' . $newName,
                             'file_type' => $fileType,
                             'file_size' => $fileSize,
