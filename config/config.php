@@ -33,8 +33,8 @@ return [
     ],
 
     'security' => [
-        'session_lifetime' => 1800,
-        'csrf_token_lifetime' => 3600,
+        'session_lifetime' => 43200, // 12 hours
+        'csrf_token_lifetime' => 43200, // 12 hours
         'max_login_attempts' => 5,
         'lockout_duration' => 900,
         'password_min_length' => 8,
