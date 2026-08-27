@@ -43,7 +43,6 @@ if (isPost() && $formEnabled) {
         if ($isBot) {
             // Fake success for bots
             $success = true;
-            Session::flash('success', content('contact_success_message', 'Mensagem enviada com sucesso! Entraremos em contacto brevemente.'));
         } else {
             $formData = [
                 'name' => sanitize(post('name', '')),
@@ -116,8 +115,6 @@ if (isPost() && $formEnabled) {
                         'subject' => '',
                         'message' => '',
                     ];
-
-                    Session::flash('success', content('contact_success_message', 'Mensagem enviada com sucesso! Entraremos em contacto brevemente.'));
                 }
             }
         }
@@ -236,7 +233,7 @@ include INCLUDES_PATH . '/header.php';
             </div>
 
             <!-- Contact Form -->
-            <div class="lg:col-span-2 animate-on-scroll" data-animation="fade-left" data-delay="200">
+            <div class="lg:col-span-2 animate-on-scroll" data-animation="fade-left" data-delay="200" id="formulario" style="scroll-margin-top: 120px;">
                 <div class="bg-white rounded-lg shadow-sm p-8 border border-charcoal/20">
                     <h2 class="font-serif text-2xl text-primary mb-6">Envie-nos uma Mensagem</h2>
 
@@ -283,7 +280,7 @@ include INCLUDES_PATH . '/header.php';
                     </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="" class="space-y-6">
+                    <form method="POST" action="#formulario" class="space-y-6">
                         <?= CSRF::tokenField() ?>
 
                         <!-- Honeypot field (hidden) -->
