@@ -89,12 +89,7 @@ if (isPost() && $formEnabled) {
                         $isSpamContent = true;
                     }
 
-                    $isSpamEmail = $db->fetch(
-                        "SELECT id FROM spam_emails WHERE email = ?",
-                        [$formData['email']]
-                    );
-
-                    $isSpam = $isSpamEmail || $isSpamContent ? 1 : 0;
+                    $isSpam = $isSpamContent ? 1 : 0;
 
                     $db->insert('contact_submissions', [
                         'name' => $formData['name'],
