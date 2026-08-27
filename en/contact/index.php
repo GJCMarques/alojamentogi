@@ -30,7 +30,7 @@ $formData = [
 if (isPost() && $formEnabled) {
 
     if (!CSRF::isValid()) {
-        $errors['csrf'] = 'Session expired. Please reload the page.';
+        $errors['csrf'] = 'The form has expired for security reasons. Please reload the page.';
     } else {
 
         $formTime = (int)post('form_time', 0);
