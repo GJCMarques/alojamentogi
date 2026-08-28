@@ -695,7 +695,7 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                             <div class="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center">
                                 <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
-                            <h4 class="font-bold text-primary">Cancelamento</h4>
+                            <h4 class="font-bold text-primary">Cancelamento e Reembolso</h4>
                         </div>
                         <p class="text-charcoal/70 text-sm leading-relaxed pl-11">
                             <?= e($accTranslation['cancellation_policy'] ?? 'Cancelamento gratuito até 30 dias antes do check-in. Cancelamentos após este período sujeitos a taxas de acordo com a plataforma de reserva.') ?>
@@ -711,10 +711,10 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                             <div class="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center">
                                 <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                             </div>
-                            <h4 class="font-bold text-primary">Reembolso</h4>
+                            <h4 class="font-bold text-primary">Outras Informações</h4>
                         </div>
                         <p class="text-charcoal/70 text-sm leading-relaxed pl-11">
-                            <?= e($accTranslation['refund_policy']) ?>
+                            <?= nl2br(e($accTranslation['refund_policy'])) ?>
                         </p>
                     </div>
                     <?php endif; ?>
