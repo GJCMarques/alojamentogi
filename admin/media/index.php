@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_media'])) {
     redirect('/admin/media/');
 }
 
-$type = isset($_GET['type']) ? $_GET['type'] : 'all';
+$filterCategory = isset($_GET['filter_category']) ? $_GET['filter_category'] : 'all';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $perPage = 24;
@@ -136,6 +136,11 @@ $offset = ($page - 1) * $perPage;
 
 $where = "WHERE 1=1";
 $params = [];
+
+if ($filterCategory !== 'all') {
+    $where .= " AND category = ?";
+    $params[] = $filterCategory;
+}
 
 if ($search) {
     $where .= " AND (original_name LIKE ? OR filename LIKE ?)";
@@ -188,10 +193,21 @@ include dirname(__DIR__) . '/includes/header.php';
                    placeholder="Nome do ficheiro..."
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
         </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+            <select name="filter_category" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
+                <option value="all" <?= $filterCategory === 'all' ? 'selected' : '' ?>>Todas</option>
+                <option value="content" <?= $filterCategory === 'content' ? 'selected' : '' ?>>Conteúdo</option>
+                <option value="gallery" <?= $filterCategory === 'gallery' ? 'selected' : '' ?>>Galeria Alojamento</option>
+                <option value="cover" <?= $filterCategory === 'cover' ? 'selected' : '' ?>>Capas Alojamento</option>
+                <option value="hero" <?= $filterCategory === 'hero' ? 'selected' : '' ?>>Heroes</option>
+                <option value="other" <?= $filterCategory === 'other' ? 'selected' : '' ?>>Outro</option>
+            </select>
+        </div>
         <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
             Filtrar
         </button>
-        <?php if ($search): ?>
+        <?php if ($search || $filterCategory !== 'all'): ?>
         <a href="<?= basePath() ?>/admin/media/" class="px-4 py-2 text-gray-500 hover:text-gray-700">Limpar</a>
         <?php endif; ?>
     </form>
