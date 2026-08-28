@@ -137,11 +137,6 @@ $offset = ($page - 1) * $perPage;
 $where = "WHERE 1=1";
 $params = [];
 
-if ($type !== 'all') {
-    $where .= " AND file_type LIKE ?";
-    $params[] = $type . '%';
-}
-
 if ($search) {
     $where .= " AND (original_name LIKE ? OR filename LIKE ?)";
     $params[] = "%{$search}%";
@@ -193,20 +188,10 @@ include dirname(__DIR__) . '/includes/header.php';
                    placeholder="Nome do ficheiro..."
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
         </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-            <select name="type" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
-                <option value="all" <?= $type === 'all' ? 'selected' : '' ?>>Todos</option>
-                <option value="image/jpeg" <?= $type === 'image/jpeg' ? 'selected' : '' ?>>JPEG</option>
-                <option value="image/png" <?= $type === 'image/png' ? 'selected' : '' ?>>PNG</option>
-                <option value="image/gif" <?= $type === 'image/gif' ? 'selected' : '' ?>>GIF</option>
-                <option value="image/webp" <?= $type === 'image/webp' ? 'selected' : '' ?>>WebP</option>
-            </select>
-        </div>
         <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
             Filtrar
         </button>
-        <?php if ($search || $type !== 'all'): ?>
+        <?php if ($search): ?>
         <a href="<?= basePath() ?>/admin/media/" class="px-4 py-2 text-gray-500 hover:text-gray-700">Limpar</a>
         <?php endif; ?>
     </form>
