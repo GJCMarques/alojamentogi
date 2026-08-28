@@ -130,7 +130,6 @@ $blockDefinitions = [
     'footer' => [
         'label' => 'Rodapé',
         'blocks' => [
-            'guestready_url' => ['label' => 'Link GuestReady (Reservas)', 'type' => 'setting_url'],
             'footer_description' => ['label' => 'Descrição Marca', 'type' => 'textarea'],
             'footer_quicklinks_title' => ['label' => 'Título Links Rápidos', 'type' => 'text'],
             'footer_contact_title' => ['label' => 'Título Contactos', 'type' => 'text'],
