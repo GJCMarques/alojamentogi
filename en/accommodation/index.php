@@ -259,9 +259,11 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
                 </div>
                 <div class="flex flex-col items-center gap-3 p-4">
                     <div class="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center text-secondary">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6h12a1 1 0 011 1v2a1 1 0 01-1 1H6a1 1 0 01-1-1V7a1 1 0 011-1zM5 11h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2a1 1 0 011-1zM4 16h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a1 1 0 011-1z"/>
+                        </svg>
                     </div>
-                    <span class="text-sm font-medium text-charcoal">Bed Linen</span>
+                    <span class="text-sm font-medium text-charcoal">Towels and sheets</span>
                 </div>
                 <div class="flex flex-col items-center gap-3 p-4">
                     <div class="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center text-secondary">

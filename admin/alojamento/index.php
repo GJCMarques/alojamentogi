@@ -847,7 +847,7 @@ include dirname(__DIR__) . '/includes/header.php';
                         <label class="flex items-center">
                             <input type="checkbox" name="towels_linens_included" value="1" <?= ($accommodation['towels_linens_included'] ?? 1) ? 'checked' : '' ?>
                                    class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-500">
-                            <span class="ml-2 text-sm text-gray-700">Toalhas e roupa de cama incluídas</span>
+                            <span class="ml-2 text-sm text-gray-700">Toalhas e lençóis incluídos</span>
                         </label>
                     </div>
                 </div>
