@@ -22,7 +22,7 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.45;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $pageTitle = 'O Que Fazer em Mogadouro';
-$pageDescription = 'Descubra o que visitar e fazer em Mogadouro e Trás-os-Montes através da Câmara Municipal e do Posto de Turismo de Mogadouro.';
+$pageDescription = 'Explore Mogadouro e Trás-os-Montes a partir do seu Alojamento Local. Descubra os melhores trilhos, miradouros e atividades na natureza envolvente.';
 
 // Recursos oficiais + guias de referência (geríveis no admin » Atividades)
 $officialLinks = [];

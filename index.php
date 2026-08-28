@@ -50,7 +50,7 @@ foreach ($heroRows as $row) {
 }
 
 $pageTitle = 'Início';
-$pageDescription = 'A Casa do Gi - Alojamento Local e Produtos Regionais em Mogadouro.';
+$pageDescription = 'A Casa do Gi: Alojamento Local de charme em Mogadouro. Reserve a sua casa de férias em Trás-os-Montes e viva uma experiência única na natureza.';
 $bodyClass = 'homepage-new';
 
 include INCLUDES_PATH . '/header.php';

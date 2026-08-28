@@ -135,7 +135,7 @@ $allRules = $db->fetchAll(
 $guestreadyUrl = $accommodation['guestready_url'] ?? null;
 
 $pageTitle = $showMainPage ? 'Alojamento' : 'Casa do Gi ' . $selectedAccommodationNumber;
-$pageDescription = 'A Casa do Gi - Alojamento Local em Mogadouro. Casa de férias de 100m² para 6 hóspedes.';
+$pageDescription = 'A Casa do Gi: Casas de férias exclusivas em Mogadouro. Alojamento Local espaçoso, com lareira, terraço e conforto para toda a família e amigos.';
 
 include INCLUDES_PATH . '/header.php';
 ?>

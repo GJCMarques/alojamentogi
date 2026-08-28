@@ -24,7 +24,7 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.45;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $pageTitle = 'What to Do in Mogadouro';
-$pageDescription = 'Discover what to visit and do in Mogadouro and Trás-os-Montes through the Mogadouro Town Council and Tourism Office.';
+$pageDescription = 'Explore Mogadouro and Trás-os-Montes from your Local Accommodation. Discover the best trails, viewpoints and activities in the surrounding nature.';
 
 // Official resources + reference guides (managed in admin » Activities)
 $officialLinks = [];

@@ -21,7 +21,7 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $pageTitle = 'About Us';
-$pageDescription = 'Discover the story of Casa do Gi - built in the 80s, a synonym for simplicity, warmth and love in Mogadouro.';
+$pageDescription = 'The story of Casa do Gi: A family-run Local Accommodation in Mogadouro born in the 80s. Tradition, warmth and love in your holiday home up North.';
 
 include INCLUDES_PATH . '/header.php';
 ?>

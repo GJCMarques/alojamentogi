@@ -130,7 +130,7 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $pageTitle = __('contact_title', 'Contact');
-$pageDescription = 'Get in touch with A Casa do Gi. We are available to answer your questions.';
+$pageDescription = 'Contact A Casa do Gi to book your Local Accommodation in Mogadouro. We are available to ensure your best holiday in Trás-os-Montes, Portugal.';
 
 include INCLUDES_PATH . '/header.php';
 ?>

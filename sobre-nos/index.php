@@ -19,7 +19,7 @@ $heroOverlay = $pageHero['hero_overlay_opacity'] ?? 0.40;
 $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 
 $pageTitle = 'Sobre Nós';
-$pageDescription = 'Conheça a história da Casa do Gi - construída nos anos 80, sinónimo de simplicidade, acolhimento e muito amor em Mogadouro.';
+$pageDescription = 'A história da Casa do Gi: Um Alojamento Local familiar em Mogadouro nascido nos anos 80. Tradição, acolhimento e amor na sua casa de férias no Norte.';
 
 include INCLUDES_PATH . '/header.php';
 ?>

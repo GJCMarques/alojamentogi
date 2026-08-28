@@ -39,7 +39,7 @@ function getCardImage($key, $default) {
 $langId = 2;
 
 $pageTitle = 'Home';
-$pageDescription = 'A Casa do Gi - Local Accommodation and Regional Products in Mogadouro.';
+$pageDescription = 'A Casa do Gi: Charming Local Accommodation in Mogadouro. Book your holiday home in Trás-os-Montes and live a unique experience in pure nature.';
 $bodyClass = 'homepage-new';
 
 include INCLUDES_PATH . '/header.php';
