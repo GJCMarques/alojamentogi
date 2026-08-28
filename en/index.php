@@ -26,7 +26,8 @@ $heroes = $db->fetchAll(
 );
 $heroImages = [];
 foreach ($heroes as $h) {
-    $heroImages[$h['page_key']] = $h['file_path'];
+    $key = $h['page_key'] === 'accommodation_main' ? 'accommodation' : $h['page_key'];
+    $heroImages[$key] = $h['file_path'];
 }
 
 function getCardImage($key, $default) {

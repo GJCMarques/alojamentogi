@@ -39,11 +39,11 @@ $heroRows = $db->fetchAll(
     "SELECT ph.page_key, m.file_path
      FROM page_heroes ph
      INNER JOIN media m ON m.entity_type = 'hero' AND m.entity_id = ph.id AND m.is_cover = 1
-     WHERE ph.page_key IN ('accommodation', 'alojamento', 'activities', 'shop', 'contact')
+     WHERE ph.page_key IN ('accommodation', 'accommodation_main', 'activities', 'shop', 'contact')
        AND ph.is_active = 1"
 );
 foreach ($heroRows as $row) {
-    $key = $row['page_key'] === 'alojamento' ? 'accommodation' : $row['page_key'];
+    $key = $row['page_key'] === 'accommodation_main' ? 'accommodation' : $row['page_key'];
     if (!empty($row['file_path']) && isset($menuImages[$key])) {
         $menuImages[$key] = $row['file_path'];
     }
