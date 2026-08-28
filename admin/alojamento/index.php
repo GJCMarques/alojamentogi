@@ -970,29 +970,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($translations[$lang['id']]['description'] ?? '') ?></textarea>
                     </div>
 
-                    <!-- Check-in Description -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição do Check-in</label>
-                        <input type="text" name="checkin_description_<?= $lang['id'] ?>" value="<?= e($translations[$lang['id']]['checkin_description'] ?? '') ?>"
-                               placeholder="Ex: Self check-in com cofre de chaves..."
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500">
-                    </div>
 
-                    <!-- Location Description -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição da Localização</label>
-                        <textarea name="location_description_<?= $lang['id'] ?>" rows="3"
-                                  placeholder="Descreva o bairro, acessos, pontos de interesse próximos..."
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($translations[$lang['id']]['location_description'] ?? '') ?></textarea>
-                    </div>
-
-                    <!-- Host Description -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sobre o Anfitrião</label>
-                        <textarea name="host_description_<?= $lang['id'] ?>" rows="3"
-                                  placeholder="Apresentação do anfitrião..."
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500"><?= e($translations[$lang['id']]['host_description'] ?? '') ?></textarea>
-                    </div>
 
                     <!-- Activity Section -->
                     <div class="pt-4 border-t border-gray-200">
