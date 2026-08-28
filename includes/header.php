@@ -5,12 +5,18 @@ $currentLang = $lang->getCurrentLang();
 $isEnglish = $lang->isEnglish();
 $base = basePath();
 
-$pageTitle = $pageTitle ?? 'A Casa do Gi';
-$pageDescription = $pageDescription ?? ($isEnglish
-    ? 'Local accommodation in Mogadouro, Portugal. Simplicity, warmth and love.'
-    : 'Alojamento local em Mogadouro, Portugal. Simplicidade, acolhimento e muito amor.');
+$pageTitle = $pageTitle ?? setting('site_name', 'A Casa do Gi');
+
+$defaultDescriptionPT = setting('site_description_pt', 'Alojamento local em Mogadouro, Portugal. Simplicidade, acolhimento e muito amor.');
+$defaultDescriptionEN = setting('site_description_en', 'Local accommodation in Mogadouro, Portugal. Simplicity, warmth and love.');
+
+$pageDescription = $pageDescription ?? ($isEnglish ? $defaultDescriptionEN : $defaultDescriptionPT);
 $bodyClass = $bodyClass ?? '';
 $hideNav = $hideNav ?? false;
+
+// Determinar URL canónico da página atual, sem query parameters
+$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$canonicalUrl = strtok($currentUrl, '?');
 
 $navItems = $isEnglish ? [
     ['url' => $base . '/en/', 'label' => 'Home'],
@@ -37,7 +43,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= e($pageDescription) ?>">
 
-    <title><?= e($pageTitle) ?> | A Casa do Gi</title>
+    <title><?= e($pageTitle) ?> | <?= e(setting('site_name', 'A Casa do Gi')) ?></title>
+    
+    <link rel="canonical" href="<?= e($canonicalUrl) ?>">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">

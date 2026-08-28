@@ -25,7 +25,8 @@ $settingsGroups = [
             ['key' => 'site_name', 'label' => 'Nome do Site', 'type' => 'text', 'default' => 'A Casa do Gi'],
             ['key' => 'site_tagline_pt', 'label' => 'Slogan (PT)', 'type' => 'text', 'default' => ''],
             ['key' => 'site_tagline_en', 'label' => 'Slogan (EN)', 'type' => 'text', 'default' => ''],
-            ['key' => 'site_description', 'label' => 'Descrição (SEO)', 'type' => 'textarea', 'default' => ''],
+            ['key' => 'site_description_pt', 'label' => 'Descrição SEO (PT)', 'type' => 'textarea', 'default' => ''],
+            ['key' => 'site_description_en', 'label' => 'Descrição SEO (EN)', 'type' => 'textarea', 'default' => ''],
             ['key' => 'maintenance_mode', 'label' => 'Modo Manutenção', 'type' => 'boolean', 'default' => '0', 'hint' => 'Ativa uma página de manutenção para visitantes'],
         ]
     ],
