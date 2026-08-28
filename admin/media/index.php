@@ -112,9 +112,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_media'])) {
         $altEn = sanitize($_POST['alt_text_en'] ?? '');
         $category = $_POST['category'] ?? 'other';
 
-        $validCategories = ['gallery', 'content', 'other'];
-        if (!in_array($category, $validCategories)) {
-            $category = 'other';
+        // Get existing media to check category
+        $existing = $db->fetch("SELECT category FROM media WHERE id = ?", [$id]);
+        
+        // Preserve system categories
+        if ($existing && in_array($existing['category'], ['hero', 'cover'])) {
+            $category = $existing['category'];
+        } else {
+            $validCategories = ['gallery', 'content', 'other'];
+            if (!in_array($category, $validCategories)) {
+                $category = 'other';
+            }
         }
 
         $db->update('media', [
@@ -199,8 +207,6 @@ include dirname(__DIR__) . '/includes/header.php';
                 <option value="all" <?= $filterCategory === 'all' ? 'selected' : '' ?>>Todas</option>
                 <option value="content" <?= $filterCategory === 'content' ? 'selected' : '' ?>>Conteúdo</option>
                 <option value="gallery" <?= $filterCategory === 'gallery' ? 'selected' : '' ?>>Galeria Alojamento</option>
-                <option value="cover" <?= $filterCategory === 'cover' ? 'selected' : '' ?>>Capas Alojamento</option>
-                <option value="hero" <?= $filterCategory === 'hero' ? 'selected' : '' ?>>Heroes</option>
                 <option value="other" <?= $filterCategory === 'other' ? 'selected' : '' ?>>Outro</option>
             </select>
         </div>
@@ -409,8 +415,6 @@ include dirname(__DIR__) . '/includes/header.php';
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500">
                         <option value="other">Outro</option>
                         <option value="gallery">Galeria (Alojamento)</option>
-                        <option value="cover">Capa (Alojamento)</option>
-                        <option value="hero">Heroes</option>
                         <option value="content">Conteúdo</option>
                     </select>
                 </div>
