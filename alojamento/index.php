@@ -751,6 +751,12 @@ $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroA
                     <?php endif; ?>
 
                 </div>
+                
+                <div class="mt-8 pt-6 border-t border-cream-200">
+                    <p class="text-[11px] text-charcoal/50 italic leading-relaxed">
+                        Nota: As informações aqui apresentadas têm caráter meramente informativo e não são exaustivas. Todas as políticas, regras completas e o processo de reserva são geridos na íntegra pela plataforma GuestReady. Consulte os <a href="<?= $base ?>/termos-condicoes/" class="underline hover:text-primary transition-colors">Termos e Condições</a>.
+                    </p>
+                </div>
             </div>
 
         </div>
