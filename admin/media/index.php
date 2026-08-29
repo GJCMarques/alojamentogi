@@ -117,12 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_media'])) {
         
         // Preserve system categories
         if ($existing && in_array($existing['category'], ['hero', 'cover'])) {
-            $category = $existing['category'];
-        } else {
-            $validCategories = ['gallery', 'content', 'other'];
-            if (!in_array($category, $validCategories)) {
-                $category = 'other';
-            }
+            // Allow changing them now since they are in the dropdown
+        }
+        
+        $validCategories = ['gallery', 'content', 'other', 'cover', 'hero'];
+        if (!in_array($category, $validCategories)) {
+            $category = 'other';
         }
 
         $db->update('media', [
@@ -418,6 +418,8 @@ include dirname(__DIR__) . '/includes/header.php';
                         <option value="other">Outro</option>
                         <option value="gallery">Galeria (Alojamento)</option>
                         <option value="content">Conteúdo</option>
+                        <option value="cover">Capa (Alojamento)</option>
+                        <option value="hero">Hero (Alojamento)</option>
                     </select>
                 </div>
             </div>
