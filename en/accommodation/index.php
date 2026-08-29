@@ -49,8 +49,8 @@ $allAccommodations = $db->fetchAll("SELECT * FROM accommodation WHERE is_active 
 
 function getAccommodationImageUrl($imagePath, $default = '') {
     if (!$imagePath) return $default;
-    if (strpos($imagePath, 'uploads/') === 0) {
-        return basePath() . '/' . $imagePath;
+    if (strpos(ltrim($imagePath, '/'), 'uploads/') === 0) {
+        return basePath() . '/' . ltrim($imagePath, '/');
     }
     return asset($imagePath);
 }

@@ -1135,8 +1135,8 @@ include dirname(__DIR__) . '/includes/header.php';
                         $heroImage = $heroMedia['file_path'] ?? '';
                         $heroUrl = '';
                         if ($heroImage) {
-                            if (strpos($heroImage, 'uploads/') === 0) {
-                                $heroUrl = basePath() . '/' . $heroImage;
+                            if (strpos(ltrim($heroImage, '/'), 'uploads/') === 0) {
+                                $heroUrl = basePath() . '/' . ltrim($heroImage, '/');
                             } else {
                                 $heroUrl = asset($heroImage);
                             }
@@ -1173,8 +1173,8 @@ include dirname(__DIR__) . '/includes/header.php';
                         $coverImage = $coverMedia['file_path'] ?? '';
                         $coverUrl = '';
                         if ($coverImage) {
-                            if (strpos($coverImage, 'uploads/') === 0) {
-                                $coverUrl = basePath() . '/' . $coverImage;
+                            if (strpos(ltrim($coverImage, '/'), 'uploads/') === 0) {
+                                $coverUrl = basePath() . '/' . ltrim($coverImage, '/');
                             } else {
                                 $coverUrl = asset($coverImage);
                             }

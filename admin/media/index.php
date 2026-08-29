@@ -207,6 +207,8 @@ include dirname(__DIR__) . '/includes/header.php';
                 <option value="all" <?= $filterCategory === 'all' ? 'selected' : '' ?>>Todas</option>
                 <option value="content" <?= $filterCategory === 'content' ? 'selected' : '' ?>>Conteúdo</option>
                 <option value="gallery" <?= $filterCategory === 'gallery' ? 'selected' : '' ?>>Galeria Alojamento</option>
+                <option value="cover" <?= $filterCategory === 'cover' ? 'selected' : '' ?>>Capa Alojamento</option>
+                <option value="hero" <?= $filterCategory === 'hero' ? 'selected' : '' ?>>Hero Alojamento</option>
                 <option value="other" <?= $filterCategory === 'other' ? 'selected' : '' ?>>Outro</option>
             </select>
         </div>
