@@ -97,7 +97,7 @@ $categoryLabels = [
 ];
 
 $galleryImages = $db->fetchAll(
-    "SELECT * FROM media WHERE category = 'gallery' AND accommodation_id = ? ORDER BY sort_order LIMIT 12",
+    "SELECT * FROM media WHERE category = 'gallery' AND accommodation_id = ? ORDER BY sort_order",
     [$accommodation['id']]
 );
 
