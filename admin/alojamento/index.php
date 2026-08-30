@@ -274,16 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         if (!empty($_FILES['gallery']['name'][0])) {
             // Deprecated: O upload de imagens da galeria agora é feito via AJAX em admin/api/upload_gallery.php
         }
-                        'file_path' => '/uploads/accommodation/' . $newName,
-                        'file_type' => $fileType,
-                        'file_size' => $fileSize,
-                        'category' => 'gallery',
-                        'accommodation_id' => $accommodation['id'],
-                        'sort_order' => $maxOrder
-                    ]);
-                }
-            }
-        }
+
 
         if (isset($_POST['gallery_alt_pt']) && is_array($_POST['gallery_alt_pt'])) {
             foreach ($_POST['gallery_alt_pt'] as $id => $altPt) {
