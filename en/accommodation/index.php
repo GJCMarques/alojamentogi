@@ -139,6 +139,20 @@ $guestreadyUrl = $accommodation['guestready_url'] ?? null;
 $pageTitle = $showMainPage ? 'Accommodation' : 'Casa do Gi ' . $selectedAccommodationNumber;
 $pageDescription = 'A Casa do Gi: Exclusive holiday homes in Mogadouro. Spacious Local Accommodation with fireplace, terrace and comfort for family and friends.';
 
+// Prepare Hero images for LCP preloading
+if ($showMainPage) {
+    $mainHeroMedia = $mainPageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$mainPageHero['id']]) : null;
+    $mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp';
+    $mainHeroUrl = $mainHeroImage[0] === '/' ? basePath() . $mainHeroImage : asset($mainHeroImage);
+    $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
+    $preloadImage = $mainHeroUrl;
+} else {
+    $casaHeroMedia = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'accommodation' AND category = 'hero' AND accommodation_id = ?", [$accommodation['id']]);
+    $casaHeroImage = $casaHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp';
+    $casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.webp'));
+    $preloadImage = $casaHeroUrl;
+}
+
 include INCLUDES_PATH . '/header.php';
 ?>
 
@@ -148,12 +162,6 @@ include INCLUDES_PATH . '/header.php';
 <!-- ========================================== -->
 
 <!-- Hero Section - Main -->
-<?php
-$mainHeroMedia = $mainPageHero ? $db->fetch("SELECT * FROM media WHERE entity_type = 'hero' AND entity_id = ? AND is_cover = 1", [$mainPageHero['id']]) : null;
-$mainHeroImage = $mainHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp';
-$mainHeroUrl = $mainHeroImage[0] === '/' ? basePath() . $mainHeroImage : asset($mainHeroImage);
-$mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
-?>
 <section class="relative h-screen flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
@@ -282,11 +290,6 @@ $mainHeroOverlay = $mainPageHero['hero_overlay_opacity'] ?? 0.40;
 <!-- ========================================== -->
 
 <!-- Hero Section -->
-<?php
-$casaHeroMedia = $db->fetch("SELECT file_path FROM media WHERE entity_type = 'accommodation' AND category = 'hero' AND accommodation_id = ?", [$accommodation['id']]);
-$casaHeroImage = $casaHeroMedia['file_path'] ?? 'images/MogadouroAlojamento.webp';
-$casaHeroUrl = getAccommodationImageUrl($casaHeroImage, asset('images/MogadouroAlojamento.webp'));
-?>
 <section class="relative h-screen flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
@@ -1085,31 +1088,56 @@ document.getElementById('policies-modal').addEventListener('click', function(e) 
     if (e.target === this) closePoliciesModal();
 });
 
-// Map
+// Leaflet Lazy Load JS
 document.addEventListener('DOMContentLoaded', function() {
-    const lat = <?= $accommodation['latitude'] ?? 41.34217 ?>;
-    const lng = <?= $accommodation['longitude'] ?? -6.71347 ?>;
+    const mapElement = document.getElementById('contact-map');
+    if (!mapElement) return;
 
-    const map = L.map('contact-map', { scrollWheelZoom: false }).setView([lat, lng], 15);
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                observer.unobserve(mapElement);
+                
+                // Load Leaflet CSS
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = '<?= asset('vendor/leaflet/leaflet.css') ?>';
+                document.head.appendChild(link);
+                
+                // Load Leaflet JS
+                const script = document.createElement('script');
+                script.src = '<?= asset('vendor/leaflet/leaflet.js') ?>';
+                script.onload = () => {
+                    const lat = <?= $accommodation['latitude'] ?? 41.34217 ?>;
+                    const lng = <?= $accommodation['longitude'] ?? -6.71347 ?>;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+                    const map = L.map('contact-map', { scrollWheelZoom: false }).setView([lat, lng], 15);
 
-    const customIcon = L.divIcon({
-        className: 'custom-map-marker',
-        html: `<div style="width:40px;height:40px;background:linear-gradient(135deg,#264653 0%,#1d3a47 100%);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(38,70,83,0.4);display:flex;align-items:center;justify-content:center;"><svg style="transform:rotate(45deg);width:20px;height:20px;color:#C5A059;" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg></div>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-        popupAnchor: [0, -40]
-    });
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; OpenStreetMap'
+                    }).addTo(map);
 
-    L.marker([lat, lng], { icon: customIcon }).addTo(map)
-        .bindPopup('<div style="text-align:center;padding:8px;"><strong style="color:#264653;">A Casa do Gi ' + <?= $selectedAccommodationNumber ?> + '</strong><br><span style="color:#2D3748;font-size:12px;">5200-207 Mogadouro</span></div>');
+                    const customIcon = L.divIcon({
+                        className: 'custom-map-marker',
+                        html: `<div style="width:40px;height:40px;background:linear-gradient(135deg,#264653 0%,#1d3a47 100%);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(38,70,83,0.4);display:flex;align-items:center;justify-content:center;"><svg style="transform:rotate(45deg);width:20px;height:20px;color:#C5A059;" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg></div>`,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40],
+                        popupAnchor: [0, -40]
+                    });
 
-    map.on('click', () => map.scrollWheelZoom.enable());
-    map.on('mouseout', () => map.scrollWheelZoom.disable());
+                    L.marker([lat, lng], { icon: customIcon }).addTo(map)
+                        .bindPopup('<div style="text-align:center;padding:8px;"><strong style="color:#264653;">A Casa do Gi ' + <?= $selectedAccommodationNumber ?> + '</strong><br><span style="color:#2D3748;font-size:12px;">5200-207 Mogadouro</span></div>');
+
+                    map.on('click', () => map.scrollWheelZoom.enable());
+                    map.on('mouseout', () => map.scrollWheelZoom.disable());
+                };
+                document.body.appendChild(script);
+            }
+        });
+    }, { rootMargin: "100px" });
+
+    observer.observe(mapElement);
 });
 </script>
 

@@ -78,6 +78,11 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <?php if (isset($preloadImage) && $preloadImage): ?>
+    <!-- LCP Image Preload -->
+    <link rel="preload" as="image" href="<?= e($preloadImage) ?>">
+    <?php endif; ?>
 
     <!-- Tailwind CSS (compilado localmente) -->
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=<?= @filemtime(ROOT_PATH . '/assets/css/app.css') ?>">
