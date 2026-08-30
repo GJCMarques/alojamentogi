@@ -272,32 +272,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         }
 
         if (!empty($_FILES['gallery']['name'][0])) {
-            $uploadDir = ROOT_PATH . '/uploads/accommodation/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-            $maxOrder = $db->fetch(
-                "SELECT MAX(sort_order) as max_order FROM media WHERE category = 'gallery' AND accommodation_id = ?",
-                [$accommodation['id']]
-            )['max_order'] ?? 0;
-
-            foreach ($_FILES['gallery']['tmp_name'] as $key => $tmpName) {
-                if ($_FILES['gallery']['error'][$key] !== UPLOAD_ERR_OK) continue;
-                if (!in_array($_FILES['gallery']['type'][$key], $allowedTypes)) continue;
-
-                $newName = 'accommodation_' . $selectedAccommodationNumber . '_' . uniqid() . '.webp';
-
-                if (\Core\ImageOptimizer::processUpload($tmpName, $uploadDir . $newName)) {
-                    $maxOrder++;
-                    $fileSize = filesize($uploadDir . $newName);
-                    $fileType = 'image/webp';
-                    $originalName = $_FILES['gallery']['name'][$key];
-
-                    $db->insert('media', [
-                        'filename' => $newName,
-                        'original_name' => $originalName,
+            // Deprecated: O upload de imagens da galeria agora é feito via AJAX em admin/api/upload_gallery.php
+        }
                         'file_path' => '/uploads/accommodation/' . $newName,
                         'file_type' => $fileType,
                         'file_size' => $fileSize,
@@ -1245,7 +1221,7 @@ include dirname(__DIR__) . '/includes/header.php';
             <?php endif; ?>
 
             <div id="galleryDropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-secondary-500 hover:bg-secondary-50 transition-all cursor-pointer">
-                <input type="file" name="gallery[]" multiple accept="image/jpeg,image/png,image/webp" id="galleryInput" class="hidden">
+                <input type="file" multiple accept="image/jpeg,image/png,image/webp" id="galleryInput" class="hidden">
                 <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                 </svg>
@@ -1255,11 +1231,13 @@ include dirname(__DIR__) . '/includes/header.php';
 
             <div id="galleryPreviewArea" class="hidden mt-4">
                 <div class="flex items-center justify-between mb-3">
-                    <p class="font-medium text-gray-700">Novas imagens a carregar:</p>
-                    <button type="button" id="clearGalleryFiles" class="text-sm text-red-500 hover:text-red-700">Limpar</button>
+                    <p class="font-medium text-gray-700">Imagens em carregamento:</p>
                 </div>
-                <div id="galleryPreviewList" class="grid grid-cols-3 md:grid-cols-4 gap-3"></div>
+                <div id="galleryPreviewList" class="flex flex-col gap-2"></div>
                 <div id="galleryPreviewTotal" class="mt-3 pt-3 border-t border-gray-200 text-sm font-medium text-gray-700"></div>
+                <div class="mt-3">
+                    <button type="button" onclick="window.location.reload()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded text-sm hover:bg-gray-200">Recarregar página para ver as fotos (após concluído)</button>
+                </div>
             </div>
         </div>
 
@@ -1815,7 +1793,7 @@ include dirname(__DIR__) . '/includes/header.php';
         });
     };
 
-    // Gallery Upload
+    // Gallery Upload (AJAX)
     const galleryInput = document.getElementById('galleryInput');
     const galleryDropZone = document.getElementById('galleryDropZone');
     const galleryPreviewArea = document.getElementById('galleryPreviewArea');
@@ -1828,54 +1806,101 @@ include dirname(__DIR__) . '/includes/header.php';
         return bytes + ' B';
     }
 
-    function updateGalleryPreview(files) {
-        if (!files || files.length === 0) {
-            galleryPreviewArea.classList.add('hidden');
-            galleryPreviewList.innerHTML = '';
-            return;
-        }
+    async function uploadGalleryFiles(files) {
+        if (!files || files.length === 0) return;
 
         galleryPreviewArea.classList.remove('hidden');
-        galleryPreviewList.innerHTML = '';
 
-        let totalSize = 0;
+        const accommodationId = <?= $accommodation['id'] ?>;
+        const accommodationNumber = <?= $selectedAccommodationNumber ?>;
+        const token = '<?= \Core\CSRF::getToken() ?>';
+        
+        let completed = 0;
+        let success = 0;
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            totalSize += file.size;
-
+            
+            // Create progress UI item
             const item = document.createElement('div');
-            item.className = 'relative bg-gray-100 rounded-lg overflow-hidden aspect-video';
-
-            const img = document.createElement('img');
-            img.className = 'w-full h-full object-cover';
-
-            const overlay = document.createElement('div');
-            overlay.className = 'absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1';
-            overlay.innerHTML = '<p class="text-white text-xs truncate">' + file.name + '</p><p class="text-gray-300 text-xs">' + formatSize(file.size) + '</p>';
-
-            const reader = new FileReader();
-            reader.onload = e => img.src = e.target.result;
-            reader.readAsDataURL(file);
-
-            item.appendChild(img);
-            item.appendChild(overlay);
+            item.className = 'bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm flex items-center p-2 gap-3 mb-2';
+            
+            item.innerHTML = `
+                <div class="flex-1 truncate">
+                    <p class="text-sm font-medium text-gray-700 truncate">${file.name}</p>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                        <div class="bg-secondary-600 h-1.5 rounded-full progress-bar" style="width: 0%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 font-medium mt-1 status-text">A enviar...</p>
+                </div>
+            `;
             galleryPreviewList.appendChild(item);
-        }
 
-        galleryPreviewTotal.textContent = 'Total: ' + files.length + ' ficheiro(s) - ' + formatSize(totalSize);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('accommodation_id', accommodationId);
+            formData.append('accommodation_number', accommodationNumber);
+            formData.append('csrf_token', token);
+
+            try {
+                // Using XMLHttpRequest for progress events
+                await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '<?= basePath() ?>/admin/api/upload_gallery.php');
+                    
+                    xhr.upload.onprogress = (e) => {
+                        if (e.lengthComputable) {
+                            const percentComplete = (e.loaded / e.total) * 100;
+                            item.querySelector('.progress-bar').style.width = percentComplete + '%';
+                        }
+                    };
+                    
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.success) {
+                                    item.outerHTML = response.html;
+                                    success++;
+                                    resolve();
+                                } else {
+                                    item.querySelector('.status-text').textContent = 'Erro: ' + response.error;
+                                    item.querySelector('.status-text').classList.replace('text-gray-500', 'text-red-500');
+                                    item.querySelector('.progress-bar').classList.replace('bg-secondary-600', 'bg-red-500');
+                                    resolve(); // Resolve anyway to continue with next
+                                }
+                            } catch(e) {
+                                reject('Invalid JSON response');
+                            }
+                        } else {
+                            reject('HTTP Error ' + xhr.status);
+                        }
+                    };
+                    
+                    xhr.onerror = () => reject('Network error');
+                    xhr.send(formData);
+                });
+            } catch (error) {
+                item.querySelector('.status-text').textContent = 'Falha no envio';
+                item.querySelector('.status-text').classList.replace('text-gray-500', 'text-red-500');
+                item.querySelector('.progress-bar').classList.replace('bg-secondary-600', 'bg-red-500');
+            }
+            
+            completed++;
+            galleryPreviewTotal.textContent = `Processadas: ${completed} de ${files.length} (${success} com sucesso)`;
+        }
+        
+        galleryInput.value = '';
     }
 
-    galleryInput?.addEventListener('change', e => updateGalleryPreview(e.target.files));
+    galleryInput?.addEventListener('change', e => uploadGalleryFiles(e.target.files));
     galleryDropZone?.addEventListener('click', () => galleryInput.click());
     galleryDropZone?.addEventListener('dragover', e => { e.preventDefault(); galleryDropZone.classList.add('border-secondary-500', 'bg-secondary-50'); });
     galleryDropZone?.addEventListener('dragleave', e => { e.preventDefault(); galleryDropZone.classList.remove('border-secondary-500', 'bg-secondary-50'); });
     galleryDropZone?.addEventListener('drop', e => {
         e.preventDefault();
         galleryDropZone.classList.remove('border-secondary-500', 'bg-secondary-50');
-        const dt = new DataTransfer();
-        for (let i = 0; i < e.dataTransfer.files.length; i++) dt.items.add(e.dataTransfer.files[i]);
-        galleryInput.files = dt.files;
-        updateGalleryPreview(dt.files);
+        uploadGalleryFiles(e.dataTransfer.files);
     });
     document.getElementById('clearGalleryFiles')?.addEventListener('click', () => {
         galleryInput.value = '';
