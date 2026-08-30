@@ -924,9 +924,7 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </div>
 
-<!-- Leaflet CSS/JS -->
-<link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>"/>
-<script src="<?= asset('vendor/leaflet/leaflet.js') ?>"></script>
+
 
 <script>
 // Gallery Data
