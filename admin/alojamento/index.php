@@ -686,7 +686,7 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </div>
 
-<form action="" method="post" enctype="multipart/form-data">
+<form id="mainAccommodationForm" action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="<?= CSRF::getToken() ?>">
     <input type="hidden" name="active_tab" id="activeTabField" value="info">
 
@@ -1222,7 +1222,8 @@ include dirname(__DIR__) . '/includes/header.php';
 
             <div id="galleryPreviewArea" class="hidden mt-4">
                 <div class="flex items-center justify-between mb-3">
-                    <p class="font-medium text-gray-700">Imagens em carregamento:</p>
+                    <p class="font-medium text-gray-700">Novas imagens a carregar (aguarda Gravação):</p>
+                    <button type="button" id="clearGalleryFiles" class="text-sm text-red-500 hover:text-red-700">Limpar</button>
                 </div>
                 <div id="galleryPreviewList" class="flex flex-col gap-2"></div>
                 <div id="galleryPreviewTotal" class="mt-3 pt-3 border-t border-gray-200 text-sm font-medium text-gray-700"></div>
@@ -1781,12 +1782,14 @@ include dirname(__DIR__) . '/includes/header.php';
         });
     };
 
-    // Gallery Upload (AJAX)
+    // Gallery Local Preview & Deferred Upload
+    const mainForm = document.getElementById('mainAccommodationForm');
     const galleryInput = document.getElementById('galleryInput');
     const galleryDropZone = document.getElementById('galleryDropZone');
     const galleryPreviewArea = document.getElementById('galleryPreviewArea');
     const galleryPreviewList = document.getElementById('galleryPreviewList');
     const galleryPreviewTotal = document.getElementById('galleryPreviewTotal');
+    const clearGalleryBtn = document.getElementById('clearGalleryFiles');
 
     function formatSize(bytes) {
         if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
@@ -1794,10 +1797,78 @@ include dirname(__DIR__) . '/includes/header.php';
         return bytes + ' B';
     }
 
-    async function uploadGalleryFiles(files) {
-        if (!files || files.length === 0) return;
+    function updateGalleryPreview(files) {
+        if (!files || files.length === 0) {
+            galleryPreviewArea.classList.add('hidden');
+            galleryPreviewList.innerHTML = '';
+            return;
+        }
 
         galleryPreviewArea.classList.remove('hidden');
+        galleryPreviewList.innerHTML = '';
+
+        let totalSize = 0;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            totalSize += file.size;
+
+            const item = document.createElement('div');
+            item.className = 'bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm flex items-center p-2 gap-3 mb-2';
+            
+            item.innerHTML = `
+                <div class="w-16 h-16 bg-gray-100 rounded flex-shrink-0">
+                    <img src="${URL.createObjectURL(file)}" class="w-full h-full object-cover rounded">
+                </div>
+                <div class="flex-1 truncate">
+                    <p class="text-sm font-medium text-gray-700 truncate">${file.name}</p>
+                    <p class="text-xs text-gray-500 font-medium mt-1 status-text">Aguardando gravação...</p>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2 hidden progress-container">
+                        <div class="bg-secondary-600 h-1.5 rounded-full progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            `;
+            galleryPreviewList.appendChild(item);
+        }
+
+        galleryPreviewTotal.textContent = 'Total: ' + files.length + ' ficheiro(s) selecionados - ' + formatSize(totalSize);
+    }
+
+    galleryInput?.addEventListener('change', e => updateGalleryPreview(e.target.files));
+    galleryDropZone?.addEventListener('click', () => galleryInput.click());
+    galleryDropZone?.addEventListener('dragover', e => { e.preventDefault(); galleryDropZone.classList.add('border-secondary-500', 'bg-secondary-50'); });
+    galleryDropZone?.addEventListener('dragleave', e => { e.preventDefault(); galleryDropZone.classList.remove('border-secondary-500', 'bg-secondary-50'); });
+    galleryDropZone?.addEventListener('drop', e => {
+        e.preventDefault();
+        galleryDropZone.classList.remove('border-secondary-500', 'bg-secondary-50');
+        const dt = new DataTransfer();
+        for (let i = 0; i < e.dataTransfer.files.length; i++) dt.items.add(e.dataTransfer.files[i]);
+        galleryInput.files = dt.files;
+        updateGalleryPreview(dt.files);
+    });
+
+    clearGalleryBtn?.addEventListener('click', () => {
+        galleryInput.value = '';
+        galleryPreviewArea.classList.add('hidden');
+    });
+
+    // Intercept main form submission to upload gallery files first via AJAX
+    mainForm?.addEventListener('submit', async (e) => {
+        const files = galleryInput.files;
+        if (!files || files.length === 0) {
+            // No gallery files to upload, proceed with normal form submission
+            return;
+        }
+
+        e.preventDefault(); // Stop form submission temporarily
+        
+        // Show loading state on submit button
+        const submitBtn = mainForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="flex items-center gap-2"><svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> A carregar fotos...</span>';
+        
+        // Hide clear button during upload
+        if (clearGalleryBtn) clearGalleryBtn.style.display = 'none';
 
         const accommodationId = <?= $accommodation['id'] ?>;
         const accommodationNumber = <?= $selectedAccommodationNumber ?>;
@@ -1806,23 +1877,19 @@ include dirname(__DIR__) . '/includes/header.php';
         let completed = 0;
         let success = 0;
 
+        const items = galleryPreviewList.children;
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
+            const item = items[i];
             
-            // Create progress UI item
-            const item = document.createElement('div');
-            item.className = 'bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm flex items-center p-2 gap-3 mb-2';
+            // Show progress UI
+            const statusText = item.querySelector('.status-text');
+            const progressContainer = item.querySelector('.progress-container');
+            const progressBar = item.querySelector('.progress-bar');
             
-            item.innerHTML = `
-                <div class="flex-1 truncate">
-                    <p class="text-sm font-medium text-gray-700 truncate">${file.name}</p>
-                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                        <div class="bg-secondary-600 h-1.5 rounded-full progress-bar" style="width: 0%"></div>
-                    </div>
-                    <p class="text-xs text-gray-500 font-medium mt-1 status-text">A enviar...</p>
-                </div>
-            `;
-            galleryPreviewList.appendChild(item);
+            progressContainer.classList.remove('hidden');
+            statusText.textContent = 'A enviar...';
 
             const formData = new FormData();
             formData.append('file', file);
@@ -1831,15 +1898,14 @@ include dirname(__DIR__) . '/includes/header.php';
             formData.append('csrf_token', token);
 
             try {
-                // Using XMLHttpRequest for progress events
                 await new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
                     xhr.open('POST', '<?= basePath() ?>/admin/api/upload_gallery.php');
                     
-                    xhr.upload.onprogress = (e) => {
-                        if (e.lengthComputable) {
-                            const percentComplete = (e.loaded / e.total) * 100;
-                            item.querySelector('.progress-bar').style.width = percentComplete + '%';
+                    xhr.upload.onprogress = (event) => {
+                        if (event.lengthComputable) {
+                            const percentComplete = (event.loaded / event.total) * 100;
+                            progressBar.style.width = percentComplete + '%';
                         }
                     };
                     
@@ -1848,16 +1914,16 @@ include dirname(__DIR__) . '/includes/header.php';
                             try {
                                 const response = JSON.parse(xhr.responseText);
                                 if (response.success) {
-                                    item.outerHTML = response.html;
+                                    item.outerHTML = response.html; // Replace with success HTML from server
                                     success++;
                                     resolve();
                                 } else {
-                                    item.querySelector('.status-text').textContent = 'Erro: ' + response.error;
-                                    item.querySelector('.status-text').classList.replace('text-gray-500', 'text-red-500');
-                                    item.querySelector('.progress-bar').classList.replace('bg-secondary-600', 'bg-red-500');
-                                    resolve(); // Resolve anyway to continue with next
+                                    statusText.textContent = 'Erro: ' + response.error;
+                                    statusText.classList.replace('text-gray-500', 'text-red-500');
+                                    progressBar.classList.replace('bg-secondary-600', 'bg-red-500');
+                                    resolve();
                                 }
-                            } catch(e) {
+                            } catch(err) {
                                 reject('Invalid JSON response');
                             }
                         } else {
@@ -1869,33 +1935,21 @@ include dirname(__DIR__) . '/includes/header.php';
                     xhr.send(formData);
                 });
             } catch (error) {
-                item.querySelector('.status-text').textContent = 'Falha no envio';
-                item.querySelector('.status-text').classList.replace('text-gray-500', 'text-red-500');
-                item.querySelector('.progress-bar').classList.replace('bg-secondary-600', 'bg-red-500');
+                statusText.textContent = 'Falha no envio';
+                statusText.classList.replace('text-gray-500', 'text-red-500');
+                progressBar.classList.replace('bg-secondary-600', 'bg-red-500');
             }
             
             completed++;
             galleryPreviewTotal.textContent = `Processadas: ${completed} de ${files.length} (${success} com sucesso)`;
         }
         
-        galleryInput.value = '';
+        galleryInput.value = ''; // Clear file input so it doesn't get submitted normally
         
-        // Auto-reload the page after 1.5 seconds so the user can see the success messages before reloading
-        if (completed === files.length) {
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
-        }
-    }
-
-    galleryInput?.addEventListener('change', e => uploadGalleryFiles(e.target.files));
-    galleryDropZone?.addEventListener('click', () => galleryInput.click());
-    galleryDropZone?.addEventListener('dragover', e => { e.preventDefault(); galleryDropZone.classList.add('border-secondary-500', 'bg-secondary-50'); });
-    galleryDropZone?.addEventListener('dragleave', e => { e.preventDefault(); galleryDropZone.classList.remove('border-secondary-500', 'bg-secondary-50'); });
-    galleryDropZone?.addEventListener('drop', e => {
-        e.preventDefault();
-        galleryDropZone.classList.remove('border-secondary-500', 'bg-secondary-50');
-        uploadGalleryFiles(e.dataTransfer.files);
+        // Wait a short moment so user sees success, then submit the main form
+        setTimeout(() => {
+            mainForm.submit();
+        }, 1000);
     });
     document.getElementById('clearGalleryFiles')?.addEventListener('click', () => {
         galleryInput.value = '';
