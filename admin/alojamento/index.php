@@ -1235,9 +1235,6 @@ include dirname(__DIR__) . '/includes/header.php';
                 </div>
                 <div id="galleryPreviewList" class="flex flex-col gap-2"></div>
                 <div id="galleryPreviewTotal" class="mt-3 pt-3 border-t border-gray-200 text-sm font-medium text-gray-700"></div>
-                <div class="mt-3">
-                    <button type="button" onclick="window.location.reload()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded text-sm hover:bg-gray-200">Recarregar página para ver as fotos (após concluído)</button>
-                </div>
             </div>
         </div>
 
@@ -1891,6 +1888,13 @@ include dirname(__DIR__) . '/includes/header.php';
         }
         
         galleryInput.value = '';
+        
+        // Auto-reload the page after 1.5 seconds so the user can see the success messages before reloading
+        if (completed === files.length) {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
     }
 
     galleryInput?.addEventListener('change', e => uploadGalleryFiles(e.target.files));
