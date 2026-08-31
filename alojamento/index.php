@@ -151,6 +151,8 @@ if ($showMainPage) {
     $preloadImage = $casaHeroUrl;
 }
 
+$ogImage = $preloadImage;
+
 include INCLUDES_PATH . '/header.php';
 ?>
 
