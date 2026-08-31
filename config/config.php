@@ -3,12 +3,12 @@
 return [
 
     'db' => [
-        'host' => '127.0.0.1',
-        'name' => 'acasadogi',
-        'user' => 'root',
-        'pass' => '',
+        'host' => getenv('DB_HOST') ?: '127.0.0.1',
+        'name' => getenv('DB_NAME') ?: 'acasadogi',
+        'user' => getenv('DB_USER') ?: 'root',
+        'pass' => getenv('DB_PASS') ?: '',
         'charset' => 'utf8mb4',
-        'port' => 3306
+        'port' => getenv('DB_PORT') ?: 3306
     ],
 
     'app' => [
