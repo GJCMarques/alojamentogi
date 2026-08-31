@@ -9,4 +9,4 @@ Allow: /
 Disallow: /*?pesquisa=
 Disallow: /*?pagina=
 
-Sitemap: https://monrion.cloud/sitemap.xml
+Sitemap: https://www.acasadogi.pt/sitemap.xml

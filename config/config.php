@@ -13,7 +13,7 @@ return [
 
     'app' => [
         'name' => 'A Casa do Gi',
-        'url' => 'https://monrion.cloud', // O teu domínio real com HTTPS
+        'url' => 'https://www.acasadogi.pt', // O teu domínio real com HTTPS
         'env' => 'production', // Mudei para production para ser mais seguro
         'debug' => false, // Desligar o debug em produção (se der erro no futuro metes true para testar)
         'timezone' => 'Europe/Lisbon',
