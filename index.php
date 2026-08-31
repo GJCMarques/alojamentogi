@@ -58,8 +58,6 @@ include INCLUDES_PATH . '/header.php';
 
 ?>
 
-<!-- HERO -->
-
 <section class="relative h-screen w-full overflow-hidden" id="mountain-hero" style="background-image: url('<?= $heroUrl ?>'); background-size: cover; background-position: center; background-attachment: fixed;">
     <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
@@ -78,7 +76,6 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- SPLIT HERO -->
 <div class="relative h-screen w-full flex flex-col md:flex-row overflow-hidden" id="split-hero">
     <div class="split-hero-left split-panel split-left relative w-full md:w-1/2 h-1/2 md:h-full group overflow-hidden">
         <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_split_left', 'images/IgrejaMatriz.webp')) ?>" alt="Igreja Matriz de Mogadouro" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out will-change-transform group-hover:scale-105">
@@ -131,10 +128,6 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </div>
 
-<!-- ====== PAGE BODY ====== -->
-
-<!-- BENTO GRID - 3 Experiences -->
-<!-- EXPLORE MENU - DYNAMIC ACCORDION -->
 <section class="py-20 bg-white min-h-[80vh] flex flex-col justify-center">
     <div class="max-w-[1800px] w-full mx-auto px-4 sm:px-6">
 
@@ -145,10 +138,8 @@ include INCLUDES_PATH . '/header.php';
             <div class="w-24 h-1 bg-accent mx-auto"></div>
         </div>
 
-        <!-- Dynamic Flex Accordion -->
         <div class="flex flex-col md:flex-row h-[800px] gap-2 md:gap-4">
 
-            <!-- CARD 1: ALOJAMENTO -->
             <a href="<?= $base ?>/alojamento/" class="animate-on-scroll relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['accommodation']) ?>');"></div>
@@ -167,7 +158,6 @@ include INCLUDES_PATH . '/header.php';
                 </div>
             </a>
 
-            <!-- CARD 2: ATIVIDADES -->
             <a href="<?= $base ?>/atividades/" class="animate-on-scroll delay-100 relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['activities']) ?>');"></div>
@@ -186,7 +176,6 @@ include INCLUDES_PATH . '/header.php';
                 </div>
             </a>
 
-            <!-- CARD 3: LOJA -->
             <a href="<?= $base ?>/loja/" class="animate-on-scroll delay-200 relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['shop']) ?>');"></div>
@@ -205,7 +194,6 @@ include INCLUDES_PATH . '/header.php';
                 </div>
             </a>
 
-            <!-- CARD 4: SOBRE / CONTACTOS -->
             <a href="<?= $base ?>/contactos/" class="animate-on-scroll delay-300 relative flex-1 md:flex-[1_1_25%] group transition-all duration-1000 ease-in-out overflow-hidden rounded-3xl cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
                      style="background-image: url('<?= resolveContentImage($menuImages['contact']) ?>');"></div>
@@ -228,12 +216,10 @@ include INCLUDES_PATH . '/header.php';
     </div>
 </section>
 
-<!-- SECTION: ABOUT US (Storytelling) -->
 <section class="relative py-24 md:py-32 bg-white overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 md:px-12">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
 
-            <!-- Left: Text Content -->
             <div class="md:order-1 animate-on-scroll">
                 <span class="text-accent text-xs font-bold tracking-[0.3em] uppercase block mb-6">
                     <?= $content['home_about_label'] ?? 'A Nossa História' ?>
@@ -260,9 +246,7 @@ include INCLUDES_PATH . '/header.php';
                 </div>
             </div>
 
-            <!-- Right: Image Composition -->
             <div class="relative md:order-2 animate-on-scroll" data-delay="200">
-                <!-- Main Image -->
                 <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                     <div class="absolute inset-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>
                     <img loading="lazy" decoding="async" src="<?= resolveContentImage(content('home_image_about', 'images/MogadouroSobre.webp')) ?>"
@@ -270,11 +254,9 @@ include INCLUDES_PATH . '/header.php';
                          class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)]">
                 </div>
 
-                <!-- Decorative Elements -->
                 <div class="absolute -top-12 -right-12 w-48 h-48 bg-cream-100 rounded-full z-0 opacity-60 blur-3xl"></div>
                 <div class="absolute -bottom-12 -left-12 w-72 h-72 bg-accent/10 rounded-full z-0 blur-3xl"></div>
 
-                <!-- Floating Badge -->
                 <div class="absolute -bottom-8 -left-8 z-20 bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-2xl max-w-[200px] hidden md:block border border-gray-100">
                     <span class="block font-cursive text-4xl text-accent mb-0 leading-[0.8] relative top-1">100%</span>
                     <span class="text-[10px] text-primary/60 uppercase tracking-[0.2em] font-bold block mt-3 border-t border-gray-100 pt-3">
@@ -288,7 +270,6 @@ include INCLUDES_PATH . '/header.php';
 </section>
 
 <style>
-/* MARQUEE ANIMATION */
 .marquee-wrapper {
     mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
@@ -302,13 +283,10 @@ include INCLUDES_PATH . '/header.php';
     100% { transform: translateX(-50%); }
 }
 
-/* OUTLINE TEXT UTILITY */
 .stroke-text {
     -webkit-text-stroke: 1px rgba(26, 26, 26, 0.2);
     color: transparent;
 }
-
-/* CUSTOM UNDERLINE */
 .text-translucent-underline {
     position: relative;
     white-space: nowrap;
@@ -321,12 +299,11 @@ include INCLUDES_PATH . '/header.php';
     left: 0;
     width: 100%;
     height: 12px;
-    background-color: #C6A87C; /* Your Accent Color */
+    background-color: #C6A87C; 
     opacity: 0.3;
     z-index: -1;
     transform: skewX(-12deg);
 }
-/* --- UTILITY ANIMATIONS --- */
 .reveal-on-scroll {
     opacity: 0;
     transform: translateY(30px);
@@ -338,12 +315,9 @@ include INCLUDES_PATH . '/header.php';
     transform: translateY(0);
 }
 
-/* Stagger delays */
 .delay-100 { transition-delay: 0.1s; }
 .delay-200 { transition-delay: 0.2s; }
 .delay-300 { transition-delay: 0.3s; }
-
-/* HERO ANIMATIONS */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
@@ -360,7 +334,6 @@ include INCLUDES_PATH . '/header.php';
 .hero-delay-2 { animation-delay: 0.4s; }
 .hero-delay-3 { animation-delay: 0.6s; }
 
-/* SPLIT HERO SPECIFIC */
 .split-panel {
     transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1.5s ease;
     will-change: transform, opacity;
@@ -380,23 +353,18 @@ include INCLUDES_PATH . '/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-
-    // 1. SPLIT HERO INTERSECTION OBSERVER
     const splitHero = document.getElementById('split-hero');
     if (splitHero) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     splitHero.classList.add('split-active');
-                    // Optional: Stop observing once activated
-                    // observer.unobserve(entry.target);
+
                 }
             });
-        }, { threshold: 0.15 }); // Trigger when 15% visible
+        }, { threshold: 0.15 }); 
         observer.observe(splitHero);
     }
-
-    // 2. REVEAL ON SCROLL (Generic)
     const revealElements = document.querySelectorAll('.animate-on-scroll');
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -409,11 +377,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
     revealElements.forEach(el => {
-        el.classList.add('reveal-on-scroll'); // Initialize hidden state
+        el.classList.add('reveal-on-scroll');
         revealObserver.observe(el);
     });
 
-    // 3. PARALLAX EFFECTS (Hero + General)
     const mountainHero = document.getElementById('mountain-hero');
     const heroContent = document.getElementById('hero-content');
 
@@ -421,10 +388,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
             if (scrolled < window.innerHeight) {
-                // Parallax text
                 heroContent.style.transform = `translateY(${scrolled * 0.4}px)`;
                 heroContent.style.opacity = 1 - (scrolled / 700);
-                // Parallax background (subtle)
                 mountainHero.style.backgroundPositionY = `${scrolled * 0.5}px`;
             }
         }, { passive: true });
