@@ -68,11 +68,7 @@ try {
         outputUrl($siteUrl . '/en/accommodation/?casa=' . $casa['id'], $lastmod, 'weekly', '0.9');
     }
 } catch (Exception $e) {
-    // Ignorar silenciosamente para não quebrar o sitemap em caso de erro na BD
+    
 }
-
-// Nota: a loja está em migração (shopk.it) e as atividades passaram a ser uma
-// página informativa única — por isso não se geram URLs de produtos nem de
-// atividades individuais (evita 301/URLs sem conteúdo indexável).
 
 echo '</urlset>';
