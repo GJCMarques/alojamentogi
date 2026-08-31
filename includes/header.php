@@ -46,6 +46,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <title><?= e($pageTitle) ?> | <?= e(setting('site_name', 'A Casa do Gi')) ?></title>
     
     <link rel="canonical" href="<?= e($canonicalUrl) ?>">
+    <link rel="author" href="<?= $base ?>/humans.txt">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?= asset('images/CGsimbUpNB.ico') ?>">

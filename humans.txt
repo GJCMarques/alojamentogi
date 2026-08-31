@@ -1,15 +1,17 @@
 /* TEAM */
-Site: A Casa do Gi
-Location: Mogadouro, Trás-os-Montes, Portugal
-Contact: info@acasadogi.pt
-
-/* SITE */
-Last update: 2025
-Standards: HTML5, CSS3, PHP 8
-Components: PHP, Tailwind CSS, MySQL
-Software: Apache, XAMPP
-Languages: Portuguese, English
+Developer: Equipa Monrion
+Lead Developer: Guilherme Marques
+Site: https://www.monrion.cloud
+Contact: geral@acasadogi.pt
+Location: Portugal
 
 /* THANKS */
-Nature lovers, history enthusiasts, and all visitors who help preserve
-the beauty and traditions of Trás-os-Montes.
+Name: A família por detrás do Alojamento Local "A Casa do Gi"
+Message: Uma homenagem à família e à história que deu origem a este projeto, com o intuito de partilhar a beleza e as tradições transmontanas.
+
+/* SITE */
+Last update: 2026/08/31
+Standards: HTML5, CSS3, PHP 8
+Components: Tailwind CSS, Vanilla JS
+Software: Apache, MySQL
+Languages: Portuguese, English
