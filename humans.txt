@@ -1,7 +1,7 @@
 /* TEAM */
 Developer: Equipa Monrion
 Lead Developer: Guilherme Marques
-Site: https://www.monrion.cloud
+Site: https://www.acasadogi.pt
 Contact: geral@acasadogi.pt
 Location: Portugal
 
