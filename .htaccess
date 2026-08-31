@@ -2,8 +2,8 @@
 # Enable mod_rewrite
 RewriteEngine On
 
-# Set base directory (crucial for XAMPP subfolders)
-RewriteBase /acasadogi/
+# Set base directory (Deploy Mode)
+RewriteBase /
 
 # Custom 404 page (Environment Agnostic via Rewrite)
 ErrorDocument 404 default
