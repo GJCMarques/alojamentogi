@@ -2,14 +2,14 @@
 # Enable mod_rewrite
 RewriteEngine On
 
-# Set base directory
-RewriteBase /
+# Set base directory (crucial for XAMPP subfolders)
+RewriteBase /acasadogi/
 
-# Custom 404 page (Environment Agnostic)
+# Custom 404 page (Environment Agnostic via Rewrite)
 ErrorDocument 404 default
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ 404.php [L]
+RewriteRule ^(.*)$ 404.php [L]
 
 # Dynamic sitemap
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
