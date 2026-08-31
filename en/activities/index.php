@@ -61,7 +61,7 @@ include INCLUDES_PATH . '/header.php';
 <!-- Hero Section -->
 <section class="relative h-screen flex items-center bg-primary overflow-hidden">
     <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
              style="background-image: url('<?= $heroUrl ?>');"></div>
         <div class="absolute inset-0 bg-black" style="opacity: <?= $heroOverlay ?>"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
