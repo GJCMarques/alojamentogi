@@ -47,6 +47,30 @@ outputUrl($siteUrl . '/en/shop/', null, 'daily', '0.7');
 outputUrl($siteUrl . '/en/activities/', null, 'weekly', '0.7');
 outputUrl($siteUrl . '/en/contact/', null, 'monthly', '0.5');
 
+// ============================================================
+// DYNAMIC PAGES (Alojamentos)
+// ============================================================
+try {
+    $dbConfig = $config['db'];
+    $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['name']};charset={$dbConfig['charset']};port={$dbConfig['port']}";
+    $pdo = new PDO($dsn, $dbConfig['user'], $dbConfig['pass']);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    $stmt = $pdo->query("SELECT id, updated_at FROM alojamentos WHERE status = 'active' OR status = 1");
+    $casas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($casas as $casa) {
+        $lastmod = $casa['updated_at'] ? date('Y-m-d', strtotime($casa['updated_at'])) : null;
+        
+        // PT
+        outputUrl($siteUrl . '/alojamento/?casa=' . $casa['id'], $lastmod, 'weekly', '0.9');
+        // EN
+        outputUrl($siteUrl . '/en/accommodation/?casa=' . $casa['id'], $lastmod, 'weekly', '0.9');
+    }
+} catch (Exception $e) {
+    // Ignorar silenciosamente para não quebrar o sitemap em caso de erro na BD
+}
+
 // Nota: a loja está em migração (shopk.it) e as atividades passaram a ser uma
 // página informativa única — por isso não se geram URLs de produtos nem de
 // atividades individuais (evita 301/URLs sem conteúdo indexável).
