@@ -52,6 +52,7 @@ if (empty($guideLinks)) {
     ];
 }
 
+$ogImage = $heroUrl;
 include INCLUDES_PATH . '/header.php';
 ?>
 

@@ -130,6 +130,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $pageTitle = __('contact_title', 'Contactos');
 $pageDescription = 'Contacte A Casa do Gi para reservar o seu Alojamento Local em Mogadouro. Estamos disponíveis para garantir as suas melhores férias em Trás-os-Montes.';
 
+$ogImage = $heroUrl;
 include INCLUDES_PATH . '/header.php';
 ?>
 

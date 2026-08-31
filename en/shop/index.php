@@ -23,6 +23,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $pageTitle = 'Shop';
 $pageDescription = 'The Casa do Gi online shop is under construction. Soon you will be able to buy our regional products from Trás-os-Montes.';
 
+$ogImage = $heroUrl;
 include INCLUDES_PATH . '/header.php';
 ?>
 

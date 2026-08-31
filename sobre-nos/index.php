@@ -21,6 +21,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $pageTitle = 'Sobre Nós';
 $pageDescription = 'A história da Casa do Gi: Um Alojamento Local familiar em Mogadouro nascido nos anos 80. Tradição, acolhimento e amor na sua casa de férias no Norte.';
 
+$ogImage = $heroUrl;
 include INCLUDES_PATH . '/header.php';
 ?>
 

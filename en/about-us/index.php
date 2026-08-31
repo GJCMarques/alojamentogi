@@ -23,6 +23,7 @@ $heroUrl = $heroImage[0] === '/' ? basePath() . $heroImage : asset($heroImage);
 $pageTitle = 'About Us';
 $pageDescription = 'The story of Casa do Gi: A family-run Local Accommodation in Mogadouro born in the 80s. Tradition, warmth and love in your holiday home up North.';
 
+$ogImage = $heroUrl;
 include INCLUDES_PATH . '/header.php';
 ?>
 

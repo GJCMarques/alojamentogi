@@ -58,20 +58,11 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <meta property="og:description" content="<?= e($pageDescription) ?>">
     <meta property="og:url" content="<?= e(rtrim($base, '/') . ($_SERVER['REQUEST_URI'] ?? '/')) ?>">
     <meta property="og:site_name" content="A Casa do Gi">
-    <?php
-    if (!isset($ogImage)) {
-        if (strpos($currentPath, '/sobre-nos/') !== false || strpos($currentPath, '/about-us/') !== false) {
-            $ogImage = asset('images/MogadouroSobre.webp');
-        } elseif (strpos($currentPath, '/atividades/') !== false || strpos($currentPath, '/activities/') !== false) {
-            $ogImage = asset('images/MogadouroNatureza.webp');
-        } elseif (strpos($currentPath, '/loja/') !== false || strpos($currentPath, '/shop/') !== false) {
-            $ogImage = asset('images/LojaBg.webp');
-        } else {
-            $ogImage = asset('images/Castelo.webp'); // Página inicial e contactos
-        }
-    }
-    ?>
+    <?php if (isset($ogImage)): ?>
     <meta property="og:image" content="<?= e($ogImage) ?>">
+    <?php else: ?>
+    <meta property="og:image" content="<?= asset('images/Castelo.webp') ?>">
+    <?php endif; ?>
     <meta property="og:locale" content="<?= $isEnglish ? 'en_GB' : 'pt_PT' ?>">
     <?php if ($isEnglish): ?>
     <meta property="og:locale:alternate" content="pt_PT">
