@@ -3,14 +3,6 @@
 User-agent: *
 Allow: /
 
-# Proteção de pastas de sistema e back-office
-Disallow: /admin/
-Disallow: /core/
-Disallow: /config/
-Disallow: /includes/
-Disallow: /database/
-Disallow: /api/
-
 # Evitar indexação de parâmetros de pesquisa/paginação (conteúdo duplicado)
 Disallow: /*?pesquisa=
 Disallow: /*?pagina=
