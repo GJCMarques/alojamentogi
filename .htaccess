@@ -5,8 +5,11 @@ RewriteEngine On
 # Set base directory
 RewriteBase /
 
-# Custom 404 page
-ErrorDocument 404 /404.php
+# Custom 404 page (Environment Agnostic)
+ErrorDocument 404 default
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ 404.php [L]
 
 # Dynamic sitemap
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
