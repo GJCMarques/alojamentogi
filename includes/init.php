@@ -5,7 +5,6 @@ if (!defined('ROOT_PATH')) {
 }
 
 // Carregar variáveis de ambiente a partir de um ficheiro .env (não versionado), se existir.
-// Em produção (Dokploy) as variáveis são definidas no painel; o .env é apenas para dev local.
 (function () {
     $envFile = ROOT_PATH . '/.env';
     if (!is_readable($envFile)) {
