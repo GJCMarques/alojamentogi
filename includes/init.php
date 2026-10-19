@@ -4,34 +4,31 @@ if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(__DIR__));
 }
 
-// Carregar variáveis do ficheiro .env se existir
-if (file_exists(ROOT_PATH . '/.env')) {
-    $lines = file(ROOT_PATH . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
+// Carregar variáveis de ambiente a partir de um ficheiro .env (não versionado), se existir.
+// Em produção (Dokploy) as variáveis são definidas no painel; o .env é apenas para dev local.
+(function () {
+    $envFile = ROOT_PATH . '/.env';
+    if (!is_readable($envFile)) {
+        return;
+    }
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
         $line = trim($line);
-        // Ignorar comentários
-        if ($line === '' || str_starts_with($line, '#')) {
+        if ($line === '' || $line[0] === '#' || strpos($line, '=') === false) {
             continue;
         }
-        if (strpos($line, '=') !== false) {
-            list($name, $value) = explode('=', $line, 2);
-            $name = trim($name);
-            $value = trim($value);
-            // Remover aspas envolventes se existirem (ex: "valor" ou 'valor')
-            if (
-                (str_starts_with($value, '"') && str_ends_with($value, '"')) ||
-                (str_starts_with($value, "'") && str_ends_with($value, "'"))
-            ) {
-                $value = substr($value, 1, -1);
-            }
-            if (!getenv($name)) {
-                putenv("{$name}={$value}");
-                $_ENV[$name] = $value;
-                $_SERVER[$name] = $value;
-            }
+        [$key, $value] = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+        // remover aspas envolventes opcionais
+        if (strlen($value) >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[-1] === $value[0]) {
+            $value = substr($value, 1, -1);
+        }
+        if ($key !== '' && getenv($key) === false) {
+            putenv("{$key}={$value}");
+            $_ENV[$key] = $value;
         }
     }
-}
+})();
 
 if (file_exists(ROOT_PATH . '/vendor/autoload.php')) {
     require_once ROOT_PATH . '/vendor/autoload.php';
@@ -48,6 +45,7 @@ if ($config['app']['debug']) {
     error_reporting(0);
     ini_set('display_errors', '0');
     ini_set('log_errors', '1');
+    ini_set('error_log', ROOT_PATH . '/logs/php-errors.log');
 }
 
 date_default_timezone_set($config['app']['timezone']);
