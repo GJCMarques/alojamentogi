@@ -244,7 +244,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `email`, `password_hash`, `full_name`, `role`, `avatar`, `is_active`, `last_login`, `login_attempts`, `locked_until`, `password_reset_token`, `password_reset_expires`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin@acasadogi.pt', '$2y$12$h1hHCeq1svPUpfFc82tKYuHPtR3j8bReNo1nSeCcR7ZK3M3YKld.G', 'Administrador', 'super_admin', NULL, 1, '2026-08-31 00:22:19', 0, NULL, NULL, NULL, '2026-01-19 12:51:19', '2026-08-30 23:22:19');
+(1, 'admin', 'admin@acasadogi.com', '$2y$12$h1hHCeq1svPUpfFc82tKYuHPtR3j8bReNo1nSeCcR7ZK3M3YKld.G', 'Administrador', 'super_admin', NULL, 1, '2026-08-31 00:22:19', 0, NULL, NULL, NULL, '2026-01-19 12:51:19', '2026-08-30 23:22:19');
 
 -- --------------------------------------------------------
 

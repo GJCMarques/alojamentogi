@@ -13,7 +13,7 @@ return [
 
     'app' => [
         'name' => 'A Casa do Gi',
-        'url' => 'https://www.acasadogi.pt', // O teu domínio real com HTTPS
+        'url' => 'https://www.acasadogi.com', // O teu domínio real com HTTPS
         'env' => 'production', // Mudei para production para ser mais seguro
         'debug' => false, // Desligar o debug em produção (se der erro no futuro metes true para testar)
         'timezone' => 'Europe/Lisbon',
@@ -27,9 +27,9 @@ return [
         'username' => '',
         'password' => '',
         'encryption' => 'tls',
-        'from_email' => 'noreply@acasadogi.pt',
+        'from_email' => 'noreply@acasadogi.com',
         'from_name' => 'A Casa do Gi',
-        'reply_to' => 'info@acasadogi.pt'
+        'reply_to' => 'info@acasadogi.com'
     ],
 
     'security' => [

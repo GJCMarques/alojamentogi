@@ -7,4 +7,4 @@ Allow: /
 Disallow: /*?pesquisa=
 Disallow: /*?pagina=
 
-Sitemap: https://www.acasadogi.pt/sitemap.xml
+Sitemap: https://www.acasadogi.com/sitemap.xml

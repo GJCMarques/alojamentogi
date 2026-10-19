@@ -9,7 +9,7 @@ if (!isMaintenanceMode()) {
 
 $bgImage = asset('images/MogadouroAtividades.webp');
 $logo = asset('images/CGsimbUp.webp');
-$email = setting('contact_email', 'geral@acasadogi.pt');
+$email = setting('contact_email', 'geral@acasadogi.com');
 $phone = setting('contact_phone', '');
 $facebook = setting('facebook_url', '');
 $instagram = setting('instagram_url', '');
@@ -27,7 +27,7 @@ $instagram = setting('instagram_url', '');
     <meta property="og:type" content="website">
     <meta property="og:title" content="A Casa do Gi - Em Breve / Coming Soon">
     <meta property="og:description" content="Estamos a preparar algo especial. Alojamento Local em Mogadouro. We are crafting something special. Local accommodation in Mogadouro.">
-    <meta property="og:url" content="<?= setting('app_url', 'https://acasadogi.pt') ?>">
+    <meta property="og:url" content="<?= setting('app_url', 'https://acasadogi.com') ?>">
     <meta property="og:site_name" content="A Casa do Gi">
     <meta property="og:image" content="<?= asset('images/MogadouroAtividades.webp') ?>">
     <meta property="og:locale" content="pt_PT">
